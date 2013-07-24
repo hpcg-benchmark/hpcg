@@ -1,0 +1,61 @@
+// ************************************************************************
+// 
+//               HPCG: Simple Conjugate Gradient Benchmark Code
+// Questions? Contact Michael A. Heroux (maherou@sandia.gov) 
+// 
+// ************************************************************************
+
+
+------------------------------------------------
+Description:
+------------------------------------------------
+HPCG: A simple conjugate gradient benchmark code for a 3D chimney 
+domain on an arbitrary number of processors.
+
+Author: Michael A. Heroux, Sandia National Laboratories (maherou@sandia.gov)
+
+This simple benchmark code is a self-contained piece of C++ software 
+that generates a 27-point finite difference matrix with a user-prescribed 
+sub-block size on each processor.
+
+Kernel performance should be reasonable, but no attempts have been made
+to provide special kernel optimizations.
+
+------------------------------------------------
+Compiling the code:
+------------------------------------------------
+
+There is a simple Makefile that should be easily modified for most 
+Unix-like environments.  Read the Makefile for 
+further instructions.  If you generate a Makefile for your platform 
+and care to share it, please send it to the author.
+
+To remove all output files, type:
+
+make clean
+
+------------------------------------------------
+Running the code:
+------------------------------------------------
+
+Usage:
+
+test_HPCG nx ny nz (serial mode)
+
+mpirun -np numproc test_HPCG nx ny nz (MPI mode)
+
+where nx, ny, nz are the number of nodes in the x, y and z 
+dimension respectively on a each processor.
+The global grid dimensions will be as close to a cubic factorization
+of the number of MPI processes as possible.
+
+Example:
+
+mpirun -np 16 ./test_HPCG 20 30 10
+
+This will construct a local problem of dimension 20-by-30-by-10.
+
+The processor decomposition will be 2-by-2-by-4, so the global problem
+size will be 40-by-60-by-40.
+
+whose global problem has dimension 20-by-30-by-160.

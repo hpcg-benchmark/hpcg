@@ -75,7 +75,7 @@ TARGET = test_HPCG
 
 CXXFLAGS= $(CPP_OPT_FLAGS) $(USE_MPI) $(MPI_INC) $(SHAREDMEM_MPI)
 
-LIB_PATHS= $(SYS_LIB)
+LIB_PATHS= $(SYS_LIB) $(MPI_LIB)
 
 TEST_CPP = main.cpp GenerateGeometry.cpp GenerateProblem.cpp \
 	  	WriteProblem.cpp ComputeResidual.cpp ReportResults.cpp mytimer.cpp \

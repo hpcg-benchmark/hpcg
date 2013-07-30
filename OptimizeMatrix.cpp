@@ -44,7 +44,7 @@ void OptimizeMatrix(const Geometry & geom, SparseMatrix & A) {
 
   int localNumberOfRows = A.localNumberOfRows;
   int  * nonzerosInRow = A.nonzerosInRow;
-  int ** matrixIndices = A.matrixIndices;
+  global_int_t ** matrixIndices = A.matrixIndices;
   
   // Scan global IDs of the nonzeros in the matrix.  Determine if the column ID matches a row ID.  If not:
   // 1) We call the getRankOfMatrixRow function, which tells us the rank of the processor owning the row ID.

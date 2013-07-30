@@ -41,7 +41,7 @@ int symgs( const SparseMatrix & A, const double * const x, double * const y) {
 
   for (int i=0; i< nrow; i++) {
       const double * const currentRowValues = A.matrixValues[i];
-      const int    * const currentRowIndices = A.matrixIndices[i];
+      const global_int_t * const currentRowIndices = A.matrixIndices[i];
       const double * addressOfCurrentDiagonal = matrixDiagonal[i]; // Current diagonal value
       const int currentNumberOfNonzeros = addressOfCurrentDiagonal - currentRowValues;
       double sum = x[i]; // RHS value
@@ -56,7 +56,7 @@ int symgs( const SparseMatrix & A, const double * const x, double * const y) {
 
   for (int i=nrow-1; i>=0; i--) {
       const double * const currentRowValues = A.matrixValues[i];
-      const int    * const currentRowIndices = A.matrixIndices[i];
+      const global_int_t * const currentRowIndices = A.matrixIndices[i];
       const int currentNumberOfNonzeros = A.nonzerosInRow[i];
       const double  currentDiagonal = matrixDiagonal[i][0]; // Current diagonal value
       double sum = x[i]; // RHS value

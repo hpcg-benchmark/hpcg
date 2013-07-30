@@ -23,7 +23,7 @@ struct SparseMatrix_STRUCT {
   int localNumberOfColumns;  // Must be defined in make_local_matrix
   int localNumberOfNonzeros;
   int  * nonzerosInRow;
-  int ** matrixIndices;
+  global_int_t ** matrixIndices;
   double ** matrixValues;
   double ** matrixDiagonal;
   std::map< int, int > globalToLocalMap;

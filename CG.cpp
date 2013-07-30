@@ -1,10 +1,10 @@
 
 //@HEADER
 // ************************************************************************
-// 
+//
 //               HPCG: Simple Conjugate Gradient Benchmark Code
-// Questions? Contact Michael A. Heroux (maherou@sandia.gov) 
-// 
+// Questions? Contact Michael A. Heroux (maherou@sandia.gov)
+//
 // ************************************************************************
 //@HEADER
 
@@ -60,8 +60,8 @@ int CG(const Geometry & geom, const SparseMatrix & A, const double * const b, do
 	double t6 = 0.0;
 #endif
 
-	int nrow = A.localNumberOfRows;
-	int ncol = A.localNumberOfColumns;
+	local_int_t nrow = A.localNumberOfRows;
+	local_int_t ncol = A.localNumberOfColumns;
 
 	double * r = new double [nrow]; // Residual vector
 	double * z = new double [nrow]; // Preconditioned residual vector

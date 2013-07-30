@@ -63,7 +63,7 @@ void GenerateProblem(const Geometry & geom, SparseMatrix & A, double **x, double
 
 	// Allocate arrays that are of length localNumberOfRows
 	int * nonzerosInRow = new int[localNumberOfRows];
-	int ** matrixIndices = new int*[localNumberOfRows];
+	global_int_t ** matrixIndices = new global_int_t*[localNumberOfRows];
 	double ** matrixValues = new double*[localNumberOfRows];
 	double ** matrixDiagonal = new double*[localNumberOfRows];
 
@@ -74,26 +74,26 @@ void GenerateProblem(const Geometry & geom, SparseMatrix & A, double **x, double
 
 	int localNumberOfNonzeros = 0;
 	for (int iz=0; iz<nz; iz++) {
-		int giz = ipz*nz+iz;
+		global_int_t giz = ipz*nz+iz;
 		for (int iy=0; iy<ny; iy++) {
-			int giy = ipy*ny+iy;
+			global_int_t giy = ipy*ny+iy;
 			for (int ix=0; ix<nx; ix++) {
-				int gix = ipx*nx+ix;
-				int currentLocalRow = iz*nx*ny+iy*nx+ix;
-				int currentGlobalRow = giz*gnx*gny+giy*gnx+gix;
+				global_int_t gix = ipx*nx+ix;
+				local_int_t currentLocalRow = iz*nx*ny+iy*nx+ix;
+				global_int_t currentGlobalRow = giz*gnx*gny+giy*gnx+gix;
 				A.globalToLocalMap[currentGlobalRow] = currentLocalRow;
 				int numberOfNonzerosInRow = 0;
 				matrixValues[currentLocalRow] = new double[numberOfNonzerosPerRow]; // Allocate a row worth of values.
-				matrixIndices[currentLocalRow] = new int[numberOfNonzerosPerRow]; // Allocate a row worth of indices.
+				matrixIndices[currentLocalRow] = new global_int_t[numberOfNonzerosPerRow]; // Allocate a row worth of indices.
 				double * currentValuePointer = matrixValues[currentLocalRow]; // Pointer to current value in current row
-				int * currentIndexPointer = matrixIndices[currentLocalRow]; // Pointer to current index in current row
+				global_int_t * currentIndexPointer = matrixIndices[currentLocalRow]; // Pointer to current index in current row
 				for (int sz=-1; sz<=1; sz++) {
 					if (giz+sz>-1 && giz+sz<gnz) {
 						for (int sy=-1; sy<=1; sy++) {
 							if (giy+sy>-1 && giy+sy<gny) {
 								for (int sx=-1; sx<=1; sx++) {
 									if (gix+sx>-1 && gix+sx<gnx) {
-										int curcol = currentGlobalRow+sz*gnx*gny+sy*gnx+sx;
+										global_int_t curcol = currentGlobalRow+sz*gnx*gny+sy*gnx+sx;
 										if (curcol==currentGlobalRow) {
 											matrixDiagonal[currentLocalRow] = currentValuePointer;
 											*currentValuePointer++ = 27.0;

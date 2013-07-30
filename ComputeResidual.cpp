@@ -22,6 +22,9 @@
 
 #include <cmath>  // needed for fabs
 #include "ComputeResidual.hpp"
+#ifdef DEBUG
+#include <iostream>
+#endif
 using std::fabs;
 #ifdef USING_MPI
 #include <mpi.h> // If this routine is compiled with -DUSING_MPI then include mpi.h
@@ -34,6 +37,10 @@ int ComputeResidual(const int n, const double * const v1,
   for (int i=0; i<n; i++) {
     double diff = fabs(v1[i] - v2[i]);
     if (diff > local_residual) local_residual = diff;
+#ifdef DEBUG
+    std::cout << " Computed, exact, diff = " << v1[i] << " " << v2[i] << " " << diff << std::endl;
+#endif
+
   }
 
 #ifdef USING_MPI

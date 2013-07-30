@@ -63,17 +63,22 @@ int CG(const Geometry & geom, const SparseMatrix & A, const double * const b, do
 	local_int_t nrow = A.localNumberOfRows;
 	local_int_t ncol = A.localNumberOfColumns;
 
-	double * r = new double [nrow]; // Residual vector
+	double * r = new double [ncol]; // Residual vector (needs ncol length for simple Sym GS implementation)
 	double * z = new double [nrow]; // Preconditioned residual vector
 	double * p = new double [ncol]; // Direction vector (in MPI mode ncol>=nrow)
 	double * Ap = new double [nrow];
+#ifdef NO_PRECONDITIONER
+	if (geom.rank==0) cout << "WARNING: PERFORMING UNPRECONDITIONED ITERATIONS" << endl;
+#endif
 
 	int rank = geom.rank; //  My process ID
 #ifdef DEBUG
-	int print_freq = max_iter/10;
+	int print_freq = 1;
 	if (print_freq>50) print_freq=50;
 	if (print_freq<1)  print_freq=1;
 #endif
+	// Zero out the tail end of r to make symgs access to off-processor entries valid and trivial
+	for (int i=nrow; i< ncol; ++i) r[i] = 0.0;
 	// p is of length ncols, copy x to p for sparse MV operation
 	TICK(); waxpby(nrow, 1.0, x, 0.0, x, p); TOCK(t2);
 #ifdef USING_MPI
@@ -130,6 +135,7 @@ int CG(const Geometry & geom, const SparseMatrix & A, const double * const b, do
 	delete [] p;
 	delete [] Ap;
 	delete [] r;
+	delete [] z;
 	times[0] = mytimer() - t_begin;  // Total time. All done...
 	return(0);
 }

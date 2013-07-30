@@ -21,6 +21,7 @@
 
 #include <iostream>
 using std::cout;
+using std::cin;
 using std::cerr;
 using std::endl;
 #include <cstdio>
@@ -43,8 +44,6 @@ using std::endl;
 #include "CG.hpp"
 #include "Geometry.hpp"
 #include "SparseMatrix.hpp"
-
-#undef DEBUG
 
 int main(int argc, char *argv[]) {
     
@@ -83,8 +82,9 @@ int main(int argc, char *argv[]) {
         cout << "Press enter to continue"<< endl;
         cin >> junk;
     }
-    
+#ifdef USING_MPI
     MPI_Barrier(MPI_COMM_WORLD);
+#endif
 #endif
     
     
@@ -120,17 +120,17 @@ int main(int argc, char *argv[]) {
     int numberOfCgCalls = 1;
     double tolerance = 0.0; // Set tolerance to zero to make all runs do max_iter iterations
     for (int i=0; i< numberOfCgCalls; ++i) {
+    	for (int j=0; j< A.localNumberOfRows; ++j) x[j] = 0.0; // Zero out x
     	ierr = CG( geom, A, b, x, maxIters, tolerance, niters, normr, times);
     	if (ierr) cerr << "Error in call to CG: " << ierr << ".\n" << endl;
     	if (rank==0) cout << "Call [" << i << "] Residual [" << normr << "]" << endl;
-    	for (int j=0; j< A.localNumberOfRows; ++j) x[j] = 0.0;
     }
     
     // Compute difference between known exact solution and computed solution
     // All processors are needed here.
 #ifdef DEBUG
     double residual = 0;
-    if ((ierr = compute_residual(A.localNumberOfRows, x, xexact, &residual)))
+    if ((ierr = ComputeResidual(A.localNumberOfRows, x, xexact, &residual)))
     cerr << "Error in call to compute_residual: " << ierr << ".\n" << endl;
     if (rank==0)
     cout << "Difference between computed and exact  = " << residual << ".\n" << endl;

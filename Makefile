@@ -48,6 +48,7 @@ USE_MPI = -DUSING_MPI
 #CPP_OPT_FLAGS = -O3 -m64
 #CPP_OPT_FLAGS = -O3 -ftree-vectorize -ftree-vectorizer-verbose=2 -fopenmp
 CPP_OPT_FLAGS = -O0 -g -DDEBUG
+#CPP_OPT_FLAGS = -O0 -g -DDEBUG -DNO_PRECONDITIONER
 #CPP_OPT_FLAGS = -O3
 #CPP_OPT_FLAGS = -O3 -ffast-math -ftree-vectorize -ftree-vectorizer-verbose=2
 

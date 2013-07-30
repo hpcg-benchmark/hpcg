@@ -136,6 +136,14 @@ void OptimizeMatrix(const Geometry & geom, SparseMatrix & A) {
 	A.sendLength = sendLength;
 	A.sendBuffer = sendBuffer;
 
+#ifdef DEBUG
+	cout << " For rank " << geom.rank << " of " << geom.size << ", number of neighbors = " << A.numberOfSendNeighbors << endl;
+	for (int i = 0; i < A.numberOfSendNeighbors; i++) {
+		cout << "     rank " << geom.rank << " neighbor " << neighbors[i] << " send/recv length = " << sendLength[i] << "/" << receiveLength[i] << endl;
+	}
+#endif
+
 #endif // USING_MPI
+
 	return;
 }

@@ -50,7 +50,7 @@ int WriteProblem( const Geometry & geom, const SparseMatrix & A,
 
   for (int i=0; i< nrow; i++) {
       const double * const currentRowValues = A.matrixValues[i];
-      const global_int_t * const currentRowIndices = A.matrixIndices[i];
+      const local_int_t * const currentRowIndices = A.mtxIndL[i];
       const int currentNumberOfNonzeros = A.nonzerosInRow[i];
       for (int j=0; j< currentNumberOfNonzeros; j++)
     	  fprintf(fA, " %d %lld %22.16e\n",i+1,(long long int)(currentRowIndices[j]+1),currentRowValues[j]);

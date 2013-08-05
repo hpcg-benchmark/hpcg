@@ -24,7 +24,8 @@ struct SparseMatrix_STRUCT {
   int localNumberOfColumns;  // Must be defined in make_local_matrix
   int localNumberOfNonzeros;
   int  * nonzerosInRow;
-  global_int_t ** matrixIndices;
+  global_int_t ** mtxIndG;
+  local_int_t ** mtxIndL;
   double ** matrixValues;
   double ** matrixDiagonal;
   std::map< int, int > globalToLocalMap;
@@ -51,7 +52,8 @@ inline void initializeMatrix(SparseMatrix & A) {
 	A.localNumberOfColumns = 0;
 	A.localNumberOfNonzeros = 0;
 	A.nonzerosInRow = 0;
-	A.matrixIndices = 0;
+	A.mtxIndG = 0;
+	A.mtxIndL = 0;
 	A.matrixValues = 0;
 	A.matrixDiagonal = 0;
 
@@ -71,11 +73,13 @@ inline void destroyMatrix(SparseMatrix & A) {
 
   for (int i = 0; i< A.localNumberOfRows; ++i) {
      delete [] A.matrixValues[i];
-     delete [] A.matrixIndices[i];
+     delete [] A.mtxIndG[i];
+     delete [] A.mtxIndL[i];
   }
   if(A.title)                  delete [] A.title;
   if(A.nonzerosInRow)             delete [] A.nonzerosInRow;
-  if(A.matrixIndices) delete [] A.matrixIndices;
+  if(A.mtxIndG) delete [] A.mtxIndG;
+  if(A.mtxIndL) delete [] A.mtxIndL;
   if(A.matrixValues) delete [] A.matrixValues;
   if(A.matrixDiagonal)           delete [] A.matrixDiagonal;
 
@@ -89,7 +93,7 @@ inline void destroyMatrix(SparseMatrix & A) {
  initializeMatrix(A);
 }
 
-inline int getRankOfMatrixRow(const Geometry & geom, const SparseMatrix & A, int index) {
+inline int getRankOfMatrixRow(const Geometry & geom, const SparseMatrix & A, global_int_t index) {
 	// For the global row id given in the argument index, return the MPI process rank that is assigned that row
 	int gnx = geom.nx*geom.npx;
 	int gny = geom.ny*geom.npy;

@@ -44,22 +44,23 @@ void OptimizeMatrix(const Geometry & geom, SparseMatrix & A) {
 
   int localNumberOfRows = A.localNumberOfRows;
   int  * nonzerosInRow = A.nonzerosInRow;
-  global_int_t ** matrixIndices = A.matrixIndices;
+  global_int_t ** mtxIndG = A.mtxIndG;
+  local_int_t ** mtxIndL = A.mtxIndL;
   
   // Scan global IDs of the nonzeros in the matrix.  Determine if the column ID matches a row ID.  If not:
   // 1) We call the getRankOfMatrixRow function, which tells us the rank of the processor owning the row ID.
   //	We need to receive this value of the x vector during the halo exchange.
   // 2) We record our row ID since we know that the other processor will need this value from us, due to symmetry.
   
-  std::map< int, std::set< int> > sendList, receiveList;
-  typedef std::map< int, std::set< int> >::iterator map_iter;
-  typedef std::set<int>::iterator set_iter;
+  std::map< int, std::set< global_int_t> > sendList, receiveList;
+  typedef std::map< int, std::set< global_int_t> >::iterator map_iter;
+  typedef std::set<global_int_t>::iterator set_iter;
   std::map< int, int > externalToLocalMap;
 
 	for (int i=0; i< localNumberOfRows; i++) {
 		global_int_t currentGlobalRow = A.localToGlobalMap[i];
 		for (int j=0; j<nonzerosInRow[i]; j++) {
-			int curIndex = matrixIndices[i][j];
+			global_int_t curIndex = mtxIndG[i][j];
 			int rankIdOfColumnEntry = getRankOfMatrixRow(geom, A, curIndex);
 #ifdef DETAILEDDEBUG
 			cout << "rank, row , col, globalToLocalMap[col] = " << geom.rank << " " << currentGlobalRow << " "
@@ -120,13 +121,13 @@ void OptimizeMatrix(const Geometry & geom, SparseMatrix & A) {
 // Convert matrix indices to local IDs
 	for (int i=0; i< localNumberOfRows; i++) {
 		for (int j=0; j<nonzerosInRow[i]; j++) {
-			int curIndex = matrixIndices[i][j];
+			global_int_t curIndex = mtxIndG[i][j];
 			int rankIdOfColumnEntry = getRankOfMatrixRow(geom, A, curIndex);
 			if (geom.rank==rankIdOfColumnEntry) { // My column index, so convert to local index
-				matrixIndices[i][j] = A.globalToLocalMap[curIndex];
+				mtxIndL[i][j] = A.globalToLocalMap[curIndex];
 			}
 			else { // If column index is not a row index, then it comes from another processor
-				matrixIndices[i][j] = externalToLocalMap[curIndex];
+				mtxIndL[i][j] = externalToLocalMap[curIndex];
 			}
 		}
 	}

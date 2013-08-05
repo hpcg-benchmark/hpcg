@@ -56,7 +56,8 @@ void GenerateProblem(const Geometry & geom, SparseMatrix & A, double **x, double
 
 	// Allocate arrays that are of length localNumberOfRows
 	int * nonzerosInRow = new int[localNumberOfRows];
-	global_int_t ** matrixIndices = new global_int_t*[localNumberOfRows];
+	global_int_t ** mtxIndG = new global_int_t*[localNumberOfRows];
+	local_int_t  ** mtxIndL = new local_int_t*[localNumberOfRows];
 	double ** matrixValues = new double*[localNumberOfRows];
 	double ** matrixDiagonal = new double*[localNumberOfRows];
 
@@ -82,9 +83,11 @@ void GenerateProblem(const Geometry & geom, SparseMatrix & A, double **x, double
 #endif
 				int numberOfNonzerosInRow = 0;
 				matrixValues[currentLocalRow] = new double[numberOfNonzerosPerRow]; // Allocate a row worth of values.
-				matrixIndices[currentLocalRow] = new global_int_t[numberOfNonzerosPerRow]; // Allocate a row worth of indices.
+				mtxIndG[currentLocalRow] = new global_int_t[numberOfNonzerosPerRow]; // Allocate a row worth of indices.
+				mtxIndL[currentLocalRow] = new local_int_t[numberOfNonzerosPerRow]; // Allocate a row worth of indices.
 				double * currentValuePointer = matrixValues[currentLocalRow]; // Pointer to current value in current row
-				global_int_t * currentIndexPointer = matrixIndices[currentLocalRow]; // Pointer to current index in current row
+				global_int_t * currentIndexPointerG = mtxIndG[currentLocalRow]; // Pointer to current index in current row
+				local_int_t * currentIndexPointerL = mtxIndL[currentLocalRow]; // Pointer to current index in current row
 				for (int sz=-1; sz<=1; sz++) {
 					if (giz+sz>-1 && giz+sz<gnz) {
 						for (int sy=-1; sy<=1; sy++) {
@@ -99,7 +102,8 @@ void GenerateProblem(const Geometry & geom, SparseMatrix & A, double **x, double
 										else {
 											*currentValuePointer++ = -1.0;
 										}
-										*currentIndexPointer++ = curcol;
+										*currentIndexPointerG++ = curcol;
+										*currentIndexPointerL++ = -((1<<(sizeof(local_int_t)-1))+1); // large value to cause problems early
 										numberOfNonzerosInRow++;
 									} // end x bounds test
 								} // end sx loop
@@ -135,7 +139,8 @@ void GenerateProblem(const Geometry & geom, SparseMatrix & A, double **x, double
 	A.localNumberOfColumns = localNumberOfRows;
 	A.localNumberOfNonzeros = localNumberOfNonzeros;
 	A.nonzerosInRow = nonzerosInRow;
-	A.matrixIndices = matrixIndices;
+	A.mtxIndG = mtxIndG;
+	A.mtxIndL = mtxIndL;
 	A.matrixValues = matrixValues;
 	A.matrixDiagonal = matrixDiagonal;
 

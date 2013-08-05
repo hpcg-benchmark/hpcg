@@ -28,7 +28,7 @@ int spmv( const SparseMatrix & A, const double * const x, double * const y) {
 	for (int i=0; i< nrow; i++)  {
 		double sum = 0.0;
 		const double * const cur_vals = A.matrixValues[i];
-		const global_int_t * const cur_inds = A.matrixIndices[i];
+		const local_int_t * const cur_inds = A.mtxIndL[i];
 		const int cur_nnz = A.nonzerosInRow[i];
 
 		for (int j=0; j< cur_nnz; j++)

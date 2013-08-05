@@ -122,18 +122,18 @@ int CG(const Geometry & geom, const SparseMatrix & A, const double * const b, do
 	}
 
 	// Store times
-	times[1] = t1; // dot time
-	times[2] = t2; // waxpby time
-	times[3] = t3; // spmv time
-	times[4] = t4; // AllReduce time
-	times[5] = t5; // preconditioner apply time
+	times[1] += t1; // dot time
+	times[2] += t2; // waxpby time
+	times[3] += t3; // spmv time
+	times[4] += t4; // AllReduce time
+	times[5] += t5; // preconditioner apply time
 #ifdef USING_MPI
-	times[6] = t6; // exchange halo time
+	times[6] += t6; // exchange halo time
 #endif
 	delete [] p;
 	delete [] Ap;
 	delete [] r;
 	delete [] z;
-	times[0] = mytimer() - t_begin;  // Total time. All done...
+	times[0] += mytimer() - t_begin;  // Total time. All done...
 	return(0);
 }

@@ -24,12 +24,8 @@ using std::cout;
 using std::cin;
 using std::cerr;
 using std::endl;
-#include <cstdio>
 #include <cstdlib>
-#include <cctype>
-#include <cassert>
-#include <string>
-#include <cmath>
+#include <vector>
 #ifdef USING_MPI
 #include <mpi.h> // If this routine is compiled with -DUSING_MPI then include mpi.h
 #endif
@@ -54,7 +50,7 @@ int main(int argc, char *argv[]) {
     int ierr = 0;
     int i, j;
     int ione = 1;
-    double times[8];
+    std::vector< double > times(8,0.0);
     double t7 = 0.0;
     int nx,ny,nz;
     
@@ -64,8 +60,10 @@ int main(int argc, char *argv[]) {
     int size, rank; // Number of MPI processes, My process ID
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    
-    //  if (size < 100) cout << "Process "<<rank<<" of "<<size<<" is alive." <<endl;
+
+#ifdef DEBUG
+    if (size < 100) cout << "Process "<<rank<<" of "<<size<<" is alive." <<endl;
+#endif
     
 #else
     
@@ -122,7 +120,7 @@ int main(int argc, char *argv[]) {
     double tolerance = 0.0; // Set tolerance to zero to make all runs do max_iter iterations
     for (int i=0; i< numberOfCgCalls; ++i) {
     	for (int j=0; j< A.localNumberOfRows; ++j) x[j] = 0.0; // Zero out x
-    	ierr = CG( geom, A, b, x, maxIters, tolerance, niters, normr, times);
+    	ierr = CG( geom, A, b, x, maxIters, tolerance, niters, normr, &times[0]);
     	if (ierr) cerr << "Error in call to CG: " << ierr << ".\n" << endl;
     	if (rank==0) cout << "Call [" << i << "] Residual [" << normr << "]" << endl;
     }
@@ -138,7 +136,7 @@ int main(int argc, char *argv[]) {
 #endif
 
     // Report results to YAML file
-    ReportResults(geom, A, niters, normr, times);
+    ReportResults(geom, A, niters, normr, &times[0]);
 
     // Clean up
     destroyMatrix(A);

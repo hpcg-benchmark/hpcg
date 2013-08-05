@@ -101,6 +101,7 @@ int main(int argc, char *argv[]) {
     nz = atoi(argv[3]);
     GenerateGeometry(size, rank, nx, ny, nz, geom);
     GenerateProblem(geom, A, &x, &b, &xexact);
+
     //if (geom.size==1) WriteProblem(A, x, b, xexact);
     
 #ifdef USING_MPI
@@ -116,8 +117,8 @@ int main(int argc, char *argv[]) {
     double t1 = mytimer();   // Initialize it (if needed)
     int niters = 0;
     double normr = 0.0;
-    int maxIters = 50;
-    int numberOfCgCalls = 1;
+    int maxIters = 10;
+    int numberOfCgCalls = 10;
     double tolerance = 0.0; // Set tolerance to zero to make all runs do max_iter iterations
     for (int i=0; i< numberOfCgCalls; ++i) {
     	for (int j=0; j< A.localNumberOfRows; ++j) x[j] = 0.0; // Zero out x

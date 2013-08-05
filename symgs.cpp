@@ -44,14 +44,16 @@ int symgs( const SparseMatrix & A, const double * const x, double * const y) {
    double ** matrixDiagonal = A.matrixDiagonal;  // An array of pointers to the diagonal entries A.matrixValues
 
   for (int i=0; i< nrow; i++) {
-      const double * const currentRowValues = A.matrixValues[i];
-      const global_int_t * const currentRowIndices = A.matrixIndices[i];
+      const double * const currentValues = A.matrixValues[i];
+      const global_int_t * const currentColIndices = A.matrixIndices[i];
       const double * addressOfCurrentDiagonal = matrixDiagonal[i]; // Current diagonal value
-      const int currentNumberOfNonzeros = addressOfCurrentDiagonal - currentRowValues;
+      const int currentNumberOfNonzeros = addressOfCurrentDiagonal - currentValues;
       double sum = x[i]; // RHS value
 
-      for (int j=0; j< currentNumberOfNonzeros; j++)
-    	  sum -= currentRowValues[j] * y[currentRowIndices[j]];
+      for (int j=0; j< currentNumberOfNonzeros; j++) {
+    	  local_int_t curCol = currentColIndices[j];
+    	  if (curCol<nrow) sum -= currentValues[j] * y[curCol];
+      }
 
       y[i] = sum/(*addressOfCurrentDiagonal);
     }
@@ -59,15 +61,16 @@ int symgs( const SparseMatrix & A, const double * const x, double * const y) {
   // Now the back sweep.
 
   for (int i=nrow-1; i>=0; i--) {
-      const double * const currentRowValues = A.matrixValues[i];
-      const global_int_t * const currentRowIndices = A.matrixIndices[i];
+      const double * const currentValues = A.matrixValues[i];
+      const global_int_t * const currentColIndices = A.matrixIndices[i];
       const int currentNumberOfNonzeros = A.nonzerosInRow[i];
       const double  currentDiagonal = matrixDiagonal[i][0]; // Current diagonal value
       double sum = x[i]; // RHS value
 
-      for (int j = 0; j< currentNumberOfNonzeros; j++)
-    	  sum -= currentRowValues[j]*y[currentRowIndices[j]];
-
+      for (int j = 0; j< currentNumberOfNonzeros; j++) {
+    	  local_int_t curCol = currentColIndices[j];
+    	  if (curCol<nrow) sum -= currentValues[j]*y[curCol];
+      }
       sum += y[i]*currentDiagonal; // Remove diagonal contribution from previous loop
 
       y[i] = sum/currentDiagonal;

@@ -15,9 +15,7 @@
 
 /////////////////////////////////////////////////////////////////////////
 
-// nrow - number of rows of matrix (on this processor)
-
-#ifdef DEBUG
+#if defined(DEBUG) || defined(DETAILEDDEBUG)
 #include <iostream>
 using std::cout;
 using std::cerr;
@@ -34,11 +32,6 @@ using std::endl;
 #endif
 
 void GenerateProblem(const Geometry & geom, SparseMatrix & A, double **x, double **b, double **xexact) {
-#ifdef DEBUG
-	int debug = 1;
-#else
-	int debug = 0;
-#endif
 
 	int size = geom.size;
 	int rank = geom.rank;
@@ -70,6 +63,7 @@ void GenerateProblem(const Geometry & geom, SparseMatrix & A, double **x, double
 	*x = new double[localNumberOfRows];
 	*b = new double[localNumberOfRows];
 	*xexact = new double[localNumberOfRows];
+	A.localToGlobalMap.resize(localNumberOfRows);
 
 
 	int localNumberOfNonzeros = 0;
@@ -82,6 +76,10 @@ void GenerateProblem(const Geometry & geom, SparseMatrix & A, double **x, double
 				local_int_t currentLocalRow = iz*nx*ny+iy*nx+ix;
 				global_int_t currentGlobalRow = giz*gnx*gny+giy*gnx+gix;
 				A.globalToLocalMap[currentGlobalRow] = currentLocalRow;
+				A.localToGlobalMap[currentLocalRow] = currentGlobalRow;
+#ifdef DETAILEDDEBUG
+				cout << " rank, globalRow, localRow = " << rank << " " << currentGlobalRow << " " << A.globalToLocalMap[currentGlobalRow] << endl;
+#endif
 				int numberOfNonzerosInRow = 0;
 				matrixValues[currentLocalRow] = new double[numberOfNonzerosPerRow]; // Allocate a row worth of values.
 				matrixIndices[currentLocalRow] = new global_int_t[numberOfNonzerosPerRow]; // Allocate a row worth of indices.

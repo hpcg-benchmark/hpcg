@@ -11,11 +11,6 @@
 // rank - My process id
 //
 
-#include <iostream>
-using std::cout;
-using std::cerr;
-using std::endl;
-
 #include "ReportResults.hpp"
 #include "YAML_Element.hpp"
 #include "YAML_Doc.hpp"
@@ -25,7 +20,11 @@ using std::endl;
 #endif
 
 #ifdef DEBUG
-#include <cassert>
+#include <iostream>
+using std::cout;
+using std::cerr;
+using std::endl;
+
 #endif
 
 void ReportResults(const Geometry & geom, const SparseMatrix & A, int niters, double normr, double times[]) {

@@ -12,6 +12,7 @@
 #define SPARSEMATRIX_HPP
 
 #include <map>
+#include <vector>
 #include "Geometry.hpp"
 #include <iostream>
 
@@ -27,6 +28,7 @@ struct SparseMatrix_STRUCT {
   double ** matrixValues;
   double ** matrixDiagonal;
   std::map< int, int > globalToLocalMap;
+  std::vector< int > localToGlobalMap;
 
 #ifdef USING_MPI
   int numberOfExternalValues;

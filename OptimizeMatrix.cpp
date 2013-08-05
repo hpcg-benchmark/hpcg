@@ -8,7 +8,7 @@
 // ************************************************************************
 //@HEADER
 
-#ifdef DEBUG
+#if defined(DEBUG) || defined(DETAILEDDEBUG)
 #include <iostream>
 using std::cout;
 using std::cerr;
@@ -33,7 +33,7 @@ void OptimizeMatrix(const Geometry & geom, SparseMatrix & A) {
 
 #ifdef USING_MPI  // Compile this routine only if running in parallel
   double t0;
-  int debug_details = 0; // Set to 1 for voluminous output
+  int debug_details = 1; // Set to 1 for voluminous output
 #ifdef DEBUG
   int debug = 1;
 #else
@@ -57,12 +57,17 @@ void OptimizeMatrix(const Geometry & geom, SparseMatrix & A) {
   std::map< int, int > externalToLocalMap;
 
 	for (int i=0; i< localNumberOfRows; i++) {
+		global_int_t currentGlobalRow = A.localToGlobalMap[i];
 		for (int j=0; j<nonzerosInRow[i]; j++) {
 			int curIndex = matrixIndices[i][j];
 			int rankIdOfColumnEntry = getRankOfMatrixRow(geom, A, curIndex);
+#ifdef DETAILEDDEBUG
+			cout << "rank, row , col, globalToLocalMap[col] = " << geom.rank << " " << currentGlobalRow << " "
+				 << curIndex << " " << A.globalToLocalMap[curIndex] << endl;
+#endif
 			if (geom.rank!=rankIdOfColumnEntry) {// If column index is not a row index, then it comes from another processor
 				receiveList[rankIdOfColumnEntry].insert(curIndex);
-				sendList[rankIdOfColumnEntry].insert(i); // Matrix symmetry means we know the neighbor process wants my value
+				sendList[rankIdOfColumnEntry].insert(currentGlobalRow); // Matrix symmetry means we know the neighbor process wants my value
 			}
 		}
 	}
@@ -107,6 +112,7 @@ void OptimizeMatrix(const Geometry & geom, SparseMatrix & A) {
 			externalToLocalMap[*i] = localNumberOfRows + receiveEntryCount; // The remote columns are indexed at end of internals
 		}
 		for (set_iter i = sendList[neighborId].begin(); i != sendList[neighborId].end(); ++i, ++sendEntryCount) {
+			//if (geom.rank==1) cout << "*i, globalToLocalMap[*i], sendEntryCount = " << *i << " " << A.globalToLocalMap[*i] << " " << sendEntryCount << endl;
 			elementsToSend[sendEntryCount] = A.globalToLocalMap[*i]; // store local ids of entry to send
 		}
 	}
@@ -140,6 +146,10 @@ void OptimizeMatrix(const Geometry & geom, SparseMatrix & A) {
 	cout << " For rank " << geom.rank << " of " << geom.size << ", number of neighbors = " << A.numberOfSendNeighbors << endl;
 	for (int i = 0; i < A.numberOfSendNeighbors; i++) {
 		cout << "     rank " << geom.rank << " neighbor " << neighbors[i] << " send/recv length = " << sendLength[i] << "/" << receiveLength[i] << endl;
+#ifdef DETAILEDDEBUG
+		for (int j = 0; j<sendLength[i]; ++j)
+			cout << "       rank " << geom.rank << " elementsToSend[" << j << "] = " << elementsToSend[j] << endl;
+#endif
 	}
 #endif
 

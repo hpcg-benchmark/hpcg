@@ -19,10 +19,9 @@
 // residual - pointer to scalar value, on exit will contain result.
 
 /////////////////////////////////////////////////////////////////////////
-
 #include <cmath>  // needed for fabs
 #include "ComputeResidual.hpp"
-#ifdef DEBUG
+#ifdef DETAILEDDEBUG
 #include <iostream>
 #endif
 using std::fabs;
@@ -37,7 +36,7 @@ int ComputeResidual(const int n, const double * const v1,
   for (int i=0; i<n; i++) {
     double diff = fabs(v1[i] - v2[i]);
     if (diff > local_residual) local_residual = diff;
-#ifdef DEBUG
+#ifdef DETAILEDDEBUG
     std::cout << " Computed, exact, diff = " << v1[i] << " " << v2[i] << " " << diff << std::endl;
 #endif
 

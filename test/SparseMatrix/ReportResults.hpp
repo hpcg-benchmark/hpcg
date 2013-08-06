@@ -12,6 +12,6 @@
 #include "Geometry.hpp"
 #include "SparseMatrix.hpp"
 
-void ReportResults(const Geometry & geom, const SparseMatrix & A, int niters, double normr, double times[]);
+void ReportResults(const Geometry & geom, const SparseMatrix & A, int numcalls, double residual, double times[]);
 
 #endif // REPORTRESULTS_HPP

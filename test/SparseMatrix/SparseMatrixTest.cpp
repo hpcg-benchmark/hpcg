@@ -26,6 +26,7 @@ using std::cerr;
 using std::endl;
 #include <cstdlib>
 #include <vector>
+#include <cmath>
 #ifdef USING_MPI
 #include <mpi.h> // If this routine is compiled with -DUSING_MPI then include mpi.h
 #endif
@@ -37,8 +38,9 @@ using std::endl;
 #include "ReportResults.hpp"
 #include "mytimer.hpp"
 #include "spmv.hpp"
+#include "symgs.hpp"
+#include "dot.hpp"
 #include "ComputeResidual.hpp"
-#include "CG.hpp"
 #include "Geometry.hpp"
 #include "SparseMatrix.hpp"
 
@@ -120,7 +122,55 @@ int main(int argc, char *argv[]) {
 	local_int_t ncol = A.localNumberOfColumns;
 
 	double * x_overlap = new double [ncol]; // Overlapped copy of x vector
+	double * y_overlap = new double [ncol]; // Overlapped copy of y vector
 	double * b_computed = new double [nrow]; // Computed RHS vector
+
+	// Test symmetry of matrix
+
+	// First load vectors with random values
+	for (int i=0; i<nrow; ++i) {
+		x_overlap[i] = ((double) rand() / (RAND_MAX)) + 1;
+		y_overlap[i] = ((double) rand() / (RAND_MAX)) + 1;
+	}
+
+	// Next, compute x'*A*y
+#ifdef USING_MPI
+	ExchangeHalo(A,y_overlap);
+#endif
+	ierr = spmv(A, y_overlap, b_computed); // b_computed = A*y_overlap
+	if (ierr) cerr << "Error in call to spmv: " << ierr << ".\n" << endl;
+	double xtAy = 0.0;
+	ierr = dot(nrow, x_overlap, b_computed, &xtAy, t4); // b_computed = A*y_overlap
+	if (ierr) cerr << "Error in call to dot: " << ierr << ".\n" << endl;
+
+	// Next, compute y'*A*x
+#ifdef USING_MPI
+	ExchangeHalo(A,x_overlap);
+#endif
+	ierr = spmv(A, x_overlap, b_computed); // b_computed = A*y_overlap
+	if (ierr) cerr << "Error in call to spmv: " << ierr << ".\n" << endl;
+	double ytAx = 0.0;
+	ierr = dot(nrow, y_overlap, b_computed, &ytAx, t4); // b_computed = A*y_overlap
+	if (ierr) cerr << "Error in call to dot: " << ierr << ".\n" << endl;
+	if (rank==0) cout << "Departure from symmetry for spmv abs(x'*A*y - y'*A*x)        = " << std::fabs(xtAy - ytAx) << endl;
+
+	// Test symmetry of symmetric Gauss-Seidel
+
+	// Compute x'*Minv*y
+	ierr = symgs(A, y_overlap, b_computed); // b_computed = Minv*y_overlap
+	if (ierr) cerr << "Error in call to symgs: " << ierr << ".\n" << endl;
+	double xtMinvy = 0.0;
+	ierr = dot(nrow, x_overlap, b_computed, &xtMinvy, t4); // b_computed = A*y_overlap
+	if (ierr) cerr << "Error in call to dot: " << ierr << ".\n" << endl;
+
+	// Next, compute y'*Minv*x
+	ierr = symgs(A, x_overlap, b_computed); // b_computed = Minv*y_overlap
+	if (ierr) cerr << "Error in call to symgs: " << ierr << ".\n" << endl;
+	double ytMinvx = 0.0;
+	ierr = dot(nrow, y_overlap, b_computed, &ytMinvx, t4); // b_computed = A*y_overlap
+	if (ierr) cerr << "Error in call to dot: " << ierr << ".\n" << endl;
+	if (rank==0) cout << "Departure from symmetry for symgs abs(x'*Minv*y - y'*Minv*x) = " << std::fabs(xtMinvy - ytMinvx) << endl;
+
 	for (int i=0; i< nrow; ++i) x_overlap[i] = xexact[i]; // Copy exact answer into overlap vector
 
 	t1 = mytimer();   // Initialize it (if needed)

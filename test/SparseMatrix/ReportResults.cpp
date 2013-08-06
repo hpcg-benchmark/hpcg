@@ -37,7 +37,7 @@ void ReportResults(const Geometry & geom, const SparseMatrix & A, int numcalls, 
         double fnrow = A.totalNumberOfRows;
         double fnnz = A.totalNumberOfNonzeros;
         double fnops_sparsemv = fniters*2*fnnz;
-        double fnops_precond = fniters*3*fnnz; // Two GS sweeps, but only use lower triangle for first sweep
+        double fnops_precond = 2*3*fnnz; // Two calls and two GS sweeps, but only use lower triangle for first sweep
         double fnops = fnops_sparsemv+fnops_precond;
         
         YAML_Doc doc("hpcg-sparsematrix", "0.1");

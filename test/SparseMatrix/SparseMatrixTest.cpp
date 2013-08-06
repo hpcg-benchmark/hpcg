@@ -157,14 +157,14 @@ int main(int argc, char *argv[]) {
 	// Test symmetry of symmetric Gauss-Seidel
 
 	// Compute x'*Minv*y
-	ierr = symgs(A, y_overlap, b_computed); // b_computed = Minv*y_overlap
+	TICK(); ierr = symgs(A, y_overlap, b_computed); TOCK(t5); // b_computed = Minv*y_overlap
 	if (ierr) cerr << "Error in call to symgs: " << ierr << ".\n" << endl;
 	double xtMinvy = 0.0;
 	ierr = dot(nrow, x_overlap, b_computed, &xtMinvy, t4); // b_computed = A*y_overlap
 	if (ierr) cerr << "Error in call to dot: " << ierr << ".\n" << endl;
 
 	// Next, compute y'*Minv*x
-	ierr = symgs(A, x_overlap, b_computed); // b_computed = Minv*y_overlap
+	TICK(); ierr = symgs(A, x_overlap, b_computed); TOCK(t5); // b_computed = Minv*y_overlap
 	if (ierr) cerr << "Error in call to symgs: " << ierr << ".\n" << endl;
 	double ytMinvx = 0.0;
 	ierr = dot(nrow, y_overlap, b_computed, &ytMinvx, t4); // b_computed = A*y_overlap
@@ -189,6 +189,7 @@ int main(int argc, char *argv[]) {
 	}
     times[0] += mytimer() - t_begin;  // Total time. All done...
     times[3] = t3; // spmv time
+    times[5] = t5; // symgs time
 #ifdef USING_MPI
 		times[6] = t6; // exchange halo time
 		times[7] = t7; // matrix set up time

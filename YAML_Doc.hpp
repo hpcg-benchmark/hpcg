@@ -36,7 +36,6 @@
 #ifndef YAML_DOC_HPP
 #define YAML_DOC_HPP
 #include <string>
-#include <vector>
 #include "YAML_Element.hpp"
 
 //! The Mantevo YAML_Doc class for the uniform collecting and reporting of performance data for mini-applications

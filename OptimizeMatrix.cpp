@@ -23,10 +23,8 @@ using std::endl;
 
 #ifdef USING_MPI
 #include <mpi.h>
-#include <algorithm>
 #include <map>
 #include <set>
-#include <vector>
 #endif
 
 void OptimizeMatrix(const Geometry & geom, SparseMatrix & A) {

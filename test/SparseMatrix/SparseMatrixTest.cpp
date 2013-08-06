@@ -31,6 +31,7 @@ using std::endl;
 #endif
 #include "GenerateGeometry.hpp"
 #include "GenerateProblem.hpp"
+#include "ExchangeHalo.hpp"
 #include "OptimizeMatrix.hpp" // Also include this function
 #include "WriteProblem.hpp"
 #include "ReportResults.hpp"
@@ -41,112 +42,126 @@ using std::endl;
 #include "Geometry.hpp"
 #include "SparseMatrix.hpp"
 
+#define TICK()  t0 = mytimer() // Use TICK and TOCK to time a code section
+#define TOCK(t) t += mytimer() - t0
+
 int main(int argc, char *argv[]) {
-    
-    Geometry geom;
-    SparseMatrix A;
-    double *x, *b, *xexact;
-    double norm, d;
-    int ierr = 0;
-    int i, j;
-    int ione = 1;
-    std::vector< double > times(8,0.0);
-    double t7 = 0.0;
-    int nx,ny,nz;
-    
+
+	Geometry geom;
+	SparseMatrix A;
+	double *x, *b, *xexact;
+	double norm, d;
+	int ierr = 0;
+	int i, j;
+	int ione = 1;
+	std::vector< double > times(8,0.0);
+	int nx,ny,nz;
+    double t0 = 0.0, t1 = 0.0, t2 = 0.0, t3 = 0.0, t4 = 0.0, t5 = 0.0, t6 = 0.0, t7 = 0.0;
+
 #ifdef USING_MPI
-    
-    MPI_Init(&argc, &argv);
-    int size, rank; // Number of MPI processes, My process ID
-    MPI_Comm_size(MPI_COMM_WORLD, &size);
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+
+	MPI_Init(&argc, &argv);
+	int size, rank; // Number of MPI processes, My process ID
+	MPI_Comm_size(MPI_COMM_WORLD, &size);
+	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
 #ifdef DEBUG
-    if (size < 100) cout << "Process "<<rank<<" of "<<size<<" is alive." <<endl;
+	if (size < 100) cout << "Process "<<rank<<" of "<<size<<" is alive." <<endl;
 #endif
-    
+
 #else
-    
-    int size = 1; // Serial case (not using MPI)
-    int rank = 0;
-    
+
+	int size = 1; // Serial case (not using MPI)
+	int rank = 0;
+
 #endif
-    
-    
+
+
 #ifdef DEBUG
-    if (rank==0)
-    {
-        int junk = 0;
-        cout << "Press enter to continue"<< endl;
-        cin >> junk;
-    }
+	if (rank==0)
+	{
+		int junk = 0;
+		cout << "Press enter to continue"<< endl;
+		cin >> junk;
+	}
 #ifdef USING_MPI
-    MPI_Barrier(MPI_COMM_WORLD);
+	MPI_Barrier(MPI_COMM_WORLD);
 #endif
-#endif
-    
-    
-    if(argc!=4) {
-        if (rank==0)
-            cerr << "Usage:" << endl
-            << argv[0] << " nx ny nz" << endl
-            << "     where nx, ny and nz are the local sub-block dimensions, or" << endl;
-        exit(1);
-    }
-    
-    nx = atoi(argv[1]);
-    ny = atoi(argv[2]);
-    nz = atoi(argv[3]);
-    GenerateGeometry(size, rank, nx, ny, nz, geom);
-    GenerateProblem(geom, A, &x, &b, &xexact);
-
-    //if (geom.size==1) WriteProblem(A, x, b, xexact);
-    
-#ifdef USING_MPI
-    
-    // Transform matrix indices from global to local values.
-    // Define number of columns for the local matrix.
-    
-    t7 = mytimer(); OptimizeMatrix(geom, A);  t7 = mytimer() - t7;
-    times[7] = t7;
-    
-#endif
-    
-    double t1 = mytimer();   // Initialize it (if needed)
-    int niters = 0;
-    double normr = 0.0;
-    int maxIters = 10;
-    int numberOfCgCalls = 10;
-    double tolerance = 0.0; // Set tolerance to zero to make all runs do max_iter iterations
-    for (int i=0; i< numberOfCgCalls; ++i) {
-    	for (int j=0; j< A.localNumberOfRows; ++j) x[j] = 0.0; // Zero out x
-    	ierr = CG( geom, A, b, x, maxIters, tolerance, niters, normr, &times[0]);
-    	if (ierr) cerr << "Error in call to CG: " << ierr << ".\n" << endl;
-    	if (rank==0) cout << "Call [" << i << "] Residual [" << normr << "]" << endl;
-    }
-    
-    // Compute difference between known exact solution and computed solution
-    // All processors are needed here.
-#ifdef DEBUG
-    double residual = 0;
-    if ((ierr = ComputeResidual(A.localNumberOfRows, x, xexact, &residual)))
-    cerr << "Error in call to compute_residual: " << ierr << ".\n" << endl;
-    if (rank==0)
-    cout << "Difference between computed and exact  = " << residual << ".\n" << endl;
 #endif
 
-    // Report results to YAML file
-    ReportResults(geom, A, niters, normr, &times[0]);
 
-    // Clean up
-    destroyMatrix(A);
-    delete [] x;
-    delete [] b;
-    delete [] xexact;
-    
-    // Finish up
+	if(argc!=4) {
+		if (rank==0)
+			cerr << "Usage:" << endl
+			<< argv[0] << " nx ny nz" << endl
+			<< "     where nx, ny and nz are the local sub-block dimensions, or" << endl;
+		exit(1);
+	}
+
+	nx = atoi(argv[1]);
+	ny = atoi(argv[2]);
+	nz = atoi(argv[3]);
+	GenerateGeometry(size, rank, nx, ny, nz, geom);
+	GenerateProblem(geom, A, &x, &b, &xexact);
+
+	//if (geom.size==1) WriteProblem(A, x, b, xexact);
+
 #ifdef USING_MPI
-    MPI_Finalize();
+
+	// Transform matrix indices from global to local values.
+	// Define number of columns for the local matrix.
+
+	t7 = mytimer(); OptimizeMatrix(geom, A);  t7 = mytimer() - t7;
+	times[7] = t7;
+
 #endif
-    return 0 ;
+
+	local_int_t nrow = A.localNumberOfRows;
+	local_int_t ncol = A.localNumberOfColumns;
+
+	double * x_overlap = new double [ncol]; // Overlapped copy of x vector
+	double * b_computed = new double [nrow]; // Computed RHS vector
+	for (int i=0; i< nrow; ++i) x_overlap[i] = xexact[i]; // Copy exact answer into overlap vector
+
+	t1 = mytimer();   // Initialize it (if needed)
+	int numberOfCalls = 10;
+	double residual = 0.0;
+	double t_begin = mytimer();
+	for (int i=0; i< numberOfCalls; ++i) {
+#ifdef USING_MPI
+		TICK(); ExchangeHalo(A,x_overlap); TOCK(t6);
+#endif
+		TICK(); ierr = spmv(A, x_overlap, b_computed); TOCK(t3); // b_computed = A*x_overlap
+		if (ierr) cerr << "Error in call to spmv: " << ierr << ".\n" << endl;
+		if ((ierr = ComputeResidual(A.localNumberOfRows, b, b_computed, &residual)))
+			cerr << "Error in call to compute_residual: " << ierr << ".\n" << endl;
+		if (rank==0) cout << "SpMV call [" << i << "] Residual [" << residual << "]" << endl;
+	}
+    times[0] += mytimer() - t_begin;  // Total time. All done...
+    times[3] = t3; // spmv time
+#ifdef USING_MPI
+		times[6] = t6; // exchange halo time
+		times[7] = t7; // matrix set up time
+#endif
+
+
+	// Compute difference between known exact solution and computed solution
+	// All processors are needed here.
+
+	// Report results to YAML file
+	ReportResults(geom, A, numberOfCalls, residual, &times[0]);
+
+	// Clean up
+	destroyMatrix(A);
+	delete [] x;
+	delete [] b;
+	delete [] xexact;
+	delete [] x_overlap;
+	delete [] b_computed;
+
+	// Finish up
+#ifdef USING_MPI
+	MPI_Finalize();
+#endif
+	return 0 ;
 } 

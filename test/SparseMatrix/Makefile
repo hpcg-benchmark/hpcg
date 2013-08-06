@@ -13,6 +13,9 @@
 #
 
 #
+# -1) Specific source location
+SRC = ../..
+#
 # 0) Specify compiler and linker:
 
 #CXX=/usr/local/bin/g++
@@ -28,14 +31,16 @@ LINKER=/usr/local/openmpi-gcc-4.8/bin/mpicxx
 #USE_MPI =
 USE_MPI = -DUSING_MPI
 
-# 2) MPI headers:  
+# 2) Headers:  
 #    If you:
 #    - Are building MPI mode (-DUSING_MPI is set above).
 #    - Do not have the MPI headers installed in a default search directory and
 #    - Are not using MPI compiler wrappers
 #    Then specify the path to your MPI header file (include a -I)
+#    SRC headers are also pointed to here.
 
-#MPI_INC = -I/usr/MPICH/SDK.gcc/include
+#INCLUDES = -I/usr/MPICH/SDK.gcc/include -I$(SRC)
+INCLUDES = -I$(SRC)
 
 
 # 3) Specify C++ compiler optimization flags (if any)
@@ -71,19 +76,20 @@ SYS_LIB =-lm
 #
 # 6) Specify name if executable (optional):
 
-TARGET = test_HPCG
+TARGET = HPCG-SparseMatrixTest
 
 ################### Derived Quantities (no modification required) ##############
 
-CXXFLAGS= $(CPP_OPT_FLAGS) $(USE_MPI) $(MPI_INC) $(SHAREDMEM_MPI)
+CXXFLAGS= $(CPP_OPT_FLAGS) $(USE_MPI) $(INCLUDES)
 
 LIB_PATHS= $(SYS_LIB) $(MPI_LIB)
 
-TEST_CPP = main.cpp GenerateGeometry.cpp GenerateProblem.cpp \
-	  	WriteProblem.cpp ComputeResidual.cpp ReportResults.cpp mytimer.cpp \
-          spmv.cpp CG.cpp waxpby.cpp dot.cpp symgs.cpp \
-          OptimizeMatrix.cpp ExchangeHalo.cpp \
-          YAML_Element.cpp YAML_Doc.cpp
+TEST_CPP = SparseMatrixTest.cpp ReportResults.cpp \
+           $(SRC)/GenerateGeometry.cpp $(SRC)/GenerateProblem.cpp \
+	  	   $(SRC)/WriteProblem.cpp $(SRC)/ComputeResidual.cpp $(SRC)/mytimer.cpp \
+           $(SRC)/spmv.cpp $(SRC)/CG.cpp $(SRC)/waxpby.cpp $(SRC)/dot.cpp $(SRC)/symgs.cpp \
+           $(SRC)/OptimizeMatrix.cpp $(SRC)/ExchangeHalo.cpp \
+           $(SRC)/YAML_Element.cpp $(SRC)/YAML_Doc.cpp
 
 TEST_OBJ          = $(TEST_CPP:.cpp=.o)
 all: $(TARGET)
@@ -92,4 +98,4 @@ $(TARGET): $(TEST_OBJ)
 	$(LINKER) $(CPP_OPT_FLAGS) $(TEST_OBJ) $(LIB_PATHS) -o $(TARGET)
 
 clean:
-	@rm -f *.o  *~ $(TARGET) $(TARGET).exe
+	@rm -f $(TEST_OBJ) *~ $(TARGET)

@@ -76,7 +76,7 @@ SYS_LIB =-lm
 #
 # 6) Specify name if executable (optional):
 
-TARGET = HPCG-SparseMatrixTest
+TARGET = HPCG-CGTest
 
 ################### Derived Quantities (no modification required) ##############
 
@@ -84,7 +84,7 @@ CXXFLAGS= $(CPP_OPT_FLAGS) $(USE_MPI) $(INCLUDES)
 
 LIB_PATHS= $(SYS_LIB) $(MPI_LIB)
 
-TEST_CPP = SparseMatrixTest.cpp ReportResults.cpp \
+TEST_CPP = CGTest.cpp ReportResults.cpp \
            $(SRC)/GenerateGeometry.cpp $(SRC)/GenerateProblem.cpp \
 	  	   $(SRC)/WriteProblem.cpp $(SRC)/ComputeResidual.cpp $(SRC)/mytimer.cpp \
            $(SRC)/spmv.cpp $(SRC)/CG.cpp $(SRC)/waxpby.cpp $(SRC)/dot.cpp $(SRC)/symgs.cpp \

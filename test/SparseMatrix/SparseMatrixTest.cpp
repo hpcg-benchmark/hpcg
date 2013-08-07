@@ -19,7 +19,7 @@
 // Main routine of a program that calls the HPCG conjugate gradient
 // solver to solve the problem, and then prints results.
 
-#include <iostream>
+#include <ostream>
 using std::cout;
 using std::cin;
 using std::cerr;

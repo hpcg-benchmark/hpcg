@@ -36,10 +36,6 @@
 
 int symgs( const SparseMatrix & A, const double * const x, double * const y) {
 
-#ifdef NO_PRECONDITIONER
-	for (int i=0; i< A.localNumberOfRows; ++i) y[i] = x[i];
-#else
-
   const int nrow = A.localNumberOfRows;
    double ** matrixDiagonal = A.matrixDiagonal;  // An array of pointers to the diagonal entries A.matrixValues
 
@@ -76,7 +72,6 @@ int symgs( const SparseMatrix & A, const double * const x, double * const y) {
       y[i] = sum/currentDiagonal;
     }
 
-#endif // NO_PRECONDITIONER
   return(0);
 }
 

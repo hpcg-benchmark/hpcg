@@ -47,8 +47,8 @@ using std::endl;
 #define TICK()  t0 = mytimer() // Use TICK and TOCK to time a code section
 #define TOCK(t) t += mytimer() - t0
 int CG(const Geometry & geom, const SparseMatrix & A, const double * const b, double * const x,
-		const int max_iter, const double tolerance, int &niters, double & normr,
-		double * times) {
+		const int max_iter, const double tolerance, int &niters, double & normr, double & normr0,
+		double * times, bool doPreconditioning) {
 
 	double t_begin = mytimer();  // Start timing right away
 	normr = 0.0;
@@ -67,9 +67,8 @@ int CG(const Geometry & geom, const SparseMatrix & A, const double * const b, do
 	double * z = new double [nrow]; // Preconditioned residual vector
 	double * p = new double [ncol]; // Direction vector (in MPI mode ncol>=nrow)
 	double * Ap = new double [nrow];
-#ifdef NO_PRECONDITIONER
-	if (geom.rank==0) cout << "WARNING: PERFORMING UNPRECONDITIONED ITERATIONS" << endl;
-#endif
+
+	if (!doPreconditioning && geom.rank==0) cout << "WARNING: PERFORMING UNPRECONDITIONED ITERATIONS" << endl;
 
 	int rank = geom.rank; //  My process ID
 #ifdef DEBUG
@@ -89,10 +88,19 @@ int CG(const Geometry & geom, const SparseMatrix & A, const double * const b, do
 #ifdef DEBUG
 	if (rank==0) cout << "Initial Residual = "<< normr << endl;
 #endif
+
+        // Record initial residual for convergence testing
+        normr0 = normr;
+
 	// Start iterations
 
-	for(int k=1; k<max_iter && normr > tolerance; k++ ) {
-		TICK(); symgs(A, r, z); TOCK(t5); // Apply preconditioner
+	for(int k=1; k<max_iter && normr/normr0 > tolerance; k++ ) {
+		TICK(); 
+		if (doPreconditioning) 
+			symgs(A, r, z); // Apply preconditioner
+		else
+			waxpby(nrow, 1.0, r, 0.0, r, z); // copy r to z (no preconditioning)
+                TOCK(t5); 
 		if (k == 1) {
 			TICK(); waxpby(nrow, 1.0, z, 0.0, z, p); TOCK(t2); // Copy Mr to p
 			TICK(); dot (nrow, r, z, &rtz, t4); TOCK(t1); // rtz = r'*z

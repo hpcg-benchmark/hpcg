@@ -90,13 +90,20 @@ int main(int argc, char *argv[]) {
         if (rank==0)
             cerr << "Usage:" << endl
             << argv[0] << " nx ny nz" << endl
-            << "     where nx, ny and nz are the local sub-block dimensions, or" << endl;
+            << "     where nx, ny and nz are the local sub-block dimensions" << endl;
         exit(1);
     }
     
     nx = atoi(argv[1]);
     ny = atoi(argv[2]);
     nz = atoi(argv[3]);
+    if (size*nx*ny*nz<=10) {
+        if (rank==0)
+            cerr << "This test requires a global problem size of 10 or more."
+            	 << "     Your size = " << size*nx*ny*nz << "." << endl;
+        exit(1);
+
+    }
     GenerateGeometry(size, rank, nx, ny, nz, geom);
     GenerateProblem(geom, A, &x, &b, &xexact);
 
@@ -112,17 +119,31 @@ int main(int argc, char *argv[]) {
     
 #endif
     
+    // Modify the matrix diagonal to greatly exaggerate diagonal values
+    for (int i=0; i< A.localNumberOfRows; ++i) {
+    	global_int_t globalRowID = A.localToGlobalMap[i];
+    	if (globalRowID<9) {
+    		*(A.matrixDiagonal[i]) *= (globalRowID+2)*1.0e6; // Multiply the first 9 diagonal values by RowID+2 times 1M.
+    		b[i] *= (globalRowID+1)*1.0e6;
+    	}
+    	else {
+    		*(A.matrixDiagonal[i]) *= 1.0e6; // The rest are multiplied by 1M.
+    		b[i] *= 1.0e6;
+
+    	}
+    }
     double t1 = mytimer();   // Initialize it (if needed)
     int niters = 0;
     double normr = 0.0;
-    int maxIters = 10;
+    double normr0 = 0.0;
+    int maxIters = 100;
     int numberOfCgCalls = 10;
-    double tolerance = 0.0; // Set tolerance to zero to make all runs do max_iter iterations
+    double tolerance = 1.0e-12; // Set tolerance to reasonable value for grossly scaled diagonal terms
     for (int i=0; i< numberOfCgCalls; ++i) {
     	for (int j=0; j< A.localNumberOfRows; ++j) x[j] = 0.0; // Zero out x
-    	ierr = CG( geom, A, b, x, maxIters, tolerance, niters, normr, &times[0]);
+    	ierr = CG( geom, A, b, x, maxIters, tolerance, niters, normr, normr0, &times[0], false);
     	if (ierr) cerr << "Error in call to CG: " << ierr << ".\n" << endl;
-    	if (rank==0) cout << "Call [" << i << "] Residual [" << normr << "]" << endl;
+    	if (rank==0) cout << "Call [" << i << "] Number of Iterations [" << niters <<"] Scaled Residual [" << normr/normr0 << "]" << endl;
     }
     
     // Compute difference between known exact solution and computed solution

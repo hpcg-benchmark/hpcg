@@ -90,9 +90,14 @@ int main(int argc, char *argv[]) {
         if (rank==0)
             cerr << "Usage:" << endl
             << argv[0] << " nx ny nz" << endl
-            << "     where nx, ny and nz are the local sub-block dimensions, or" << endl;
+            << "     where nx, ny and nz are the local sub-block dimensions." << endl;
         exit(1);
     }
+#ifdef NO_PRECONDITIONER
+    bool doPreconditioning = false;
+#else
+    bool doPreconditioning = true;
+#endif
     
     nx = atoi(argv[1]);
     ny = atoi(argv[2]);
@@ -115,14 +120,15 @@ int main(int argc, char *argv[]) {
     double t1 = mytimer();   // Initialize it (if needed)
     int niters = 0;
     double normr = 0.0;
+    double normr0 = 0.0;
     int maxIters = 10;
     int numberOfCgCalls = 10;
     double tolerance = 0.0; // Set tolerance to zero to make all runs do max_iter iterations
     for (int i=0; i< numberOfCgCalls; ++i) {
     	for (int j=0; j< A.localNumberOfRows; ++j) x[j] = 0.0; // Zero out x
-    	ierr = CG( geom, A, b, x, maxIters, tolerance, niters, normr, &times[0]);
+    	ierr = CG( geom, A, b, x, maxIters, tolerance, niters, normr, normr0, &times[0], doPreconditioning);
     	if (ierr) cerr << "Error in call to CG: " << ierr << ".\n" << endl;
-    	if (rank==0) cout << "Call [" << i << "] Residual [" << normr << "]" << endl;
+    	if (rank==0) cout << "Call [" << i << "] Scaled Residual [" << normr/normr0 << "]" << endl;
     }
     
     // Compute difference between known exact solution and computed solution

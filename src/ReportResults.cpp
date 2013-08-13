@@ -47,9 +47,11 @@ void ReportResults(const Geometry & geom, const SparseMatrix & A, int niters, do
         double fniters = niters;
         double fnrow = A.totalNumberOfRows;
         double fnnz = A.totalNumberOfNonzeros;
-        double fnops_ddot = fniters*4*fnrow;
-        double fnops_waxpby = fniters*6*fnrow;
-        double fnops_sparsemv = fniters*2*fnnz;
+
+        // Op counts come from implementation of CG in CG.cpp
+        double fnops_ddot = fniters*6*fnrow; // 3 ddots with nrow adds and nrow mults
+        double fnops_waxpby = fniters*6*fnrow; // 3 waxpbys with nrow adds and nrow mults
+        double fnops_sparsemv = fniters*2*fnnz; // 1 spmv with nnz adds and nnz mults
         double fnops_precond = fniters*3*fnnz; // Two GS sweeps, but only use lower triangle for first sweep
         double fnops = fnops_ddot+fnops_waxpby+fnops_sparsemv+fnops_precond;
         

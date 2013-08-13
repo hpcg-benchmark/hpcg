@@ -15,18 +15,18 @@
 #include <cstdlib>
 
 void ExchangeHalo(const SparseMatrix & A, const double *x) {
-  int numberOfExternalValues = 0;
+  local_int_t numberOfExternalValues = 0;
 
   // Extract Matrix pieces
 
-  int localNumberOfRows = A.localNumberOfRows;
+  local_int_t localNumberOfRows = A.localNumberOfRows;
   int num_neighbors = A.numberOfSendNeighbors;
-  int * receiveLength = A.receiveLength;
-  int * sendLength = A.sendLength;
+  local_int_t * receiveLength = A.receiveLength;
+  local_int_t * sendLength = A.sendLength;
   int * neighbors = A.neighbors;
   double * sendBuffer = A.sendBuffer;
-  int totalToBeSent = A.totalToBeSent;
-  int * elementsToSend = A.elementsToSend;
+  local_int_t totalToBeSent = A.totalToBeSent;
+  local_int_t * elementsToSend = A.elementsToSend;
   
   int size, rank; // Number of MPI processes, My process ID
   MPI_Comm_size(MPI_COMM_WORLD, &size);
@@ -49,7 +49,7 @@ void ExchangeHalo(const SparseMatrix & A, const double *x) {
 
   // Post receives first 
   for (int i = 0; i < num_neighbors; i++) {
-      int n_recv = receiveLength[i];
+      local_int_t n_recv = receiveLength[i];
       MPI_Irecv(x_external, n_recv, MPI_DOUBLE, neighbors[i], MPI_MY_TAG, MPI_COMM_WORLD, request+i);
       x_external += n_recv;
     }
@@ -59,14 +59,14 @@ void ExchangeHalo(const SparseMatrix & A, const double *x) {
   // Fill up send buffer
   //
 
-  for (int i=0; i<totalToBeSent; i++) sendBuffer[i] = x[elementsToSend[i]];
+  for (local_int_t i=0; i<totalToBeSent; i++) sendBuffer[i] = x[elementsToSend[i]];
 
   //
   // Send to each neighbor
   //
 
   for (int i = 0; i < num_neighbors; i++) {
-      int n_send = sendLength[i];
+      local_int_t n_send = sendLength[i];
       MPI_Send(sendBuffer, n_send, MPI_DOUBLE, neighbors[i], MPI_MY_TAG, MPI_COMM_WORLD);
       sendBuffer += n_send;
     }

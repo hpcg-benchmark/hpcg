@@ -40,19 +40,19 @@ using std::endl;
 #include "CG.hpp"
 #include "Geometry.hpp"
 #include "SparseMatrix.hpp"
+#include "CGData.hpp"
 
 int main(int argc, char *argv[]) {
     
     Geometry geom;
     SparseMatrix A;
+    CGData data;
     double *x, *b, *xexact;
     double norm, d;
     int ierr = 0;
-    int i, j;
-    int ione = 1;
     std::vector< double > times(8,0.0);
     double t7 = 0.0;
-    int nx,ny,nz;
+    local_int_t nx,ny,nz;
     
 #ifdef USING_MPI
     
@@ -110,7 +110,7 @@ int main(int argc, char *argv[]) {
     // Transform matrix indices from global to local values.
     // Define number of columns for the local matrix.
     
-    t7 = mytimer(); OptimizeMatrix(geom, A);  t7 = mytimer() - t7;
+    t7 = mytimer(); OptimizeMatrix(geom, A);  initializeCGData(A, data); t7 = mytimer() - t7;
     times[7] = t7;
     
     double t1 = mytimer();   // Initialize it (if needed)
@@ -123,7 +123,7 @@ int main(int argc, char *argv[]) {
     double tolerance = 0.0; // Set tolerance to zero to make all runs do max_iter iterations
     for (int i=0; i< numberOfCgCalls; ++i) {
     	for (int j=0; j< A.localNumberOfRows; ++j) x[j] = 0.0; // Zero out x
-    	ierr = CG( geom, A, b, x, maxIters, tolerance, niters, normr, normr0, &times[0], doPreconditioning);
+    	ierr = CG( geom, A, data, b, x, maxIters, tolerance, niters, normr, normr0, &times[0], doPreconditioning);
     	if (ierr) cerr << "Error in call to CG: " << ierr << ".\n" << endl;
     	if (rank==0) cout << "Call [" << i << "] Scaled Residual [" << normr/normr0 << "]" << endl;
 	totalNiters += niters;
@@ -144,6 +144,7 @@ int main(int argc, char *argv[]) {
 
     // Clean up
     destroyMatrix(A);
+    destroyCGData(data);
     delete [] x;
     delete [] b;
     delete [] xexact;

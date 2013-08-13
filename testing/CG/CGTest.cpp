@@ -40,16 +40,16 @@ using std::endl;
 #include "CG.hpp"
 #include "Geometry.hpp"
 #include "SparseMatrix.hpp"
+#include "CGData.hpp"
 
 int main(int argc, char *argv[]) {
 
 	Geometry geom;
 	SparseMatrix A;
+	CGData data;
 	double *x, *b, *xexact;
 	double norm, d;
 	int ierr = 0;
-	int i, j;
-	int ione = 1;
 	std::vector< double > times(8,0.0);
 	double t7 = 0.0;
 	int nx,ny,nz;
@@ -144,7 +144,7 @@ int main(int argc, char *argv[]) {
 		if (k==0) expected_niters = 11;
 		for (int i=0; i< numberOfCgCalls; ++i) {
 			for (int j=0; j< A.localNumberOfRows; ++j) x[j] = 0.0; // Zero out x
-			ierr = CG( geom, A, b, x, maxIters, tolerance, niters, normr, normr0, &times[0], k==1);
+			ierr = CG( geom, A, data, b, x, maxIters, tolerance, niters, normr, normr0, &times[0], k==1);
 			if (ierr) cerr << "Error in call to CG: " << ierr << ".\n" << endl;
 			if (rank==0) {
 				cout << "Call [" << i << "] Number of Iterations [" << niters <<"] Scaled Residual [" << normr/normr0 << "]";

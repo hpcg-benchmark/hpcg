@@ -48,14 +48,14 @@ void GenerateProblem(const Geometry & geom, SparseMatrix & A, double **x, double
 	int gny = ny*npy;
 	int gnz = nz*npz;
 
-	int localNumberOfRows = nx*ny*nz; // This is the size of our subblock
+	local_int_t localNumberOfRows = nx*ny*nz; // This is the size of our subblock
 	int numberOfNonzerosPerRow = 27; // We are approximating a 27-point finite element/volume/difference 3D stencil
 
-	int totalNumberOfRows = localNumberOfRows*size; // Total number of grid points in mesh
+	global_int_t totalNumberOfRows = localNumberOfRows*size; // Total number of grid points in mesh
 
 
 	// Allocate arrays that are of length localNumberOfRows
-	int * nonzerosInRow = new int[localNumberOfRows];
+	char * nonzerosInRow = new char[localNumberOfRows];
 	global_int_t ** mtxIndG = new global_int_t*[localNumberOfRows];
 	local_int_t  ** mtxIndL = new local_int_t*[localNumberOfRows];
 	double ** matrixValues = new double*[localNumberOfRows];
@@ -67,12 +67,12 @@ void GenerateProblem(const Geometry & geom, SparseMatrix & A, double **x, double
 	A.localToGlobalMap.resize(localNumberOfRows);
 
 
-	int localNumberOfNonzeros = 0;
-	for (int iz=0; iz<nz; iz++) {
+	global_int_t localNumberOfNonzeros = 0;
+	for (local_int_t iz=0; iz<nz; iz++) {
 		global_int_t giz = ipz*nz+iz;
-		for (int iy=0; iy<ny; iy++) {
+		for (local_int_t iy=0; iy<ny; iy++) {
 			global_int_t giy = ipy*ny+iy;
-			for (int ix=0; ix<nx; ix++) {
+			for (local_int_t ix=0; ix<nx; ix++) {
 				global_int_t gix = ipx*nx+ix;
 				local_int_t currentLocalRow = iz*nx*ny+iy*nx+ix;
 				global_int_t currentGlobalRow = giz*gnx*gny+giy*gnx+gix;
@@ -81,7 +81,7 @@ void GenerateProblem(const Geometry & geom, SparseMatrix & A, double **x, double
 #ifdef DETAILEDDEBUG
 				cout << " rank, globalRow, localRow = " << rank << " " << currentGlobalRow << " " << A.globalToLocalMap[currentGlobalRow] << endl;
 #endif
-				int numberOfNonzerosInRow = 0;
+				local_int_t numberOfNonzerosInRow = 0;
 				matrixValues[currentLocalRow] = new double[numberOfNonzerosPerRow]; // Allocate a row worth of values.
 				mtxIndG[currentLocalRow] = new global_int_t[numberOfNonzerosPerRow]; // Allocate a row worth of indices.
 				mtxIndL[currentLocalRow] = new local_int_t[numberOfNonzerosPerRow]; // Allocate a row worth of indices.
@@ -126,10 +126,10 @@ void GenerateProblem(const Geometry & geom, SparseMatrix & A, double **x, double
 
 #ifdef USING_MPI
   // Use MPI's reduce function to sum all nonzeros
-  int totalNumberOfNonzeros = 0;
+  global_int_t totalNumberOfNonzeros = 0;
   MPI_Allreduce(&localNumberOfNonzeros, &totalNumberOfNonzeros, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
 #else
-  int totalNumberOfNonzeros = localNumberOfNonzeros;
+  global_int_t totalNumberOfNonzeros = localNumberOfNonzeros;
 #endif
 
 	A.title = 0;

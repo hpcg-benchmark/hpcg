@@ -46,7 +46,7 @@ using std::endl;
 
 #define TICK()  t0 = mytimer() // Use TICK and TOCK to time a code section
 #define TOCK(t) t += mytimer() - t0
-int CG(const Geometry & geom, const SparseMatrix & A, const double * const b, double * const x,
+int CG(const Geometry & geom, const SparseMatrix & A, CGData & data, const double * const b, double * const x,
 		const int max_iter, const double tolerance, int &niters, double & normr, double & normr0,
 		double * times, bool doPreconditioning) {
 
@@ -63,10 +63,10 @@ int CG(const Geometry & geom, const SparseMatrix & A, const double * const b, do
 	local_int_t nrow = A.localNumberOfRows;
 	local_int_t ncol = A.localNumberOfColumns;
 
-	double * r = new double [nrow]; // Residual vector
-	double * z = new double [nrow]; // Preconditioned residual vector
-	double * p = new double [ncol]; // Direction vector (in MPI mode ncol>=nrow)
-	double * Ap = new double [nrow];
+	double * r = data.r; // Residual vector
+	double * z = data.z; // Preconditioned residual vector
+	double * p = data.p; // Direction vector (in MPI mode ncol>=nrow)
+	double * Ap = data.Ap;
 
 	if (!doPreconditioning && geom.rank==0) cout << "WARNING: PERFORMING UNPRECONDITIONED ITERATIONS" << endl;
 
@@ -77,13 +77,13 @@ int CG(const Geometry & geom, const SparseMatrix & A, const double * const b, do
 	if (print_freq<1)  print_freq=1;
 #endif
 	// p is of length ncols, copy x to p for sparse MV operation
-	TICK(); waxpby(nrow, 1.0, x, 0.0, x, p); TOCK(t2);
+	waxpby(nrow, 1.0, x, 0.0, x, p);
 #ifdef USING_MPI
 	TICK(); ExchangeHalo(A,p); TOCK(t6);
 #endif
-	TICK(); spmv(A, p, Ap); TOCK(t3);
-	TICK(); waxpby(nrow, 1.0, b, -1.0, Ap, r); TOCK(t2); // r = b - Ax (x stored in p)
-	TICK(); dot(nrow, r, r, &normr, t4); TOCK(t1);
+	spmv(A, p, Ap);
+	waxpby(nrow, 1.0, b, -1.0, Ap, r); // r = b - Ax (x stored in p)
+	dot(nrow, r, r, &normr, t4);
 	normr = sqrt(normr);
 #ifdef DEBUG
 	if (rank==0) cout << "Initial Residual = "<< normr << endl;
@@ -94,14 +94,15 @@ int CG(const Geometry & geom, const SparseMatrix & A, const double * const b, do
 
 	// Start iterations
 
-	for(int k=1; k<max_iter && normr/normr0 > tolerance; k++ ) {
+	for(int k=0; k<max_iter && normr/normr0 > tolerance; k++ ) {
 		TICK(); 
 		if (doPreconditioning) 
 			symgs(A, r, z); // Apply preconditioner
 		else
 			waxpby(nrow, 1.0, r, 0.0, r, z); // copy r to z (no preconditioning)
-                TOCK(t5); 
-		if (k == 1) {
+        TOCK(t5); // Preconditioner apply time
+
+		if (k == 0) {
 			TICK(); waxpby(nrow, 1.0, z, 0.0, z, p); TOCK(t2); // Copy Mr to p
 			TICK(); dot (nrow, r, z, &rtz, t4); TOCK(t1); // rtz = r'*z
 		}
@@ -119,12 +120,12 @@ int CG(const Geometry & geom, const SparseMatrix & A, const double * const b, do
 		TICK(); dot(nrow, p, Ap, &pAp, t4); TOCK(t1); // alpha = p'*Ap
 		alpha = rtz/pAp;
 		TICK(); waxpby(nrow, 1.0, x, alpha, p, x);// x = x + alpha*p
-		waxpby(nrow, 1.0, r, -alpha, Ap, r);  TOCK(t2);// r = r - alpha*Ap
+				waxpby(nrow, 1.0, r, -alpha, Ap, r);  TOCK(t2);// r = r - alpha*Ap
 		TICK(); dot(nrow, r, r, &normr, t4); TOCK(t1);
 		normr = sqrt(normr);
 #ifdef DEBUG
 		if (rank==0 && (k%print_freq == 0 || k+1 == max_iter))
-			cout << "Iteration = "<< k << "   Residual = "<< normr << endl;
+			cout << "Iteration = "<< k << "   Scaled Residual = "<< normr/normr0 << endl;
 #endif
 		niters = k;
 	}
@@ -138,10 +139,6 @@ int CG(const Geometry & geom, const SparseMatrix & A, const double * const b, do
 #ifdef USING_MPI
 	times[6] += t6; // exchange halo time
 #endif
-	delete [] p;
-	delete [] Ap;
-	delete [] r;
-	delete [] z;
 	times[0] += mytimer() - t_begin;  // Total time. All done...
 	return(0);
 }

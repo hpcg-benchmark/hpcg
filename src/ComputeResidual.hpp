@@ -10,7 +10,7 @@
 
 #ifndef COMPUTERESIDUAL_HPP
 #define COMPUTERESIDUAL_HPP
-
-int ComputeResidual(const int n, const double * const v1, 
+#include "Geometry.hpp"
+int ComputeResidual(const local_int_t n, const double * const v1,
                     const double * const v2, double * const residual);
 #endif // COMPUTERESIDUAL_HPP

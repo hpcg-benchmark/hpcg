@@ -26,13 +26,13 @@
 #endif
 #include "dot.hpp"
 
-int dot (const int n, const double * const x, const double * const y, 
+int dot (const local_int_t n, const double * const x, const double * const y,
 	  double * const result, double & time_allreduce) {  
   double local_result = 0.0;
   if (y==x)
-    for (int i=0; i<n; i++) local_result += x[i]*x[i];
+    for (local_int_t i=0; i<n; i++) local_result += x[i]*x[i];
   else
-    for (int i=0; i<n; i++) local_result += x[i]*y[i];
+    for (local_int_t i=0; i<n; i++) local_result += x[i]*y[i];
 
 #ifdef USING_MPI
   // Use MPI's reduce function to collect all partial sums

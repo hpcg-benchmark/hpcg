@@ -41,13 +41,13 @@ void OptimizeMatrix(const Geometry & geom, SparseMatrix & A) {
   
   // Extract Matrix pieces
 
-  int localNumberOfRows = A.localNumberOfRows;
-  int  * nonzerosInRow = A.nonzerosInRow;
+  local_int_t localNumberOfRows = A.localNumberOfRows;
+  char  * nonzerosInRow = A.nonzerosInRow;
   global_int_t ** mtxIndG = A.mtxIndG;
   local_int_t ** mtxIndL = A.mtxIndL;
   
 #ifndef USING_MPI  // In the non-MPI case we simply copy global indices to local index storage
-	for (int i=0; i< localNumberOfRows; i++) {
+	for (local_int_t i=0; i< localNumberOfRows; i++) {
 		for (int j=0; j<nonzerosInRow[i]; j++)	mtxIndL[i][j] = mtxIndG[i][j];
 	}
 
@@ -61,9 +61,9 @@ void OptimizeMatrix(const Geometry & geom, SparseMatrix & A) {
   std::map< int, std::set< global_int_t> > sendList, receiveList;
   typedef std::map< int, std::set< global_int_t> >::iterator map_iter;
   typedef std::set<global_int_t>::iterator set_iter;
-  std::map< int, int > externalToLocalMap;
+  std::map< local_int_t, local_int_t > externalToLocalMap;
 
-	for (int i=0; i< localNumberOfRows; i++) {
+	for (local_int_t i=0; i< localNumberOfRows; i++) {
 		global_int_t currentGlobalRow = A.localToGlobalMap[i];
 		for (int j=0; j<nonzerosInRow[i]; j++) {
 			global_int_t curIndex = mtxIndG[i][j];
@@ -80,11 +80,11 @@ void OptimizeMatrix(const Geometry & geom, SparseMatrix & A) {
 	}
 
 	// Count number of matrix entries to send and receive
-	int totalToBeSent = 0;
+	local_int_t totalToBeSent = 0;
 	for (map_iter curNeighbor = sendList.begin(); curNeighbor != sendList.end(); ++curNeighbor) {
 		totalToBeSent += (curNeighbor->second).size();
 	}
-	int totalToBeReceived = 0;
+	local_int_t totalToBeReceived = 0;
 	for (map_iter curNeighbor = receiveList.begin(); curNeighbor != receiveList.end(); ++curNeighbor) {
 		totalToBeReceived += (curNeighbor->second).size();
 	}
@@ -103,13 +103,13 @@ void OptimizeMatrix(const Geometry & geom, SparseMatrix & A) {
 
 	// Build the arrays and lists needed by the ExchangeHalo function.
 	double * sendBuffer = new double[totalToBeSent];
-	int * elementsToSend = new int[totalToBeSent];
+	local_int_t * elementsToSend = new local_int_t[totalToBeSent];
 	int * neighbors = new int[sendList.size()];
-	int * receiveLength = new int[receiveList.size()];
-	int * sendLength = new int[sendList.size()];
+	local_int_t * receiveLength = new local_int_t[receiveList.size()];
+	local_int_t * sendLength = new local_int_t[sendList.size()];
 	int neighborCount = 0;
-	int receiveEntryCount = 0;
-	int sendEntryCount = 0;
+	local_int_t receiveEntryCount = 0;
+	local_int_t sendEntryCount = 0;
 	for (map_iter curNeighbor = receiveList.begin(); curNeighbor != receiveList.end(); ++curNeighbor, ++neighborCount) {
 		int neighborId = curNeighbor->first; // rank of current neighbor we are processing
 		neighbors[neighborCount] = neighborId; // store rank ID of current neighbor
@@ -125,7 +125,7 @@ void OptimizeMatrix(const Geometry & geom, SparseMatrix & A) {
 	}
 
 // Convert matrix indices to local IDs
-	for (int i=0; i< localNumberOfRows; i++) {
+	for (local_int_t i=0; i< localNumberOfRows; i++) {
 		for (int j=0; j<nonzerosInRow[i]; j++) {
 			global_int_t curIndex = mtxIndG[i][j];
 			int rankIdOfColumnEntry = getRankOfMatrixRow(geom, A, curIndex);
@@ -154,7 +154,7 @@ void OptimizeMatrix(const Geometry & geom, SparseMatrix & A) {
 	for (int i = 0; i < A.numberOfSendNeighbors; i++) {
 		cout << "     rank " << geom.rank << " neighbor " << neighbors[i] << " send/recv length = " << sendLength[i] << "/" << receiveLength[i] << endl;
 #ifdef DETAILEDDEBUG
-		for (int j = 0; j<sendLength[i]; ++j)
+		for (local_int_t j = 0; j<sendLength[i]; ++j)
 			cout << "       rank " << geom.rank << " elementsToSend[" << j << "] = " << elementsToSend[j] << endl;
 #endif
 	}

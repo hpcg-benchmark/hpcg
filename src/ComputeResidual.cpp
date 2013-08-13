@@ -29,11 +29,11 @@ using std::fabs;
 #include <mpi.h> // If this routine is compiled with -DUSING_MPI then include mpi.h
 #endif
 
-int ComputeResidual(const int n, const double * const v1, 
+int ComputeResidual(const local_int_t n, const double * const v1,
                     const double * const v2, double * const residual) {
 
   double local_residual = 0.0;
-  for (int i=0; i<n; i++) {
+  for (local_int_t i=0; i<n; i++) {
     double diff = fabs(v1[i] - v2[i]);
     if (diff > local_residual) local_residual = diff;
 #ifdef DETAILEDDEBUG

@@ -35,12 +35,12 @@
 
 #include <cstdio>
 #include "WriteProblem.hpp"
-
+#include "Geometry.hpp"
 int WriteProblem( const Geometry & geom, const SparseMatrix & A,
 			const double * const x, const double * const b, const double * const xexact) {
 
 	if (geom.size!=1) return(-1); //TODO Only works on one processor.  Need better error handler
-	const int nrow = A.localNumberOfRows;
+	const local_int_t nrow = A.localNumberOfRows;
 
 	FILE * fA = 0, * fx = 0, * fxexact = 0, * fb = 0;
     fA = fopen("A.dat", "w");
@@ -48,7 +48,7 @@ int WriteProblem( const Geometry & geom, const SparseMatrix & A,
     fxexact = fopen("xexact.dat", "w");
     fb = fopen("b.dat", "w");
 
-  for (int i=0; i< nrow; i++) {
+  for (local_int_t i=0; i< nrow; i++) {
       const double * const currentRowValues = A.matrixValues[i];
       const local_int_t * const currentRowIndices = A.mtxIndL[i];
       const int currentNumberOfNonzeros = A.nonzerosInRow[i];

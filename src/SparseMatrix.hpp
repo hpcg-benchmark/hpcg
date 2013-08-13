@@ -20,27 +20,27 @@
 
 struct SparseMatrix_STRUCT {
   char   *title;
-  int totalNumberOfRows;
-  int totalNumberOfNonzeros;
-  int localNumberOfRows;
-  int localNumberOfColumns;  // Must be defined in make_local_matrix
-  int localNumberOfNonzeros;
-  int  * nonzerosInRow;
+  global_int_t totalNumberOfRows;
+  global_int_t totalNumberOfNonzeros;
+  local_int_t localNumberOfRows;
+  local_int_t localNumberOfColumns;  // Must be defined in make_local_matrix
+  global_int_t localNumberOfNonzeros;  //Make this a globlal since it can get big
+  char  * nonzerosInRow;  // The number of nonzeros in a row will always be 27 or fewer
   global_int_t ** mtxIndG;
   local_int_t ** mtxIndL;
   double ** matrixValues;
   double ** matrixDiagonal;
-  std::map< int, int > globalToLocalMap;
-  std::vector< int > localToGlobalMap;
+  std::map< global_int_t, local_int_t > globalToLocalMap;
+  std::vector< global_int_t > localToGlobalMap;
 
 #ifdef USING_MPI
-  int numberOfExternalValues;
+  local_int_t numberOfExternalValues;
   int numberOfSendNeighbors;
-  int totalToBeSent;
-  int *elementsToSend;
+  local_int_t totalToBeSent;
+  local_int_t *elementsToSend;
   int *neighbors;
-  int *receiveLength;
-  int *sendLength;
+  local_int_t *receiveLength;
+  local_int_t *sendLength;
   double *sendBuffer;
 #endif
 };
@@ -69,30 +69,32 @@ inline void initializeMatrix(SparseMatrix & A) {
 	A.sendLength = 0;
 	A.sendBuffer = 0;
 	#endif
+	return;
 }
 
 inline void destroyMatrix(SparseMatrix & A) {
 
-  for (int i = 0; i< A.localNumberOfRows; ++i) {
-     delete [] A.matrixValues[i];
-     delete [] A.mtxIndG[i];
-     delete [] A.mtxIndL[i];
-  }
-  if(A.title)                  delete [] A.title;
-  if(A.nonzerosInRow)             delete [] A.nonzerosInRow;
-  if(A.mtxIndG) delete [] A.mtxIndG;
-  if(A.mtxIndL) delete [] A.mtxIndL;
-  if(A.matrixValues) delete [] A.matrixValues;
-  if(A.matrixDiagonal)           delete [] A.matrixDiagonal;
-
+	for (int i = 0; i< A.localNumberOfRows; ++i) {
+		delete [] A.matrixValues[i];
+		delete [] A.mtxIndG[i];
+		delete [] A.mtxIndL[i];
+	}
+	if(A.title)                  delete [] A.title;
+	if(A.nonzerosInRow)             delete [] A.nonzerosInRow;
+	if(A.mtxIndG) delete [] A.mtxIndG;
+	if(A.mtxIndL) delete [] A.mtxIndL;
+	if(A.matrixValues) delete [] A.matrixValues;
+	if(A.matrixDiagonal)           delete [] A.matrixDiagonal;
+	
 #ifdef USING_MPI
-  if(A.elementsToSend)       delete [] A.elementsToSend;
-  if(A.neighbors)              delete [] A.neighbors;
-  if(A.receiveLength)            delete [] A.receiveLength;
-  if(A.sendLength)            delete [] A.sendLength;
-  if(A.sendBuffer)            delete [] A.sendBuffer;
+	if(A.elementsToSend)       delete [] A.elementsToSend;
+	if(A.neighbors)              delete [] A.neighbors;
+	if(A.receiveLength)            delete [] A.receiveLength;
+	if(A.sendLength)            delete [] A.sendLength;
+	if(A.sendBuffer)            delete [] A.sendBuffer;
 #endif
- initializeMatrix(A);
+	initializeMatrix(A);
+	return;
 }
 
 inline int getRankOfMatrixRow(const Geometry & geom, const SparseMatrix & A, global_int_t index) {

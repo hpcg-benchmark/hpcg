@@ -33,45 +33,11 @@
 
 #include "Geometry.hpp"
 #include "symgs.hpp"
+#include "symgsref.hpp"
 
 int symgs( const SparseMatrix & A, const double * const x, double * const y) {
 
-  const int nrow = A.localNumberOfRows;
-   double ** matrixDiagonal = A.matrixDiagonal;  // An array of pointers to the diagonal entries A.matrixValues
+  return(symgsref(A, x, y));
 
-  for (int i=0; i< nrow; i++) {
-      const double * const currentValues = A.matrixValues[i];
-      const local_int_t * const currentColIndices = A.mtxIndL[i];
-      const double * addressOfCurrentDiagonal = matrixDiagonal[i]; // Current diagonal value
-      const int currentNumberOfNonzeros = addressOfCurrentDiagonal - currentValues;
-      double sum = x[i]; // RHS value
-
-      for (int j=0; j< currentNumberOfNonzeros; j++) {
-    	  local_int_t curCol = currentColIndices[j];
-    	  if (curCol<nrow) sum -= currentValues[j] * y[curCol];
-      }
-
-      y[i] = sum/(*addressOfCurrentDiagonal);
-    }
-
-  // Now the back sweep.
-
-  for (int i=nrow-1; i>=0; i--) {
-      const double * const currentValues = A.matrixValues[i];
-      const local_int_t * const currentColIndices = A.mtxIndL[i];
-      const int currentNumberOfNonzeros = A.nonzerosInRow[i];
-      const double  currentDiagonal = matrixDiagonal[i][0]; // Current diagonal value
-      double sum = x[i]; // RHS value
-
-      for (int j = 0; j< currentNumberOfNonzeros; j++) {
-    	  local_int_t curCol = currentColIndices[j];
-    	  if (curCol<nrow) sum -= currentValues[j]*y[curCol];
-      }
-      sum += y[i]*currentDiagonal; // Remove diagonal contribution from previous loop
-
-      y[i] = sum/currentDiagonal;
-    }
-
-  return(0);
 }
 

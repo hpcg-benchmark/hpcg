@@ -13,8 +13,9 @@
 
 #include "SparseMatrix.hpp"
 #include "Geometry.hpp"
+#include "CGData.hpp"
 
-int CG(const Geometry & geom, const SparseMatrix & A, const double * const b, double * const x,
+int CG(const Geometry & geom, const SparseMatrix & A, CGData & data, const double * const b, double * const x,
 	  const int max_iter, const double tolerance, int & niters, double & normr,  double & normr0,
           double * times, bool doPreconditioning);
 

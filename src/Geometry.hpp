@@ -12,7 +12,7 @@
 #define GEOMETRY_HPP
 
 typedef int local_int_t;
-typedef int global_int_t;
+typedef long long global_int_t;
 
 // This is a data structure to contain all processor navigation information
 

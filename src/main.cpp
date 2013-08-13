@@ -107,15 +107,11 @@ int main(int argc, char *argv[]) {
 
     //if (geom.size==1) WriteProblem(A, x, b, xexact);
     
-#ifdef USING_MPI
-    
     // Transform matrix indices from global to local values.
     // Define number of columns for the local matrix.
     
     t7 = mytimer(); OptimizeMatrix(geom, A);  t7 = mytimer() - t7;
     times[7] = t7;
-    
-#endif
     
     double t1 = mytimer();   // Initialize it (if needed)
     int niters = 0;

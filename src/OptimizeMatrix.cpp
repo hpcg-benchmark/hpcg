@@ -29,9 +29,10 @@ using std::endl;
 
 void OptimizeMatrix(const Geometry & geom, SparseMatrix & A) {
 
-#ifdef USING_MPI  // Compile this routine only if running in parallel
   double t0;
+#ifdef DETAILEDDEBUG
   int debug_details = 1; // Set to 1 for voluminous output
+#endif
 #ifdef DEBUG
   int debug = 1;
 #else
@@ -45,6 +46,13 @@ void OptimizeMatrix(const Geometry & geom, SparseMatrix & A) {
   global_int_t ** mtxIndG = A.mtxIndG;
   local_int_t ** mtxIndL = A.mtxIndL;
   
+#ifndef USING_MPI  // In the non-MPI case we simply copy global indices to local index storage
+	for (int i=0; i< localNumberOfRows; i++) {
+		for (int j=0; j<nonzerosInRow[i]; j++)	mtxIndL[i][j] = mtxIndG[i][j];
+	}
+
+#else // Run this section only if compiling for MPI
+
   // Scan global IDs of the nonzeros in the matrix.  Determine if the column ID matches a row ID.  If not:
   // 1) We call the getRankOfMatrixRow function, which tells us the rank of the processor owning the row ID.
   //	We need to receive this value of the x vector during the halo exchange.

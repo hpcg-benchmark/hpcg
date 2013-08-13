@@ -17,16 +17,18 @@
 
 #CXX=/usr/local/bin/g++
 #LINKER=/usr/local/bin/g++
-CXX=/usr/local/openmpi-gcc-4.8/bin/mpicxx
-LINKER=/usr/local/openmpi-gcc-4.8/bin/mpicxx
+CXX=g++
+LINKER=g++
+#CXX=mpicxx
+#LINKER=mpicxx
 
 
 # 1) Build with MPI or not?
 #    If you want to run the program with MPI, make sure USE_MPI is set 
 #    to -DUSING_MPI
 
-#USE_MPI =
-USE_MPI = -DUSING_MPI
+USE_MPI =
+#USE_MPI = -DUSING_MPI
 
 # 2) MPI headers:  
 #    If you:
@@ -47,12 +49,12 @@ USE_MPI = -DUSING_MPI
 
 #CPP_OPT_FLAGS = -O3 -m64
 #CPP_OPT_FLAGS = -O3 -ftree-vectorize -ftree-vectorizer-verbose=2 -fopenmp
-#CPP_OPT_FLAGS = -O0 -g
+CPP_OPT_FLAGS = -O0 -g
 #CPP_OPT_FLAGS = -O0 -g -DDEBUG
 #CPP_OPT_FLAGS = -O0 -g -DDEBUG -DNO_PRECONDITIONER
 #CPP_OPT_FLAGS = -O0 -g -DNO_PRECONDITIONER
 #CPP_OPT_FLAGS = -O3
-CPP_OPT_FLAGS = -O3 -ffast-math -ftree-vectorize -ftree-vectorizer-verbose=2
+#CPP_OPT_FLAGS = -O3 -ffast-math -ftree-vectorize -ftree-vectorizer-verbose=2
 
 #
 # 4) MPI library:

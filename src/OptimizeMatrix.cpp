@@ -30,10 +30,12 @@ using std::endl;
 void OptimizeMatrix(const Geometry & geom, SparseMatrix & A) {
 
   double t0;
+#ifdef DEBUG
 #ifdef DETAILEDDEBUG
   int debug_details = 1; // Set to 1 for voluminous output
+#else
+  int debug_details = 0; // Set to 0
 #endif
-#ifdef DEBUG
   int debug = 1;
 #else
   int debug = 0;
@@ -48,7 +50,8 @@ void OptimizeMatrix(const Geometry & geom, SparseMatrix & A) {
   
 #ifndef USING_MPI  // In the non-MPI case we simply copy global indices to local index storage
 	for (local_int_t i=0; i< localNumberOfRows; i++) {
-		for (int j=0; j<nonzerosInRow[i]; j++)	mtxIndL[i][j] = mtxIndG[i][j];
+                int cur_nnz = nonzerosInRow[i];
+		for (int j=0; j<cur_nnz; j++)	mtxIndL[i][j] = mtxIndG[i][j];
 	}
 
 #else // Run this section only if compiling for MPI

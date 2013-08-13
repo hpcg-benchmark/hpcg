@@ -14,22 +14,24 @@
 
 #
 # -1) Specific source location
-SRC = ../..
+SRC = ../../src
 #
 # 0) Specify compiler and linker:
 
 #CXX=/usr/local/bin/g++
 #LINKER=/usr/local/bin/g++
-CXX=/usr/local/openmpi-gcc-4.8/bin/mpicxx
-LINKER=/usr/local/openmpi-gcc-4.8/bin/mpicxx
+CXX=g++
+LINKER=g++
+#CXX=/usr/local/openmpi-gcc-4.8/bin/mpicxx
+#LINKER=/usr/local/openmpi-gcc-4.8/bin/mpicxx
 
 
 # 1) Build with MPI or not?
 #    If you want to run the program with MPI, make sure USE_MPI is set 
 #    to -DUSING_MPI
 
-#USE_MPI =
-USE_MPI = -DUSING_MPI
+USE_MPI =
+#USE_MPI = -DUSING_MPI
 
 # 2) Headers:  
 #    If you:
@@ -52,10 +54,10 @@ INCLUDES = -I$(SRC)
 
 #CPP_OPT_FLAGS = -O3 -m64
 #CPP_OPT_FLAGS = -O3 -ftree-vectorize -ftree-vectorizer-verbose=2 -fopenmp
-#CPP_OPT_FLAGS = -O0 -g -DDEBUG
+CPP_OPT_FLAGS = -O0 -g -DDEBUG
 #CPP_OPT_FLAGS = -O0 -g -DDEBUG -DNO_PRECONDITIONER
 #CPP_OPT_FLAGS = -O0 -g -DNO_PRECONDITIONER
-CPP_OPT_FLAGS = -O3
+#CPP_OPT_FLAGS = -O3
 #CPP_OPT_FLAGS = -O3 -ffast-math -ftree-vectorize -ftree-vectorizer-verbose=2
 
 #
@@ -87,6 +89,7 @@ LIB_PATHS= $(SYS_LIB) $(MPI_LIB)
 TEST_CPP = SparseMatrixTest.cpp ReportResults.cpp \
            $(SRC)/GenerateGeometry.cpp $(SRC)/GenerateProblem.cpp \
 	  	   $(SRC)/WriteProblem.cpp $(SRC)/ComputeResidual.cpp $(SRC)/mytimer.cpp \
+	   $(SRC)/spmvref.cpp $(SRC)/symgsref.cpp \
            $(SRC)/spmv.cpp $(SRC)/CG.cpp $(SRC)/waxpby.cpp $(SRC)/dot.cpp $(SRC)/symgs.cpp \
            $(SRC)/OptimizeMatrix.cpp $(SRC)/ExchangeHalo.cpp \
            $(SRC)/YAML_Element.cpp $(SRC)/YAML_Doc.cpp

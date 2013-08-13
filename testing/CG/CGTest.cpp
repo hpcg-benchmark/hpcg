@@ -109,15 +109,11 @@ int main(int argc, char *argv[]) {
 
 	//if (geom.size==1) WriteProblem(A, x, b, xexact);
 
-#ifdef USING_MPI
-
 	// Transform matrix indices from global to local values.
 	// Define number of columns for the local matrix.
 
-	t7 = mytimer(); OptimizeMatrix(geom, A);  t7 = mytimer() - t7;
+	t7 = mytimer(); OptimizeMatrix(geom, A);  initializeCGData(A, data); t7 = mytimer() - t7;
 	times[7] = t7;
-
-#endif
 
 	// Modify the matrix diagonal to greatly exaggerate diagonal values
 	for (int i=0; i< A.localNumberOfRows; ++i) {
@@ -140,7 +136,7 @@ int main(int argc, char *argv[]) {
 	int numberOfCgCalls = 10;
 	double tolerance = 1.0e-12; // Set tolerance to reasonable value for grossly scaled diagonal terms
 	for (int k=0; k<2; ++k) { // This loop tests both unpreconditioned and preconditioned runs
-		int expected_niters = 2;
+		int expected_niters = 1;
 		if (k==0) expected_niters = 11;
 		for (int i=0; i< numberOfCgCalls; ++i) {
 			for (int j=0; j< A.localNumberOfRows; ++j) x[j] = 0.0; // Zero out x
@@ -173,6 +169,7 @@ int main(int argc, char *argv[]) {
 
 	// Clean up
 	destroyMatrix(A);
+	destroyCGData(data);
 	delete [] x;
 	delete [] b;
 	delete [] xexact;

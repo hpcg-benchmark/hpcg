@@ -1,61 +1,38 @@
-// ************************************************************************
-// 
-//               HPCG: Simple Conjugate Gradient Benchmark Code
-// Questions? Contact Michael A. Heroux (maherou@sandia.gov) 
-// 
-// ************************************************************************
+==============================================================
+ High Performance Conjugate Gradient Benchmark (HPCG)
+ HPCG - 0.1 - August 22, 2013
+==============================================================
 
+ HPCG is a software package that performs a fixed number of
+ symmetric Gauss-Seidel preconditioned conjugate gradient
+ iterations using double precision (64 bit) floating point
+ values.  Integer arrays have global and local scope (global
+ indices are unique across the entire distributed memory 
+ system, local indices are unique within a memory image).
+ Integer data for global/local indices have three modes:
+   32/32 - global and local integers are 32-bit.
+   64/32 - global integers are 64-bit, local are 32-bit.
+   64/64 - global and local are 64-bit.
 
-------------------------------------------------
-Description:
-------------------------------------------------
-HPCG: A simple conjugate gradient benchmark code for a 3D chimney 
-domain on an arbitrary number of processors.
+ These various modes are required in order to address
+ sufficiently big problem if the range of indexing goes
+ above 2^31 (roughly 2.1B), or to conserve storage costs
+ if the range of indexing is less than 2^31.
 
-Author: Michael A. Heroux, Sandia National Laboratories (maherou@sandia.gov)
+ The  HPCG  software  package requires the availibility on your
+ system of an implementation of the  Message Passing Interface
+ MPI  (1.1 compliant).
 
-This simple benchmark code is a self-contained piece of C++ software 
-that generates a 27-point finite difference matrix with a user-prescribed 
-sub-block size on each processor.
+ Install See the file INSTALL in this directory.
+ -------
 
-Kernel performance should be reasonable, but no attempts have been made
-to provide special kernel optimizations.
+ Tuning  See the file TUNING in this directory.
+ ------
 
-------------------------------------------------
-Compiling the code:
-------------------------------------------------
+ Bugs  Known  problems and bugs with this release are documen-
+ ----  ted in the file hpcg/BUGS.
 
-There is a simple Makefile that should be easily modified for most 
-Unix-like environments.  Read the Makefile for 
-further instructions.  If you generate a Makefile for your platform 
-and care to share it, please send it to the author.
+ Check out  the website  www.netlib.org/benchmark/hpcg  for the
+ latest information.
 
-To remove all output files, type:
-
-make clean
-
-------------------------------------------------
-Running the code:
-------------------------------------------------
-
-Usage:
-
-test_HPCG nx ny nz (serial mode)
-
-mpirun -np numproc test_HPCG nx ny nz (MPI mode)
-
-where nx, ny, nz are the number of nodes in the x, y and z 
-dimension respectively on a each processor.
-The global grid dimensions will be as close to a cubic factorization
-of the number of MPI processes as possible.
-
-Example:
-
-mpirun -np 16 ./test_HPCG 20 30 10
-
-This will construct a local problem of dimension 20-by-30-by-10.
-
-The processor decomposition will be 2-by-2-by-4, so the global problem
-size will be 40-by-60-by-40.
-
-whose global problem has dimension 20-by-30-by-160.
+==============================================================

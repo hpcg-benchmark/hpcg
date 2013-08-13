@@ -1,0 +1,67 @@
+==============================================================
+ High Performance Conjugate Gradient Benchmark (HPCG)
+ HPCG - 0.1 - August 22, 2013
+==============================================================
+
+ 1) Retrieve the tar file, then
+
+    gunzip hpcg.tgz; tar -xvf hpcg.tar
+
+ this  will create an  hpcg  directory,  that we call below the
+ top-level directory.
+
+ 2) Create a file Make.<arch> in the  top-level directory. For
+ this purpose,  you  may  want  to re-use one contained in the
+ setup directory. This file essentially contains the compilers
+ and librairies with their paths to be used.
+
+ 3) Type "make arch=<arch>". This  should create an executable
+ in the bin/<arch> directory called xhpcg.
+
+ For example, on our Linux PII cluster, I create a file called
+ Make.Linux_PII in the top-level directory. Then, I type
+    "make arch=Linux_PII" 
+ This creates the executable file bin/Linux_PII/xhpcg.
+
+ 4) Quick check: run a few tests:
+
+    cd bin/<arch>
+    mpirun -np 4 xhpcg
+
+ 5) Tuning: Most of the performance  parameters can be tuned,
+ by modifying the input file bin/HPCG.dat. See the file TUNING
+ in the top-level directory.
+
+==============================================================
+
+ Compile time options:  At the end of the "model" Make.<arch>,
+ ---------------------  the  user  is given the opportunity to
+ compile the software with some specific compile options.  The
+ list of this options and their meaning are:
+
+    -DHPCG_DEBUG
+       Compile with modest debugging turned on.
+
+    -DHPCG_DETAILED_DEBUG
+       Compile with voluminous debugging information turned on.
+
+    -DHPCG_NOMPI
+       Compile without MPI enabled
+
+    -DHPCG_NOOPENMP
+       Compile without OpenMP enabled
+
+    -DHPCG_DETAILED_TIMING
+       enables detail timers;
+
+
+ By default HPCG will:
+    *) Turn on MPI support.
+    *) Turn on OpenMP support.
+    *) not display detailed timing information.
+
+==============================================================
+ 
+ Check out  the website  www.netlib.org/benchmark/hpcg  for the
+ latest information.
+==============================================================

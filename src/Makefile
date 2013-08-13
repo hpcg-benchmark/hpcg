@@ -17,8 +17,8 @@
 
 #CXX=/usr/local/bin/g++
 #LINKER=/usr/local/bin/g++
-CXX=/usr/local/openmpi-gcc-4.8/bin/mpicxx
-LINKER=/usr/local/openmpi-gcc-4.8/bin/mpicxx
+CXX=mpicxx
+LINKER=mpicxx
 
 
 # 1) Build with MPI or not?

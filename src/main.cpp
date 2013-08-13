@@ -119,6 +119,7 @@ int main(int argc, char *argv[]) {
     
     double t1 = mytimer();   // Initialize it (if needed)
     int niters = 0;
+    int totalNiters = 0;
     double normr = 0.0;
     double normr0 = 0.0;
     int maxIters = 10;
@@ -129,6 +130,7 @@ int main(int argc, char *argv[]) {
     	ierr = CG( geom, A, b, x, maxIters, tolerance, niters, normr, normr0, &times[0], doPreconditioning);
     	if (ierr) cerr << "Error in call to CG: " << ierr << ".\n" << endl;
     	if (rank==0) cout << "Call [" << i << "] Scaled Residual [" << normr/normr0 << "]" << endl;
+	totalNiters += niters;
     }
     
     // Compute difference between known exact solution and computed solution
@@ -142,7 +144,7 @@ int main(int argc, char *argv[]) {
 #endif
 
     // Report results to YAML file
-    ReportResults(geom, A, niters, normr, &times[0]);
+    ReportResults(geom, A, totalNiters, normr/normr0, &times[0]);
 
     // Clean up
     destroyMatrix(A);

@@ -26,8 +26,13 @@ using std::cerr;
 using std::endl;
 #include <cstdlib>
 #include <vector>
+
 #ifndef HPCG_NOMPI
 #include <mpi.h> // If this routine is not compiled with HPCG_NOMPI
+#endif
+
+#ifndef HPCG_NOOPENMP
+#include <omp.h> // If this routine is not compiled with HPCG_NOOPENMP
 #endif
 #include "GenerateGeometry.hpp"
 #include "GenerateProblem.hpp"
@@ -60,18 +65,23 @@ int main(int argc, char *argv[]) {
     int size, rank; // Number of MPI processes, My process ID
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-
-#ifdef DEBUG
-    if (size < 100) cout << "Process "<<rank<<" of "<<size<<" is alive." <<endl;
-#endif
-    
 #else
     
     int size = 1; // Serial case (not using MPI)
     int rank = 0;
     
 #endif
-    
+
+  int numThreads = 1;
+
+#ifndef HPCG_NOOPENMP
+#pragma omp parallel
+  numThreads = omp_get_num_threads();
+#endif
+
+#ifdef DEBUG
+    if (size < 100) cout << "Process "<<rank<<" of "<<size<<" is alive with " << numThreads << " threads." <<endl;
+#endif
     
 #ifdef DEBUG
     if (rank==0)
@@ -102,7 +112,7 @@ int main(int argc, char *argv[]) {
     nx = atoi(argv[1]);
     ny = atoi(argv[2]);
     nz = atoi(argv[3]);
-    GenerateGeometry(size, rank, nx, ny, nz, geom);
+    GenerateGeometry(size, rank, numThreads, nx, ny, nz, geom);
     GenerateProblem(geom, A, &x, &b, &xexact);
 
     //if (geom.size==1) WriteProblem(A, x, b, xexact);

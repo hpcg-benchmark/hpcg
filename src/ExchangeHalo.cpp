@@ -48,6 +48,7 @@ void ExchangeHalo(const SparseMatrix & A, const double *x) {
   double *x_external = (double *) x + localNumberOfRows;
 
   // Post receives first 
+  // TODO: Thread this loop
   for (int i = 0; i < num_neighbors; i++) {
       local_int_t n_recv = receiveLength[i];
       MPI_Irecv(x_external, n_recv, MPI_DOUBLE, neighbors[i], MPI_MY_TAG, MPI_COMM_WORLD, request+i);
@@ -59,12 +60,14 @@ void ExchangeHalo(const SparseMatrix & A, const double *x) {
   // Fill up send buffer
   //
 
+  // TODO: Thread this loop
   for (local_int_t i=0; i<totalToBeSent; i++) sendBuffer[i] = x[elementsToSend[i]];
 
   //
   // Send to each neighbor
   //
 
+  // TODO: Thread this loop
   for (int i = 0; i < num_neighbors; i++) {
       local_int_t n_send = sendLength[i];
       MPI_Send(sendBuffer, n_send, MPI_DOUBLE, neighbors[i], MPI_MY_TAG, MPI_COMM_WORLD);
@@ -76,6 +79,7 @@ void ExchangeHalo(const SparseMatrix & A, const double *x) {
   //
 
   MPI_Status status;
+  // TODO: Thread this loop
   for (int i = 0; i < num_neighbors; i++) {
       if ( MPI_Wait(request+i, &status) ) {
 	  std::exit(-1); // TODO: have better error exit

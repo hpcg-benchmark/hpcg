@@ -44,6 +44,7 @@ void ReportResults(const Geometry & geom, const SparseMatrix & A, int niters, do
     
     if (geom.rank==0) { // Only PE 0 needs to compute and report timing results
 
+
         double fniters = niters;
         double fnrow = A.totalNumberOfRows;
         double fnnz = A.totalNumberOfNonzeros;
@@ -57,6 +58,10 @@ void ReportResults(const Geometry & geom, const SparseMatrix & A, int niters, do
         
         YAML_Doc doc("hpcg", "0.1");
         
+        doc.add("Machine Summary","");
+        doc.get("Machine Summary")->add("Distributed Processes",geom.size);
+        doc.get("Machine Summary")->add("Threaded Processes   ",geom.numThreads);
+
         doc.add("Dimensions","");
         doc.get("Dimensions")->add("nx",geom.nx);
         doc.get("Dimensions")->add("ny",geom.ny);

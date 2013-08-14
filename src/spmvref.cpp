@@ -24,10 +24,16 @@
 
 #include "spmvref.hpp"
 
+#ifndef HPCG_NOOPENMP
+#include <omp.h>
+#endif
+
 int spmvref( const SparseMatrix & A, const double * const x, double * const y) {
 
 	const local_int_t nrow = A.localNumberOfRows;
-
+#ifndef HPCG_NOOPENMP
+#pragma parallel for default(none)
+#endif
 	for (local_int_t i=0; i< nrow; i++)  {
 		double sum = 0.0;
 		const double * const cur_vals = A.matrixValues[i];

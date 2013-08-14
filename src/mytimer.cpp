@@ -17,13 +17,20 @@
 /////////////////////////////////////////////////////////////////////////
 
 #ifndef HPCG_NOMPI
-#include <mpi.h> // If this routine is compiled with -DUSING_MPI then include mpi.h
+#include <mpi.h> // If this routine is not compiled with HPCG_NOMPI then use MPI
 
 double mytimer(void)
 {
    return(MPI_Wtime());
 }
 
+#elif !defined(HPCG_NOOPENMP)
+
+#include <omp.h> // If this routine is compiled with HPCG_NOMPI and not compiled with HPCG_NOOPENMP then use OpenMP timer
+double mytimer(voide)
+{
+   return(omp_get_wtime());
+}
 #else
 
 #include <cstdlib>

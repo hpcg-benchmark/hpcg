@@ -24,15 +24,27 @@
 #include <mpi.h>
 #include "mytimer.hpp"
 #endif
+#ifndef HPCG_NOOPENMP
+#include <omp.h>
+#endif
+
 #include "dot.hpp"
 
 int dot (const local_int_t n, const double * const x, const double * const y,
 	  double * const result, double & time_allreduce) {  
   double local_result = 0.0;
-  if (y==x)
+  if (y==x) {
+#ifndef HPCG_NOOPENMP
+#pragma omp parallel for reduction (+:local_result) default(none)
+#endif
     for (local_int_t i=0; i<n; i++) local_result += x[i]*x[i];
-  else
+  }
+  else {
+#ifndef HPCG_NOOPENMP
+#pragma omp parallel for reduction (+:local_result) default(none)
+#endif
     for (local_int_t i=0; i<n; i++) local_result += x[i]*y[i];
+  }
 
 #ifndef HPCG_NOMPI
   // Use MPI's reduce function to collect all partial sums

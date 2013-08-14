@@ -31,6 +31,10 @@ using std::endl;
 #include <mpi.h>
 #endif
 
+#ifndef HPCG_NOOPENMP
+#include <omp.h>
+#endif
+
 void GenerateProblem(const Geometry & geom, SparseMatrix & A, double **x, double **b, double **xexact) {
 
 	int size = geom.size;
@@ -70,7 +74,7 @@ void GenerateProblem(const Geometry & geom, SparseMatrix & A, double **x, double
 	global_int_t localNumberOfNonzeros = 0;
 	// TODO:  This triply nested loop could be flattened or use nested parallelism
 #ifndef HPCG_NOOPENMP
-#pragma omp parallel for
+#pragma omp parallel for default(none)
 #endif
 	for (local_int_t iz=0; iz<nz; iz++) {
 		global_int_t giz = ipz*nz+iz;
@@ -88,10 +92,8 @@ void GenerateProblem(const Geometry & geom, SparseMatrix & A, double **x, double
 				local_int_t numberOfNonzerosInRow = 0;
 				matrixValues[currentLocalRow] = new double[numberOfNonzerosPerRow]; // Allocate a row worth of values.
 				mtxIndG[currentLocalRow] = new global_int_t[numberOfNonzerosPerRow]; // Allocate a row worth of indices.
-				//mtxIndL[currentLocalRow] = new local_int_t[numberOfNonzerosPerRow]; // Allocate a row worth of indices.
 				double * currentValuePointer = matrixValues[currentLocalRow]; // Pointer to current value in current row
 				global_int_t * currentIndexPointerG = mtxIndG[currentLocalRow]; // Pointer to current index in current row
-				//local_int_t * currentIndexPointerL = mtxIndL[currentLocalRow]; // Pointer to current index in current row
 				for (int sz=-1; sz<=1; sz++) {
 					if (giz+sz>-1 && giz+sz<gnz) {
 						for (int sy=-1; sy<=1; sy++) {
@@ -107,7 +109,6 @@ void GenerateProblem(const Geometry & geom, SparseMatrix & A, double **x, double
 											*currentValuePointer++ = -1.0;
 										}
 										*currentIndexPointerG++ = curcol;
-										//*currentIndexPointerL++ = -((1<<(sizeof(local_int_t)-1))+1); // large value to cause problems early
 										numberOfNonzerosInRow++;
 									} // end x bounds test
 								} // end sx loop
@@ -116,7 +117,7 @@ void GenerateProblem(const Geometry & geom, SparseMatrix & A, double **x, double
 					} // end z bounds test
 				} // end sz loop
 				nonzerosInRow[currentLocalRow] = numberOfNonzerosInRow;
-#ifndef HPCG_HOOPENMP
+#ifndef HPCG_NOOPENMP
 #pragma omp atomic
 #endif
 				localNumberOfNonzeros += numberOfNonzerosInRow; // Protect this with an atomic

@@ -186,7 +186,7 @@ gen_min_area3(int n, int *f1, int *f2, int *f3) {
   }
 }
 
-void GenerateGeometry(int size, int rank, int nx, int ny, int nz, Geometry & geom) {
+void GenerateGeometry(int size, int rank, int numThreads, int nx, int ny, int nz, Geometry & geom) {
 
 	int npx, npy, npz;
 
@@ -216,6 +216,7 @@ void GenerateGeometry(int size, int rank, int nx, int ny, int nz, Geometry & geo
 #endif
 	geom.size = size;
 	geom.rank = rank;
+	geom.numThreads = numThreads;
 	geom.nx = nx;
 	geom.ny = ny;
 	geom.nz = nz;

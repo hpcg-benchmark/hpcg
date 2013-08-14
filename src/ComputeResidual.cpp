@@ -24,23 +24,43 @@
 #ifdef DETAILEDDEBUG
 #include <iostream>
 #endif
-using std::fabs;
+
 #ifndef HPCG_NOMPI
 #include <mpi.h> // If this routine is not compiled with HPCG_NOMPI
+#endif
+
+#ifndef HPCG_NOOPENMP
+#include <omp.h> // If this routine is not compiled with HPCG_NOOPENMP
 #endif
 
 int ComputeResidual(const local_int_t n, const double * const v1,
                     const double * const v2, double * const residual) {
 
   double local_residual = 0.0;
+
+#ifndef HPCG_NOOPENMP
+#pragma omp parallel default(none) shared(local_residual)
+{
+  double threadlocal_residual = 0.0;
+#pragma omp for
   for (local_int_t i=0; i<n; i++) {
-    double diff = fabs(v1[i] - v2[i]);
+    double diff = std::fabs(v1[i] - v2[i]);
+    if (diff > threadlocal_residual) threadlocal_residual = diff;
+  }
+#pragma omp critical
+  {
+   if (threadlocal_residual>local_residual) local_residual = threadlocal_residual;
+  }
+}
+#else // No threading
+  for (local_int_t i=0; i<n; i++) {
+    double diff = std::fabs(v1[i] - v2[i]);
     if (diff > local_residual) local_residual = diff;
 #ifdef DETAILEDDEBUG
     std::cout << " Computed, exact, diff = " << v1[i] << " " << v2[i] << " " << diff << std::endl;
 #endif
-
   }
+#endif
 
 #ifndef HPCG_NOMPI
   // Use MPI's reduce function to collect all partial sums

@@ -27,6 +27,10 @@ using std::endl;
 #include <set>
 #endif
 
+#ifndef HPCG_NOOPENMP
+#include <omp.h>
+#endif
+
 void OptimizeMatrix(const Geometry & geom, SparseMatrix & A) {
 
 	double t0;

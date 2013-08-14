@@ -16,7 +16,7 @@
 
 /////////////////////////////////////////////////////////////////////////
 
-#ifdef USING_MPI
+#ifndef HPCG_NOMPI
 #include <mpi.h> // If this routine is compiled with -DUSING_MPI then include mpi.h
 
 double mytimer(void)

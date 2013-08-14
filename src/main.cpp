@@ -26,8 +26,8 @@ using std::cerr;
 using std::endl;
 #include <cstdlib>
 #include <vector>
-#ifdef USING_MPI
-#include <mpi.h> // If this routine is compiled with -DUSING_MPI then include mpi.h
+#ifndef HPCG_NOMPI
+#include <mpi.h> // If this routine is not compiled with HPCG_NOMPI
 #endif
 #include "GenerateGeometry.hpp"
 #include "GenerateProblem.hpp"
@@ -54,7 +54,7 @@ int main(int argc, char *argv[]) {
     double t7 = 0.0;
     local_int_t nx,ny,nz;
     
-#ifdef USING_MPI
+#ifndef HPCG_NOMPI
     
     MPI_Init(&argc, &argv);
     int size, rank; // Number of MPI processes, My process ID
@@ -80,7 +80,7 @@ int main(int argc, char *argv[]) {
         cout << "Press enter to continue"<< endl;
         cin >> junk;
     }
-#ifdef USING_MPI
+#ifndef HPCG_NOMPI
     MPI_Barrier(MPI_COMM_WORLD);
 #endif
 #endif
@@ -150,7 +150,7 @@ int main(int argc, char *argv[]) {
     delete [] xexact;
     
     // Finish up
-#ifdef USING_MPI
+#ifndef HPCG_NOMPI
     MPI_Finalize();
 #endif
     return 0 ;

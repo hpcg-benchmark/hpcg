@@ -8,7 +8,7 @@
 // ************************************************************************
 //@HEADER
 
-#ifdef USING_MPI  // Compile this routine only if running in parallel
+#ifndef HPCG_NOMPI  // Compile this routine only if running in parallel
 #include <mpi.h>
 #include "Geometry.hpp"
 #include "ExchangeHalo.hpp"
@@ -86,4 +86,4 @@ void ExchangeHalo(const SparseMatrix & A, const double *x) {
 
   return;
 }
-#endif // USING_MPI
+#endif // ifndef HPCG_NOMPI

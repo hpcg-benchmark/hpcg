@@ -56,7 +56,7 @@ int CG(const Geometry & geom, const SparseMatrix & A, CGData & data, const doubl
 
 
 	double t0 = 0.0, t1 = 0.0, t2 = 0.0, t3 = 0.0, t4 = 0.0, t5 = 0.0;
-#ifdef USING_MPI
+#ifndef HPCG_NOMPI
 	double t6 = 0.0;
 #endif
 
@@ -78,7 +78,7 @@ int CG(const Geometry & geom, const SparseMatrix & A, CGData & data, const doubl
 #endif
 	// p is of length ncols, copy x to p for sparse MV operation
 	waxpby(nrow, 1.0, x, 0.0, x, p);
-#ifdef USING_MPI
+#ifndef HPCG_NOMPI
 	TICK(); ExchangeHalo(A,p); TOCK(t6);
 #endif
 	spmv(A, p, Ap);
@@ -113,7 +113,7 @@ int CG(const Geometry & geom, const SparseMatrix & A, CGData & data, const doubl
 			TICK(); waxpby (nrow, 1.0, z, beta, p, p);  TOCK(t2); // p = beta*p + z
 		}
 
-#ifdef USING_MPI
+#ifndef HPCG_NOMPI
 		TICK(); ExchangeHalo(A,p); TOCK(t6);
 #endif
 		TICK(); spmv(A, p, Ap); TOCK(t3); // Ap = A*p
@@ -136,7 +136,7 @@ int CG(const Geometry & geom, const SparseMatrix & A, CGData & data, const doubl
 	times[3] += t3; // spmv time
 	times[4] += t4; // AllReduce time
 	times[5] += t5; // preconditioner apply time
-#ifdef USING_MPI
+#ifndef HPCG_NOMPI
 	times[6] += t6; // exchange halo time
 #endif
 	times[0] += mytimer() - t_begin;  // Total time. All done...

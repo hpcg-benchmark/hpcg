@@ -27,7 +27,7 @@ using std::endl;
 
 #include "GenerateProblem.hpp"
 
-#ifdef USING_MPI
+#ifndef HPCG_NOMPI
 #include <mpi.h>
 #endif
 
@@ -57,7 +57,7 @@ void GenerateProblem(const Geometry & geom, SparseMatrix & A, double **x, double
 	// Allocate arrays that are of length localNumberOfRows
 	char * nonzerosInRow = new char[localNumberOfRows];
 	global_int_t ** mtxIndG = new global_int_t*[localNumberOfRows];
-	local_int_t  ** mtxIndL = new local_int_t*[localNumberOfRows];
+	//local_int_t  ** mtxIndL = new local_int_t*[localNumberOfRows];
 	double ** matrixValues = new double*[localNumberOfRows];
 	double ** matrixDiagonal = new double*[localNumberOfRows];
 
@@ -68,6 +68,10 @@ void GenerateProblem(const Geometry & geom, SparseMatrix & A, double **x, double
 
 
 	global_int_t localNumberOfNonzeros = 0;
+	// TODO:  This triply nested loop could be flattened or use nested parallelism
+#ifndef HPCG_NOOPENMP
+#pragma omp parallel for
+#endif
 	for (local_int_t iz=0; iz<nz; iz++) {
 		global_int_t giz = ipz*nz+iz;
 		for (local_int_t iy=0; iy<ny; iy++) {
@@ -84,10 +88,10 @@ void GenerateProblem(const Geometry & geom, SparseMatrix & A, double **x, double
 				local_int_t numberOfNonzerosInRow = 0;
 				matrixValues[currentLocalRow] = new double[numberOfNonzerosPerRow]; // Allocate a row worth of values.
 				mtxIndG[currentLocalRow] = new global_int_t[numberOfNonzerosPerRow]; // Allocate a row worth of indices.
-				mtxIndL[currentLocalRow] = new local_int_t[numberOfNonzerosPerRow]; // Allocate a row worth of indices.
+				//mtxIndL[currentLocalRow] = new local_int_t[numberOfNonzerosPerRow]; // Allocate a row worth of indices.
 				double * currentValuePointer = matrixValues[currentLocalRow]; // Pointer to current value in current row
 				global_int_t * currentIndexPointerG = mtxIndG[currentLocalRow]; // Pointer to current index in current row
-				local_int_t * currentIndexPointerL = mtxIndL[currentLocalRow]; // Pointer to current index in current row
+				//local_int_t * currentIndexPointerL = mtxIndL[currentLocalRow]; // Pointer to current index in current row
 				for (int sz=-1; sz<=1; sz++) {
 					if (giz+sz>-1 && giz+sz<gnz) {
 						for (int sy=-1; sy<=1; sy++) {
@@ -103,7 +107,7 @@ void GenerateProblem(const Geometry & geom, SparseMatrix & A, double **x, double
 											*currentValuePointer++ = -1.0;
 										}
 										*currentIndexPointerG++ = curcol;
-										*currentIndexPointerL++ = -((1<<(sizeof(local_int_t)-1))+1); // large value to cause problems early
+										//*currentIndexPointerL++ = -((1<<(sizeof(local_int_t)-1))+1); // large value to cause problems early
 										numberOfNonzerosInRow++;
 									} // end x bounds test
 								} // end sx loop
@@ -112,7 +116,10 @@ void GenerateProblem(const Geometry & geom, SparseMatrix & A, double **x, double
 					} // end z bounds test
 				} // end sz loop
 				nonzerosInRow[currentLocalRow] = numberOfNonzerosInRow;
-				localNumberOfNonzeros += numberOfNonzerosInRow; // TODO: Protect this with an atomic or refactor
+#ifndef HPCG_HOOPENMP
+#pragma omp atomic
+#endif
+				localNumberOfNonzeros += numberOfNonzerosInRow; // Protect this with an atomic
 				(*x)[currentLocalRow] = 0.0;
 				(*b)[currentLocalRow] = 27.0 - ((double) (numberOfNonzerosInRow-1));
 				(*xexact)[currentLocalRow] = 1.0;
@@ -124,7 +131,7 @@ void GenerateProblem(const Geometry & geom, SparseMatrix & A, double **x, double
 			  << "Process " << rank << " of " << size <<" has " << localNumberOfNonzeros<< " nonzeros." <<endl;
 #endif
 
-#ifdef USING_MPI
+#ifndef HPCG_NOMPI
   // Use MPI's reduce function to sum all nonzeros
   global_int_t totalNumberOfNonzeros = 0;
   MPI_Allreduce(&localNumberOfNonzeros, &totalNumberOfNonzeros, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
@@ -140,7 +147,7 @@ void GenerateProblem(const Geometry & geom, SparseMatrix & A, double **x, double
 	A.localNumberOfNonzeros = localNumberOfNonzeros;
 	A.nonzerosInRow = nonzerosInRow;
 	A.mtxIndG = mtxIndG;
-	A.mtxIndL = mtxIndL;
+	//A.mtxIndL = mtxIndL;
 	A.matrixValues = matrixValues;
 	A.matrixDiagonal = matrixDiagonal;
 

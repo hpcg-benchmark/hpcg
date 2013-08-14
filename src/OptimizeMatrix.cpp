@@ -21,7 +21,7 @@ using std::endl;
 #include "OptimizeMatrix.hpp"
 #include "mytimer.hpp"
 
-#ifdef USING_MPI
+#ifndef HPCG_NOMPI
 #include <mpi.h>
 #include <map>
 #include <set>
@@ -29,43 +29,53 @@ using std::endl;
 
 void OptimizeMatrix(const Geometry & geom, SparseMatrix & A) {
 
-  double t0;
+	double t0;
 #ifdef DEBUG
 #ifdef DETAILEDDEBUG
-  int debug_details = 1; // Set to 1 for voluminous output
+	int debug_details = 1; // Set to 1 for voluminous output
 #else
-  int debug_details = 0; // Set to 0
+	int debug_details = 0; // Set to 0
 #endif
-  int debug = 1;
+	int debug = 1;
 #else
-  int debug = 0;
+	int debug = 0;
 #endif
-  
-  // Extract Matrix pieces
 
-  local_int_t localNumberOfRows = A.localNumberOfRows;
-  char  * nonzerosInRow = A.nonzerosInRow;
-  global_int_t ** mtxIndG = A.mtxIndG;
-  local_int_t ** mtxIndL = A.mtxIndL;
-  
-#ifndef USING_MPI  // In the non-MPI case we simply copy global indices to local index storage
+	// Extract Matrix pieces
+
+	local_int_t localNumberOfRows = A.localNumberOfRows;
+	char  * nonzerosInRow = A.nonzerosInRow;
+	global_int_t ** mtxIndG = A.mtxIndG;
+	local_int_t ** mtxIndL = new local_int_t*[localNumberOfRows];
+
+	// Use a parallel loop to do initial assignment: distributes the placement of mtxIndL across the memory system
+#ifndef HPCG_NOOPENMP
+#pragma omp parallel for
+#endif
+	for (local_int_t i=0; i< localNumberOfRows; ++i) mtxIndL[i] = new local_int_t[nonzerosInRow[i]];
+
+#ifdef HPCG_NOMPI  // In the non-MPI case we simply copy global indices to local index storage
+#ifndef HPCG_NOOPENMP
+#pragma omp parallel for
+#endif
 	for (local_int_t i=0; i< localNumberOfRows; i++) {
-                int cur_nnz = nonzerosInRow[i];
+		int cur_nnz = nonzerosInRow[i];
 		for (int j=0; j<cur_nnz; j++)	mtxIndL[i][j] = mtxIndG[i][j];
 	}
 
-#else // Run this section only if compiling for MPI
+#else // Run this section if compiling for MPI
 
-  // Scan global IDs of the nonzeros in the matrix.  Determine if the column ID matches a row ID.  If not:
-  // 1) We call the getRankOfMatrixRow function, which tells us the rank of the processor owning the row ID.
-  //	We need to receive this value of the x vector during the halo exchange.
-  // 2) We record our row ID since we know that the other processor will need this value from us, due to symmetry.
-  
-  std::map< int, std::set< global_int_t> > sendList, receiveList;
-  typedef std::map< int, std::set< global_int_t> >::iterator map_iter;
-  typedef std::set<global_int_t>::iterator set_iter;
-  std::map< local_int_t, local_int_t > externalToLocalMap;
+	// Scan global IDs of the nonzeros in the matrix.  Determine if the column ID matches a row ID.  If not:
+	// 1) We call the getRankOfMatrixRow function, which tells us the rank of the processor owning the row ID.
+	//	We need to receive this value of the x vector during the halo exchange.
+	// 2) We record our row ID since we know that the other processor will need this value from us, due to symmetry.
 
+	std::map< int, std::set< global_int_t> > sendList, receiveList;
+	typedef std::map< int, std::set< global_int_t> >::iterator map_iter;
+	typedef std::set<global_int_t>::iterator set_iter;
+	std::map< local_int_t, local_int_t > externalToLocalMap;
+
+	// TODO: With proper critical and atomic regions, this loop could be threaded, but not attempting it at this time
 	for (local_int_t i=0; i< localNumberOfRows; i++) {
 		global_int_t currentGlobalRow = A.localToGlobalMap[i];
 		for (int j=0; j<nonzerosInRow[i]; j++) {
@@ -73,7 +83,7 @@ void OptimizeMatrix(const Geometry & geom, SparseMatrix & A) {
 			int rankIdOfColumnEntry = getRankOfMatrixRow(geom, A, curIndex);
 #ifdef DETAILEDDEBUG
 			cout << "rank, row , col, globalToLocalMap[col] = " << geom.rank << " " << currentGlobalRow << " "
-				 << curIndex << " " << A.globalToLocalMap[curIndex] << endl;
+					<< curIndex << " " << A.globalToLocalMap[curIndex] << endl;
 #endif
 			if (geom.rank!=rankIdOfColumnEntry) {// If column index is not a row index, then it comes from another processor
 				receiveList[rankIdOfColumnEntry].insert(curIndex);
@@ -127,7 +137,10 @@ void OptimizeMatrix(const Geometry & geom, SparseMatrix & A) {
 		}
 	}
 
-// Convert matrix indices to local IDs
+	// Convert matrix indices to local IDs
+#ifndef HPCG_NOOPENMP
+#pragma omp parallel for
+#endif
 	for (local_int_t i=0; i< localNumberOfRows; i++) {
 		for (int j=0; j<nonzerosInRow[i]; j++) {
 			global_int_t curIndex = mtxIndG[i][j];
@@ -142,6 +155,7 @@ void OptimizeMatrix(const Geometry & geom, SparseMatrix & A) {
 	}
 
 	// Store contents in our matrix struct
+	A.mtxIndL = mtxIndL;
 	A.numberOfExternalValues = externalToLocalMap.size();
 	A.localNumberOfColumns = A.localNumberOfRows + A.numberOfExternalValues;
 	A.numberOfSendNeighbors = sendList.size();
@@ -163,7 +177,7 @@ void OptimizeMatrix(const Geometry & geom, SparseMatrix & A) {
 	}
 #endif
 
-#endif // USING_MPI
+#endif // ifndef HPCG_NOMPI
 
 	return;
 }

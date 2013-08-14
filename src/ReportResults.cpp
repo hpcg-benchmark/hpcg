@@ -15,8 +15,8 @@
 #include "YAML_Element.hpp"
 #include "YAML_Doc.hpp"
 
-#ifdef USING_MPI
-#include <mpi.h> // If this routine is compiled with -DUSING_MPI then include mpi.h
+#ifndef HPCG_NOMPI
+#include <mpi.h> // If this routine is not compiled with HPCG_NOMPI
 #endif
 
 #ifdef DEBUG
@@ -29,7 +29,7 @@ using std::endl;
 
 void ReportResults(const Geometry & geom, const SparseMatrix & A, int niters, double normr, double times[]) {
 
-#ifdef USING_MPI
+#ifndef HPCG_NOMPI
     double t4 = times[4];
     double t4min = 0.0;
     double t4max = 0.0;
@@ -89,7 +89,7 @@ void ReportResults(const Geometry & geom, const SparseMatrix & A, int niters, do
         doc.get("MFLOPS Summary")->add("SPARSEMV",fnops_sparsemv/(times[3])/1.0E6);
         doc.get("MFLOPS Summary")->add("PRECOND ",fnops_precond/(times[5])/1.0E6);
         
-#ifdef USING_MPI
+#ifndef HPCG_NOMPI
         doc.add("DDOT Timing Variations","");
         doc.get("DDOT Timing Variations")->add("Min DDOT MPI_Allreduce time",t4min);
         doc.get("DDOT Timing Variations")->add("Max DDOT MPI_Allreduce time",t4max);

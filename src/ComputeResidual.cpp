@@ -25,8 +25,8 @@
 #include <iostream>
 #endif
 using std::fabs;
-#ifdef USING_MPI
-#include <mpi.h> // If this routine is compiled with -DUSING_MPI then include mpi.h
+#ifndef HPCG_NOMPI
+#include <mpi.h> // If this routine is not compiled with HPCG_NOMPI
 #endif
 
 int ComputeResidual(const local_int_t n, const double * const v1,
@@ -42,7 +42,7 @@ int ComputeResidual(const local_int_t n, const double * const v1,
 
   }
 
-#ifdef USING_MPI
+#ifndef HPCG_NOMPI
   // Use MPI's reduce function to collect all partial sums
   double global_residual = 0;
   MPI_Allreduce(&local_residual, &global_residual, 1, MPI_DOUBLE, MPI_MAX, MPI_COMM_WORLD);

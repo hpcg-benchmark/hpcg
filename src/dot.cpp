@@ -20,7 +20,7 @@
 
 /////////////////////////////////////////////////////////////////////////
 
-#ifdef USING_MPI
+#ifndef HPCG_NOMPI
 #include <mpi.h>
 #include "mytimer.hpp"
 #endif
@@ -34,7 +34,7 @@ int dot (const local_int_t n, const double * const x, const double * const y,
   else
     for (local_int_t i=0; i<n; i++) local_result += x[i]*y[i];
 
-#ifdef USING_MPI
+#ifndef HPCG_NOMPI
   // Use MPI's reduce function to collect all partial sums
   double t0 = mytimer();
   double global_result = 0.0;

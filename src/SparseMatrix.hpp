@@ -33,7 +33,7 @@ struct SparseMatrix_STRUCT {
   std::map< global_int_t, local_int_t > globalToLocalMap;
   std::vector< global_int_t > localToGlobalMap;
 
-#ifdef USING_MPI
+#ifndef HPCG_NOMPI
   local_int_t numberOfExternalValues;
   int numberOfSendNeighbors;
   local_int_t totalToBeSent;
@@ -59,7 +59,7 @@ inline void initializeMatrix(SparseMatrix & A) {
 	A.matrixValues = 0;
 	A.matrixDiagonal = 0;
 
-	#ifdef USING_MPI
+	#ifndef HPCG_NOMPI
 	A.numberOfExternalValues = 0;
 	A.numberOfSendNeighbors = 0;
 	A.totalToBeSent = 0;
@@ -86,7 +86,7 @@ inline void destroyMatrix(SparseMatrix & A) {
 	if(A.matrixValues) delete [] A.matrixValues;
 	if(A.matrixDiagonal)           delete [] A.matrixDiagonal;
 	
-#ifdef USING_MPI
+#ifndef HPCG_NOMPI
 	if(A.elementsToSend)       delete [] A.elementsToSend;
 	if(A.neighbors)              delete [] A.neighbors;
 	if(A.receiveLength)            delete [] A.receiveLength;

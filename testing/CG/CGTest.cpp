@@ -29,6 +29,11 @@ using std::endl;
 #ifdef USING_MPI
 #include <mpi.h> // If this routine is compiled with -DUSING_MPI then include mpi.h
 #endif
+
+#ifndef HPCG_NOOPENMP
+#include <omp.h> // If this routine is not compiled with HPCG_NOOPENMP
+#endif
+
 #include "GenerateGeometry.hpp"
 #include "GenerateProblem.hpp"
 #include "OptimizeMatrix.hpp" // Also include this function
@@ -84,6 +89,13 @@ int main(int argc, char *argv[]) {
 	MPI_Barrier(MPI_COMM_WORLD);
 #endif
 #endif
+	int numThreads = 1;
+
+#ifndef HPCG_NOOPENMP
+#pragma omp parallel
+	numThreads = omp_get_num_threads();
+#endif
+
 
 
 	if(argc!=4) {
@@ -104,7 +116,7 @@ int main(int argc, char *argv[]) {
 		exit(1);
 
 	}
-	GenerateGeometry(size, rank, nx, ny, nz, geom);
+	GenerateGeometry(size, rank, numThreads, nx, ny, nz, geom);
 	GenerateProblem(geom, A, &x, &b, &xexact);
 
 	//if (geom.size==1) WriteProblem(A, x, b, xexact);

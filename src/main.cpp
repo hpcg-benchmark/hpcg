@@ -34,6 +34,7 @@ using std::endl;
 #ifndef HPCG_NOOPENMP
 #include <omp.h> // If this routine is not compiled with HPCG_NOOPENMP
 #endif
+
 #include "GenerateGeometry.hpp"
 #include "GenerateProblem.hpp"
 #include "OptimizeMatrix.hpp" // Also include this function

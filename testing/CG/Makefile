@@ -24,8 +24,8 @@ CXX=mpicxx
 LINKER=mpicxx
 #CXX=/usr/local/bin/g++
 #LINKER=/usr/local/bin/g++
-#CXX=/usr/local/openmpi-gcc-4.8/bin/mpicxx
-#LINKER=/usr/local/openmpi-gcc-4.8/bin/mpicxx
+CXX=/usr/local/openmpi-gcc-4.8/bin/mpicxx
+LINKER=/usr/local/openmpi-gcc-4.8/bin/mpicxx
 
 
 # 1) Build with MPI or not?
@@ -60,7 +60,7 @@ INCLUDES = -I$(SRC)
 #CPP_OPT_FLAGS = -O0 -g -DDEBUG -DNO_PRECONDITIONER
 #CPP_OPT_FLAGS = -O0 -g -DNO_PRECONDITIONER
 #CPP_OPT_FLAGS = -O3
-CPP_OPT_FLAGS = -O3 -ffast-math -ftree-vectorize -ftree-vectorizer-verbose=2
+CPP_OPT_FLAGS = -O3 -ffast-math -ftree-vectorize -ftree-vectorizer-verbose=0 -fopenmp
 
 #
 # 4) MPI library:

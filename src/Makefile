@@ -19,16 +19,16 @@
 #LINKER=/usr/local/bin/g++
 CXX=g++
 LINKER=g++
-#CXX=/usr/local/openmpi-gcc-4.8/bin/mpicxx
-#LINKER=/usr/local/openmpi-gcc-4.8/bin/mpicxx
-CXX=mpicxx
-LINKER=mpicxx
+CXX=/usr/local/openmpi-gcc-4.8/bin/mpicxx
+LINKER=/usr/local/openmpi-gcc-4.8/bin/mpicxx
+#CXX=mpicxx
+#LINKER=mpicxx
 
 
 #    If you want to run the program without MPI, make sure NOMPI is set 
 #    to -DHPCG_NOMPI
-NOMPI = 
-#NOMPI = -DHPCG_NOMPI
+#NOMPI = 
+NOMPI = -DHPCG_NOMPI
 
 #    If you want to run the program without OpenMP, make sure NOOPENMP is set 
 #    to -DHPCG_NOOPENMP

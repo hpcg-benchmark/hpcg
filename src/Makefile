@@ -17,33 +17,33 @@
 
 #CXX=/usr/local/bin/g++
 #LINKER=/usr/local/bin/g++
-#CXX=g++
-#LINKER=g++
-CXX=/usr/local/openmpi-gcc-4.8/bin/mpicxx
-LINKER=/usr/local/openmpi-gcc-4.8/bin/mpicxx
+CXX=g++
+LINKER=g++
+#CXX=/usr/local/openmpi-gcc-4.8/bin/mpicxx
+#LINKER=/usr/local/openmpi-gcc-4.8/bin/mpicxx
 
 
 #    If you want to run the program without MPI, make sure NOMPI is set 
 #    to -DHPCG_NOMPI
-NOMPI = 
-#NOMPI = -DHPCG_NOMPI
+#NOMPI = 
+NOMPI = -DHPCG_NOMPI
 
 #    If you want to run the program without OpenMP, make sure NOOPENMP is set 
 #    to -DHPCG_NOOPENMP
-NOOPENMP = 
-#NOOPENMP = -DHPCG_NOOPENMP
+#OOPENMP = 
+NOOPENMP = -DHPCG_NOOPENMP
 
 
 
 #CPP_OPT_FLAGS = -O3 -funroll-all-loops -malign-double
 #CPP_OPT_FLAGS = -O3 -m64
 #CPP_OPT_FLAGS = -O3 -ftree-vectorize -ftree-vectorizer-verbose=2 -fopenmp
-#CPP_OPT_FLAGS = -O0 -g
+CPP_OPT_FLAGS = -O0 -g
 #CPP_OPT_FLAGS = -O0 -g -DDEBUG
 #CPP_OPT_FLAGS = -O0 -g -DDEBUG -DNO_PRECONDITIONER
 #CPP_OPT_FLAGS = -O0 -g -DNO_PRECONDITIONER
 #CPP_OPT_FLAGS = -O3
-CPP_OPT_FLAGS = -O3 -ffast-math -ftree-vectorize -ftree-vectorizer-verbose=0 -fopenmp
+#CPP_OPT_FLAGS = -O3 -ffast-math -ftree-vectorize -ftree-vectorizer-verbose=0 -fopenmp
 
 
 #

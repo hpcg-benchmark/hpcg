@@ -62,6 +62,7 @@ void OptimizeMatrix(const Geometry & geom, SparseMatrix & A) {
 		int cur_nnz = nonzerosInRow[i];
 		for (int j=0; j<cur_nnz; j++)	mtxIndL[i][j] = mtxIndG[i][j];
 	}
+	A.mtxIndL = mtxIndL;
 
 #else // Run this section if compiling for MPI
 

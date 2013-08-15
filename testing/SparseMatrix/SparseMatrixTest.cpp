@@ -27,9 +27,14 @@ using std::endl;
 #include <cstdlib>
 #include <vector>
 #include <cmath>
-#ifdef USING_MPI
-#include <mpi.h> // If this routine is compiled with -DUSING_MPI then include mpi.h
+#ifndef HPCG_NOMPI
+#include <mpi.h> // If this routine is not compiled with -DHPCG_NOMPI then include mpi.h
 #endif
+
+#ifndef HPCG_NOOPENMP
+#include <omp.h> // If this routine is not compiled with HPCG_NOOPENMP
+#endif
+
 #include "GenerateGeometry.hpp"
 #include "GenerateProblem.hpp"
 #include "ExchangeHalo.hpp"
@@ -60,16 +65,12 @@ int main(int argc, char *argv[]) {
 	int nx,ny,nz;
     double t0 = 0.0, t1 = 0.0, t2 = 0.0, t3 = 0.0, t4 = 0.0, t5 = 0.0, t6 = 0.0, t7 = 0.0;
 
-#ifdef USING_MPI
+#ifndef HPCG_NOMPI
 
 	MPI_Init(&argc, &argv);
 	int size, rank; // Number of MPI processes, My process ID
 	MPI_Comm_size(MPI_COMM_WORLD, &size);
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-
-#ifdef DEBUG
-	if (size < 100) cout << "Process "<<rank<<" of "<<size<<" is alive." <<endl;
-#endif
 
 #else
 
@@ -78,6 +79,16 @@ int main(int argc, char *argv[]) {
 
 #endif
 
+  int numThreads = 1;
+
+#ifndef HPCG_NOOPENMP
+#pragma omp parallel
+  numThreads = omp_get_num_threads();
+#endif
+
+#ifdef DEBUG
+    if (size < 100) cout << "Process "<<rank<<" of "<<size<<" is alive with " << numThreads << " threads." <<endl;
+#endif
 
 #ifdef DEBUG
 	if (rank==0)
@@ -86,7 +97,7 @@ int main(int argc, char *argv[]) {
 		cout << "Press enter to continue"<< endl;
 		cin >> junk;
 	}
-#ifdef USING_MPI
+#ifndef HPCG_NOMPI
 	MPI_Barrier(MPI_COMM_WORLD);
 #endif
 #endif
@@ -103,7 +114,7 @@ int main(int argc, char *argv[]) {
 	nx = atoi(argv[1]);
 	ny = atoi(argv[2]);
 	nz = atoi(argv[3]);
-	GenerateGeometry(size, rank, nx, ny, nz, geom);
+	GenerateGeometry(size, rank, numThreads, nx, ny, nz, geom);
 	GenerateProblem(geom, A, &x, &b, &xexact);
 
 	//if (geom.size==1) WriteProblem(A, x, b, xexact);
@@ -130,7 +141,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	// Next, compute x'*A*y
-#ifdef USING_MPI
+#ifndef HPCG_NOMPI
 	ExchangeHalo(A,y_overlap);
 #endif
 	ierr = spmv(A, y_overlap, b_computed); // b_computed = A*y_overlap
@@ -140,7 +151,7 @@ int main(int argc, char *argv[]) {
 	if (ierr) cerr << "Error in call to dot: " << ierr << ".\n" << endl;
 
 	// Next, compute y'*A*x
-#ifdef USING_MPI
+#ifndef HPCG_NOMPI
 	ExchangeHalo(A,x_overlap);
 #endif
 	ierr = spmv(A, x_overlap, b_computed); // b_computed = A*y_overlap
@@ -174,7 +185,7 @@ int main(int argc, char *argv[]) {
 	double residual = 0.0;
 	double t_begin = mytimer();
 	for (int i=0; i< numberOfCalls; ++i) {
-#ifdef USING_MPI
+#ifndef HPCG_NOMPI
 		TICK(); ExchangeHalo(A,x_overlap); TOCK(t6);
 #endif
 		TICK(); ierr = spmv(A, x_overlap, b_computed); TOCK(t3); // b_computed = A*x_overlap
@@ -186,7 +197,7 @@ int main(int argc, char *argv[]) {
     times[0] += mytimer() - t_begin;  // Total time. All done...
     times[3] = t3; // spmv time
     times[5] = t5; // symgs time
-#ifdef USING_MPI
+#ifndef HPCG_NOMPI
 		times[6] = t6; // exchange halo time
 		times[7] = t7; // matrix set up time
 #endif
@@ -207,7 +218,7 @@ int main(int argc, char *argv[]) {
 	delete [] b_computed;
 
 	// Finish up
-#ifdef USING_MPI
+#ifndef HPCG_NOMPI
 	MPI_Finalize();
 #endif
 	return 0 ;

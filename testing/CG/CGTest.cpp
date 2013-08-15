@@ -26,8 +26,8 @@ using std::cerr;
 using std::endl;
 #include <cstdlib>
 #include <vector>
-#ifdef USING_MPI
-#include <mpi.h> // If this routine is compiled with -DUSING_MPI then include mpi.h
+#ifndef HPCG_NOMPI
+#include <mpi.h> // If this routine is not compiled with HPCG_NOMPI
 #endif
 
 #ifndef HPCG_NOOPENMP
@@ -59,22 +59,29 @@ int main(int argc, char *argv[]) {
 	double t7 = 0.0;
 	int nx,ny,nz;
 
-#ifdef USING_MPI
+#ifndef HPCG_NOMPI
 
 	MPI_Init(&argc, &argv);
 	int size, rank; // Number of MPI processes, My process ID
 	MPI_Comm_size(MPI_COMM_WORLD, &size);
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-#ifdef DEBUG
-	if (size < 100) cout << "Process "<<rank<<" of "<<size<<" is alive." <<endl;
-#endif
-
 #else
 
 	int size = 1; // Serial case (not using MPI)
 	int rank = 0;
 
+#endif
+
+  int numThreads = 1;
+
+#ifndef HPCG_NOOPENMP
+#pragma omp parallel
+  numThreads = omp_get_num_threads();
+#endif
+
+#ifdef DEBUG
+    if (size < 100) cout << "Process "<<rank<<" of "<<size<<" is alive with " << numThreads << " threads." <<endl;
 #endif
 
 
@@ -85,17 +92,10 @@ int main(int argc, char *argv[]) {
 		cout << "Press enter to continue"<< endl;
 		cin >> junk;
 	}
-#ifdef USING_MPI
+#ifndef HPCG_NOMPI
 	MPI_Barrier(MPI_COMM_WORLD);
 #endif
 #endif
-	int numThreads = 1;
-
-#ifndef HPCG_NOOPENMP
-#pragma omp parallel
-	numThreads = omp_get_num_threads();
-#endif
-
 
 
 	if(argc!=4) {
@@ -187,7 +187,7 @@ int main(int argc, char *argv[]) {
 	delete [] xexact;
 
 	// Finish up
-#ifdef USING_MPI
+#ifndef HPCG_NOMPI
 	MPI_Finalize();
 #endif
 	return 0 ;

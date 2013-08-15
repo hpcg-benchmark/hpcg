@@ -32,7 +32,7 @@ int spmvref( const SparseMatrix & A, const double * const x, double * const y) {
 
 	const local_int_t nrow = A.localNumberOfRows;
 #ifndef HPCG_NOOPENMP
-#pragma parallel for default(none)
+#pragma parallel for
 #endif
 	for (local_int_t i=0; i< nrow; i++)  {
 		double sum = 0.0;

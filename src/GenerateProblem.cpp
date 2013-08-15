@@ -61,7 +61,7 @@ void GenerateProblem(const Geometry & geom, SparseMatrix & A, double **x, double
 	// Allocate arrays that are of length localNumberOfRows
 	char * nonzerosInRow = new char[localNumberOfRows];
 	global_int_t ** mtxIndG = new global_int_t*[localNumberOfRows];
-	//local_int_t  ** mtxIndL = new local_int_t*[localNumberOfRows];
+	local_int_t  ** mtxIndL = new local_int_t*[localNumberOfRows];
 	double ** matrixValues = new double*[localNumberOfRows];
 	double ** matrixDiagonal = new double*[localNumberOfRows];
 
@@ -70,11 +70,30 @@ void GenerateProblem(const Geometry & geom, SparseMatrix & A, double **x, double
 	*xexact = new double[localNumberOfRows];
 	A.localToGlobalMap.resize(localNumberOfRows);
 
+	// Use a parallel loop to do initial assignment:
+	// distributes the physical placement of arrays of pointers across the memory system
+#ifndef HPCG_NOOPENMP
+#pragma omp parallel for
+#endif
+	for (local_int_t i=0; i< localNumberOfRows; ++i) {
+		matrixValues[i] = 0;
+		matrixDiagonal[i] = 0;
+		mtxIndG[i] = 0;
+		mtxIndL[i] = 0;
+	}
+	// Now allocate the arrays pointed to
+	for (local_int_t i=0; i< localNumberOfRows; ++i) {
+		mtxIndL[i] = new local_int_t[numberOfNonzerosPerRow];
+		matrixValues[i] = new double[numberOfNonzerosPerRow];
+		mtxIndG[i] = new global_int_t[numberOfNonzerosPerRow];
+	}
+
+
 
 	global_int_t localNumberOfNonzeros = 0;
 	// TODO:  This triply nested loop could be flattened or use nested parallelism
 #ifndef HPCG_NOOPENMP
-//#pragma omp parallel for
+#pragma omp parallel for
 #endif
 	for (local_int_t iz=0; iz<nz; iz++) {
 		global_int_t giz = ipz*nz+iz;
@@ -90,8 +109,6 @@ void GenerateProblem(const Geometry & geom, SparseMatrix & A, double **x, double
 				cout << " rank, globalRow, localRow = " << rank << " " << currentGlobalRow << " " << A.globalToLocalMap[currentGlobalRow] << endl;
 #endif
 				local_int_t numberOfNonzerosInRow = 0;
-				matrixValues[currentLocalRow] = new double[numberOfNonzerosPerRow]; // Allocate a row worth of values.
-				mtxIndG[currentLocalRow] = new global_int_t[numberOfNonzerosPerRow]; // Allocate a row worth of indices.
 				double * currentValuePointer = matrixValues[currentLocalRow]; // Pointer to current value in current row
 				global_int_t * currentIndexPointerG = mtxIndG[currentLocalRow]; // Pointer to current index in current row
 				for (int sz=-1; sz<=1; sz++) {
@@ -118,7 +135,7 @@ void GenerateProblem(const Geometry & geom, SparseMatrix & A, double **x, double
 				} // end sz loop
 				nonzerosInRow[currentLocalRow] = numberOfNonzerosInRow;
 #ifndef HPCG_NOOPENMP
-#pragma omp atomic
+#pragma omp critical
 #endif
 				localNumberOfNonzeros += numberOfNonzerosInRow; // Protect this with an atomic
 				(*x)[currentLocalRow] = 0.0;
@@ -148,7 +165,7 @@ void GenerateProblem(const Geometry & geom, SparseMatrix & A, double **x, double
 	A.localNumberOfNonzeros = localNumberOfNonzeros;
 	A.nonzerosInRow = nonzerosInRow;
 	A.mtxIndG = mtxIndG;
-	//A.mtxIndL = mtxIndL;
+	A.mtxIndL = mtxIndL;
 	A.matrixValues = matrixValues;
 	A.matrixDiagonal = matrixDiagonal;
 

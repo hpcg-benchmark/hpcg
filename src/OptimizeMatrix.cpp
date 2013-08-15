@@ -50,15 +50,9 @@ void OptimizeMatrix(const Geometry & geom, SparseMatrix & A) {
 	local_int_t localNumberOfRows = A.localNumberOfRows;
 	char  * nonzerosInRow = A.nonzerosInRow;
 	global_int_t ** mtxIndG = A.mtxIndG;
-	local_int_t ** mtxIndL = new local_int_t*[localNumberOfRows];
+	local_int_t ** mtxIndL = A.mtxIndL;
 
-	// Use a parallel loop to do initial assignment: distributes the placement of mtxIndL across the memory system
-#ifndef HPCG_NOOPENMP
-#pragma omp parallel for
-#endif
-	for (local_int_t i=0; i< localNumberOfRows; ++i) mtxIndL[i] = new local_int_t[nonzerosInRow[i]];
-
-#ifdef HPCG_NOMPI  // In the non-MPI case we simply copy global indices to local index storage
+	#ifdef HPCG_NOMPI  // In the non-MPI case we simply copy global indices to local index storage
 #ifndef HPCG_NOOPENMP
 #pragma omp parallel for
 #endif
@@ -66,7 +60,6 @@ void OptimizeMatrix(const Geometry & geom, SparseMatrix & A) {
 		int cur_nnz = nonzerosInRow[i];
 		for (int j=0; j<cur_nnz; j++)	mtxIndL[i][j] = mtxIndG[i][j];
 	}
-	A.mtxIndL = mtxIndL;
 
 #else // Run this section if compiling for MPI
 
@@ -160,7 +153,6 @@ void OptimizeMatrix(const Geometry & geom, SparseMatrix & A) {
 	}
 
 	// Store contents in our matrix struct
-	A.mtxIndL = mtxIndL;
 	A.numberOfExternalValues = externalToLocalMap.size();
 	A.localNumberOfColumns = A.localNumberOfRows + A.numberOfExternalValues;
 	A.numberOfSendNeighbors = sendList.size();

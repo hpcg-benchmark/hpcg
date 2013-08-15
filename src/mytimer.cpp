@@ -27,7 +27,7 @@ double mytimer(void)
 #elif !defined(HPCG_NOOPENMP)
 
 #include <omp.h> // If this routine is compiled with HPCG_NOMPI and not compiled with HPCG_NOOPENMP then use OpenMP timer
-double mytimer(voide)
+double mytimer(void)
 {
    return(omp_get_wtime());
 }

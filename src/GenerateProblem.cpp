@@ -74,7 +74,7 @@ void GenerateProblem(const Geometry & geom, SparseMatrix & A, double **x, double
 	global_int_t localNumberOfNonzeros = 0;
 	// TODO:  This triply nested loop could be flattened or use nested parallelism
 #ifndef HPCG_NOOPENMP
-#pragma omp parallel for
+//#pragma omp parallel for
 #endif
 	for (local_int_t iz=0; iz<nz; iz++) {
 		global_int_t giz = ipz*nz+iz;

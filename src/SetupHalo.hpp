@@ -8,11 +8,11 @@
 // ************************************************************************
 //@HEADER
 
-#ifndef OPTIMIZEMATRIX_HPP
-#define OPTIMIZEMATRIX_HPP
+#ifndef SETUPHALO_HPP
+#define SETUPHALO_HPP
 #include "Geometry.hpp"
 #include "SparseMatrix.hpp"
 
-void OptimizeMatrix(const Geometry & geom, SparseMatrix & A);
+void SetupHalo(const Geometry & geom, SparseMatrix & A);
 
-#endif // OPTIMIZEMATRIX_HPP
+#endif // SETUPHALO_HPP

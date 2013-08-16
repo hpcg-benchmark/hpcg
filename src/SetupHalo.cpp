@@ -18,7 +18,7 @@ using std::endl;
 #include <cassert>
 #endif
 
-#include "OptimizeMatrix.hpp"
+#include "SetupHalo.hpp"
 #include "mytimer.hpp"
 
 #ifndef HPCG_NOMPI
@@ -31,7 +31,7 @@ using std::endl;
 #include <omp.h>
 #endif
 
-void OptimizeMatrix(const Geometry & geom, SparseMatrix & A) {
+void SetupHalo(const Geometry & geom, SparseMatrix & A) {
 
 	double t0;
 #ifdef DEBUG

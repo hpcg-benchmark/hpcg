@@ -36,7 +36,8 @@ using std::endl;
 
 #include "GenerateGeometry.hpp"
 #include "GenerateProblem.hpp"
-#include "OptimizeMatrix.hpp" // Also include this function
+#include "SetupHalo.hpp"
+#include "OptimizeProblem.hpp"
 #include "WriteProblem.hpp"
 #include "ReportResults.hpp"
 #include "mytimer.hpp"
@@ -49,15 +50,6 @@ using std::endl;
 
 int main(int argc, char *argv[]) {
 
-	Geometry geom;
-	SparseMatrix A;
-	CGData data;
-	double *x, *b, *xexact;
-	double norm, d;
-	int ierr = 0;
-	std::vector< double > times(8,0.0);
-	double t7 = 0.0;
-	int nx,ny,nz;
 
 #ifndef HPCG_NOMPI
 
@@ -106,9 +98,11 @@ int main(int argc, char *argv[]) {
 		exit(1);
 	}
 
+	int nx,ny,nz;
 	nx = atoi(argv[1]);
 	ny = atoi(argv[2]);
 	nz = atoi(argv[3]);
+
 	if (size*nx*ny*nz<=10) {
 		if (rank==0)
 			cerr << "This test requires a global problem size of 10 or more."
@@ -116,16 +110,31 @@ int main(int argc, char *argv[]) {
 		exit(1);
 
 	}
-	GenerateGeometry(size, rank, numThreads, nx, ny, nz, geom);
-	GenerateProblem(geom, A, &x, &b, &xexact);
 
-	//if (geom.size==1) WriteProblem(A, x, b, xexact);
+    Geometry geom;
+    GenerateGeometry(size, rank, numThreads, nx, ny, nz, geom);
 
-	// Transform matrix indices from global to local values.
-	// Define number of columns for the local matrix.
+    SparseMatrix A;
+    CGData data;
+    double *x, *b, *xexact;
+    GenerateProblem(geom, A, &x, &b, &xexact);
+    SetupHalo(geom, A);
+    initializeCGData(A, data);
 
-	t7 = mytimer(); OptimizeMatrix(geom, A);  initializeCGData(A, data); t7 = mytimer() - t7;
-	times[7] = t7;
+#ifdef HPCG_DEBUG
+    if (rank==0) cout << "Total setup time (sec) = " << mytimer() - t1 << endl;
+#endif
+
+
+    //if (geom.size==1) WriteProblem(A, x, b, xexact);
+
+    // Use this array for collecting timing information
+    std::vector< double > times(8,0.0);
+    double t7 = 0.0;
+
+    // Call user-tunable set up function.
+    t7 = mytimer(); OptimizeProblem(geom, A, data, x, b, xexact); t7 = mytimer() - t7;
+    times[7] = t7;
 
 	// Modify the matrix diagonal to greatly exaggerate diagonal values
 	for (int i=0; i< A.localNumberOfRows; ++i) {
@@ -152,7 +161,7 @@ int main(int argc, char *argv[]) {
 		if (k==0) expected_niters = 11;
 		for (int i=0; i< numberOfCgCalls; ++i) {
 			for (int j=0; j< A.localNumberOfRows; ++j) x[j] = 0.0; // Zero out x
-			ierr = CG( geom, A, data, b, x, maxIters, tolerance, niters, normr, normr0, &times[0], k==1);
+			int ierr = CG( geom, A, data, b, x, maxIters, tolerance, niters, normr, normr0, &times[0], k==1);
 			if (ierr) cerr << "Error in call to CG: " << ierr << ".\n" << endl;
 			if (rank==0) {
 				cout << "Call [" << i << "] Number of Iterations [" << niters <<"] Scaled Residual [" << normr/normr0 << "]";
@@ -170,8 +179,8 @@ int main(int argc, char *argv[]) {
 	// All processors are needed here.
 #ifdef DEBUG
 	double residual = 0;
-	if ((ierr = ComputeResidual(A.localNumberOfRows, x, xexact, &residual)))
-		cerr << "Error in call to compute_residual: " << ierr << ".\n" << endl;
+	int ierr = ComputeResidual(A.localNumberOfRows, x, xexact, &residual);
+	if (ierr) cerr << "Error in call to compute_residual: " << ierr << ".\n" << endl;
 	if (rank==0)
 		cout << "Difference between computed and exact  = " << residual << ".\n" << endl;
 #endif

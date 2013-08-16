@@ -37,7 +37,8 @@ using std::endl;
 
 #include "GenerateGeometry.hpp"
 #include "GenerateProblem.hpp"
-#include "OptimizeMatrix.hpp" // Also include this function
+#include "SetupHalo.hpp"
+#include "OptimizeProblem.hpp"
 #include "WriteProblem.hpp"
 #include "ReportResults.hpp"
 #include "mytimer.hpp"
@@ -50,15 +51,6 @@ using std::endl;
 
 int main(int argc, char *argv[]) {
     
-    Geometry geom;
-    SparseMatrix A;
-    CGData data;
-    double *x, *b, *xexact;
-    double norm, d;
-    int ierr = 0;
-    std::vector< double > times(8,0.0);
-    double t7 = 0.0;
-    local_int_t nx,ny,nz;
     
 #ifndef HPCG_NOMPI
     
@@ -110,21 +102,40 @@ int main(int argc, char *argv[]) {
     bool doPreconditioning = true;
 #endif
     
+    local_int_t nx,ny,nz;
     nx = atoi(argv[1]);
     ny = atoi(argv[2]);
     nz = atoi(argv[3]);
+
+#ifdef HPCG_DEBUG
+    double t1 = mytimer();
+#endif
+
+    Geometry geom;
     GenerateGeometry(size, rank, numThreads, nx, ny, nz, geom);
+
+    SparseMatrix A;
+    CGData data;
+    double *x, *b, *xexact;
     GenerateProblem(geom, A, &x, &b, &xexact);
+    SetupHalo(geom, A);
+    initializeCGData(A, data);
+
+#ifdef HPCG_DEBUG
+    if (rank==0) cout << "Total setup time (sec) = " << mytimer() - t1 << endl;
+#endif
+
 
     //if (geom.size==1) WriteProblem(A, x, b, xexact);
-    
-    // Transform matrix indices from global to local values.
-    // Define number of columns for the local matrix.
-    
-    t7 = mytimer(); OptimizeMatrix(geom, A);  initializeCGData(A, data); t7 = mytimer() - t7;
+
+    // Use this array for collecting timing information
+    std::vector< double > times(8,0.0);
+    double t7 = 0.0;
+
+    // Call user-tunable set up function.
+    t7 = mytimer(); OptimizeProblem(geom, A, data, x, b, xexact); t7 = mytimer() - t7;
     times[7] = t7;
     
-    double t1 = mytimer();   // Initialize it (if needed)
     int niters = 0;
     int totalNiters = 0;
     double normr = 0.0;
@@ -134,7 +145,7 @@ int main(int argc, char *argv[]) {
     double tolerance = 0.0; // Set tolerance to zero to make all runs do max_iter iterations
     for (int i=0; i< numberOfCgCalls; ++i) {
     	for (int j=0; j< A.localNumberOfRows; ++j) x[j] = 0.0; // Zero out x
-    	ierr = CG( geom, A, data, b, x, maxIters, tolerance, niters, normr, normr0, &times[0], doPreconditioning);
+    	int ierr = CG( geom, A, data, b, x, maxIters, tolerance, niters, normr, normr0, &times[0], doPreconditioning);
     	if (ierr) cerr << "Error in call to CG: " << ierr << ".\n" << endl;
     	if (rank==0) cout << "Call [" << i << "] Scaled Residual [" << normr/normr0 << "]" << endl;
 	totalNiters += niters;
@@ -144,8 +155,8 @@ int main(int argc, char *argv[]) {
     // All processors are needed here.
 #ifdef DEBUG
     double residual = 0;
-    if ((ierr = ComputeResidual(A.localNumberOfRows, x, xexact, &residual)))
-    cerr << "Error in call to compute_residual: " << ierr << ".\n" << endl;
+    int ierr = ComputeResidual(A.localNumberOfRows, x, xexact, &residual);
+    if (ierr) cerr << "Error in call to compute_residual: " << ierr << ".\n" << endl;
     if (rank==0)
     cout << "Difference between computed and exact  = " << residual << ".\n" << endl;
 #endif

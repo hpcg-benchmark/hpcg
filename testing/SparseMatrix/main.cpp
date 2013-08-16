@@ -37,8 +37,9 @@ using std::endl;
 
 #include "GenerateGeometry.hpp"
 #include "GenerateProblem.hpp"
+#include "SetupHalo.hpp"
 #include "ExchangeHalo.hpp"
-#include "OptimizeMatrix.hpp" // Also include this function
+#include "OptimizeProblem.hpp"
 #include "WriteProblem.hpp"
 #include "ReportResults.hpp"
 #include "mytimer.hpp"
@@ -53,17 +54,6 @@ using std::endl;
 #define TOCK(t) t += mytimer() - t0
 
 int main(int argc, char *argv[]) {
-
-	Geometry geom;
-	SparseMatrix A;
-	double *x, *b, *xexact;
-	double norm, d;
-	int ierr = 0;
-	int i, j;
-	int ione = 1;
-	std::vector< double > times(8,0.0);
-	int nx,ny,nz;
-    double t0 = 0.0, t1 = 0.0, t2 = 0.0, t3 = 0.0, t4 = 0.0, t5 = 0.0, t6 = 0.0, t7 = 0.0;
 
 #ifndef HPCG_NOMPI
 
@@ -111,19 +101,38 @@ int main(int argc, char *argv[]) {
 		exit(1);
 	}
 
+    local_int_t nx,ny,nz;
 	nx = atoi(argv[1]);
 	ny = atoi(argv[2]);
 	nz = atoi(argv[3]);
-	GenerateGeometry(size, rank, numThreads, nx, ny, nz, geom);
-	GenerateProblem(geom, A, &x, &b, &xexact);
+#ifdef HPCG_DEBUG
+    double tsetup = mytimer();
+#endif
 
-	//if (geom.size==1) WriteProblem(A, x, b, xexact);
+    Geometry geom;
+    GenerateGeometry(size, rank, numThreads, nx, ny, nz, geom);
 
-	// Transform matrix indices from global to local values.
-	// Define number of columns for the local matrix.
+    SparseMatrix A;
+    CGData data;
+    double *x, *b, *xexact;
+    GenerateProblem(geom, A, &x, &b, &xexact);
+    SetupHalo(geom, A);
+    initializeCGData(A, data);
 
-	t7 = mytimer(); OptimizeMatrix(geom, A);  t7 = mytimer() - t7;
-	times[7] = t7;
+#ifdef HPCG_DEBUG
+    if (rank==0) cout << "Total setup time (sec) = " << mytimer() - tsetup << endl;
+#endif
+
+
+    //if (geom.size==1) WriteProblem(A, x, b, xexact);
+
+    // Use this array for collecting timing information
+    std::vector< double > times(8,0.0);
+    double t0 = 0.0, t1 = 0.0, t2 = 0.0, t3 = 0.0, t4 = 0.0, t5 = 0.0, t6 = 0.0, t7 = 0.0;
+
+    // Call user-tunable set up function.
+    t7 = mytimer(); OptimizeProblem(geom, A, data, x, b, xexact); t7 = mytimer() - t7;
+    times[7] = t7;
 
 	local_int_t nrow = A.localNumberOfRows;
 	local_int_t ncol = A.localNumberOfColumns;
@@ -144,7 +153,7 @@ int main(int argc, char *argv[]) {
 #ifndef HPCG_NOMPI
 	ExchangeHalo(A,y_overlap);
 #endif
-	ierr = spmv(A, y_overlap, b_computed); // b_computed = A*y_overlap
+	int ierr = spmv(A, y_overlap, b_computed); // b_computed = A*y_overlap
 	if (ierr) cerr << "Error in call to spmv: " << ierr << ".\n" << endl;
 	double xtAy = 0.0;
 	ierr = dot(nrow, x_overlap, b_computed, &xtAy, t4); // b_computed = A*y_overlap

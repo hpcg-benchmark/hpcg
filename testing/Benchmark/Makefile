@@ -62,10 +62,10 @@ include Make.inc
 
 TARGET = $(BINdir)/HPCG-Benchmark.exe
 
-TEST_CPP = main.cpp GenerateGeometry.cpp GenerateProblem.cpp \
+TEST_CPP = main.cpp GenerateGeometry.cpp GenerateProblem.cpp SetupHalo.cpp \
 	   WriteProblem.cpp ComputeResidual.cpp ReportResults.cpp mytimer.cpp \
            spmvref.cpp symgsref.cpp spmv.cpp CG.cpp waxpby.cpp dot.cpp symgs.cpp \
-           OptimizeMatrix.cpp ExchangeHalo.cpp \
+           OptimizeProblem.cpp ExchangeHalo.cpp \
            YAML_Element.cpp YAML_Doc.cpp
 
 TEST_OBJ          = $(TEST_CPP:.cpp=.o)

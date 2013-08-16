@@ -38,11 +38,13 @@ using std::endl;
 #include "GenerateGeometry.hpp"
 #include "GenerateProblem.hpp"
 #include "SetupHalo.hpp"
+#include "ExchangeHalo.hpp"
 #include "OptimizeProblem.hpp"
 #include "WriteProblem.hpp"
 #include "ReportResults.hpp"
 #include "mytimer.hpp"
-#include "spmv.hpp"
+#include "spmvref.hpp"
+#include "symgsref.hpp"
 #include "ComputeResidual.hpp"
 #include "CG.hpp"
 #include "Geometry.hpp"
@@ -129,23 +131,52 @@ int main(int argc, char *argv[]) {
     //if (geom.size==1) WriteProblem(A, x, b, xexact);
 
     // Use this array for collecting timing information
-    std::vector< double > times(8,0.0);
-    double t7 = 0.0;
+    std::vector< double > times(9,0.0);
 
     // Call user-tunable set up function.
-    t7 = mytimer(); OptimizeProblem(geom, A, data, x, b, xexact); t7 = mytimer() - t7;
+    double t7 = mytimer(); OptimizeProblem(geom, A, data, x, b, xexact); t7 = mytimer() - t7;
     times[7] = t7;
     
+    // Call Reference SPMV and SYMGS. Compute Optimization time as ratio of times in these routines
+
+    local_int_t nrow = A.localNumberOfRows;
+	local_int_t ncol = A.localNumberOfColumns;
+
+	double * x_overlap = new double [ncol]; // Overlapped copy of x vector
+	double * b_computed = new double [nrow]; // Computed RHS vector
+
+	// Test symmetry of matrix
+
+	// First load vector with random values
+	for (int i=0; i<nrow; ++i) {
+		x_overlap[i] = ((double) rand() / (RAND_MAX)) + 1;
+	}
+
+	int ierr = 0;
+	int numberOfCalls = 10;
+	double t_begin = mytimer();
+	for (int i=0; i< numberOfCalls; ++i) {
+#ifndef HPCG_NOMPI
+		ExchangeHalo(A,x_overlap);
+#endif
+		ierr = spmvref(A, x_overlap, b_computed); // b_computed = A*x_overlap
+		if (ierr) cerr << "Error in call to spmv: " << ierr << ".\n" << endl;
+		ierr = symgsref(A, x_overlap, b_computed); // b_computed = Minv*y_overlap
+		if (ierr) cerr << "Error in call to symgs: " << ierr << ".\n" << endl;
+	}
+    times[8] = (mytimer() - t_begin)/((double) numberOfCalls);  // Total time divided by number of calls.
+
+
+
     int niters = 0;
     int totalNiters = 0;
     double normr = 0.0;
     double normr0 = 0.0;
     int maxIters = 10;
-    int numberOfCgCalls = 10;
     double tolerance = 0.0; // Set tolerance to zero to make all runs do max_iter iterations
-    for (int i=0; i< numberOfCgCalls; ++i) {
+    for (int i=0; i< numberOfCalls; ++i) {
     	for (int j=0; j< A.localNumberOfRows; ++j) x[j] = 0.0; // Zero out x
-    	int ierr = CG( geom, A, data, b, x, maxIters, tolerance, niters, normr, normr0, &times[0], doPreconditioning);
+    	ierr = CG( geom, A, data, b, x, maxIters, tolerance, niters, normr, normr0, &times[0], doPreconditioning);
     	if (ierr) cerr << "Error in call to CG: " << ierr << ".\n" << endl;
     	if (rank==0) cout << "Call [" << i << "] Scaled Residual [" << normr/normr0 << "]" << endl;
 	totalNiters += niters;
@@ -155,7 +186,7 @@ int main(int argc, char *argv[]) {
     // All processors are needed here.
 #ifdef DEBUG
     double residual = 0;
-    int ierr = ComputeResidual(A.localNumberOfRows, x, xexact, &residual);
+    ierr = ComputeResidual(A.localNumberOfRows, x, xexact, &residual);
     if (ierr) cerr << "Error in call to compute_residual: " << ierr << ".\n" << endl;
     if (rank==0)
     cout << "Difference between computed and exact  = " << residual << ".\n" << endl;

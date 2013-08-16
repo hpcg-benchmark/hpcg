@@ -165,11 +165,11 @@ int main(int argc, char *argv[]) {
 			if (ierr) cerr << "Error in call to CG: " << ierr << ".\n" << endl;
 			if (rank==0) {
 				cout << "Call [" << i << "] Number of Iterations [" << niters <<"] Scaled Residual [" << normr/normr0 << "]";
-				if (niters==expected_niters) {
+				if (niters<=expected_niters) {
 					cout << ".  Result OK" << endl;
 				}
 				else {
-					cout << "Expected " << expected_niters << " iterations.  Performed " << niters << "." << endl;
+					cout << " Expected " << expected_niters << " iterations.  Performed " << niters << "." << endl;
 				}
 			}
 		}

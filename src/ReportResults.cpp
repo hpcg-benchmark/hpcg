@@ -94,21 +94,22 @@ void ReportResults(const Geometry & geom, const SparseMatrix & A, int niters, do
         doc.get("MFLOPS Summary")->add("SPARSEMV",fnops_sparsemv/(times[3])/1.0E6);
         doc.get("MFLOPS Summary")->add("PRECOND ",fnops_precond/(times[5])/1.0E6);
         
-#ifndef HPCG_NOMPI
+        double totalSparseMVTime = times[3] + times[6];
+         doc.add("SPARSEOPS OVERHEADS","");
+         doc.get("SPARSEOPS OVERHEADS")->add("SPARSEMV  MFLOPS W OVERHEAD",fnops_sparsemv/(totalSparseMVTime)/1.0E6);
+         doc.get("SPARSEOPS OVERHEADS")->add("SPARSEOPS OVERHEAD Time", (times[7]+times[6]));
+         doc.get("SPARSEOPS OVERHEADS")->add("SPARSEOPS OVERHEAD Pct", (times[7]+times[6])/totalSparseMVTime*100.0);
+         doc.get("SPARSEOPS OVERHEADS")->add("SPARSEOPS OVERHEAD Optimization Time", (times[7]));
+         doc.get("SPARSEOPS OVERHEADS")->add("SPARSEOPS OVERHEAD Optimization Ratio vs ref SPMV+SYMGS", (times[7])/times[8]);
+
+ #ifndef HPCG_NOMPI
         doc.add("DDOT Timing Variations","");
         doc.get("DDOT Timing Variations")->add("Min DDOT MPI_Allreduce time",t4min);
         doc.get("DDOT Timing Variations")->add("Max DDOT MPI_Allreduce time",t4max);
         doc.get("DDOT Timing Variations")->add("Avg DDOT MPI_Allreduce time",t4avg);
         
-        double totalSparseMVTime = times[3] + times[5]+ times[6];
-        doc.add("SPARSEMV OVERHEADS","");
-        doc.get("SPARSEMV OVERHEADS")->add("SPARSEMV MFLOPS W OVERHEAD",fnops_sparsemv/(totalSparseMVTime)/1.0E6);
-        doc.get("SPARSEMV OVERHEADS")->add("SPARSEMV PARALLEL OVERHEAD Time", (times[7]+times[6]));
-        doc.get("SPARSEMV OVERHEADS")->add("SPARSEMV PARALLEL OVERHEAD Pct", (times[7]+times[6])/totalSparseMVTime*100.0);
-        doc.get("SPARSEMV OVERHEADS")->add("SPARSEMV PARALLEL OVERHEAD Setup Time", (times[7]));
-        doc.get("SPARSEMV OVERHEADS")->add("SPARSEMV PARALLEL OVERHEAD Setup Pct", (times[7])/totalSparseMVTime*100.0);
-        doc.get("SPARSEMV OVERHEADS")->add("SPARSEMV PARALLEL OVERHEAD Bdry Exch Time", (times[6]));
-        doc.get("SPARSEMV OVERHEADS")->add("SPARSEMV PARALLEL OVERHEAD Bdry Exch Pct", (times[6])/totalSparseMVTime*100.0);
+        doc.get("SPARSEOPS OVERHEADS")->add("SPARSEOPS PARALLEL OVERHEAD Bdry Exch Time", (times[6]));
+        doc.get("SPARSEOPS OVERHEADS")->add("SPARSEOPS PARALLEL OVERHEAD Bdry Exch Pct", (times[6])/totalSparseMVTime*100.0);
 #endif
         
             std::string yaml = doc.generateYAML();

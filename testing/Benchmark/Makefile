@@ -60,7 +60,7 @@ include Make.inc
 
 ################### Derived Quantities (no modification required) ##############
 
-TARGET = Benchmark.exe
+TARGET = $(BINdir)/HPCG-Benchmark.exe
 
 TEST_CPP = main.cpp GenerateGeometry.cpp GenerateProblem.cpp \
 	   WriteProblem.cpp ComputeResidual.cpp ReportResults.cpp mytimer.cpp \

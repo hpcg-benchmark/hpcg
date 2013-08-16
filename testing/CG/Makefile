@@ -60,7 +60,7 @@ include Make.inc
 
 ################### Derived Quantities (no modification required) ##############
 
-TARGET = HPCG-CGTest
+TARGET = $(BINdir)/HPCG-CGTest.exe
 
 TEST_CPP = main.cpp ReportCGResults.cpp \
            GenerateGeometry.cpp GenerateProblem.cpp \

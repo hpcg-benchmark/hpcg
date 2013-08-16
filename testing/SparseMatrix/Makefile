@@ -60,7 +60,7 @@ include Make.inc
 
 ################### Derived Quantities (no modification required) ##############
 
-TARGET = HPCG-SparseMatrixTest
+TARGET = $(BINdir)/HPCG-SparseMatrixTest.exe
 
 TEST_CPP = main.cpp ReportSPMVResults.cpp \
            GenerateGeometry.cpp GenerateProblem.cpp \

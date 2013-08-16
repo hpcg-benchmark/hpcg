@@ -67,19 +67,13 @@ RM           = /bin/rm -f
 TOUCH        = touch
 #
 # ----------------------------------------------------------------------
-# - Platform identifier ------------------------------------------------
-# ----------------------------------------------------------------------
-#
-ARCH         = Make.Mac.Serial
-#
-# ----------------------------------------------------------------------
 # - HPCG Directory Structure / HPCG library ------------------------------
 # ----------------------------------------------------------------------
 #
 TOPdir       = $(HOME)/hpcg
 SRCdir       = $(TOPdir)/src
 INCdir       = $(TOPdir)/src
-BINdir       = $(TOPdir)/bin/$(ARCH)
+BINdir       = $(TOPdir)/bin/$(arch)
 #
 # ----------------------------------------------------------------------
 # - Message Passing library (MPI) --------------------------------------
@@ -97,7 +91,7 @@ MPlib        =
 # - HPCG includes / libraries / specifics -------------------------------
 # ----------------------------------------------------------------------
 #
-HPCG_INCLUDES = -I$(INCdir) -I$(INCdir)/$(ARCH) $(LAinc) $(MPinc)
+HPCG_INCLUDES = -I$(INCdir) -I$(INCdir)/$(arch) $(LAinc) $(MPinc)
 HPCG_LIBS     = 
 #
 # - Compile time options -----------------------------------------------
@@ -112,7 +106,7 @@ HPCG_LIBS     =
 #    *) Build with OpenMP enabled.
 #    *) Not generate debugging output.
 #
-HPCG_OPTS     = -DHPCG_NOMPI
+HPCG_OPTS     = -DHPCG_NOOPENMP
 #
 # ----------------------------------------------------------------------
 #

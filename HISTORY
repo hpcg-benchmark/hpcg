@@ -1,57 +1,84 @@
-==============================================================
- High Performance Conjugate Gradient Benchmark (HPCG)
- HPCG - 0.1 - August 22, 2013
-==============================================================
+####################################################
+High Performance Conjugate Gradient Benchmark (HPCG)
+####################################################
 
- History
+:Author: Jack Dongarra and Michael Heroux and Piotr Luszczek
+:Revision: 0.1
+:Date: August 22, 2013
 
-Version 0.1 HPCCG (Original version) - Written as a teaching code
-for illustrating the anatomy of a distributed memory parallel
-sparse iterative solver for new research students and junior 
-staff members.  March 2000.
+===============
+History of HPCG
+===============
 
-Version 0.2:
-- Fixed bugs related to turning MPI compilation off.
-- Added more text to README to improve understanding.
-- Added new Makfile.x86linux.gcc for non-opteron systems.
-- Made MPI_Wtime the default timer when in MPI mode.
+-----------
+Version 0.1
+-----------
 
-Version 0.3:
-- Fixed a performance bug in make_local_matrix.cpp that was 
-  very noticeable when the fraction of off-processor grid 
-  points was large.
+* Added local symmetric Gauss-Seidel preconditioning.
+* Changed global geometry to be true 3D.  Previously was a beam (subdomains
+  were stacked only in the z dimension).
+* Introduced three global/local index modes: 32/32, 64/32, 64/64 to handle all
+  problem sizes.
+* Changed execution strategy to perform multiple runs with just a few
+  iterations per run.
+* Added infrastructure and rules for user adaptation of kernels for performance
+  optimization.
+* Added benchmark modification and reporting rules.
+* Changed directory and file layout to mimic HPL layouts where appropriate.
 
-Version 0.4:
+================
+History of HPCCG
+================
+
+--------------------------
+NAME CHANGE: HPCCG to HPCG
+--------------------------
+
+* The name was changed from HPCCG to HPCG without any code changes.
+
+-----------
+Version 1.0
+-----------
+
+* Released as part of Mantevo Suite 1.0, December 2012.
+
+-----------
+Version 0.5
+-----------
+
+* Added timing for Allreduce calls in MPI mode, printing min/max/avg times.
+* Set the solver tolerance to zero to make all solves take ``max_iter``
+  iterations.
+* Changed accumulator to a local variable for ``ddot``.  It seems to help
+  dual-core performance.
+
+-----------
+Version 0.4
+-----------
+
 - Made total_nnz a "long long" so that MFLOP numbers were valid
   when the nonzero count is  more than 2^31.
 
-Version 0.5:
-- Added timing for Allreduce calls in MPI mode, printing 
-  min/max/avg times.
-- Set the solver tolerance to zero to make all solves take 
-  max_iter iterations.
-- Changed accumulator to a local variable for ddot.  It 
-  seems to help dual-core performance.
+-----------
+Version 0.3
+-----------
 
-Version 1.0:
-- Released as part of Mantevo Suite 1.0, December 2012.
+* Fixed a performance bug in ``make_local_matrix.cpp`` that was very noticeable
+  when the fraction of off-processor grid points was large.
 
+-----------
+Version 0.2
+-----------
 
-NAME CHANGE: HPCCG to HPCG
+* Fixed bugs related to turning MPI compilation off.
+* Added more text to README to improve understanding.
+* Added new ``Makfile.x86linux.gcc`` for non-opteron systems.
+* Made ``MPI_Wtime`` the default timer when in MPI mode.
 
-Version 0.1:
-- Added local symmetric Gauss-Seidel preconditioning.
-- Changed global geometry to be true 3D.  Previously
-  was a beam (subdomains were stacked only in the z
-  dimension).
-- Introduced three global/local index modes: 32/32, 64/32,
-  64/64 to handle all problem sizes.
-- Changed execution strategy to perform multiple runs with 
-  just a few iterations per run.
-- Added infrastructure and rules for user adaptation of
-  kernels for performance optimization.
-- Added benchmark modification and reporting rules.
-- Changed directory and file layout to mimic TOP500 HPL 
-  layouts.
+-----------
+Version 0.1
+-----------
 
-==============================================================
+HPCCG (Original version) was written as a teaching code for illustrating the
+anatomy of a distributed memory parallel sparse iterative solver for new
+research students and junior staff members.  March 2000.

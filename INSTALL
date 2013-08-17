@@ -10,35 +10,35 @@ High Performance Conjugate Gradient Benchmark (HPCG)
 Download and Unpack
 ===================
 
-Retrieve the tar-gzip file, then uncompress it with:
+Retrieve the tar-gzip file, then uncompress it with::
 
-    gunzip hpcg.tgz; tar -xvf hpcg.tar
+    gunzip hpcg.tar.gz; tar -xvf hpcg.tar
 
-this  will create  an `hpcg` directory, that  we call  the top-level directory
+this  will create  an ``hpcg`` directory, that  we call  the top-level directory
 in the text below.
 
 =========
 Configure
 =========
 
-Create a file `Make.<arch>` in the  top-level  directory.   For  this purpose,
+Create a file ``Make.<arch>`` in the  top-level  directory.   For  this purpose,
 you may want to re-use one contained in the setup  directory.  This file
-essentially contains the names of the compilers and  options for  libraries
-with  their  paths   that   are   to   be   used   for building   the   binary.
+essentially contains the names of the compilers and  options for libraries with
+their paths that are to be used for building the binary.
 
 =====
 Build
 =====
 
-Type `make arch=<arch>`. This  should create an executable in the bin/<arch>
-directory called `xhpcg`.
+Type ``make arch=<arch>``. This  should create an executable in the bin/<arch>
+directory called ``xhpcg``.
 
 For example, on a Linux cluster, I create a file called Make.Linux in the
-top-level directory. Then, I type
+top-level directory. Then, I type::
 
     make arch=Linux
 
-This creates the executable file `bin/xhpcg`.
+This creates the executable file ``bin/xhpcg``.
 
 ====
 Test
@@ -54,34 +54,34 @@ Tuning
 ======
 
 Most of the performance  parameters can be tuned, by modifying the input file
-`bin/HPCG.dat`. See the file TUNING in the top-level directory.
+``bin/HPCG.dat``. See the file TUNING in the top-level directory.
 
 
 ====================
 Compile Time Options
 ====================
 
-At the end of the "model" `Make.<arch>`, the  user  is given the opportunity to
+At the end of the "model" ``Make.<arch>``, the  user  is given the opportunity to
 compile the software with some specific compile options.  The list of this
 options and their meaning are:
 
-* Compile with modest debugging turned on:
+* Compile with modest debugging turned on::
 
     -DHPCG_DEBUG
 
-* Compile with voluminous debugging information turned on:
+* Compile with voluminous debugging information turned on::
 
     -DHPCG_DETAILED_DEBUG
 
-* Compile without MPI enabled:
+* Compile without MPI enabled::
 
     -DHPCG_NOMPI
 
-* Compile without OpenMP enabled:
+* Compile without OpenMP enabled::
 
     -DHPCG_NOOPENMP
 
-* Enable detail timers:
+* Enable detail timers::
 
     -DHPCG_DETAILED_TIMING
 
@@ -96,5 +96,4 @@ By default HPCG will:
 Further information
 ===================
  
-Check out  the website  http://icl.cs.utk.edu/hpcg/  for the latest
-information.
+Check out  the website  http://icl.utk.edu/hpcg/  for the latest information.

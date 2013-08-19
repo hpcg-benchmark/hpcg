@@ -44,7 +44,7 @@ This creates the executable file ``bin/xhpcg``.
 Test
 ====
 
-For a quick check, run a few tests:
+For a quick check, run a few tests::
 
     cd bin/<arch>
     mpirun -np 4 xhpcg

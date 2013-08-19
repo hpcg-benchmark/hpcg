@@ -1,0 +1,48 @@
+include ../setup/Make.$(arch)
+
+HPCG_DEPS = CG.o ComputeResidual.o ExchangeHalo.o GenerateGeometry.o GenerateProblem.o OptimizeMatrix.o OptimizeProblem.o ReportResults.o SetupHalo.o WriteProblem.o YAML_Doc.o YAML_Element.o dot.o mytimer.o spmv.o spmvref.o symgs.o symgsref.o waxpby.o
+
+all: $(HPCG_DEPS)
+
+CG.o: CG.cpp CG.hpp mytimer.hpp spmv.hpp symgs.hpp dot.hpp dot.hpp waxpby.hpp ExchangeHalo.hpp 
+
+ComputeResidual.o: ComputeResidual.cpp ComputeResidual.hpp 
+
+ExchangeHalo.o: ExchangeHalo.cpp Geometry.hpp ExchangeHalo.hpp 
+
+GenerateGeometry.o: GenerateGeometry.cpp GenerateGeometry.hpp 
+
+GenerateProblem.o: GenerateProblem.cpp GenerateProblem.hpp 
+
+OptimizeMatrix.o: OptimizeMatrix.cpp OptimizeMatrix.hpp mytimer.hpp 
+
+OptimizeProblem.o: OptimizeProblem.cpp OptimizeProblem.hpp 
+
+ReportResults.o: ReportResults.cpp ReportResults.hpp YAML_Element.hpp YAML_Doc.hpp 
+
+SetupHalo.o: SetupHalo.cpp SetupHalo.hpp mytimer.hpp 
+
+WriteProblem.o: WriteProblem.cpp WriteProblem.hpp Geometry.hpp 
+
+YAML_Doc.o: YAML_Doc.cpp YAML_Doc.hpp 
+
+YAML_Element.o: YAML_Element.cpp YAML_Element.hpp 
+
+dot.o: dot.cpp mytimer.hpp dot.hpp 
+
+mytimer.o: mytimer.cpp 
+
+spmv.o: spmv.cpp spmv.hpp spmvref.hpp 
+
+spmvref.o: spmvref.cpp spmvref.hpp 
+
+symgs.o: symgs.cpp Geometry.hpp symgs.hpp symgsref.hpp 
+
+symgsref.o: symgsref.cpp Geometry.hpp symgsref.hpp 
+
+waxpby.o: waxpby.cpp waxpby.hpp 
+
+clean:
+	rm -f $(HPCG_DEPS)
+
+.PHONY: all clean

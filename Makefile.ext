@@ -1,0 +1,96 @@
+
+arch = UNKNOWN
+
+include HPCG_SRC_PATH/setup/Make.$(arch)
+
+
+HPCG_DEPS = src/CG.o src/ComputeResidual.o src/ExchangeHalo.o src/GenerateGeometry.o src/GenerateProblem.o src/OptimizeMatrix.o src/OptimizeProblem.o src/SetupHalo.o src/WriteProblem.o src/YAML_Doc.o src/YAML_Element.o src/dot.o src/mytimer.o src/spmv.o src/spmvref.o src/symgs.o src/symgsref.o src/waxpby.o
+
+all: xhpcg xcgtest xsparsematrixtest
+
+xhpcg: testing/Benchmark/main.o $(HPCG_DEPS)  src/ReportResults.o
+	$(LINKER) $(LINKFLAGS) testing/Benchmark/main.o $(HPCG_DEPS) src/ReportResults.o $(TEST_OBJ) $(HPCG_LIBS) -o $@
+
+xcgtest: testing/CG/main.o testing/CG/ReportCGResults.o $(HPCG_DEPS)
+	$(LINKER) $(LINKFLAGS) testing/CG/main.o testing/CG/ReportCGResults.o $(HPCG_DEPS) $(TEST_OBJ) $(HPCG_LIBS) -o $@
+
+xsparsematrixtest: testing/SparseMatrix/main.o testing/SparseMatrix/ReportSPMVResults.o $(HPCG_DEPS)
+	$(LINKER) $(LINKFLAGS) testing/SparseMatrix/main.o testing/SparseMatrix/ReportSPMVResults.o $(HPCG_DEPS) $(TEST_OBJ) $(HPCG_LIBS) -o $@
+
+clean:
+	rm -f src/*.o testing/*/*.o xhpcg xcgtest xsparsematrixtest
+
+.PHONY: all clean
+
+testing/Benchmark/main.o: HPCG_SRC_PATH/testing/Benchmark/main.cpp
+	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
+
+testing/CG/main.o: HPCG_SRC_PATH/testing/Benchmark/main.cpp
+	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
+
+testing/CG/ReportCGResults.o: HPCG_SRC_PATH/testing/CG/ReportCGResults.cpp
+	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
+
+testing/SparseMatrix/main.o: HPCG_SRC_PATH/testing/SparseMatrix/main.cpp
+	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
+
+testing/SparseMatrix/ReportSPMVResults.o: HPCG_SRC_PATH/testing/SparseMatrix/ReportSPMVResults.cpp
+	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
+
+src/CG.o: HPCG_SRC_PATH/src/CG.cpp
+	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
+
+src/ComputeResidual.o: HPCG_SRC_PATH/src/ComputeResidual.cpp
+	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
+
+src/ExchangeHalo.o: HPCG_SRC_PATH/src/ExchangeHalo.cpp
+	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
+
+src/GenerateGeometry.o: HPCG_SRC_PATH/src/GenerateGeometry.cpp
+	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
+
+src/GenerateProblem.o: HPCG_SRC_PATH/src/GenerateProblem.cpp
+	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
+
+src/OptimizeMatrix.o: HPCG_SRC_PATH/src/OptimizeMatrix.cpp
+	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
+
+src/OptimizeProblem.o: HPCG_SRC_PATH/src/OptimizeProblem.cpp
+	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
+
+src/ReportResults.o: HPCG_SRC_PATH/src/ReportResults.cpp
+	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
+
+src/SetupHalo.o: HPCG_SRC_PATH/src/SetupHalo.cpp
+	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
+
+src/WriteProblem.o: HPCG_SRC_PATH/src/WriteProblem.cpp
+	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
+
+src/YAML_Doc.o: HPCG_SRC_PATH/src/YAML_Doc.cpp
+	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
+
+src/YAML_Element.o: HPCG_SRC_PATH/src/YAML_Element.cpp
+	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
+
+src/dot.o: HPCG_SRC_PATH/src/dot.cpp
+	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
+
+src/mytimer.o: HPCG_SRC_PATH/src/mytimer.cpp
+	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
+
+src/spmv.o: HPCG_SRC_PATH/src/spmv.cpp
+	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
+
+src/spmvref.o: HPCG_SRC_PATH/src/spmvref.cpp
+	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
+
+src/symgs.o: HPCG_SRC_PATH/src/symgs.cpp
+	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
+
+src/symgsref.o: HPCG_SRC_PATH/src/symgsref.cpp
+	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
+
+src/waxpby.o: HPCG_SRC_PATH/src/waxpby.cpp
+	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
+

@@ -18,7 +18,6 @@
 #if defined(DEBUG) || defined(DETAILEDDEBUG)
 #include <iostream>
 using std::cout;
-using std::cerr;
 using std::endl;
 #include <cstdlib>
 #include <cstdio>

@@ -20,10 +20,10 @@
 #endif
 
 #ifdef DEBUG
-#include <iostream>
-using std::cout;
+#include <fstream>
 using std::endl;
 
+#include "hpcg.hpp"
 #endif
 
 void ReportResults(const Geometry & geom, const SparseMatrix & A, int niters, double normr, double times[]) {
@@ -113,7 +113,7 @@ void ReportResults(const Geometry & geom, const SparseMatrix & A, int niters, do
         
             std::string yaml = doc.generateYAML();
 #ifdef DEBUG
-            cout << yaml;
+            HPCG_fout << yaml;
 #endif
     }
 	return;

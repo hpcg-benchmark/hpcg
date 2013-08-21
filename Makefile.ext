@@ -4,7 +4,7 @@ arch = UNKNOWN
 include HPCG_SRC_PATH/setup/Make.$(arch)
 
 
-HPCG_DEPS = src/CG.o src/ComputeResidual.o src/ExchangeHalo.o src/GenerateGeometry.o src/GenerateProblem.o src/OptimizeMatrix.o src/OptimizeProblem.o src/SetupHalo.o src/WriteProblem.o src/YAML_Doc.o src/YAML_Element.o src/dot.o src/mytimer.o src/spmv.o src/spmvref.o src/symgs.o src/symgsref.o src/waxpby.o
+HPCG_DEPS = src/CG.o src/ComputeResidual.o src/ExchangeHalo.o src/GenerateGeometry.o src/GenerateProblem.o src/OptimizeMatrix.o src/OptimizeProblem.o src/SetupHalo.o src/WriteProblem.o src/YAML_Doc.o src/YAML_Element.o src/dot.o src/mytimer.o src/spmv.o src/spmvref.o src/symgs.o src/symgsref.o src/waxpby.o src/init.o src/finalize.o
 
 all: xhpcg xcgtest xsparsematrixtest
 
@@ -25,7 +25,7 @@ clean:
 testing/Benchmark/main.o: HPCG_SRC_PATH/testing/Benchmark/main.cpp
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
-testing/CG/main.o: HPCG_SRC_PATH/testing/Benchmark/main.cpp
+testing/CG/main.o: HPCG_SRC_PATH/testing/CG/main.cpp
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
 testing/CG/ReportCGResults.o: HPCG_SRC_PATH/testing/CG/ReportCGResults.cpp
@@ -74,6 +74,12 @@ src/YAML_Element.o: HPCG_SRC_PATH/src/YAML_Element.cpp
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
 src/dot.o: HPCG_SRC_PATH/src/dot.cpp
+	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
+
+src/finalize.o: HPCG_SRC_PATH/src/finalize.cpp
+	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
+
+src/init.o: HPCG_SRC_PATH/src/init.cpp
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
 src/mytimer.o: HPCG_SRC_PATH/src/mytimer.cpp

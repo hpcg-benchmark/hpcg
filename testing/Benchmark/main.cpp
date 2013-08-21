@@ -19,13 +19,15 @@
 // Main routine of a program that calls the HPCG conjugate gradient
 // solver to solve the problem, and then prints results.
 
+#include <fstream>
 #include <iostream>
-using std::cout;
 using std::cin;
 using std::cerr;
 using std::endl;
 #include <cstdlib>
 #include <vector>
+
+#include "hpcg.hpp"
 
 #ifndef HPCG_NOMPI
 #include <mpi.h> // If this routine is not compiled with HPCG_NOMPI
@@ -57,6 +59,7 @@ int main(int argc, char *argv[]) {
 #ifndef HPCG_NOMPI
     
     MPI_Init(&argc, &argv);
+
     int size, rank; // Number of MPI processes, My process ID
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -67,6 +70,8 @@ int main(int argc, char *argv[]) {
     
 #endif
 
+    HPCG_Init();
+
   int numThreads = 1;
 
 #ifndef HPCG_NOOPENMP
@@ -75,14 +80,14 @@ int main(int argc, char *argv[]) {
 #endif
 
 #ifdef DEBUG
-    if (size < 100) cout << "Process "<<rank<<" of "<<size<<" is alive with " << numThreads << " threads." <<endl;
+    if (size < 100) HPCG_fout << "Process "<<rank<<" of "<<size<<" is alive with " << numThreads << " threads." <<endl;
 #endif
     
 #ifdef DEBUG
     if (rank==0)
     {
         int junk = 0;
-        cout << "Press enter to continue"<< endl;
+        HPCG_fout << "Press enter to continue"<< endl;
         cin >> junk;
     }
 #ifndef HPCG_NOMPI
@@ -124,7 +129,7 @@ int main(int argc, char *argv[]) {
     initializeCGData(A, data);
 
 #ifdef HPCG_DEBUG
-    if (rank==0) cout << "Total setup time (sec) = " << mytimer() - t1 << endl;
+    if (rank==0) HPCG_fout << "Total setup time (sec) = " << mytimer() - t1 << endl;
 #endif
 
 
@@ -178,7 +183,7 @@ int main(int argc, char *argv[]) {
     	for (int j=0; j< A.localNumberOfRows; ++j) x[j] = 0.0; // Zero out x
     	ierr = CG( geom, A, data, b, x, maxIters, tolerance, niters, normr, normr0, &times[0], doPreconditioning);
     	if (ierr) cerr << "Error in call to CG: " << ierr << ".\n" << endl;
-    	if (rank==0) cout << "Call [" << i << "] Scaled Residual [" << normr/normr0 << "]" << endl;
+    	if (rank==0) HPCG_fout << "Call [" << i << "] Scaled Residual [" << normr/normr0 << "]" << endl;
 	totalNiters += niters;
     }
     
@@ -189,7 +194,7 @@ int main(int argc, char *argv[]) {
     ierr = ComputeResidual(A.localNumberOfRows, x, xexact, &residual);
     if (ierr) cerr << "Error in call to compute_residual: " << ierr << ".\n" << endl;
     if (rank==0)
-    cout << "Difference between computed and exact  = " << residual << ".\n" << endl;
+    HPCG_fout << "Difference between computed and exact  = " << residual << ".\n" << endl;
 #endif
 
     // Report results to YAML file
@@ -202,6 +207,8 @@ int main(int argc, char *argv[]) {
     delete [] b;
     delete [] xexact;
     
+    HPCG_Finalize();
+
     // Finish up
 #ifndef HPCG_NOMPI
     MPI_Finalize();

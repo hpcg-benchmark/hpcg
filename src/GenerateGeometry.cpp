@@ -21,8 +21,8 @@
 
 #include "GenerateGeometry.hpp"
 #ifdef DEBUG
-#include <iostream>
-using std::cout;
+#include <fstream>
+#include "hpcg.hpp"
 using std::endl;
 
 #include <cassert>
@@ -198,7 +198,7 @@ void GenerateGeometry(int size, int rank, int numThreads, int nx, int ny, int nz
 
 #ifdef DEBUG
 	if (rank==0)
-	cout 	<< "size = "<< size << endl
+	HPCG_fout 	<< "size = "<< size << endl
 			<< "nx  = " << nx << endl
 			<< "ny  = " << ny << endl
 			<< "nz  = " << nz << endl
@@ -206,7 +206,7 @@ void GenerateGeometry(int size, int rank, int numThreads, int nx, int ny, int nz
 			<< "npy = " << npy << endl
 			<< "npz = " << npz << endl;
 
-	cout    << "For rank = " << rank << endl
+	HPCG_fout    << "For rank = " << rank << endl
 			<< "ipx = " << ipx << endl
 			<< "ipy = " << ipy << endl
 			<< "ipz = " << ipz << endl;

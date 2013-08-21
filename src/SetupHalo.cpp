@@ -9,9 +9,9 @@
 //@HEADER
 
 #if defined(DEBUG) || defined(DETAILEDDEBUG)
-#include <iostream>
-using std::cout;
+#include <fstream>
 using std::endl;
+#include "hpcg.hpp"
 #include <cstdlib>
 #include <cstdio>
 #include <cassert>
@@ -79,7 +79,7 @@ void SetupHalo(const Geometry & geom, SparseMatrix & A) {
 			global_int_t curIndex = mtxIndG[i][j];
 			int rankIdOfColumnEntry = getRankOfMatrixRow(geom, A, curIndex);
 #ifdef DETAILEDDEBUG
-			cout << "rank, row , col, globalToLocalMap[col] = " << geom.rank << " " << currentGlobalRow << " "
+			HPCG_fout << "rank, row , col, globalToLocalMap[col] = " << geom.rank << " " << currentGlobalRow << " "
 					<< curIndex << " " << A.globalToLocalMap[curIndex] << endl;
 #endif
 			if (geom.rank!=rankIdOfColumnEntry) {// If column index is not a row index, then it comes from another processor
@@ -101,7 +101,7 @@ void SetupHalo(const Geometry & geom, SparseMatrix & A) {
 
 #ifdef DEBUG
 	// These are all attributes that should be true, due to symmetry
-	if (debug_details) cout << "totalToBeSent = " << totalToBeSent << " totalToBeReceived = " << totalToBeReceived << endl;
+	if (debug_details) HPCG_fout << "totalToBeSent = " << totalToBeSent << " totalToBeReceived = " << totalToBeReceived << endl;
 	assert(totalToBeSent==totalToBeReceived); // Number of sent entry should equal number of received
 	assert(sendList.size()==receiveList.size()); // Number of send-to neighbors should equal number of receive-from
 	// Each receive-from neighbor should be a send-to neighbor, and send the same number of entries
@@ -129,7 +129,7 @@ void SetupHalo(const Geometry & geom, SparseMatrix & A) {
 			externalToLocalMap[*i] = localNumberOfRows + receiveEntryCount; // The remote columns are indexed at end of internals
 		}
 		for (set_iter i = sendList[neighborId].begin(); i != sendList[neighborId].end(); ++i, ++sendEntryCount) {
-			//if (geom.rank==1) cout << "*i, globalToLocalMap[*i], sendEntryCount = " << *i << " " << A.globalToLocalMap[*i] << " " << sendEntryCount << endl;
+			//if (geom.rank==1) HPCG_fout << "*i, globalToLocalMap[*i], sendEntryCount = " << *i << " " << A.globalToLocalMap[*i] << " " << sendEntryCount << endl;
 			elementsToSend[sendEntryCount] = A.globalToLocalMap[*i]; // store local ids of entry to send
 		}
 	}
@@ -163,12 +163,12 @@ void SetupHalo(const Geometry & geom, SparseMatrix & A) {
 	A.sendBuffer = sendBuffer;
 
 #ifdef DEBUG
-	cout << " For rank " << geom.rank << " of " << geom.size << ", number of neighbors = " << A.numberOfSendNeighbors << endl;
+	HPCG_fout << " For rank " << geom.rank << " of " << geom.size << ", number of neighbors = " << A.numberOfSendNeighbors << endl;
 	for (int i = 0; i < A.numberOfSendNeighbors; i++) {
-		cout << "     rank " << geom.rank << " neighbor " << neighbors[i] << " send/recv length = " << sendLength[i] << "/" << receiveLength[i] << endl;
+		HPCG_fout << "     rank " << geom.rank << " neighbor " << neighbors[i] << " send/recv length = " << sendLength[i] << "/" << receiveLength[i] << endl;
 #ifdef DETAILEDDEBUG
 		for (local_int_t j = 0; j<sendLength[i]; ++j)
-			cout << "       rank " << geom.rank << " elementsToSend[" << j << "] = " << elementsToSend[j] << endl;
+			HPCG_fout << "       rank " << geom.rank << " elementsToSend[" << j << "] = " << elementsToSend[j] << endl;
 #endif
 	}
 #endif

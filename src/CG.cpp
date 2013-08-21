@@ -28,10 +28,11 @@
 
 /////////////////////////////////////////////////////////////////////////
 
-#include <iostream>
-using std::cout;
-using std::endl;
+#include <fstream>
+
 #include <cmath>
+
+#include "hpcg.hpp"
 
 #include "CG.hpp"
 #include "mytimer.hpp"
@@ -41,6 +42,8 @@ using std::endl;
 #include "dot.hpp"
 #include "waxpby.hpp"
 #include "ExchangeHalo.hpp"
+
+using std::endl;
 
 
 #define TICK()  t0 = mytimer() // Use TICK and TOCK to time a code section
@@ -67,7 +70,7 @@ int CG(const Geometry & geom, const SparseMatrix & A, CGData & data, const doubl
 	double * p = data.p; // Direction vector (in MPI mode ncol>=nrow)
 	double * Ap = data.Ap;
 
-	if (!doPreconditioning && geom.rank==0) cout << "WARNING: PERFORMING UNPRECONDITIONED ITERATIONS" << endl;
+	if (!doPreconditioning && geom.rank==0) HPCG_fout << "WARNING: PERFORMING UNPRECONDITIONED ITERATIONS" << endl;
 
 	int rank = geom.rank; //  My process ID
 #ifdef DEBUG
@@ -85,7 +88,7 @@ int CG(const Geometry & geom, const SparseMatrix & A, CGData & data, const doubl
 	dot(nrow, r, r, &normr, t4);
 	normr = sqrt(normr);
 #ifdef DEBUG
-	if (rank==0) cout << "Initial Residual = "<< normr << endl;
+	if (rank==0) HPCG_fout << "Initial Residual = "<< normr << endl;
 #endif
 
         // Record initial residual for convergence testing
@@ -124,7 +127,7 @@ int CG(const Geometry & geom, const SparseMatrix & A, CGData & data, const doubl
 		normr = sqrt(normr);
 #ifdef DEBUG
 		if (rank==0 && (k%print_freq == 0 || k+1 == max_iter))
-			cout << "Iteration = "<< k << "   Scaled Residual = "<< normr/normr0 << endl;
+			HPCG_fout << "Iteration = "<< k << "   Scaled Residual = "<< normr/normr0 << endl;
 #endif
 		niters = k;
 	}

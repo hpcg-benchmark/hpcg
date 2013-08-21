@@ -19,8 +19,8 @@
 // Main routine of a program that calls the HPCG conjugate gradient
 // solver to solve the problem, and then prints results.
 
+#include <fstream>
 #include <iostream>
-using std::cout;
 using std::cin;
 using std::cerr;
 using std::endl;
@@ -34,6 +34,8 @@ using std::endl;
 #ifndef HPCG_NOOPENMP
 #include <omp.h> // If this routine is not compiled with HPCG_NOOPENMP
 #endif
+
+#include "hpcg.hpp"
 
 #include "GenerateGeometry.hpp"
 #include "GenerateProblem.hpp"
@@ -69,6 +71,8 @@ int main(int argc, char *argv[]) {
 
 #endif
 
+	HPCG_Init();
+
   int numThreads = 1;
 
 #ifndef HPCG_NOOPENMP
@@ -77,14 +81,14 @@ int main(int argc, char *argv[]) {
 #endif
 
 #ifdef DEBUG
-    if (size < 100) cout << "Process "<<rank<<" of "<<size<<" is alive with " << numThreads << " threads." <<endl;
+    if (size < 100) HPCG_fout << "Process "<<rank<<" of "<<size<<" is alive with " << numThreads << " threads." <<endl;
 #endif
 
 #ifdef DEBUG
 	if (rank==0)
 	{
 		int junk = 0;
-		cout << "Press enter to continue"<< endl;
+		HPCG_fout << "Press enter to continue"<< endl;
 		cin >> junk;
 	}
 #ifndef HPCG_NOMPI
@@ -120,7 +124,7 @@ int main(int argc, char *argv[]) {
     initializeCGData(A, data);
 
 #ifdef HPCG_DEBUG
-    if (rank==0) cout << "Total setup time (sec) = " << mytimer() - tsetup << endl;
+    if (rank==0) HPCG_fout << "Total setup time (sec) = " << mytimer() - tsetup << endl;
 #endif
 
 
@@ -168,7 +172,7 @@ int main(int argc, char *argv[]) {
 	double ytAx = 0.0;
 	ierr = dot(nrow, y_overlap, b_computed, &ytAx, t4); // b_computed = A*y_overlap
 	if (ierr) cerr << "Error in call to dot: " << ierr << ".\n" << endl;
-	if (rank==0) cout << "Departure from symmetry for spmv abs(x'*A*y - y'*A*x)        = " << std::fabs(xtAy - ytAx) << endl;
+	if (rank==0) HPCG_fout << "Departure from symmetry for spmv abs(x'*A*y - y'*A*x)        = " << std::fabs(xtAy - ytAx) << endl;
 
 	// Test symmetry of symmetric Gauss-Seidel
 
@@ -185,7 +189,7 @@ int main(int argc, char *argv[]) {
 	double ytMinvx = 0.0;
 	ierr = dot(nrow, y_overlap, b_computed, &ytMinvx, t4); // b_computed = A*y_overlap
 	if (ierr) cerr << "Error in call to dot: " << ierr << ".\n" << endl;
-	if (rank==0) cout << "Departure from symmetry for symgs abs(x'*Minv*y - y'*Minv*x) = " << std::fabs(xtMinvy - ytMinvx) << endl;
+	if (rank==0) HPCG_fout << "Departure from symmetry for symgs abs(x'*Minv*y - y'*Minv*x) = " << std::fabs(xtMinvy - ytMinvx) << endl;
 
 	for (int i=0; i< nrow; ++i) x_overlap[i] = xexact[i]; // Copy exact answer into overlap vector
 
@@ -201,7 +205,7 @@ int main(int argc, char *argv[]) {
 		if (ierr) cerr << "Error in call to spmv: " << ierr << ".\n" << endl;
 		if ((ierr = ComputeResidual(A.localNumberOfRows, b, b_computed, &residual)))
 			cerr << "Error in call to compute_residual: " << ierr << ".\n" << endl;
-		if (rank==0) cout << "SpMV call [" << i << "] Residual [" << residual << "]" << endl;
+		if (rank==0) HPCG_fout << "SpMV call [" << i << "] Residual [" << residual << "]" << endl;
 	}
     times[0] += mytimer() - t_begin;  // Total time. All done...
     times[3] = t3; // spmv time
@@ -225,6 +229,8 @@ int main(int argc, char *argv[]) {
 	delete [] xexact;
 	delete [] x_overlap;
 	delete [] b_computed;
+
+	HPCG_Finalize();
 
 	// Finish up
 #ifndef HPCG_NOMPI

@@ -53,7 +53,7 @@ void ReportResults(const Geometry & geom, const SparseMatrix & A, int niters, do
         double fnops_precond = fniters*3*fnnz; // Two GS sweeps, but only use lower triangle for first sweep
         double fnops = fnops_ddot+fnops_waxpby+fnops_sparsemv+fnops_precond;
         
-        YAML_Doc doc("hpcg", "0.1");
+        YAML_Doc doc("hpcg-cg", "0.1");
         
         doc.add("Dimensions","");
         doc.get("Dimensions")->add("nx",geom.nx);

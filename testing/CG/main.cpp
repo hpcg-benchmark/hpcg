@@ -22,7 +22,6 @@
 #include <fstream>
 #include <iostream>
 using std::cin;
-using std::cerr;
 using std::endl;
 #include <cstdlib>
 #include <vector>
@@ -94,14 +93,6 @@ int main(int argc, char *argv[]) {
 #endif
 
 
-	if(argc!=4) {
-		if (rank==0)
-			cerr << "Usage:" << endl
-			<< argv[0] << " nx ny nz" << endl
-			<< "     where nx, ny and nz are the local sub-block dimensions" << endl;
-		exit(1);
-	}
-
 	int nx,ny,nz;
 	nx = atoi(argv[1]);
 	ny = atoi(argv[2]);
@@ -109,7 +100,7 @@ int main(int argc, char *argv[]) {
 
 	if (size*nx*ny*nz<=10) {
 		if (rank==0)
-			cerr << "This test requires a global problem size of 10 or more."
+			HPCG_fout << "This test requires a global problem size of 10 or more."
 			<< "     Your size = " << size*nx*ny*nz << "." << endl;
 		exit(1);
 
@@ -166,7 +157,7 @@ int main(int argc, char *argv[]) {
 		for (int i=0; i< numberOfCgCalls; ++i) {
 			for (int j=0; j< A.localNumberOfRows; ++j) x[j] = 0.0; // Zero out x
 			int ierr = CG( geom, A, data, b, x, maxIters, tolerance, niters, normr, normr0, &times[0], k==1);
-			if (ierr) cerr << "Error in call to CG: " << ierr << ".\n" << endl;
+			if (ierr) HPCG_fout << "Error in call to CG: " << ierr << ".\n" << endl;
 			if (rank==0) {
 				HPCG_fout << "Call [" << i << "] Number of Iterations [" << niters <<"] Scaled Residual [" << normr/normr0 << "]";
 				if (niters<=expected_niters) {
@@ -184,7 +175,7 @@ int main(int argc, char *argv[]) {
 #ifdef DEBUG
 	double residual = 0;
 	int ierr = ComputeResidual(A.localNumberOfRows, x, xexact, &residual);
-	if (ierr) cerr << "Error in call to compute_residual: " << ierr << ".\n" << endl;
+	if (ierr) HPCG_fout << "Error in call to compute_residual: " << ierr << ".\n" << endl;
 	if (rank==0)
 		HPCG_fout << "Difference between computed and exact  = " << residual << ".\n" << endl;
 #endif

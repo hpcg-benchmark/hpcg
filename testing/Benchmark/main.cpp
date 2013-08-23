@@ -22,7 +22,6 @@
 #include <fstream>
 #include <iostream>
 using std::cin;
-using std::cerr;
 using std::endl;
 #include <cstdlib>
 #include <vector>
@@ -96,13 +95,6 @@ int main(int argc, char *argv[]) {
 #endif
     
     
-    if(argc!=4) {
-        if (rank==0)
-            cerr << "Usage:" << endl
-            << argv[0] << " nx ny nz" << endl
-            << "     where nx, ny and nz are the local sub-block dimensions." << endl;
-        exit(1);
-    }
 #ifdef NO_PRECONDITIONER
     bool doPreconditioning = false;
 #else
@@ -165,9 +157,9 @@ int main(int argc, char *argv[]) {
 		ExchangeHalo(A,x_overlap);
 #endif
 		ierr = spmvref(A, x_overlap, b_computed); // b_computed = A*x_overlap
-		if (ierr) cerr << "Error in call to spmv: " << ierr << ".\n" << endl;
+		if (ierr) HPCG_fout << "Error in call to spmv: " << ierr << ".\n" << endl;
 		ierr = symgsref(A, x_overlap, b_computed); // b_computed = Minv*y_overlap
-		if (ierr) cerr << "Error in call to symgs: " << ierr << ".\n" << endl;
+		if (ierr) HPCG_fout << "Error in call to symgs: " << ierr << ".\n" << endl;
 	}
     times[8] = (mytimer() - t_begin)/((double) numberOfCalls);  // Total time divided by number of calls.
 
@@ -182,7 +174,7 @@ int main(int argc, char *argv[]) {
     for (int i=0; i< numberOfCalls; ++i) {
     	for (int j=0; j< A.localNumberOfRows; ++j) x[j] = 0.0; // Zero out x
     	ierr = CG( geom, A, data, b, x, maxIters, tolerance, niters, normr, normr0, &times[0], doPreconditioning);
-    	if (ierr) cerr << "Error in call to CG: " << ierr << ".\n" << endl;
+    	if (ierr) HPCG_fout << "Error in call to CG: " << ierr << ".\n" << endl;
     	if (rank==0) HPCG_fout << "Call [" << i << "] Scaled Residual [" << normr/normr0 << "]" << endl;
 	totalNiters += niters;
     }
@@ -192,7 +184,7 @@ int main(int argc, char *argv[]) {
 #ifdef DEBUG
     double residual = 0;
     ierr = ComputeResidual(A.localNumberOfRows, x, xexact, &residual);
-    if (ierr) cerr << "Error in call to compute_residual: " << ierr << ".\n" << endl;
+    if (ierr) HPCG_fout << "Error in call to compute_residual: " << ierr << ".\n" << endl;
     if (rank==0)
     HPCG_fout << "Difference between computed and exact  = " << residual << ".\n" << endl;
 #endif

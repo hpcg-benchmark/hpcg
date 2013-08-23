@@ -22,7 +22,6 @@
 #include <fstream>
 #include <iostream>
 using std::cin;
-using std::cerr;
 using std::endl;
 #include <cstdlib>
 #include <vector>
@@ -97,14 +96,6 @@ int main(int argc, char *argv[]) {
 #endif
 
 
-	if(argc!=4) {
-		if (rank==0)
-			cerr << "Usage:" << endl
-			<< argv[0] << " nx ny nz" << endl
-			<< "     where nx, ny and nz are the local sub-block dimensions, or" << endl;
-		exit(1);
-	}
-
     local_int_t nx,ny,nz;
 	nx = atoi(argv[1]);
 	ny = atoi(argv[2]);
@@ -158,37 +149,37 @@ int main(int argc, char *argv[]) {
 	ExchangeHalo(A,y_overlap);
 #endif
 	int ierr = spmv(A, y_overlap, b_computed); // b_computed = A*y_overlap
-	if (ierr) cerr << "Error in call to spmv: " << ierr << ".\n" << endl;
+	if (ierr) HPCG_fout << "Error in call to spmv: " << ierr << ".\n" << endl;
 	double xtAy = 0.0;
 	ierr = dot(nrow, x_overlap, b_computed, &xtAy, t4); // b_computed = A*y_overlap
-	if (ierr) cerr << "Error in call to dot: " << ierr << ".\n" << endl;
+	if (ierr) HPCG_fout << "Error in call to dot: " << ierr << ".\n" << endl;
 
 	// Next, compute y'*A*x
 #ifndef HPCG_NOMPI
 	ExchangeHalo(A,x_overlap);
 #endif
 	ierr = spmv(A, x_overlap, b_computed); // b_computed = A*y_overlap
-	if (ierr) cerr << "Error in call to spmv: " << ierr << ".\n" << endl;
+	if (ierr) HPCG_fout << "Error in call to spmv: " << ierr << ".\n" << endl;
 	double ytAx = 0.0;
 	ierr = dot(nrow, y_overlap, b_computed, &ytAx, t4); // b_computed = A*y_overlap
-	if (ierr) cerr << "Error in call to dot: " << ierr << ".\n" << endl;
+	if (ierr) HPCG_fout << "Error in call to dot: " << ierr << ".\n" << endl;
 	if (rank==0) HPCG_fout << "Departure from symmetry for spmv abs(x'*A*y - y'*A*x)        = " << std::fabs(xtAy - ytAx) << endl;
 
 	// Test symmetry of symmetric Gauss-Seidel
 
 	// Compute x'*Minv*y
 	TICK(); ierr = symgs(A, y_overlap, b_computed); TOCK(t5); // b_computed = Minv*y_overlap
-	if (ierr) cerr << "Error in call to symgs: " << ierr << ".\n" << endl;
+	if (ierr) HPCG_fout << "Error in call to symgs: " << ierr << ".\n" << endl;
 	double xtMinvy = 0.0;
 	ierr = dot(nrow, x_overlap, b_computed, &xtMinvy, t4); // b_computed = A*y_overlap
-	if (ierr) cerr << "Error in call to dot: " << ierr << ".\n" << endl;
+	if (ierr) HPCG_fout << "Error in call to dot: " << ierr << ".\n" << endl;
 
 	// Next, compute y'*Minv*x
 	TICK(); ierr = symgs(A, x_overlap, b_computed); TOCK(t5); // b_computed = Minv*y_overlap
-	if (ierr) cerr << "Error in call to symgs: " << ierr << ".\n" << endl;
+	if (ierr) HPCG_fout << "Error in call to symgs: " << ierr << ".\n" << endl;
 	double ytMinvx = 0.0;
 	ierr = dot(nrow, y_overlap, b_computed, &ytMinvx, t4); // b_computed = A*y_overlap
-	if (ierr) cerr << "Error in call to dot: " << ierr << ".\n" << endl;
+	if (ierr) HPCG_fout << "Error in call to dot: " << ierr << ".\n" << endl;
 	if (rank==0) HPCG_fout << "Departure from symmetry for symgs abs(x'*Minv*y - y'*Minv*x) = " << std::fabs(xtMinvy - ytMinvx) << endl;
 
 	for (int i=0; i< nrow; ++i) x_overlap[i] = xexact[i]; // Copy exact answer into overlap vector
@@ -202,9 +193,9 @@ int main(int argc, char *argv[]) {
 		TICK(); ExchangeHalo(A,x_overlap); TOCK(t6);
 #endif
 		TICK(); ierr = spmv(A, x_overlap, b_computed); TOCK(t3); // b_computed = A*x_overlap
-		if (ierr) cerr << "Error in call to spmv: " << ierr << ".\n" << endl;
+		if (ierr) HPCG_fout << "Error in call to spmv: " << ierr << ".\n" << endl;
 		if ((ierr = ComputeResidual(A.localNumberOfRows, b, b_computed, &residual)))
-			cerr << "Error in call to compute_residual: " << ierr << ".\n" << endl;
+			HPCG_fout << "Error in call to compute_residual: " << ierr << ".\n" << endl;
 		if (rank==0) HPCG_fout << "SpMV call [" << i << "] Residual [" << residual << "]" << endl;
 	}
     times[0] += mytimer() - t_begin;  // Total time. All done...

@@ -62,7 +62,7 @@ include Make.inc
 
 TARGET = $(BINdir)/HPCG-CGTest.exe
 
-TEST_CPP = main.cpp ReportCGResults.cpp \
+TEST_CPP = main.cpp init.cpp finalize.cpp ReportCGResults.cpp \
            GenerateGeometry.cpp GenerateProblem.cpp SetupHalo.cpp \
 	  	   WriteProblem.cpp ComputeResidual.cpp mytimer.cpp \
 	  	   spmvref.cpp symgsref.cpp \

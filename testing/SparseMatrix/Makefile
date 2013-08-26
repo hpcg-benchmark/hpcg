@@ -62,7 +62,7 @@ include Make.inc
 
 TARGET = $(BINdir)/HPCG-SparseMatrixTest.exe
 
-TEST_CPP = main.cpp ReportSPMVResults.cpp \
+TEST_CPP = main.cpp init.cpp finalize.cpp ReportSPMVResults.cpp \
            GenerateGeometry.cpp GenerateProblem.cpp SetupHalo.cpp \
 	  	   WriteProblem.cpp ComputeResidual.cpp mytimer.cpp \
 	  	   spmvref.cpp symgsref.cpp \

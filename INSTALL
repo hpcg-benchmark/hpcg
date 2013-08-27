@@ -17,28 +17,72 @@ Retrieve the tar-gzip file, then uncompress it with::
 this  will create  an ``hpcg`` directory, that  we call  the top-level directory
 in the text below.
 
-=========
-Configure
-=========
+=============
+Configuration
+=============
 
-Create a file ``Make.<arch>`` in the  top-level  directory.   For  this purpose,
-you may want to re-use one contained in the setup  directory.  This file
-essentially contains the names of the compilers and  options for libraries with
-their paths that are to be used for building the binary.
+HPCG uses a make-compatible file for configuring the compilers, linkers, and
+their command line flags.
+
+Create a file ``Make.<arch>`` in the  top-level  directory where ``<arch>``
+would be a name that you choose for your system.  To make the process easier,
+you may want to re-use one of the example files contained in the ``setup``
+directory.  The ``Make.<arch>`` file contains the command names of the
+compilers and linkers together with their options for using special directories
+and linking with libraries as well as their paths that are to be used for
+building the binary.
+
+The most important variables that need to be set in ``Make.<arch>`` are:
+
+* ``MPdir`` specifies the path to where the MPI installation resides. For some
+  MPI implementations, using the MPI-enabled compiler (such as ``mpicxx``) is
+  sufficient and it is not required specified any MPI installation paths. This
+  variable can be used to setup the ``MPinc`` and ``MPlib`` variables.
+
+* ``MPinc`` specifies the path to include directories with MPI header files. A
+  common setting here would be ``MPinc = $(MPdir)/include``, provided that the
+  ``MPdir`` variable was set properly.
+
+* ``MPlib`` specifies the path to directories with MPI library files. A common
+  setting here would be ``MPlib = $(MPdir)/lib``, provided that the ``MPdir``
+  variable was set properly.
+
+* ``HPCG_OPTS`` specifies additional compiler options for compiling the HPCG
+  source files. These options might include optimization, debugging, or tuning
+  flags.
+
+HPCG primarily support out-of-source building whereby you create a custom
+directory, say ``build``, where object files and binaries will be created::
+
+    mkdir build
+
+Next, go this new directory and use the ``configure`` script to create the
+build infrastructure::
+
+    cd build
+    /path/to/hpcg/configure
+
+Notice that you have to give a full or relative path to the ``configure`` shell
+script so that the location of source files can be automatically discovered.
 
 =====
 Build
 =====
 
-Type ``make arch=<arch>``. This  should create an executable in the bin/<arch>
-directory called ``xhpcg``.
+While in the ``build`` directory, type ``make arch=<arch>``. This  should
+create an executable in the ``bin/<arch>`` directory called ``xhpcg``.
 
-For example, on a Linux cluster, I create a file called Make.Linux in the
-top-level directory. Then, I type::
+=============
+Example Build
+=============
+
+For example, on a Linux cluster, I create a file called ``Make.Linux`` in the
+``setup`` directory right under the top-level directory. Then, in the ``build``
+directory I type::
 
     make arch=Linux
 
-This creates the executable file ``bin/xhpcg``.
+This creates the executable file ``xhpcg``.
 
 ====
 Test
@@ -46,7 +90,6 @@ Test
 
 For a quick check, run a few tests::
 
-    cd bin/<arch>
     mpirun -np 4 xhpcg
 
 ======
@@ -54,7 +97,7 @@ Tuning
 ======
 
 Most of the performance  parameters can be tuned, by modifying the input file
-``bin/HPCG.dat``. See the file TUNING in the top-level directory.
+``hpcg.dat``. See the file ``TUNING`` in the top-level directory.
 
 
 ====================

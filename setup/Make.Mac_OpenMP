@@ -91,7 +91,7 @@ MPlib        =
 # - HPCG includes / libraries / specifics -------------------------------
 # ----------------------------------------------------------------------
 #
-HPCG_INCLUDES = -I$(INCdir) -I$(INCdir)/$(arch) $(LAinc) $(MPinc)
+HPCG_INCLUDES = -I$(INCdir) -I$(INCdir)/$(arch) $(MPinc)
 HPCG_LIBS     = 
 #
 # - Compile time options -----------------------------------------------
@@ -118,9 +118,6 @@ HPCG_DEFS     = $(HPCG_OPTS) $(HPCG_INCLUDES)
 #
 CXX          = /usr/bin/g++
 CXXFLAGS     = $(HPCG_DEFS) -O3 -ffast-math -ftree-vectorize -ftree-vectorizer-verbose=0 -fopenmp
-#
-# On some platforms,  it is necessary  to use the Fortran linker to find
-# the Fortran internals used in the BLAS library.
 #
 LINKER       = $(CXX)
 LINKFLAGS    = $(CXXFLAGS)

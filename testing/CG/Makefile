@@ -66,7 +66,7 @@ TEST_CPP = main.cpp init.cpp finalize.cpp ReportCGResults.cpp \
            GenerateGeometry.cpp GenerateProblem.cpp SetupHalo.cpp \
 	  	   WriteProblem.cpp ComputeResidual.cpp mytimer.cpp \
 	  	   spmvref.cpp symgsref.cpp \
-           spmv.cpp CG.cpp waxpby.cpp waxpbyref.cpp dot.cpp symgs.cpp \
+           spmv.cpp CG.cpp waxpby.cpp waxpbyref.cpp dot.cpp dotref.cpp symgs.cpp \
            OptimizeProblem.cpp ExchangeHalo.cpp \
            YAML_Element.cpp YAML_Doc.cpp
 

@@ -39,7 +39,6 @@
 #include "spmv.hpp"
 #include "symgs.hpp"
 #include "dot.hpp"
-#include "dot.hpp"
 #include "waxpby.hpp"
 #include "ExchangeHalo.hpp"
 

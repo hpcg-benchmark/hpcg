@@ -1,10 +1,10 @@
 include ../setup/Make.$(arch)
 
-HPCG_DEPS = CG.o ComputeResidual.o ExchangeHalo.o GenerateGeometry.o GenerateProblem.o OptimizeMatrix.o OptimizeProblem.o ReportResults.o SetupHalo.o WriteProblem.o YAML_Doc.o YAML_Element.o dot.o mytimer.o spmv.o spmvref.o symgs.o symgsref.o waxpby.o
+HPCG_DEPS = CG.o ComputeResidual.o ExchangeHalo.o GenerateGeometry.o GenerateProblem.o OptimizeMatrix.o OptimizeProblem.o ReportResults.o SetupHalo.o WriteProblem.o YAML_Doc.o YAML_Element.o dot.o mytimer.o spmv.o spmvref.o symgs.o symgsref.o waxpby.o waxpbyref.o
 
 all: $(HPCG_DEPS)
 
-CG.o: CG.cpp CG.hpp mytimer.hpp spmv.hpp symgs.hpp dot.hpp dot.hpp waxpby.hpp ExchangeHalo.hpp 
+CG.o: CG.cpp CG.hpp mytimer.hpp spmv.hpp symgs.hpp dot.hpp dot.hpp waxpby.hpp waxpbyref.hpp ExchangeHalo.hpp 
 
 ComputeResidual.o: ComputeResidual.cpp ComputeResidual.hpp 
 
@@ -41,6 +41,8 @@ symgs.o: symgs.cpp Geometry.hpp symgs.hpp symgsref.hpp
 symgsref.o: symgsref.cpp Geometry.hpp symgsref.hpp 
 
 waxpby.o: waxpby.cpp waxpby.hpp 
+
+waxpbyref.o: waxpbyref.cpp waxpbyref.hpp 
 
 clean:
 	rm -f $(HPCG_DEPS)

@@ -1,16 +1,16 @@
 
 //@HEADER
 // ************************************************************************
-// 
+//
 //               HPCG: Simple Conjugate Gradient Benchmark Code
-// Questions? Contact Michael A. Heroux (maherou@sandia.gov) 
-// 
+// Questions? Contact Michael A. Heroux (maherou@sandia.gov)
+//
 // ************************************************************************
 //@HEADER
 
 /////////////////////////////////////////////////////////////////////////
 
-// Routine to compute the update of a vector with the sum of two 
+// Routine to compute the update of a vector with the sum of two
 // scaled vectors where:
 
 // w = alpha*x + beta*y
@@ -19,16 +19,19 @@
 // alpha, beta - scalars applied to x and y respectively.
 // w - output vector.
 
+// This is the reference WAXPBY impmentation.  It CANNOT be modified for the
+// purposes of this benchmark.
+
 /////////////////////////////////////////////////////////////////////////
 
-#include "waxpby.hpp"
+#include "waxpbyref.hpp"
 #ifndef HPCG_NOOPENMP
 #include <omp.h>
 #endif
 
-int waxpby (const local_int_t n, const double alpha, const double * const x,
-	    const double beta, const double * const y, 
-		     double * const w) {  
+int waxpbyref (const local_int_t n, const double alpha, const double * const x,
+	    const double beta, const double * const y,
+		     double * const w) {
   if (alpha==1.0) {
 #ifndef HPCG_NOOPENMP
 #pragma omp parallel for default(none)

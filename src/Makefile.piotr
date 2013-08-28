@@ -1,10 +1,10 @@
 include ../setup/Make.$(arch)
 
-HPCG_DEPS = CG.o ComputeResidual.o ExchangeHalo.o GenerateGeometry.o GenerateProblem.o OptimizeMatrix.o OptimizeProblem.o ReportResults.o SetupHalo.o WriteProblem.o YAML_Doc.o YAML_Element.o dot.o mytimer.o spmv.o spmvref.o symgs.o symgsref.o waxpby.o waxpbyref.o
+HPCG_DEPS = CG.o ComputeResidual.o ExchangeHalo.o GenerateGeometry.o GenerateProblem.o OptimizeProblem.o ReportResults.o SetupHalo.o WriteProblem.o YAML_Doc.o YAML_Element.o dot.o dotref.o mytimer.o spmv.o spmvref.o symgs.o symgsref.o waxpby.o waxpbyref.o
 
 all: $(HPCG_DEPS)
 
-CG.o: CG.cpp CG.hpp mytimer.hpp spmv.hpp symgs.hpp dot.hpp dot.hpp waxpby.hpp waxpbyref.hpp ExchangeHalo.hpp 
+CG.o: CG.cpp CG.hpp mytimer.hpp spmv.hpp symgs.hpp dot.hpp waxpby.hpp waxpbyref.hpp ExchangeHalo.hpp 
 
 ComputeResidual.o: ComputeResidual.cpp ComputeResidual.hpp 
 
@@ -13,8 +13,6 @@ ExchangeHalo.o: ExchangeHalo.cpp Geometry.hpp ExchangeHalo.hpp
 GenerateGeometry.o: GenerateGeometry.cpp GenerateGeometry.hpp 
 
 GenerateProblem.o: GenerateProblem.cpp GenerateProblem.hpp 
-
-OptimizeMatrix.o: OptimizeMatrix.cpp OptimizeMatrix.hpp mytimer.hpp 
 
 OptimizeProblem.o: OptimizeProblem.cpp OptimizeProblem.hpp 
 

@@ -33,6 +33,12 @@ struct SparseMatrix_STRUCT {
   std::map< global_int_t, local_int_t > globalToLocalMap;
   std::vector< global_int_t > localToGlobalMap;
 
+  /*
+   This is for storing optimized data structres created in OptimizeProblem and
+   used inside optimized spmv().
+   */
+  void *optimization_data;
+
 #ifndef HPCG_NOMPI
   local_int_t numberOfExternalValues;
   int numberOfSendNeighbors;

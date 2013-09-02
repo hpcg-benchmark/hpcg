@@ -21,8 +21,11 @@
 
 #include <fstream>
 #include <iostream>
+#ifdef DEBUG
 using std::cin;
+#endif
 using std::endl;
+
 #include <cstdlib>
 #include <vector>
 

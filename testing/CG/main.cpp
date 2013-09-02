@@ -21,8 +21,10 @@
 
 #include <fstream>
 #include <iostream>
-using std::cin;
 using std::endl;
+#ifdef DEBUG
+using std::cin;
+#endif
 #include <cstdlib>
 #include <vector>
 #ifndef HPCG_NOMPI

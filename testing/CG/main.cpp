@@ -68,7 +68,9 @@ int main(int argc, char *argv[]) {
 
 #endif
 
-	HPCG_Init();
+  HPCG_Params params;
+
+  HPCG_Init(&argc, &argv, &params);
 
   int numThreads = 1;
 
@@ -95,10 +97,10 @@ int main(int argc, char *argv[]) {
 #endif
 
 
-	int nx,ny,nz;
-	nx = atoi(argv[1]);
-	ny = atoi(argv[2]);
-	nz = atoi(argv[3]);
+    local_int_t nx,ny,nz;
+    nx = (local_int_t)params.nx;
+    ny = (local_int_t)params.ny;
+    nz = (local_int_t)params.nz;
 
 	if (size*nx*ny*nz<=10) {
 		if (rank==0)

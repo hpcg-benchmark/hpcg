@@ -168,14 +168,63 @@ int main(int argc, char *argv[]) {
 	}
     times[8] = (mytimer() - t_begin)/((double) numberOfCalls);  // Total time divided by number of calls.
 
-
+    int global_failure = 0; // assume all is well: no failures
 
     int niters = 0;
     int totalNiters = 0;
     double normr = 0.0;
     double normr0 = 0.0;
-    int maxIters = 10;
+    int maxIters = 50;
+
+    /* Compute the residual reduction for the natural ordering and reference kernels. */
+    std::vector< double > ref_times(9,0.0);
     double tolerance = 0.0; // Set tolerance to zero to make all runs do max_iter iterations
+    int err_count = 0;
+    for (int i=0; i< numberOfCalls; ++i) {
+    	for (int j=0; j< A.localNumberOfRows; ++j) x[j] = 0.0; // start x at all zeros
+    	ierr = CGref( geom, A, data, b, x, maxIters, tolerance, niters, normr, normr0, &ref_times[0], true);
+    	if (ierr) ++err_count; // count the number of errors in CG
+	totalNiters += niters;
+    }
+    if (rank == 0 && err_count) HPCG_fout << err_count << " error(s) in call(s) to reference CG." << endl;
+    double ref_tolerance = normr / norm0;
+    int ref_iters = niters;
+    
+    totalNiters = 0;
+    niters = 0;
+    normr = 0.0;
+    normr0 = 0.0;
+    err_count = 0;
+    int tolerance_failures = 0;
+
+    int opt_maxIters = 10*maxIters;
+    int opt_iters = 0;
+    double opt_worst_time = 0.0;
+    /* Compute the residual reduction and residual count for the user ordering and optimized kernels. */
+    for (int i=0; i< numberOfCalls; ++i) {
+    	for (int j=0; j< A.localNumberOfRows; ++j) x[j] = 0.0; // start x at all zeros
+    	ierr = CG( geom, A, data, b, x, opt_maxIters, ref_tolerance, niters, normr, normr0, &times[0], true);
+    	if (ierr) ++err_count; // count the number of errors in CG
+        if (normr / norm0 > ref_tolerance) ++tolerance_failures; // the number of failures to reduce residual
+
+        // pick the largest number of iterations to guarantee convergence
+        if (niters > opt_iters) opt_iters = niters;
+
+        if (times[0] > opt_worst_time) opt_worst_time = times[0];
+
+	totalNiters += niters;
+    }
+    if (rank == 0 && err_count) HPCG_fout << err_count << " error(s) in call(s) to optimized CG." << endl;
+    if (tolerance_failures) {
+      global_failure = 1;
+      if (rank == 0)
+        HPCG_fout << "Failed to reduce the residual " << tolerance_failures << " times." << endl;
+    }
+
+    double total_runtime = 60; // run for at least one minute
+    numberOfCalls = int(total_runtime / opt_worst_time);
+    if (numberOfCalls < 1) numberOfCalls = 1; // run CG at least once
+
     for (int i=0; i< numberOfCalls; ++i) {
     	for (int j=0; j< A.localNumberOfRows; ++j) x[j] = 0.0; // Zero out x
     	ierr = CG( geom, A, data, b, x, maxIters, tolerance, niters, normr, normr0, &times[0], doPreconditioning);

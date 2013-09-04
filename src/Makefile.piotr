@@ -4,7 +4,9 @@ HPCG_DEPS = CG.o ComputeResidual.o ExchangeHalo.o GenerateGeometry.o GeneratePro
 
 all: $(HPCG_DEPS)
 
-CG.o: CG.cpp CG.hpp mytimer.hpp spmv.hpp symgs.hpp dot.hpp waxpby.hpp waxpbyref.hpp ExchangeHalo.hpp 
+CG.o: CG.cpp CG.hpp mytimer.hpp spmv.hpp symgs.hpp dot.hpp waxpby.hpp ExchangeHalo.hpp 
+
+CGref.o: CGref.cpp CGref.hpp mytimer.hpp spmvref.hpp symgsref.hpp dotref.hpp waxpbyref.hpp ExchangeHalo.hpp 
 
 ComputeResidual.o: ComputeResidual.cpp ComputeResidual.hpp 
 

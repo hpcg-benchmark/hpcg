@@ -51,6 +51,7 @@ using std::endl;
 #include "symgsref.hpp"
 #include "ComputeResidual.hpp"
 #include "CG.hpp"
+#include "CGref.hpp"
 #include "Geometry.hpp"
 #include "SparseMatrix.hpp"
 #include "CGData.hpp"
@@ -187,7 +188,7 @@ int main(int argc, char *argv[]) {
 	totalNiters += niters;
     }
     if (rank == 0 && err_count) HPCG_fout << err_count << " error(s) in call(s) to reference CG." << endl;
-    double ref_tolerance = normr / norm0;
+    double ref_tolerance = normr / normr0;
     int ref_iters = niters;
     
     totalNiters = 0;
@@ -205,7 +206,7 @@ int main(int argc, char *argv[]) {
     	for (int j=0; j< A.localNumberOfRows; ++j) x[j] = 0.0; // start x at all zeros
     	ierr = CG( geom, A, data, b, x, opt_maxIters, ref_tolerance, niters, normr, normr0, &times[0], true);
     	if (ierr) ++err_count; // count the number of errors in CG
-        if (normr / norm0 > ref_tolerance) ++tolerance_failures; // the number of failures to reduce residual
+        if (normr / normr0 > ref_tolerance) ++tolerance_failures; // the number of failures to reduce residual
 
         // pick the largest number of iterations to guarantee convergence
         if (niters > opt_iters) opt_iters = niters;

@@ -64,7 +64,7 @@ TARGET = $(BINdir)/HPCG-Benchmark.exe
 
 TEST_CPP = main.cpp init.cpp finalize.cpp GenerateGeometry.cpp GenerateProblem.cpp SetupHalo.cpp \
 	   WriteProblem.cpp ComputeResidual.cpp ReportResults.cpp mytimer.cpp \
-           spmvref.cpp symgsref.cpp spmv.cpp CG.cpp waxpby.cpp waxpbyref.cpp dot.cpp dotref.cpp symgs.cpp \
+           spmvref.cpp symgsref.cpp spmv.cpp CG.cpp CGref.cpp waxpby.cpp waxpbyref.cpp dot.cpp dotref.cpp symgs.cpp \
            OptimizeProblem.cpp ExchangeHalo.cpp \
            YAML_Element.cpp YAML_Doc.cpp
 

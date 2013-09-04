@@ -201,9 +201,11 @@ int main(int argc, char *argv[]) {
     int opt_maxIters = 10*maxIters;
     int opt_iters = 0;
     double opt_worst_time = 0.0;
+
     /* Compute the residual reduction and residual count for the user ordering and optimized kernels. */
     for (int i=0; i< numberOfCalls; ++i) {
     	for (int j=0; j< A.localNumberOfRows; ++j) x[j] = 0.0; // start x at all zeros
+        double last_cummulative_time = times[0];
     	ierr = CG( geom, A, data, b, x, opt_maxIters, ref_tolerance, niters, normr, normr0, &times[0], true);
     	if (ierr) ++err_count; // count the number of errors in CG
         if (normr / normr0 > ref_tolerance) ++tolerance_failures; // the number of failures to reduce residual
@@ -211,7 +213,8 @@ int main(int argc, char *argv[]) {
         // pick the largest number of iterations to guarantee convergence
         if (niters > opt_iters) opt_iters = niters;
 
-        if (times[0] > opt_worst_time) opt_worst_time = times[0];
+        double current_time = times[0] - last_cummulative_time;
+        if (current_time > opt_worst_time) opt_worst_time = current_time;
 
 	totalNiters += niters;
     }

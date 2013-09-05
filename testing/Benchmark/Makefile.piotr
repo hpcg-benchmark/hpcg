@@ -4,7 +4,7 @@ include ../../setup/Make.$(arch)
 
 HPCG_ROOT = ../..
 
-HPCG_DEPS = $(HPCG_ROOT)/src/CG.o $(HPCG_ROOT)/src/CGref.o $(HPCG_ROOT)/src/ComputeResidual.o $(HPCG_ROOT)/src/ExchangeHalo.o $(HPCG_ROOT)/src/GenerateGeometry.o $(HPCG_ROOT)/src/GenerateProblem.o $(HPCG_ROOT)/src/OptimizeProblem.o $(HPCG_ROOT)/src/ReportResults.o $(HPCG_ROOT)/src/SetupHalo.o $(HPCG_ROOT)/src/WriteProblem.o $(HPCG_ROOT)/src/YAML_Doc.o $(HPCG_ROOT)/src/YAML_Element.o $(HPCG_ROOT)/src/dot.o $(HPCG_ROOT)/src/dotref.o $(HPCG_ROOT)/src/mytimer.o $(HPCG_ROOT)/src/spmv.o $(HPCG_ROOT)/src/spmvref.o $(HPCG_ROOT)/src/symgs.o $(HPCG_ROOT)/src/symgsref.o $(HPCG_ROOT)/src/waxpby.o $(HPCG_ROOT)/src/waxpbyref.o
+HPCG_DEPS = $(HPCG_ROOT)/src/CG.o $(HPCG_ROOT)/src/CGref.o $(HPCG_ROOT)/src/ComputeResidual.o $(HPCG_ROOT)/src/ExchangeHalo.o $(HPCG_ROOT)/src/GenerateGeometry.o $(HPCG_ROOT)/src/GenerateProblem.o $(HPCG_ROOT)/src/OptimizeProblem.o $(HPCG_ROOT)/src/ReportResults.o $(HPCG_ROOT)/src/SetupHalo.o $(HPCG_ROOT)/src/WriteProblem.o $(HPCG_ROOT)/src/YAML_Doc.o $(HPCG_ROOT)/src/YAML_Element.o $(HPCG_ROOT)/src/dot.o $(HPCG_ROOT)/src/dotref.o $(HPCG_ROOT)/src/finalize.o $(HPCG_ROOT)/src/init.o $(HPCG_ROOT)/src/mytimer.o $(HPCG_ROOT)/src/spmv.o $(HPCG_ROOT)/src/spmvref.o $(HPCG_ROOT)/src/symgs.o $(HPCG_ROOT)/src/symgsref.o $(HPCG_ROOT)/src/waxpby.o $(HPCG_ROOT)/src/waxpbyref.o
 
 CXXFLAGS += -I../../src
 

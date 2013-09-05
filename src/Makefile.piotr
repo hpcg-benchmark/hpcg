@@ -1,6 +1,6 @@
 include ../setup/Make.$(arch)
 
-HPCG_DEPS = CG.o ComputeResidual.o ExchangeHalo.o GenerateGeometry.o GenerateProblem.o OptimizeProblem.o ReportResults.o SetupHalo.o WriteProblem.o YAML_Doc.o YAML_Element.o dot.o dotref.o mytimer.o spmv.o spmvref.o symgs.o symgsref.o waxpby.o waxpbyref.o
+HPCG_DEPS = CG.o ComputeResidual.o ExchangeHalo.o GenerateGeometry.o GenerateProblem.o OptimizeProblem.o ReportResults.o SetupHalo.o WriteProblem.o YAML_Doc.o YAML_Element.o dot.o dotref.o finalize.o init.o mytimer.o spmv.o spmvref.o symgs.o symgsref.o waxpby.o waxpbyref.o
 
 all: $(HPCG_DEPS)
 
@@ -29,6 +29,10 @@ YAML_Doc.o: YAML_Doc.cpp YAML_Doc.hpp
 YAML_Element.o: YAML_Element.cpp YAML_Element.hpp 
 
 dot.o: dot.cpp mytimer.hpp dot.hpp 
+
+finalize.o: finalize.cpp hpcg.hpp
+
+init.o: init.cpp hpcg.hpp
 
 mytimer.o: mytimer.cpp 
 

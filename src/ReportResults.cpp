@@ -11,6 +11,8 @@
 // rank - My process id
 //
 
+#include "CGtest.hpp"
+#include "SymTest.hpp"
 #include "ReportResults.hpp"
 #include "YAML_Element.hpp"
 #include "YAML_Doc.hpp"
@@ -26,7 +28,8 @@ using std::endl;
 #include "hpcg.hpp"
 #endif
 
-void ReportResults(const Geometry & geom, const SparseMatrix & A, int niters, double normr, double times[]) {
+void ReportResults(const Geometry & geom, const SparseMatrix & A, int niters, double normr, double times[],
+  CGtestData * cgtest_data, SymTestData * symtest_data) {
 
 #ifndef HPCG_NOMPI
     double t4 = times[4];
@@ -59,7 +62,7 @@ void ReportResults(const Geometry & geom, const SparseMatrix & A, int niters, do
         
         doc.add("Machine Summary","");
         doc.get("Machine Summary")->add("Distributed Processes",geom.size);
-        doc.get("Machine Summary")->add("Threaded Processes   ",geom.numThreads);
+        doc.get("Machine Summary")->add("Threads per processes",geom.numThreads);
 
         doc.add("Dimensions","");
         doc.get("Dimensions")->add("nx",geom.nx);
@@ -70,6 +73,13 @@ void ReportResults(const Geometry & geom, const SparseMatrix & A, int niters, do
         
         doc.add("Number of iterations: ", niters);
         doc.add("Final residual: ", normr);
+        doc.add("********** Testing     Summary (times in sec) ***********","");
+        doc.add("Large Magnitude Diagonal","");
+        doc.get("Large Magnitude Diagonal")->add("Iteration count", cgtest_data->niters);
+        doc.get("Large Magnitude Diagonal")->add("Final residual", cgtest_data->normr);
+        doc.add("Departure from symmetry","");
+        doc.get("Departure from symmetry")->add("Departure for SPMV", symtest_data->depsym_spmv);
+        doc.get("Departure from symmetry")->add("Departure for SYMGS", symtest_data->depsym_symgs);
         doc.add("********** Performance Summary (times in sec) ***********","");
         
         doc.add("Time Summary","");

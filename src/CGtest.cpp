@@ -116,7 +116,7 @@ int CGtest(HPCG_Params *params, Geometry& geom, int size, int rank, CGtestData *
           ++cgtest_data->count_fail;
         }
         if (rank==0) {
-          HPCG_fout << "Call [" << i << "] Number of Iterations [" << niters <<"] Scaled Residual [" << normr/normr0 << "]";
+          HPCG_fout << "Call [" << i << "] Number of Iterations [" << niters <<"] Scaled Residual [" << normr/normr0 << "]" << endl;
           if (niters > expected_niters)
             HPCG_fout << " Expected " << expected_niters << " iterations.  Performed " << niters << "." << endl;
         }

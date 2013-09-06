@@ -1,3 +1,6 @@
+# -*- Makefile -*-
+
+# by default, "arch" is unknown
 arch = UNKNOWN
 
 include setup/Make.$(arch)
@@ -13,7 +16,7 @@ bin/xhpcg: testing/main.o $(HPCG_DEPS)
 	$(LINKER) $(LINKFLAGS) $? -o $@ $(HPCG_LIBS)
 
 clean:
-	rm -f $(HPCG_DEPS) bin/xhpcg
+	rm -f $(HPCG_DEPS) bin/xhpcg testing/main.o
 
 .PHONY: clean
 

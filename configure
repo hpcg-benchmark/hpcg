@@ -13,15 +13,15 @@ fi
 
 sed -e "s:HPCG_ROOT_PATH:${bld_path}:g" ${src_path}/Makefile.ext | sed -e "s:HPCG_SRC_PATH:${src_path}:g" > $mkfile
 
-src_obj_path=src
-testing_obj_path=testing
-testing_benchmark_obj_path=testing/Benchmark
-testing_cg_obj_path=testing/CG
-testing_sparsematrix_obj_path=testing/SparseMatrix
-
-for path in $src_obj_path $testing_obj_path $testing_benchmark_obj_path $testing_cg_obj_path $testing_sparsematrix_obj_path
+# creating missing directories
+for path in src testing bin
 do
   if test ! -d $path ; then
     mkdir $path
   fi
 done
+
+# copy hpcg.dat if it doesn't exist
+if test ! -f bin/hpcg.dat ; then
+  cp ${src_path}/bin/hpcg.dat bin/hpcg.dat
+fi

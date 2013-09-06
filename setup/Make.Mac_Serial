@@ -70,10 +70,10 @@ TOUCH        = touch
 # - HPCG Directory Structure / HPCG library ------------------------------
 # ----------------------------------------------------------------------
 #
-TOPdir       = $(HOME)/hpcg
+TOPdir       = .
 SRCdir       = $(TOPdir)/src
 INCdir       = $(TOPdir)/src
-BINdir       = $(TOPdir)/bin/$(arch)
+BINdir       = $(TOPdir)/bin
 #
 # ----------------------------------------------------------------------
 # - Message Passing library (MPI) --------------------------------------

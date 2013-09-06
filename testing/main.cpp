@@ -55,6 +55,7 @@ using std::endl;
 #include "Geometry.hpp"
 #include "SparseMatrix.hpp"
 #include "CGData.hpp"
+#include "CGtest.hpp"
 
 int main(int argc, char *argv[]) {
     
@@ -118,6 +119,10 @@ int main(int argc, char *argv[]) {
 
     Geometry geom;
     GenerateGeometry(size, rank, numThreads, nx, ny, nz, geom);
+
+    CGtestData cgtest_data;
+    cgtest_data.count_pass = cgtest_data.count_fail = 0;
+    CGtest(&params, geom, size, rank, &cgtest_data);
 
     SparseMatrix A;
     CGData data;

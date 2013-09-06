@@ -11,6 +11,8 @@
 #ifndef HPCG_HPP
 #define HPCG_HPP
 
+#include <fstream>
+
 extern std::ofstream HPCG_fout;
 
 struct HPCG_Params_STRUCT {

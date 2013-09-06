@@ -211,18 +211,20 @@ int main(int argc, char *argv[]) {
     int opt_iters = 0;
     double opt_worst_time = 0.0;
 
+    std::vector< double > opt_times(9,0.0);
+
     /* Compute the residual reduction and residual count for the user ordering and optimized kernels. */
     for (int i=0; i< numberOfCalls; ++i) {
     	for (int j=0; j< A.localNumberOfRows; ++j) x[j] = 0.0; // start x at all zeros
-        double last_cummulative_time = times[0];
-    	ierr = CG( geom, A, data, b, x, opt_maxIters, ref_tolerance, niters, normr, normr0, &times[0], true);
+        double last_cummulative_time = opt_times[0];
+    	ierr = CG( geom, A, data, b, x, opt_maxIters, ref_tolerance, niters, normr, normr0, &opt_times[0], true);
     	if (ierr) ++err_count; // count the number of errors in CG
         if (normr / normr0 > ref_tolerance) ++tolerance_failures; // the number of failures to reduce residual
 
         // pick the largest number of iterations to guarantee convergence
         if (niters > opt_iters) opt_iters = niters;
 
-        double current_time = times[0] - last_cummulative_time;
+        double current_time = opt_times[0] - last_cummulative_time;
         if (current_time > opt_worst_time) opt_worst_time = current_time;
 
 	totalNiters += niters;
@@ -238,6 +240,10 @@ int main(int argc, char *argv[]) {
     numberOfCalls = int(total_runtime / opt_worst_time);
     if (numberOfCalls < 1) numberOfCalls = 1; // run CG at least once
 
+    /* This is the timed run for a specified amount of time. */
+
+    totalNiters = 0;
+
     for (int i=0; i< numberOfCalls; ++i) {
     	for (int j=0; j< A.localNumberOfRows; ++j) x[j] = 0.0; // Zero out x
     	ierr = CG( geom, A, data, b, x, maxIters, tolerance, niters, normr, normr0, &times[0], doPreconditioning);
@@ -252,12 +258,11 @@ int main(int argc, char *argv[]) {
     double residual = 0;
     ierr = ComputeResidual(A.localNumberOfRows, x, xexact, &residual);
     if (ierr) HPCG_fout << "Error in call to compute_residual: " << ierr << ".\n" << endl;
-    if (rank==0)
-    HPCG_fout << "Difference between computed and exact  = " << residual << ".\n" << endl;
+    if (rank==0) HPCG_fout << "Difference between computed and exact  = " << residual << ".\n" << endl;
 #endif
 
     // Report results to YAML file
-    ReportResults(geom, A, totalNiters, normr/normr0, &times[0]);
+    ReportResults(geom, A, totalNiters, normr/normr0, &times[0], &cgtest_data, &symtest_data);
 
     // Clean up
     destroyMatrix(A);

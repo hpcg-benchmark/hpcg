@@ -1,3 +1,4 @@
+
 //@HEADER
 // ************************************************************************
 //
@@ -7,11 +8,18 @@
 // ************************************************************************
 //@HEADER
 
-#ifndef REPORTRESULTS_HPP
-#define REPORTRESULTS_HPP
-#include "Geometry.hpp"
+#ifndef SYMTEST_HPP
+#define SYMTEST_HPP
+
+#include "hpcg.hpp"
 #include "SparseMatrix.hpp"
+#include "Geometry.hpp"
 
-void ReportResults(const Geometry & geom, const SparseMatrix & A, int numcalls, double residual, double times[]);
+struct SymTestData_STRUCT {
+  double depsym_spmv, depsym_symgs;
+};
+typedef struct SymTestData_STRUCT SymTestData;
 
-#endif // REPORTRESULTS_HPP
+extern int SymTest(HPCG_Params *params, Geometry& geom, int size, int rank, SymTestData *symtest_data);
+
+#endif  // SYMTEST_HPP

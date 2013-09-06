@@ -56,6 +56,7 @@ using std::endl;
 #include "SparseMatrix.hpp"
 #include "CGData.hpp"
 #include "CGtest.hpp"
+#include "SymTest.hpp"
 
 int main(int argc, char *argv[]) {
     
@@ -123,6 +124,9 @@ int main(int argc, char *argv[]) {
     CGtestData cgtest_data;
     cgtest_data.count_pass = cgtest_data.count_fail = 0;
     CGtest(&params, geom, size, rank, &cgtest_data);
+
+    SymTestData symtest_data;
+    SymTest(&params, geom, size, rank, &symtest_data);
 
     SparseMatrix A;
     CGData data;

@@ -57,7 +57,7 @@ using std::cin;
 #define TICK()  t0 = mytimer() // Use TICK and TOCK to time a code section
 #define TOCK(t) t += mytimer() - t0
 
-int SymTest(HPCG_Params *params, Geometry& geom, int size, int rank, SymTestData *symtest_data) {
+int SymTest(HPCG_Params * params, Geometry & geom, int size, int rank, SymTestData * symtest_data) {
 
   int numThreads = 1;
 

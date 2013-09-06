@@ -21,7 +21,7 @@ struct CGtestData_STRUCT {
 };
 typedef struct CGtestData_STRUCT CGtestData;
 
-extern int CGtest(HPCG_Params *params, Geometry& geom, int size, int rank, CGtestData *cgtest_data);
+extern int CGtest(HPCG_Params * params, Geometry & geom, int size, int rank, CGtestData * cgtest_data);
 
 #endif  // CGTEST_HPP
 

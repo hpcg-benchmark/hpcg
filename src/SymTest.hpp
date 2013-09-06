@@ -20,6 +20,6 @@ struct SymTestData_STRUCT {
 };
 typedef struct SymTestData_STRUCT SymTestData;
 
-extern int SymTest(HPCG_Params *params, Geometry& geom, int size, int rank, SymTestData *symtest_data);
+extern int SymTest(HPCG_Params * params, Geometry & geom, int size, int rank, SymTestData * symtest_data);
 
 #endif  // SYMTEST_HPP

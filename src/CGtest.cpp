@@ -49,7 +49,7 @@ using std::cin;
 #include "SparseMatrix.hpp"
 #include "CGData.hpp"
 
-int CGtest(HPCG_Params *params, Geometry& geom, int size, int rank, CGtestData *cgtest_data) {
+int CGtest(HPCG_Params * params, Geometry & geom, int size, int rank, CGtestData * cgtest_data) {
 
 
   int numThreads = 1;

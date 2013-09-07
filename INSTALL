@@ -24,13 +24,13 @@ Configuration
 HPCG uses a make-compatible file for configuring the compilers, linkers, and
 their command line flags.
 
-Create a file ``Make.<arch>`` in the  top-level  directory where ``<arch>``
-would be a name that you choose for your system.  To make the process easier,
-you may want to re-use one of the example files contained in the ``setup``
-directory.  The ``Make.<arch>`` file contains the command names of the
-compilers and linkers together with their options for using special directories
-and linking with libraries as well as their paths that are to be used for
-building the binary.
+Create a file ``Make.<arch>`` in the ``setup`` directory right under the
+top-level  directory. Suffix ``<arch>`` should be a name that you choose for
+your system.  To make the process easier, you may want to re-use one of the
+example files contained already in the ``setup`` directory.  The
+``Make.<arch>`` file contains the command names of the compilers and linkers
+together with their options for using special directories and linking with
+libraries as well as their paths that are to be used for building the binary.
 
 The most important variables that need to be set in ``Make.<arch>`` are:
 
@@ -51,8 +51,27 @@ The most important variables that need to be set in ``Make.<arch>`` are:
   source files. These options might include optimization, debugging, or tuning
   flags.
 
-HPCG primarily support out-of-source building whereby you create a custom
-directory, say ``build``, where object files and binaries will be created::
+* ``CXX`` specifies the name of the C++ compiler for compiling the code. It
+  should be a C++ that supports a subset of STL that is used in HPCG as well as
+  the subset of constructs used in the MPI standard.
+
+* ``CXXFLAGS`` specifies the flags to be used when invoking the C++ compiler.
+  These might include optimization and profiling options.
+
+* ``LINKER`` specifies the linker capable of linking C++ programs that include
+  MPI calls.
+
+* ``LINKERFLAGS`` specifies the flags passed to the linker that might indicate
+  directories where to look for standard C++ and MPI libraries.
+
+HPCG supports in-source and out-of-source builds. In the case of the former,
+the object files and the binary reside in the same directory structure as the
+source files. There is no need for a seperate configuation step and the reader
+may skip the the Build section.
+
+In the latter case, a seperate directory is created to hold the object and
+binary executable files.  For example, create a custom directory, ``build`` in
+this example, for the results of compilation and linking::
 
     mkdir build
 
@@ -60,43 +79,68 @@ Next, go this new directory and use the ``configure`` script to create the
 build infrastructure::
 
     cd build
-    /path/to/hpcg/configure
+    /path/to/hpcg/configure arch=<arch>
 
-Notice that you have to give a full or relative path to the ``configure`` shell
-script so that the location of source files can be automatically discovered.
+Notice that you have to give a absolute or relative path to the ``configure``
+shell script so that the location of the source files can be discovered
+automatically.
 
 =====
 Build
 =====
 
-While in the ``build`` directory, type ``make arch=<arch>``. This  should
-create an executable in the ``bin/<arch>`` directory called ``xhpcg``.
+For the in-source builds, while in the top-level directory, simply type::
+
+    make arch=<arch>
+
+For the out-of-source builds, go to the ``build`` directory and type ``make``.
+
+In both cases, the executable called ``xhpcg`` should be created in the ``bin``
+directory.
 
 =============
 Example Build
 =============
 
-For example, on a Linux cluster, I create a file called ``Make.Linux`` in the
-``setup`` directory right under the top-level directory. Then, in the ``build``
-directory I type::
+As an example, let's use a Linux cluster and create a file called
+``Make.Linux`` in the ``setup`` directory right under the top-level directory.
 
-    make arch=Linux
+For in-source build, we type ``make arch=Linux`` which creates the executable
+file called ``bin/xhpcg``.
 
-This creates the executable file ``xhpcg``.
+For out-of-source build, we create the build directory called ``build_Linux``
+and go to that direcotry::
+
+    mkdir build_Linux
+    cd build_Linux
+
+Then, while in the ``build_Linux`` directory we type::
+
+    /path/to/hpcg/configure arch=Linux
+    make
+
+This creates the executable file ``bin/xhpcg``.
 
 ====
 Test
 ====
 
-For a quick check, run a few tests::
+For a quick check, go to the ``bin`` directory and run the HPCG executable as
+follows::
 
-    mpirun -np 4 xhpcg
+    mpirun -np 8 xhpcg
+
+Note that this will use the default ``hpcg.dat`` file. If you'd like to change
+the size of local dimensions of the problem to NX=17, NY=19, NZ=23 then run the
+following::
+
+    mpirun -np 8 xhpcg 17 19 23
 
 ======
 Tuning
 ======
 
-Most of the performance  parameters can be tuned, by modifying the input file
+Most of the performance  parameters can be tuned by modifying the input file
 ``hpcg.dat``. See the file ``TUNING`` in the top-level directory.
 
 

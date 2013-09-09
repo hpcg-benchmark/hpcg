@@ -102,7 +102,12 @@ void GenerateProblem(const Geometry & geom, SparseMatrix & A, double **x, double
 				global_int_t gix = ipx*nx+ix;
 				local_int_t currentLocalRow = iz*nx*ny+iy*nx+ix;
 				global_int_t currentGlobalRow = giz*gnx*gny+giy*gnx+gix;
+#ifndef HPCG_NOOPENMP
+// C++ std::map is not threadsafe for writing
+#pragma omp critical
+#endif
 				A.globalToLocalMap[currentGlobalRow] = currentLocalRow;
+
 				A.localToGlobalMap[currentLocalRow] = currentGlobalRow;
 #ifdef DETAILEDDEBUG
 				HPCG_fout << " rank, globalRow, localRow = " << rank << " " << currentGlobalRow << " " << A.globalToLocalMap[currentGlobalRow] << endl;

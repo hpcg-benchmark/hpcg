@@ -34,19 +34,19 @@ int waxpbyref (const local_int_t n, const double alpha, const double * const x,
 		     double * const w) {
   if (alpha==1.0) {
 #ifndef HPCG_NOOPENMP
-#pragma omp parallel for default(none)
+#pragma omp parallel for
 #endif
     for (local_int_t i=0; i<n; i++) w[i] = x[i] + beta * y[i];
   }
   else if(beta==1.0) {
 #ifndef HPCG_NOOPENMP
-#pragma omp parallel for default(none)
+#pragma omp parallel for
 #endif
     for (local_int_t i=0; i<n; i++) w[i] = alpha * x[i] + y[i];
   }
   else  {
 #ifndef HPCG_NOOPENMP
-#pragma omp parallel for default(none)
+#pragma omp parallel for
 #endif
     for (local_int_t i=0; i<n; i++) w[i] = alpha * x[i] + beta * y[i];
   }

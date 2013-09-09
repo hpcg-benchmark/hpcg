@@ -38,13 +38,13 @@ int dotref (const local_int_t n, const double * const x, const double * const y,
   double local_result = 0.0;
   if (y==x) {
 #ifndef HPCG_NOOPENMP
-#pragma omp parallel for reduction (+:local_result) default(none)
+#pragma omp parallel for reduction (+:local_result)
 #endif
     for (local_int_t i=0; i<n; i++) local_result += x[i]*x[i];
   }
   else {
 #ifndef HPCG_NOOPENMP
-#pragma omp parallel for reduction (+:local_result) default(none)
+#pragma omp parallel for reduction (+:local_result)
 #endif
     for (local_int_t i=0; i<n; i++) local_result += x[i]*y[i];
   }

@@ -64,6 +64,8 @@ int CGtest(HPCG_Params * params, Geometry & geom, int size, int rank, CGtestData
     ny = (local_int_t)params->ny;
     nz = (local_int_t)params->nz;
 
+    double t1 = mytimer();   // Initialize it (if needed)
+
     SparseMatrix A;
     CGData data;
     double *x, *b, *xexact;
@@ -95,7 +97,6 @@ int CGtest(HPCG_Params * params, Geometry & geom, int size, int rank, CGtestData
         b[i] *= 1.0e6;
       }
     }
-    double t1 = mytimer();   // Initialize it (if needed)
     int niters = 0;
     double normr = 0.0;
     double normr0 = 0.0;

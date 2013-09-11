@@ -14,9 +14,6 @@
 #include <map>
 #include <vector>
 #include "Geometry.hpp"
-#ifdef DETAILEDDEBUG
-#include <iostream>
-#endif
 
 struct SparseMatrix_STRUCT {
   char   *title;
@@ -115,9 +112,6 @@ inline int getRankOfMatrixRow(const Geometry & geom, const SparseMatrix & A, glo
 	int ipy = iy/geom.ny;
 	int ipx = ix/geom.nx;
 	int rank = ipx+ipy*geom.npx+ipz*geom.npy*geom.npx;
-#ifdef DETAILEDDEBUG
-	//std::cout << "In getRank, rank = " << geom.rank << " index, gnx, gny, ipz, ipy, ipx, rank = " << index << " " << gnx << " "  << " " << gny << " " << ipz << " " << ipy << " " << ipx << " " << rank << std::endl;
-#endif
 	return(rank);
 
 }

@@ -15,7 +15,7 @@
 
 /////////////////////////////////////////////////////////////////////////
 
-#if defined(DEBUG) || defined(DETAILEDDEBUG)
+#if defined(HPCG_DEBUG) || defined(HPCG_DETAILEDDEBUG)
 #include <fstream>
 using std::endl;
 #include <cstdlib>
@@ -109,7 +109,7 @@ void GenerateProblem(const Geometry & geom, SparseMatrix & A, double **b, double
 				A.globalToLocalMap[currentGlobalRow] = currentLocalRow;
 
 				A.localToGlobalMap[currentLocalRow] = currentGlobalRow;
-#ifdef DETAILEDDEBUG
+#ifdef HPCG_DETAILEDDEBUG
 				HPCG_fout << " rank, globalRow, localRow = " << rank << " " << currentGlobalRow << " " << A.globalToLocalMap[currentGlobalRow] << endl;
 #endif
 				local_int_t numberOfNonzerosInRow = 0;
@@ -148,7 +148,7 @@ void GenerateProblem(const Geometry & geom, SparseMatrix & A, double **b, double
 			} // end ix loop
 		} // end iy loop
 	} // end iz loop
-#ifdef DEBUG
+#ifdef HPCG_DETAILEDDEBUG
 	HPCG_fout 	  << "Process " << rank << " of " << size <<" has " << localNumberOfRows    << " rows."     << endl
 			  << "Process " << rank << " of " << size <<" has " << localNumberOfNonzeros<< " nonzeros." <<endl;
 #endif

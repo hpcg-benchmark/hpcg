@@ -95,7 +95,7 @@ int CGtest(HPCG_Params * params, Geometry & geom, SparseMatrix & A, CGData & dat
     // Restore matrix diagonal and RHS
     for (int i=0; i< A.localNumberOfRows; ++i) {
       *(A.matrixDiagonal[i]) = diagA[i];
-      b[i] = origB[i] = b[i];
+      b[i] = origB[i];
     }
         cgtest_data->niters = niters;
         cgtest_data->normr = normr;

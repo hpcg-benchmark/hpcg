@@ -82,7 +82,7 @@ HPCG_Init(int *argc_p, char ***argv_p, HPCG_Params *params) {
   if (0 == rank)
     HPCG_fout.open(fname);
   else {
-#if defined(DEBUG) || defined(HPCG_DEBUG) || defined(DETAILEDDEBUG)
+#if defined(HPCG_DEBUG) || defined(HPCG_DETAILEDDEBUG)
     char local[15];
     sprintf( local, "%d_", rank );
     sprintf( fname, "hpcg_log_%s%04d%02d%02d_%02d:%02d:%02d.txt", local,

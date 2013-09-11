@@ -86,11 +86,11 @@ int main(int argc, char *argv[]) {
   numThreads = omp_get_num_threads();
 #endif
 
-#ifdef DEBUG
-    if (size < 100) HPCG_fout << "Process "<<rank<<" of "<<size<<" is alive with " << numThreads << " threads." <<endl;
+#ifdef HPCG_DETAILEDDEBUG
+    if (size < 100 && rank==0) HPCG_fout << "Process "<<rank<<" of "<<size<<" is alive with " << numThreads << " threads." <<endl;
 #endif
     
-#ifdef DEBUG
+#ifdef HPCG_DETAILEDDEBUG
     if (rank==0)
     {
         int junk = 0;

@@ -8,7 +8,7 @@
 // ************************************************************************
 //@HEADER
 
-#if defined(DEBUG) || defined(DETAILEDDEBUG)
+#if defined(HPCG_DEBUG) || defined(HPCG_DETAILEDDEBUG)
 #include <fstream>
 using std::endl;
 #include "hpcg.hpp"
@@ -33,8 +33,8 @@ using std::endl;
 void SetupHalo(const Geometry & geom, SparseMatrix & A) {
 
 	double t0;
-#ifdef DEBUG
-#ifdef DETAILEDDEBUG
+#ifdef HPCG_DEBUG
+#ifdef HPCG_DETAILEDDEBUG
 	int debug_details = 1; // Set to 1 for voluminous output
 #else
 	int debug_details = 0; // Set to 0
@@ -78,7 +78,7 @@ void SetupHalo(const Geometry & geom, SparseMatrix & A) {
 		for (int j=0; j<nonzerosInRow[i]; j++) {
 			global_int_t curIndex = mtxIndG[i][j];
 			int rankIdOfColumnEntry = getRankOfMatrixRow(geom, A, curIndex);
-#ifdef DETAILEDDEBUG
+#ifdef HPCG_DETAILEDDEBUG
 			HPCG_fout << "rank, row , col, globalToLocalMap[col] = " << geom.rank << " " << currentGlobalRow << " "
 					<< curIndex << " " << A.globalToLocalMap[curIndex] << endl;
 #endif
@@ -99,7 +99,7 @@ void SetupHalo(const Geometry & geom, SparseMatrix & A) {
 		totalToBeReceived += (curNeighbor->second).size();
 	}
 
-#ifdef DEBUG
+#ifdef HPCG_DETAILEDDEBUG
 	// These are all attributes that should be true, due to symmetry
 	if (debug_details) HPCG_fout << "totalToBeSent = " << totalToBeSent << " totalToBeReceived = " << totalToBeReceived << endl;
 	assert(totalToBeSent==totalToBeReceived); // Number of sent entry should equal number of received
@@ -162,14 +162,12 @@ void SetupHalo(const Geometry & geom, SparseMatrix & A) {
 	A.sendLength = sendLength;
 	A.sendBuffer = sendBuffer;
 
-#ifdef DEBUG
+#ifdef HPCG_DETAILEDDEBUG
 	HPCG_fout << " For rank " << geom.rank << " of " << geom.size << ", number of neighbors = " << A.numberOfSendNeighbors << endl;
 	for (int i = 0; i < A.numberOfSendNeighbors; i++) {
 		HPCG_fout << "     rank " << geom.rank << " neighbor " << neighbors[i] << " send/recv length = " << sendLength[i] << "/" << receiveLength[i] << endl;
-#ifdef DETAILEDDEBUG
 		for (local_int_t j = 0; j<sendLength[i]; ++j)
 			HPCG_fout << "       rank " << geom.rank << " elementsToSend[" << j << "] = " << elementsToSend[j] << endl;
-#endif
 	}
 #endif
 

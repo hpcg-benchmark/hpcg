@@ -14,6 +14,8 @@
 #include "hpcg.hpp"
 #include "SparseMatrix.hpp"
 #include "Geometry.hpp"
+#include "CGData.hpp"
+
 
 struct CGtestData_STRUCT {
   int count_pass, count_fail, niters;
@@ -21,7 +23,7 @@ struct CGtestData_STRUCT {
 };
 typedef struct CGtestData_STRUCT CGtestData;
 
-extern int CGtest(HPCG_Params * params, Geometry & geom, int size, int rank, CGtestData * cgtest_data);
+extern int CGtest(HPCG_Params * params, Geometry & geom, SparseMatrix & A, CGData & data, double * const b, double * const x, CGtestData * cgtest_data);
 
 #endif  // CGTEST_HPP
 

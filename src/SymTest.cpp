@@ -38,14 +38,6 @@ using std::cin;
 
 #include "hpcg.hpp"
 
-#include "GenerateGeometry.hpp"
-#include "GenerateProblem.hpp"
-#include "SetupHalo.hpp"
-#include "ExchangeHalo.hpp"
-#include "OptimizeProblem.hpp"
-#include "WriteProblem.hpp"
-#include "ReportResults.hpp"
-#include "mytimer.hpp"
 #include "spmv.hpp"
 #include "symgs.hpp"
 #include "dot.hpp"
@@ -53,48 +45,9 @@ using std::cin;
 #include "Geometry.hpp"
 #include "SparseMatrix.hpp"
 #include "SymTest.hpp"
+#include "ExchangeHalo.hpp"
 
-#define TICK()  t0 = mytimer() // Use TICK and TOCK to time a code section
-#define TOCK(t) t += mytimer() - t0
-
-int SymTest(HPCG_Params * params, Geometry & geom, int size, int rank, SymTestData * symtest_data) {
-
-  int numThreads = 1;
-
-#ifndef HPCG_NOOPENMP
-#pragma omp parallel
-  numThreads = omp_get_num_threads();
-#endif
-
-  local_int_t nx,ny,nz;
-  nx = (local_int_t)params->nx;
-  ny = (local_int_t)params->ny;
-  nz = (local_int_t)params->nz;
-#ifdef HPCG_DEBUG
-    double tsetup = mytimer();
-#endif
-
-    SparseMatrix A;
-    CGData data;
-    double *x, *b, *xexact;
-    GenerateProblem(geom, A, &x, &b, &xexact);
-    SetupHalo(geom, A);
-    initializeCGData(A, data);
-
-#ifdef HPCG_DEBUG
-    if (rank==0) HPCG_fout << "Total setup time (sec) = " << mytimer() - tsetup << endl;
-#endif
-
-
-    //if (geom.size==1) WriteProblem(A, x, b, xexact);
-
-    // Use this array for collecting timing information
-    std::vector< double > times(8,0.0);
-    double t0 = 0.0, t1 = 0.0, t2 = 0.0, t3 = 0.0, t4 = 0.0, t5 = 0.0, t6 = 0.0, t7 = 0.0;
-
-    // Call user-tunable set up function.
-    t7 = mytimer(); OptimizeProblem(geom, A, data, x, b, xexact); t7 = mytimer() - t7;
-    times[7] = t7;
+int SymTest(HPCG_Params * params, Geometry & geom, SparseMatrix & A, CGData & data, double * const b, double * const xexact, SymTestData * symtest_data) {
 
     local_int_t nrow = A.localNumberOfRows;
     local_int_t ncol = A.localNumberOfColumns;
@@ -102,6 +55,7 @@ int SymTest(HPCG_Params * params, Geometry & geom, int size, int rank, SymTestDa
     double * x_overlap = new double [ncol]; // Overlapped copy of x vector
     double * y_overlap = new double [ncol]; // Overlapped copy of y vector
     double * b_computed = new double [nrow]; // Computed RHS vector
+    double t4 = 0.0; // Needed for dot call, otherwise unused
 
     // Test symmetry of matrix
 
@@ -131,56 +85,42 @@ int SymTest(HPCG_Params * params, Geometry & geom, int size, int rank, SymTestDa
     ierr = dot(nrow, y_overlap, b_computed, &ytAx, t4); // b_computed = A*y_overlap
     if (ierr) HPCG_fout << "Error in call to dot: " << ierr << ".\n" << endl;
     symtest_data->depsym_spmv = std::fabs(xtAy - ytAx);
-    if (rank==0) HPCG_fout << "Departure from symmetry for spmv abs(x'*A*y - y'*A*x) = " << symtest_data->depsym_spmv << endl;
+    if (geom.rank==0) HPCG_fout << "Departure from symmetry for spmv abs(x'*A*y - y'*A*x) = " << symtest_data->depsym_spmv << endl;
 
     // Test symmetry of symmetric Gauss-Seidel
 
     // Compute x'*Minv*y
-    TICK(); ierr = symgs(A, y_overlap, b_computed); TOCK(t5); // b_computed = Minv*y_overlap
+    ierr = symgs(A, y_overlap, b_computed); // b_computed = Minv*y_overlap
     if (ierr) HPCG_fout << "Error in call to symgs: " << ierr << ".\n" << endl;
     double xtMinvy = 0.0;
     ierr = dot(nrow, x_overlap, b_computed, &xtMinvy, t4); // b_computed = A*y_overlap
     if (ierr) HPCG_fout << "Error in call to dot: " << ierr << ".\n" << endl;
 
     // Next, compute y'*Minv*x
-    TICK(); ierr = symgs(A, x_overlap, b_computed); TOCK(t5); // b_computed = Minv*y_overlap
+    ierr = symgs(A, x_overlap, b_computed); // b_computed = Minv*y_overlap
     if (ierr) HPCG_fout << "Error in call to symgs: " << ierr << ".\n" << endl;
     double ytMinvx = 0.0;
     ierr = dot(nrow, y_overlap, b_computed, &ytMinvx, t4); // b_computed = A*y_overlap
     if (ierr) HPCG_fout << "Error in call to dot: " << ierr << ".\n" << endl;
     symtest_data->depsym_symgs = std::fabs(xtMinvy - ytMinvx);
-    if (rank==0) HPCG_fout << "Departure from symmetry for symgs abs(x'*Minv*y - y'*Minv*x) = " << symtest_data->depsym_symgs << endl;
+    if (geom.rank==0) HPCG_fout << "Departure from symmetry for symgs abs(x'*Minv*y - y'*Minv*x) = " << symtest_data->depsym_symgs << endl;
 
     for (int i=0; i< nrow; ++i) x_overlap[i] = xexact[i]; // Copy exact answer into overlap vector
 
-    t1 = mytimer();   // Initialize it (if needed)
-    int numberOfCalls = 10;
+    int numberOfCalls = 2;
     double residual = 0.0;
-    double t_begin = mytimer();
     for (int i=0; i< numberOfCalls; ++i) {
 #ifndef HPCG_NOMPI
-      TICK(); ExchangeHalo(A,x_overlap); TOCK(t6);
+      ExchangeHalo(A,x_overlap);
 #endif
-      TICK(); ierr = spmv(A, x_overlap, b_computed); TOCK(t3); // b_computed = A*x_overlap
+      ierr = spmv(A, x_overlap, b_computed); // b_computed = A*x_overlap
       if (ierr) HPCG_fout << "Error in call to spmv: " << ierr << ".\n" << endl;
       if ((ierr = ComputeResidual(A.localNumberOfRows, b, b_computed, &residual)))
         HPCG_fout << "Error in call to compute_residual: " << ierr << ".\n" << endl;
-      if (rank==0) HPCG_fout << "SpMV call [" << i << "] Residual [" << residual << "]" << endl;
+      if (geom.rank==0) HPCG_fout << "SpMV call [" << i << "] Residual [" << residual << "]" << endl;
     }
-    times[0] += mytimer() - t_begin;  // Total time. All done...
-    times[3] = t3; // spmv time
-    times[5] = t5; // symgs time
-#ifndef HPCG_NOMPI
-    times[6] = t6; // exchange halo time
-    times[7] = t7; // matrix set up time
-#endif
-
-    // Clean up
-    destroyMatrix(A);
-    delete [] x;
-    delete [] b;
-    delete [] xexact;
     delete [] x_overlap;
+    delete [] y_overlap;
     delete [] b_computed;
 
     return 0;

@@ -34,7 +34,7 @@ using std::endl;
 #include <omp.h>
 #endif
 
-void GenerateProblem(const Geometry & geom, SparseMatrix & A, double **x, double **b, double **xexact) {
+void GenerateProblem(const Geometry & geom, SparseMatrix & A, double **b, double **x, double **xexact) {
 
 	int size = geom.size;
 	int rank = geom.rank;

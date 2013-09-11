@@ -37,7 +37,7 @@
 #include "WriteProblem.hpp"
 #include "Geometry.hpp"
 int WriteProblem( const Geometry & geom, const SparseMatrix & A,
-			const double * const x, const double * const b, const double * const xexact) {
+			const double * const b, const double * const x, const double * const xexact) {
 
 	if (geom.size!=1) return(-1); //TODO Only works on one processor.  Need better error handler
 	const local_int_t nrow = A.localNumberOfRows;

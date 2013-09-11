@@ -13,5 +13,5 @@
 #include "Geometry.hpp"
 #include "SparseMatrix.hpp"
 
-void GenerateProblem(const Geometry & geom, SparseMatrix &A, double **x, double **b, double **xexact);
+void GenerateProblem(const Geometry & geom, SparseMatrix &A, double **b, double **x, double **xexact);
 #endif // GENERATEPROBLEM_HPP

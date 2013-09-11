@@ -15,6 +15,6 @@
 #include "SymTest.hpp"
 
 void ReportResults(const Geometry & geom, const SparseMatrix & A, int niters, double normr, double times[],
-  CGtestData * cgtest_data, SymTestData * symtest_data);
+  CGtestData * cgtest_data, SymTestData * symtest_data, bool isValidRun);
 
 #endif // REPORTRESULTS_HPP

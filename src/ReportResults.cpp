@@ -29,7 +29,7 @@ using std::endl;
 #endif
 
 void ReportResults(const Geometry & geom, const SparseMatrix & A, int niters, double normr, double times[],
-  CGtestData * cgtest_data, SymTestData * symtest_data) {
+  CGtestData * cgtest_data, SymTestData * symtest_data, bool isValidRun) {
 
 #ifndef HPCG_NOMPI
     double t4 = times[4];
@@ -120,6 +120,15 @@ void ReportResults(const Geometry & geom, const SparseMatrix & A, int niters, do
         doc.get("SPARSEOPS OVERHEADS")->add("SPARSEOPS PARALLEL OVERHEAD Bdry Exch Time", (times[6]));
         doc.get("SPARSEOPS OVERHEADS")->add("SPARSEOPS PARALLEL OVERHEAD Bdry Exch Pct", (times[6])/totalSparseMVTime*100.0);
 #endif
+        doc.add("********** Final Summary **********","");
+        if (isValidRun) {
+        	doc.get("********** Final Summary **********")->add("This Result is valid with an MFLOP/s rating of", fnops/times[0]/1.0E6);
+        	doc.get("********** Final Summary **********")->add("Please send the generated .yaml file to","HPCG-Results@software.sandia.gov");
+        }
+        else {
+        	doc.get("********** Final Summary **********")->add("This Result is","Invalid");
+        	doc.get("********** Final Summary **********")->add("Please review output in the generated .yaml file","You may NOT submit these results for consideration");
+        }
         
             std::string yaml = doc.generateYAML();
 #ifdef DEBUG

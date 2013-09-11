@@ -215,6 +215,7 @@ int main(int argc, char *argv[]) {
     double normr = 0.0;
     double normr0 = 0.0;
     int maxIters = 50;
+    numberOfCalls = 1; // Only need to run the residual reduction analysis once
 
     // Compute the residual reduction for the natural ordering and reference kernels
     std::vector< double > ref_times(9,0.0);
@@ -309,7 +310,7 @@ int main(int argc, char *argv[]) {
     ////////////////////
 
     // Report results to YAML file
-    ReportResults(geom, A, totalNiters, normr/normr0, &times[0], &cgtest_data, &symtest_data);
+    ReportResults(geom, A, totalNiters, normr/normr0, &times[0], &cgtest_data, &symtest_data, ierr==0);
 
     // Clean up
     destroyMatrix(A);

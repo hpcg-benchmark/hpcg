@@ -10,6 +10,10 @@
 #include <mpi.h>
 #endif
 
+#ifndef HPCG_NOOPENMP
+#include <omp.h>
+#endif
+
 #include "hpcg.hpp"
 
 std::ofstream HPCG_fout;

@@ -77,7 +77,7 @@ int main(int argc, char *argv[]) {
 
   HPCG_Params params;
 
-  HPCG_Init(&argc, &argv, &params);
+  HPCG_Init(&argc, &argv, params);
 
   int numThreads = 1;
 
@@ -152,10 +152,10 @@ int main(int argc, char *argv[]) {
 #endif
     CGtestData cgtest_data;
     cgtest_data.count_pass = cgtest_data.count_fail = 0;
-    CGtest(&params, geom, A, data, b, x, &cgtest_data);
+    CGtest(geom, A, data, b, x, &cgtest_data);
 
     SymTestData symtest_data;
-    SymTest(&params, geom, A, data, b, xexact, &symtest_data);
+    SymTest(geom, A, data, b, xexact, &symtest_data);
 
 #ifdef HPCG_DEBUG
     if (rank==0) HPCG_fout << "Total validation (CGtest and SymTest) execution time in main (sec) = " << mytimer() - t1 << endl;

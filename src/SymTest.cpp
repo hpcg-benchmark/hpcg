@@ -43,7 +43,7 @@ using std::cin;
 #include "SymTest.hpp"
 #include "ExchangeHalo.hpp"
 
-int SymTest(HPCG_Params * params, Geometry & geom, SparseMatrix & A, CGData & data, double * const b, double * const xexact, SymTestData * symtest_data) {
+int SymTest(Geometry & geom, SparseMatrix & A, CGData & data, double * const b, double * const xexact, SymTestData * symtest_data) {
 
     local_int_t nrow = A.localNumberOfRows;
     local_int_t ncol = A.localNumberOfColumns;

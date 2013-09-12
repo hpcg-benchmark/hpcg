@@ -23,7 +23,7 @@ startswith(const char *s, const char *prefix) {
 }
 
 int
-HPCG_Init(int *argc_p, char ***argv_p, HPCG_Params *params) {
+HPCG_Init(int *argc_p, char ***argv_p, HPCG_Params & params) {
   int argc = *argc_p;
   char **argv = *argv_p;
   char fname[80];
@@ -66,9 +66,9 @@ HPCG_Init(int *argc_p, char ***argv_p, HPCG_Params *params) {
   MPI_Bcast( iparams, 3, MPI_INT, 0, MPI_COMM_WORLD );
 #endif
 
-  params->nx = iparams[0];
-  params->ny = iparams[1];
-  params->nz = iparams[2];
+  params.nx = iparams[0];
+  params.ny = iparams[1];
+  params.nz = iparams[2];
 
 #ifndef HPCG_NOMPI
   MPI_Comm_rank( MPI_COMM_WORLD, &rank );

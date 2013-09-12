@@ -38,7 +38,7 @@ using std::cin;
 #include "Geometry.hpp"
 #include "SparseMatrix.hpp"
 
-int CGtest(HPCG_Params * params, Geometry & geom, SparseMatrix & A, CGData & data, double * const b, double * const x, CGtestData * cgtest_data) {
+int CGtest(Geometry & geom, SparseMatrix & A, CGData & data, double * const b, double * const x, CGtestData * cgtest_data) {
 
 
     // Use this array for collecting timing information

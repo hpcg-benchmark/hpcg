@@ -32,10 +32,6 @@ using std::cin;
 #include <mpi.h> // If this routine is not compiled with -DHPCG_NOMPI then include mpi.h
 #endif
 
-#ifndef HPCG_NOOPENMP
-#include <omp.h> // If this routine is not compiled with HPCG_NOOPENMP
-#endif
-
 #include "hpcg.hpp"
 
 #include "spmv.hpp"

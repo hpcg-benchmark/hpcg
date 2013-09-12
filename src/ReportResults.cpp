@@ -122,12 +122,12 @@ void ReportResults(const Geometry & geom, const SparseMatrix & A, int niters, do
 #endif
         doc.add("********** Final Summary **********","");
         if (isValidRun) {
-        	doc.get("********** Final Summary **********")->add("This Result is valid with an MFLOP/s rating of", fnops/times[0]/1.0E6);
+        	doc.get("********** Final Summary **********")->add("This result is VALID with an MFLOP/s rating of", fnops/times[0]/1.0E6);
         	doc.get("********** Final Summary **********")->add("Please send the generated .yaml file to","HPCG-Results@software.sandia.gov");
         }
         else {
-        	doc.get("********** Final Summary **********")->add("This Result is","Invalid");
-        	doc.get("********** Final Summary **********")->add("Please review output in the generated .yaml file","You may NOT submit these results for consideration");
+        	doc.get("********** Final Summary **********")->add("This result is","INVALID.");
+        	doc.get("********** Final Summary **********")->add("Please review output in the generated .yaml file","You may NOT submit these results for consideration.");
         }
         
             std::string yaml = doc.generateYAML();

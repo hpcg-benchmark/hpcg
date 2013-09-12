@@ -35,10 +35,6 @@ using std::endl;
 #include <mpi.h> // If this routine is not compiled with HPCG_NOMPI
 #endif
 
-#ifndef HPCG_NOOPENMP
-#include <omp.h> // If this routine is not compiled with HPCG_NOOPENMP
-#endif
-
 #include "GenerateGeometry.hpp"
 #include "GenerateProblem.hpp"
 #include "SetupHalo.hpp"
@@ -69,15 +65,9 @@ int main(int argc, char *argv[]) {
   HPCG_Init(&argc, &argv, params);
 
   int size = params.comm_size, rank = params.comm_rank; // Number of MPI processes, My process ID
-  int numThreads = 1;
-
-#ifndef HPCG_NOOPENMP
-#pragma omp parallel
-  numThreads = omp_get_num_threads();
-#endif
 
 #ifdef HPCG_DETAILEDDEBUG
-    if (size < 100 && rank==0) HPCG_fout << "Process "<<rank<<" of "<<size<<" is alive with " << numThreads << " threads." <<endl;
+    if (size < 100 && rank==0) HPCG_fout << "Process "<<rank<<" of "<<size<<" is alive with " << params.numThreads << " threads." <<endl;
 #endif
 
 #ifdef HPCG_DETAILEDDEBUG
@@ -91,7 +81,6 @@ int main(int argc, char *argv[]) {
     MPI_Barrier(MPI_COMM_WORLD);
 #endif
 #endif
-    
     
     local_int_t nx,ny,nz;
     nx = (local_int_t)params.nx;
@@ -108,7 +97,7 @@ int main(int argc, char *argv[]) {
 #endif
 
     Geometry geom;
-    GenerateGeometry(size, rank, numThreads, nx, ny, nz, geom);
+    GenerateGeometry(size, rank, params.numThreads, nx, ny, nz, geom);
 
     SparseMatrix A;
     CGData data;

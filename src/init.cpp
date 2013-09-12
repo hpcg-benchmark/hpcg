@@ -77,6 +77,13 @@ HPCG_Init(int *argc_p, char ***argv_p, HPCG_Params & params) {
   MPI_Comm_size( MPI_COMM_WORLD, &params.comm_size );
 #endif
 
+#ifdef HPCG_NOOPENMP
+  params.numThreads = 1;
+#else
+#pragma omp parallel
+  params.numThreads = omp_get_num_threads();
+#endif
+
   time ( &rawtime );
   ptm = localtime(&rawtime);
   sprintf( fname, "hpcg_log_%04d%02d%02d_%02d:%02d:%02d.txt",

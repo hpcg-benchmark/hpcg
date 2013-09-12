@@ -28,7 +28,6 @@ HPCG_Init(int *argc_p, char ***argv_p, HPCG_Params & params) {
   char **argv = *argv_p;
   char fname[80];
   int i, j, iparams[3];
-  int rank = 0;
   char cparams[3][6] = {"--nx=", "--ny=", "--nz="};
   time_t rawtime;
   tm *ptm;
@@ -70,8 +69,12 @@ HPCG_Init(int *argc_p, char ***argv_p, HPCG_Params & params) {
   params.ny = iparams[1];
   params.nz = iparams[2];
 
-#ifndef HPCG_NOMPI
-  MPI_Comm_rank( MPI_COMM_WORLD, &rank );
+#ifdef HPCG_NOMPI
+  params.comm_rank = 0;
+  params.comm_size = 1;
+#else
+  MPI_Comm_rank( MPI_COMM_WORLD, &params.comm_rank );
+  MPI_Comm_size( MPI_COMM_WORLD, &params.comm_size );
 #endif
 
   time ( &rawtime );
@@ -79,12 +82,12 @@ HPCG_Init(int *argc_p, char ***argv_p, HPCG_Params & params) {
   sprintf( fname, "hpcg_log_%04d%02d%02d_%02d:%02d:%02d.txt",
       1900 + ptm->tm_year, ptm->tm_mon+1, ptm->tm_mday, ptm->tm_hour, ptm->tm_min, ptm->tm_sec );
 
-  if (0 == rank)
+  if (0 == params.comm_rank)
     HPCG_fout.open(fname);
   else {
 #if defined(HPCG_DEBUG) || defined(HPCG_DETAILEDDEBUG)
     char local[15];
-    sprintf( local, "%d_", rank );
+    sprintf( local, "%d_", params.comm_rank );
     sprintf( fname, "hpcg_log_%s%04d%02d%02d_%02d:%02d:%02d.txt", local,
       1900 + ptm->tm_year, ptm->tm_mon+1, ptm->tm_mday, ptm->tm_hour, ptm->tm_min, ptm->tm_sec );
     HPCG_fout.open(fname);

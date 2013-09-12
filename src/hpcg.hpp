@@ -16,6 +16,7 @@
 extern std::ofstream HPCG_fout;
 
 struct HPCG_Params_STRUCT {
+  int comm_size, comm_rank;
   int nx, ny, nz;
 };
 typedef HPCG_Params_STRUCT HPCG_Params;

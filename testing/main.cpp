@@ -59,26 +59,16 @@ using std::endl;
 #include "SymTest.hpp"
 
 int main(int argc, char *argv[]) {
-    
-    
-#ifndef HPCG_NOMPI
-    
-    MPI_Init(&argc, &argv);
 
-    int size, rank; // Number of MPI processes, My process ID
-    MPI_Comm_size(MPI_COMM_WORLD, &size);
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-#else
-    
-    int size = 1; // Serial case (not using MPI)
-    int rank = 0;
-    
+#ifndef HPCG_NOMPI
+  MPI_Init(&argc, &argv);
 #endif
 
   HPCG_Params params;
 
   HPCG_Init(&argc, &argv, params);
 
+  int size = params.comm_size, rank = params.comm_rank; // Number of MPI processes, My process ID
   int numThreads = 1;
 
 #ifndef HPCG_NOOPENMP
@@ -89,7 +79,7 @@ int main(int argc, char *argv[]) {
 #ifdef HPCG_DETAILEDDEBUG
     if (size < 100 && rank==0) HPCG_fout << "Process "<<rank<<" of "<<size<<" is alive with " << numThreads << " threads." <<endl;
 #endif
-    
+
 #ifdef HPCG_DETAILEDDEBUG
     if (rank==0)
     {

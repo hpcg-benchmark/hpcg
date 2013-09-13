@@ -134,7 +134,7 @@ int main(int argc, char *argv[]) {
     CGtest(geom, A, data, b, x, &cgtest_data);
 
     SymTestData symtest_data;
-    SymTest(geom, A, data, b, xexact, &symtest_data);
+    SymTest(geom, A, b, xexact, &symtest_data);
 
 #ifdef HPCG_DEBUG
     if (rank==0) HPCG_fout << "Total validation (CGtest and SymTest) execution time in main (sec) = " << mytimer() - t1 << endl;
@@ -208,7 +208,6 @@ int main(int argc, char *argv[]) {
     }
     if (rank == 0 && err_count) HPCG_fout << err_count << " error(s) in call(s) to reference CG." << endl;
     double ref_tolerance = normr / normr0;
-    int ref_iters = niters;
     
     //////////////////////////////
     // Optimized CG Setup Phase //
@@ -289,7 +288,7 @@ int main(int argc, char *argv[]) {
     ////////////////////
 
     // Report results to YAML file
-    ReportResults(geom, A, totalNiters, normr/normr0, &times[0], &cgtest_data, &symtest_data, ierr==0);
+    ReportResults(geom, A, totalNiters, normr/normr0, &times[0], &cgtest_data, &symtest_data, (ierr==0 && global_failure==0));
 
     // Clean up
     destroyMatrix(A);

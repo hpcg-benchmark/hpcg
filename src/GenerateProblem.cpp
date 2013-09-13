@@ -36,8 +36,6 @@ using std::endl;
 
 void GenerateProblem(const Geometry & geom, SparseMatrix & A, double **b, double **x, double **xexact) {
 
-	int size = geom.size;
-	int rank = geom.rank;
 	int nx = geom.nx;
 	int ny = geom.ny;
 	int nz = geom.nz;
@@ -54,7 +52,7 @@ void GenerateProblem(const Geometry & geom, SparseMatrix & A, double **b, double
 	local_int_t localNumberOfRows = nx*ny*nz; // This is the size of our subblock
 	int numberOfNonzerosPerRow = 27; // We are approximating a 27-point finite element/volume/difference 3D stencil
 
-	global_int_t totalNumberOfRows = localNumberOfRows*size; // Total number of grid points in mesh
+	global_int_t totalNumberOfRows = localNumberOfRows*geom.size; // Total number of grid points in mesh
 
 
 	// Allocate arrays that are of length localNumberOfRows
@@ -110,7 +108,7 @@ void GenerateProblem(const Geometry & geom, SparseMatrix & A, double **b, double
 
 				A.localToGlobalMap[currentLocalRow] = currentGlobalRow;
 #ifdef HPCG_DETAILEDDEBUG
-				HPCG_fout << " rank, globalRow, localRow = " << rank << " " << currentGlobalRow << " " << A.globalToLocalMap[currentGlobalRow] << endl;
+				HPCG_fout << " rank, globalRow, localRow = " << geom.rank << " " << currentGlobalRow << " " << A.globalToLocalMap[currentGlobalRow] << endl;
 #endif
 				local_int_t numberOfNonzerosInRow = 0;
 				double * currentValuePointer = matrixValues[currentLocalRow]; // Pointer to current value in current row
@@ -149,8 +147,8 @@ void GenerateProblem(const Geometry & geom, SparseMatrix & A, double **b, double
 		} // end iy loop
 	} // end iz loop
 #ifdef HPCG_DETAILEDDEBUG
-	HPCG_fout 	  << "Process " << rank << " of " << size <<" has " << localNumberOfRows    << " rows."     << endl
-			  << "Process " << rank << " of " << size <<" has " << localNumberOfNonzeros<< " nonzeros." <<endl;
+	HPCG_fout 	  << "Process " << geom.rank << " of " << geom.size <<" has " << localNumberOfRows    << " rows."     << endl
+			  << "Process " << geom.rank << " of " << geom.size <<" has " << localNumberOfNonzeros<< " nonzeros." <<endl;
 #endif
 
 #ifndef HPCG_NOMPI

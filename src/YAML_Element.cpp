@@ -36,7 +36,7 @@ YAML_Element* YAML_Element::add(const std::string& key_arg, int value_arg) {
   return element;
 }
 
-#ifndef MINIFE_NO_LONG_LONG
+#ifndef HPCG_NO_LONG_LONG
 
 YAML_Element* YAML_Element::add(const std::string& key_arg, long long value_arg) {
   this->value = "";
@@ -102,7 +102,7 @@ string YAML_Element::convert_int_to_string(int value_arg){
   return strm.str();
 }
 
-#ifndef MINIFE_NO_LONG_LONG
+#ifndef HPCG_NO_LONG_LONG
 
 string YAML_Element::convert_long_long_to_string(long long value_arg){
   stringstream strm;

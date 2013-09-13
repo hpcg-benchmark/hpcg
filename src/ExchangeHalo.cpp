@@ -15,7 +15,6 @@
 #include <cstdlib>
 
 void ExchangeHalo(const SparseMatrix & A, const double *x) {
-  local_int_t numberOfExternalValues = 0;
 
   // Extract Matrix pieces
 

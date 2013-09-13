@@ -117,8 +117,7 @@ HPCG_DEFS     = $(HPCG_OPTS) $(HPCG_INCLUDES)
 # ----------------------------------------------------------------------
 #
 CXX          = /usr/bin/g++
-CXXFLAGS     = $(HPCG_DEFS) -fomit-frame-pointer -O3 -funroll-loops -W -Wall
-CXXFLAGS     = $(HPCG_DEFS) -O3
+CXXFLAGS     = $(HPCG_DEFS) -fomit-frame-pointer -O3 -funroll-loops -W -Wall -pedantic
 #
 LINKER       = $(CXX)
 LINKFLAGS    = $(CXXFLAGS)

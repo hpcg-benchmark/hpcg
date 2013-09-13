@@ -22,9 +22,6 @@
 #include <fstream>
 #include <iostream>
 using std::endl;
-#ifdef DEBUG
-using std::cin;
-#endif
 #include <cstdlib>
 #include <vector>
 #include <cmath>
@@ -43,7 +40,7 @@ using std::cin;
 #include "SymTest.hpp"
 #include "ExchangeHalo.hpp"
 
-int SymTest(Geometry & geom, SparseMatrix & A, CGData & data, double * const b, double * const xexact, SymTestData * symtest_data) {
+int SymTest(Geometry & geom, SparseMatrix & A, double * const b, double * const xexact, SymTestData * symtest_data) {
 
     local_int_t nrow = A.localNumberOfRows;
     local_int_t ncol = A.localNumberOfColumns;
@@ -80,7 +77,7 @@ int SymTest(Geometry & geom, SparseMatrix & A, CGData & data, double * const b, 
     double ytAx = 0.0;
     ierr = dot(nrow, y_overlap, b_computed, &ytAx, t4); // b_computed = A*y_overlap
     if (ierr) HPCG_fout << "Error in call to dot: " << ierr << ".\n" << endl;
-    symtest_data->depsym_spmv = std::fabs(xtAy - ytAx);
+    symtest_data->depsym_spmv = std::fabs((double) (xtAy - ytAx));
     if (geom.rank==0) HPCG_fout << "Departure from symmetry for spmv abs(x'*A*y - y'*A*x) = " << symtest_data->depsym_spmv << endl;
 
     // Test symmetry of symmetric Gauss-Seidel

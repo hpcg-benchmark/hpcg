@@ -97,7 +97,7 @@ Counter_max_cur_sub(Counter *this_, Counter *that, Counter *res) {
 
 static void
 primefactor_i(int x, int *factors) {
-  int i, d, sq=(int)(sqrt(x))+1L;
+  int i, d, sq=(int)(sqrt((double)x))+1L;
   div_t r;
 
   /* remove 2 as a factor with shifts */

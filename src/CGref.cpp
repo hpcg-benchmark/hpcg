@@ -62,7 +62,6 @@ int CGref(const Geometry & geom, const SparseMatrix & A, CGData & data, const do
 #endif
 
 	local_int_t nrow = A.localNumberOfRows;
-	local_int_t ncol = A.localNumberOfColumns;
 
 	double * r = data.r; // Residual vector
 	double * z = data.z; // Preconditioned residual vector
@@ -71,7 +70,6 @@ int CGref(const Geometry & geom, const SparseMatrix & A, CGData & data, const do
 
 	if (!doPreconditioning && geom.rank==0) HPCG_fout << "WARNING: PERFORMING UNPRECONDITIONED ITERATIONS" << endl;
 
-	int rank = geom.rank; //  My process ID
 #ifdef DEBUG
 	int print_freq = 1;
 	if (print_freq>50) print_freq=50;
@@ -87,7 +85,7 @@ int CGref(const Geometry & geom, const SparseMatrix & A, CGData & data, const do
 	dotref(nrow, r, r, &normr, t4);
 	normr = sqrt(normr);
 #ifdef DEBUG
-	if (rank==0) HPCG_fout << "Initial Residual = "<< normr << endl;
+	if (geom.rank==0) HPCG_fout << "Initial Residual = "<< normr << endl;
 #endif
 
         // Record initial residual for convergence testing
@@ -125,7 +123,7 @@ int CGref(const Geometry & geom, const SparseMatrix & A, CGData & data, const do
 		TICK(); dotref(nrow, r, r, &normr, t4); TOCK(t1);
 		normr = sqrt(normr);
 #ifdef DEBUG
-		if (rank==0 && (k%print_freq == 0 || k+1 == max_iter))
+		if (geom.rank==0 && (k%print_freq == 0 || k+1 == max_iter))
 			HPCG_fout << "Iteration = "<< k << "   Scaled Residual = "<< normr/normr0 << endl;
 #endif
 		niters = k;

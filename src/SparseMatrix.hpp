@@ -100,21 +100,5 @@ inline void destroyMatrix(SparseMatrix & A) {
 	return;
 }
 
-inline int getRankOfMatrixRow(const Geometry & geom, const SparseMatrix & A, global_int_t index) {
-	// For the global row id given in the argument index, return the MPI process rank that is assigned that row
-	int gnx = geom.nx*geom.npx;
-	int gny = geom.ny*geom.npy;
-
-	int iz = index/(gny*gnx);
-	int iy = (index-iz*gny*gnx)/gnx;
-	int ix = index%gnx;
-	int ipz = iz/geom.nz;
-	int ipy = iy/geom.ny;
-	int ipx = ix/geom.nx;
-	int rank = ipx+ipy*geom.npx+ipz*geom.npy*geom.npx;
-	return(rank);
-
-}
-
 #endif // SPARSEMATRIX_HPP
 

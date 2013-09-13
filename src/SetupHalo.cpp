@@ -8,7 +8,7 @@
 // ************************************************************************
 //@HEADER
 
-#if defined(HPCG_DEBUG) || defined(HPCG_DETAILEDDEBUG)
+#ifdef HPCG_DETAILEDDEBUG
 #include <fstream>
 using std::endl;
 #include "hpcg.hpp"
@@ -32,18 +32,6 @@ using std::endl;
 
 void SetupHalo(const Geometry & geom, SparseMatrix & A) {
 
-	double t0;
-#ifdef HPCG_DEBUG
-#ifdef HPCG_DETAILEDDEBUG
-	int debug_details = 1; // Set to 1 for voluminous output
-#else
-	int debug_details = 0; // Set to 0
-#endif
-	int debug = 1;
-#else
-	int debug = 0;
-#endif
-
 	// Extract Matrix pieces
 
 	local_int_t localNumberOfRows = A.localNumberOfRows;
@@ -51,7 +39,7 @@ void SetupHalo(const Geometry & geom, SparseMatrix & A) {
 	global_int_t ** mtxIndG = A.mtxIndG;
 	local_int_t ** mtxIndL = A.mtxIndL;
 
-	#ifdef HPCG_NOMPI  // In the non-MPI case we simply copy global indices to local index storage
+#ifdef HPCG_NOMPI  // In the non-MPI case we simply copy global indices to local index storage
 #ifndef HPCG_NOOPENMP
 #pragma omp parallel for
 #endif
@@ -77,7 +65,7 @@ void SetupHalo(const Geometry & geom, SparseMatrix & A) {
 		global_int_t currentGlobalRow = A.localToGlobalMap[i];
 		for (int j=0; j<nonzerosInRow[i]; j++) {
 			global_int_t curIndex = mtxIndG[i][j];
-			int rankIdOfColumnEntry = getRankOfMatrixRow(geom, A, curIndex);
+			int rankIdOfColumnEntry = getRankOfMatrixRow(geom, curIndex);
 #ifdef HPCG_DETAILEDDEBUG
 			HPCG_fout << "rank, row , col, globalToLocalMap[col] = " << geom.rank << " " << currentGlobalRow << " "
 					<< curIndex << " " << A.globalToLocalMap[curIndex] << endl;
@@ -101,7 +89,7 @@ void SetupHalo(const Geometry & geom, SparseMatrix & A) {
 
 #ifdef HPCG_DETAILEDDEBUG
 	// These are all attributes that should be true, due to symmetry
-	if (debug_details) HPCG_fout << "totalToBeSent = " << totalToBeSent << " totalToBeReceived = " << totalToBeReceived << endl;
+	HPCG_fout << "totalToBeSent = " << totalToBeSent << " totalToBeReceived = " << totalToBeReceived << endl;
 	assert(totalToBeSent==totalToBeReceived); // Number of sent entry should equal number of received
 	assert(sendList.size()==receiveList.size()); // Number of send-to neighbors should equal number of receive-from
 	// Each receive-from neighbor should be a send-to neighbor, and send the same number of entries
@@ -141,7 +129,7 @@ void SetupHalo(const Geometry & geom, SparseMatrix & A) {
 	for (local_int_t i=0; i< localNumberOfRows; i++) {
 		for (int j=0; j<nonzerosInRow[i]; j++) {
 			global_int_t curIndex = mtxIndG[i][j];
-			int rankIdOfColumnEntry = getRankOfMatrixRow(geom, A, curIndex);
+			int rankIdOfColumnEntry = getRankOfMatrixRow(geom, curIndex);
 			if (geom.rank==rankIdOfColumnEntry) { // My column index, so convert to local index
 				mtxIndL[i][j] = A.globalToLocalMap[curIndex];
 			}

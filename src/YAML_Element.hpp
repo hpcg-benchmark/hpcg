@@ -37,10 +37,11 @@
 #define YAML_ELEMENT_HPP
 #include <string>
 #include <vector>
-//! The Mantevo YAML_Element class for registering key-value pairs of performance data
+#include "Geometry.hpp"
+//! HPCG YAML_Element class, from the Mantevo YAML_Element class for registering key-value pairs of performance data
 
 /*!
-  Mantevo mini-applications generate a collection of performance data for each run of the executable.  YAML_Element, and
+  HPCG generates a collection of performance data for each run of the executable.  YAML_Element, and
   the related YAML_Doc class, provide a uniform facility for gathering and reporting this data using the YAML text format.
 */
 class YAML_Element {
@@ -58,7 +59,7 @@ class YAML_Element {
   YAML_Element* add(const std::string& key_arg, double value_arg);
   //! Add a child element to an element list associated with this element, value of type int
   YAML_Element* add(const std::string& key_arg, int value_arg);
-#ifndef MINIFE_NO_LONG_LONG
+#ifndef HPCG_NO_LONG_LONG
   //! Add a child element to an element list associated with this element, value of type long long
   YAML_Element* add(const std::string& key_arg, long long value_arg);
 #endif
@@ -78,7 +79,7 @@ protected:
 private:
   std::string convert_double_to_string(double value_arg);
   std::string convert_int_to_string(int value_arg);
-#ifndef MINIFE_NO_LONG_LONG
+#ifndef HPCG_NO_LONG_LONG
   std::string convert_long_long_to_string(long long value_arg);
 #endif
   std::string convert_size_t_to_string(size_t value_arg);

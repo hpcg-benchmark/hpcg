@@ -66,7 +66,6 @@ int CGtest(Geometry & geom, SparseMatrix & A, CGData & data, double * const b, d
     double normr0 = 0.0;
     int maxIters = 50;
     int numberOfCgCalls = 2;
-    int err_count = 0;
     double tolerance = 1.0e-12; // Set tolerance to reasonable value for grossly scaled diagonal terms
     for (int k=0; k<2; ++k) { // This loop tests both unpreconditioned and preconditioned runs
       int expected_niters = 11; // For the unpreconditioned CG call, we should take about 10 iterations

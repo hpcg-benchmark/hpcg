@@ -12,7 +12,12 @@
 #define GEOMETRY_HPP
 
 typedef int local_int_t;
+
 typedef int global_int_t;
+
+// This macro should be defined if the global_int_t is not long long
+// in order to stop complaints from non-C++11 compliant compilers
+#define HPCG_NO_LONG_LONG
 
 // This is a data structure to contain all processor navigation information
 
@@ -32,6 +37,22 @@ struct Geometry_STRUCT {
 
 };
 typedef struct Geometry_STRUCT Geometry;
+
+inline int getRankOfMatrixRow(const Geometry & geom, global_int_t index) {
+	// For the global row id given in the argument index, return the MPI process rank that is assigned that row
+	int gnx = geom.nx*geom.npx;
+	int gny = geom.ny*geom.npy;
+
+	int iz = index/(gny*gnx);
+	int iy = (index-iz*gny*gnx)/gnx;
+	int ix = index%gnx;
+	int ipz = iz/geom.nz;
+	int ipy = iy/geom.ny;
+	int ipx = ix/geom.nx;
+	int rank = ipx+ipy*geom.npx+ipz*geom.npy*geom.npx;
+	return(rank);
+
+}
 
 
 #endif // GEOMETRY_HPP

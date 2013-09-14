@@ -21,7 +21,7 @@ struct SparseMatrix_STRUCT {
   global_int_t totalNumberOfNonzeros;
   local_int_t localNumberOfRows;
   local_int_t localNumberOfColumns;  // Must be defined in make_local_matrix
-  global_int_t localNumberOfNonzeros;  //Make this a globlal since it can get big
+  local_int_t localNumberOfNonzeros;  //Make this a globlal since it can get big
   char  * nonzerosInRow;  // The number of nonzeros in a row will always be 27 or fewer
   global_int_t ** mtxIndG;
   local_int_t ** mtxIndL;

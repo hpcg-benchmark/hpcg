@@ -52,10 +52,10 @@ void ReportResults(const Geometry & geom, const SparseMatrix & A, int niters, do
         double fnnz = A.totalNumberOfNonzeros;
 
         // Op counts come from implementation of CG in CG.cpp
-        double fnops_ddot = fniters*6*fnrow; // 3 ddots with nrow adds and nrow mults
-        double fnops_waxpby = fniters*6*fnrow; // 3 waxpbys with nrow adds and nrow mults
-        double fnops_sparsemv = fniters*2*fnnz; // 1 spmv with nnz adds and nnz mults
-        double fnops_precond = fniters*3*fnnz; // Two GS sweeps, but only use lower triangle for first sweep
+        double fnops_ddot = fniters*6.0*fnrow; // 3 ddots with nrow adds and nrow mults
+        double fnops_waxpby = fniters*6.0*fnrow; // 3 waxpbys with nrow adds and nrow mults
+        double fnops_sparsemv = fniters*2.0*fnnz; // 1 spmv with nnz adds and nnz mults
+        double fnops_precond = fniters*3.0*fnnz; // Two GS sweeps, but only use lower triangle for first sweep
         double fnops = fnops_ddot+fnops_waxpby+fnops_sparsemv+fnops_precond;
         
         YAML_Doc doc("benchmark-hpcg", "0.1");
@@ -64,12 +64,25 @@ void ReportResults(const Geometry & geom, const SparseMatrix & A, int niters, do
         doc.get("Machine Summary")->add("Distributed Processes",geom.size);
         doc.get("Machine Summary")->add("Threads per processes",geom.numThreads);
 
-        doc.add("Dimensions","");
-        doc.get("Dimensions")->add("nx",geom.nx);
-        doc.get("Dimensions")->add("ny",geom.ny);
-        doc.get("Dimensions")->add("nz",geom.nz);
+        doc.add("Processor Dimensions","");
+        doc.get("Processor Dimensions")->add("npx",geom.npx);
+        doc.get("Processor Dimensions")->add("npy",geom.npy);
+        doc.get("Processor Dimensions")->add("npz",geom.npz);
+        
+        doc.add("Global Problem Dimensions","");
+        doc.get("Global Problem Dimensions")->add("Global nx",geom.npx*geom.nx);
+        doc.get("Global Problem Dimensions")->add("Global ny",geom.npy*geom.ny);
+        doc.get("Global Problem Dimensions")->add("Global nz",geom.npz*geom.nz);
+        
+        doc.add("Local Domain Dimensions","");
+        doc.get("Local Domain Dimensions")->add("nx",geom.nx);
+        doc.get("Local Domain Dimensions")->add("ny",geom.ny);
+        doc.get("Local Domain Dimensions")->add("nz",geom.nz);
         
         
+        doc.add("Linear System Information","");
+        doc.get("Linear System Information")->add("Number of Equations",A.totalNumberOfRows);
+        doc.get("Linear System Information")->add("Number of Nonzero Terms",A.totalNumberOfNonzeros);
         
         doc.add("Number of iterations: ", niters);
         doc.add("Final residual: ", normr);

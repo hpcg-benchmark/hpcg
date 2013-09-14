@@ -20,9 +20,9 @@
 using std::endl;
 #include <cstdlib>
 #include <cstdio>
-#include <cassert>
 #include "hpcg.hpp"
 #endif
+#include <cassert>
 
 #include "GenerateProblem.hpp"
 
@@ -50,9 +50,13 @@ void GenerateProblem(const Geometry & geom, SparseMatrix & A, double **b, double
 	int gnz = nz*npz;
 
 	local_int_t localNumberOfRows = nx*ny*nz; // This is the size of our subblock
+        // If this assert fails, it most likely means that the local_int_t is set to int and should be set to long long
+        assert(localNumberOfRows>0); // Throw an exception of the number of rows is less than zero (can happen if int overflow)
 	int numberOfNonzerosPerRow = 27; // We are approximating a 27-point finite element/volume/difference 3D stencil
 
 	global_int_t totalNumberOfRows = localNumberOfRows*geom.size; // Total number of grid points in mesh
+        // If this assert fails, it most likely means that the global_int_t is set to int and should be set to long long
+        assert(totalNumberOfRows>0); // Throw an exception of the number of rows is less than zero (can happen if int overflow)
 
 
 	// Allocate arrays that are of length localNumberOfRows
@@ -87,7 +91,7 @@ void GenerateProblem(const Geometry & geom, SparseMatrix & A, double **b, double
 
 
 
-	global_int_t localNumberOfNonzeros = 0;
+	local_int_t localNumberOfNonzeros = 0;
 	// TODO:  This triply nested loop could be flattened or use nested parallelism
 #ifndef HPCG_NOOPENMP
 #pragma omp parallel for
@@ -110,7 +114,7 @@ void GenerateProblem(const Geometry & geom, SparseMatrix & A, double **b, double
 #ifdef HPCG_DETAILEDDEBUG
 				HPCG_fout << " rank, globalRow, localRow = " << geom.rank << " " << currentGlobalRow << " " << A.globalToLocalMap[currentGlobalRow] << endl;
 #endif
-				local_int_t numberOfNonzerosInRow = 0;
+				char numberOfNonzerosInRow = 0;
 				double * currentValuePointer = matrixValues[currentLocalRow]; // Pointer to current value in current row
 				global_int_t * currentIndexPointerG = mtxIndG[currentLocalRow]; // Pointer to current index in current row
 				for (int sz=-1; sz<=1; sz++) {
@@ -151,13 +155,22 @@ void GenerateProblem(const Geometry & geom, SparseMatrix & A, double **b, double
 			  << "Process " << geom.rank << " of " << geom.size <<" has " << localNumberOfNonzeros<< " nonzeros." <<endl;
 #endif
 
+  global_int_t totalNumberOfNonzeros = 0;
 #ifndef HPCG_NOMPI
   // Use MPI's reduce function to sum all nonzeros
-  global_int_t totalNumberOfNonzeros = 0;
+#ifdef HPCG_NO_LONG_LONG
   MPI_Allreduce(&localNumberOfNonzeros, &totalNumberOfNonzeros, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
 #else
-  global_int_t totalNumberOfNonzeros = localNumberOfNonzeros;
+  long long lnnz = localNumberOfNonzeros, gnnz = 0; // convert to 64 bit for MPI call
+  MPI_Allreduce(&lnnz, &gnnz, 1, MPI_LONG_LONG_INT, MPI_SUM, MPI_COMM_WORLD);
+  totalNumberOfNonzeros = gnnz; // Copy back
 #endif
+#else
+  totalNumberOfNonzeros = localNumberOfNonzeros;
+#endif
+        // If this assert fails, it most likely means that the global_int_t is set to int and should be set to long long
+        // This assert is usually the first to fail as problem size increases beyond the 32-bit integer range.
+        assert(totalNumberOfNonzeros>0); // Throw an exception of the number of nonzeros is less than zero (can happen if int overflow)
 
 	A.title = 0;
 	A.totalNumberOfRows = totalNumberOfRows;

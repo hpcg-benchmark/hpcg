@@ -56,7 +56,7 @@ int WriteProblem( const Geometry & geom, const SparseMatrix & A,
 #ifdef HPCG_NO_LONG_LONG
     	  fprintf(fA, " %d %d %22.16e\n",i+1,(global_int_t)(currentRowIndices[j]+1),currentRowValues[j]);
 #else
-	  	  fprintf(fA, " %d %lld %22.16e\n",i+1,(global_int_t)(currentRowIndices[j]+1),currentRowValues[j]);
+	  	  fprintf(fA, " %lld %lld %22.16e\n",i+1,(global_int_t)(currentRowIndices[j]+1),currentRowValues[j]);
 #endif
       fprintf(fx, "%22.16e\n",x[i]);
       fprintf(fxexact, "%22.16e\n",xexact[i]);

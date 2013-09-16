@@ -8,7 +8,7 @@
 // ************************************************************************
 //@HEADER
 
-#ifdef HPCG_DETAILEDDEBUG
+#ifdef HPCG_DETAILED_DEBUG
 #include <fstream>
 using std::endl;
 #include "hpcg.hpp"
@@ -64,7 +64,7 @@ void SetupHalo(const Geometry & geom, SparseMatrix & A) {
 		for (int j=0; j<nonzerosInRow[i]; j++) {
 			global_int_t curIndex = mtxIndG[i][j];
 			int rankIdOfColumnEntry = getRankOfMatrixRow(geom, curIndex);
-#ifdef HPCG_DETAILEDDEBUG
+#ifdef HPCG_DETAILED_DEBUG
 			HPCG_fout << "rank, row , col, globalToLocalMap[col] = " << geom.rank << " " << currentGlobalRow << " "
 					<< curIndex << " " << A.globalToLocalMap[curIndex] << endl;
 #endif
@@ -85,7 +85,7 @@ void SetupHalo(const Geometry & geom, SparseMatrix & A) {
 		totalToBeReceived += (curNeighbor->second).size();
 	}
 
-#ifdef HPCG_DETAILEDDEBUG
+#ifdef HPCG_DETAILED_DEBUG
 	// These are all attributes that should be true, due to symmetry
 	HPCG_fout << "totalToBeSent = " << totalToBeSent << " totalToBeReceived = " << totalToBeReceived << endl;
 	assert(totalToBeSent==totalToBeReceived); // Number of sent entry should equal number of received
@@ -148,7 +148,7 @@ void SetupHalo(const Geometry & geom, SparseMatrix & A) {
 	A.sendLength = sendLength;
 	A.sendBuffer = sendBuffer;
 
-#ifdef HPCG_DETAILEDDEBUG
+#ifdef HPCG_DETAILED_DEBUG
 	HPCG_fout << " For rank " << geom.rank << " of " << geom.size << ", number of neighbors = " << A.numberOfSendNeighbors << endl;
 	for (int i = 0; i < A.numberOfSendNeighbors; i++) {
 		HPCG_fout << "     rank " << geom.rank << " neighbor " << neighbors[i] << " send/recv length = " << sendLength[i] << "/" << receiveLength[i] << endl;

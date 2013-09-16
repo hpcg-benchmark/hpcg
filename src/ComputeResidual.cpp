@@ -19,14 +19,14 @@
 // residual - pointer to scalar value, on exit will contain result.
 
 /////////////////////////////////////////////////////////////////////////
-#ifdef HPCG_DETAILEDDEBUG
+#ifdef HPCG_DETAILED_DEBUG
 #include <fstream>
 #include "hpcg.hpp"
 #endif
 
 #include <cmath>  // needed for fabs
 #include "ComputeResidual.hpp"
-#ifdef HPCG_DETAILEDDEBUG
+#ifdef HPCG_DETAILED_DEBUG
 #include <iostream>
 #endif
 
@@ -61,7 +61,7 @@ int ComputeResidual(const local_int_t n, const double * const v1,
   for (local_int_t i=0; i<n; i++) {
     double diff = std::fabs(v1[i] - v2[i]);
     if (diff > local_residual) local_residual = diff;
-#ifdef HPCG_DETAILEDDEBUG
+#ifdef HPCG_DETAILED_DEBUG
     HPCG_fout << " Computed, exact, diff = " << v1[i] << " " << v2[i] << " " << diff << std::endl;
 #endif
   }

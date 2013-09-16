@@ -21,7 +21,7 @@
 
 #include <fstream>
 #include <iostream>
-#ifdef HPCG_DETAILEDDEBUG
+#ifdef HPCG_DETAILED_DEBUG
 using std::cin;
 #endif
 using std::endl;
@@ -65,11 +65,9 @@ int main(int argc, char *argv[]) {
 
   int size = params.comm_size, rank = params.comm_rank; // Number of MPI processes, My process ID
 
-#ifdef HPCG_DETAILEDDEBUG
+#ifdef HPCG_DETAILED_DEBUG
     if (size < 100 && rank==0) HPCG_fout << "Process "<<rank<<" of "<<size<<" is alive with " << params.numThreads << " threads." <<endl;
-#endif
 
-#ifdef HPCG_DETAILEDDEBUG
     if (rank==0)
     {
         int junk = 0;
@@ -116,7 +114,7 @@ int main(int argc, char *argv[]) {
     if (rank==0) HPCG_fout << "Total problem setup time in main (sec) = " << mytimer() - t1 << endl;
 #endif
 
-#ifdef HPCG_DETAILEDDEBUG
+#ifdef HPCG_DETAILED_DEBUG
     if (geom.size==1) WriteProblem(geom, A, b, x, xexact);
 #endif
 

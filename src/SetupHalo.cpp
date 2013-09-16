@@ -12,8 +12,6 @@
 #include <fstream>
 using std::endl;
 #include "hpcg.hpp"
-#include <cstdlib>
-#include <cstdio>
 #include <cassert>
 #endif
 

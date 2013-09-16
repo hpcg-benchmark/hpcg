@@ -22,7 +22,6 @@
 #include <fstream>
 #include <iostream>
 using std::endl;
-#include <cstdlib>
 #include <vector>
 #ifndef HPCG_NOMPI
 #include <mpi.h> // If this routine is not compiled with HPCG_NOMPI

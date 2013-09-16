@@ -18,8 +18,6 @@
 #if defined(HPCG_DEBUG) || defined(HPCG_DETAILEDDEBUG)
 #include <fstream>
 using std::endl;
-#include <cstdlib>
-#include <cstdio>
 #include "hpcg.hpp"
 #endif
 #include <cassert>

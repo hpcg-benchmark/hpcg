@@ -26,7 +26,6 @@ using std::cin;
 #endif
 using std::endl;
 
-#include <cstdlib>
 #include <vector>
 
 #include "hpcg.hpp"

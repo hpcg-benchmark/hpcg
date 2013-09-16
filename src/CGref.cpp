@@ -40,7 +40,10 @@
 #include "symgsref.hpp"
 #include "dotref.hpp"
 #include "waxpbyref.hpp"
+
+#ifndef HPCG_NOMPI
 #include "ExchangeHalo.hpp"
+#endif
 
 using std::endl;
 

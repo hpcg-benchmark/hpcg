@@ -22,7 +22,6 @@
 #include <fstream>
 #include <iostream>
 using std::endl;
-#include <cstdlib>
 #include <vector>
 #include <cmath>
 #ifndef HPCG_NOMPI
@@ -38,7 +37,9 @@ using std::endl;
 #include "Geometry.hpp"
 #include "SparseMatrix.hpp"
 #include "SymTest.hpp"
+#ifndef HPCG_NOMPI
 #include "ExchangeHalo.hpp"
+#endif
 
 int SymTest(Geometry & geom, SparseMatrix & A, double * const b, double * const xexact, SymTestData * symtest_data) {
 

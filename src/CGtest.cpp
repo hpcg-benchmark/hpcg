@@ -8,6 +8,12 @@
 // ************************************************************************
 //@HEADER
 
+/*!
+ @file CGtest.cpp
+
+ HPCG routine
+ */
+
 // Changelog
 //
 // Version 0.3
@@ -15,9 +21,6 @@
 // - Corrected percentages reported for sparse MV with overhead
 //
 /////////////////////////////////////////////////////////////////////////
-
-// Main routine of a program that calls the HPCG conjugate gradient
-// solver to solve the problem, and then prints results.
 
 #include <fstream>
 #include <iostream>
@@ -34,6 +37,20 @@ using std::endl;
 #include "Geometry.hpp"
 #include "SparseMatrix.hpp"
 
+/*!
+  Test the correctness of the Preconditined CG implementation by using a system matrix with a dominant diagonal.
+
+  @param[in]    geom The description of the problem's geometry.
+  @param[in]    A    The known matrix stored as an HPC_Sparse_Matrix struct
+  @param[int]   data the data structure with all necessary CG vectors preallocated
+  @param[in]    b    The known right hand side vector
+  @param[inout] x    On entry: the initial guess; on exit: the new approximate solution
+  @param[out]   cgtest_data the data structure with the results of the test including pass/fail information
+
+  @return Returns zero on success and a non-zero value otherwise.
+
+  @see CG()
+ */
 int CGtest(Geometry & geom, SparseMatrix & A, CGData & data, double * const b, double * const x, CGtestData * cgtest_data) {
 
 

@@ -8,25 +8,11 @@
 // ************************************************************************
 //@HEADER
 
-/////////////////////////////////////////////////////////////////////////
+/*!
+ @file CG.cpp
 
-// Routine to compute an approximate solution to Ax = b where:
-
-// A - known matrix stored as an HPC_Sparse_Matrix struct
-
-// b - known right hand side vector
-
-// x - On entry is initial guess, on exit new approximate solution
-
-// max_iter - Maximum number of iterations to perform, even if
-//            tolerance is not met.
-
-// tolerance - Stop and assert convergence if norm of residual is <=
-//             to tolerance.
-
-// niters - On output, the number of iterations actually performed.
-
-/////////////////////////////////////////////////////////////////////////
+ HPCG routine
+ */
 
 #include <fstream>
 
@@ -50,6 +36,27 @@ using std::endl;
 
 #define TICK()  t0 = mytimer() // Use TICK and TOCK to time a code section
 #define TOCK(t) t += mytimer() - t0
+
+/*!
+  Routine to compute an approximate solution to Ax = b
+
+  @param[in]    geom The description of the problem's geometry.
+  @param[in]    A    The known matrix stored as an HPC_Sparse_Matrix struct
+  @param[int]   data The data structure with all necessary CG vectors preallocated
+  @param[in]    b    The known right hand side vector
+  @param[inout] x    On entry: the initial guess; on exit: the new approximate solution
+  @param[in]    max_iter  The maximum number of iterations to perform, even if tolerance is not met.
+  @param[in]    tolerance The stopping criterion to assert convergence: if norm of residual is <= to tolerance.
+  @param[out]   niters    The number of iterations actually performed.
+  @param[out]   normr     The 2-norm of the residual vector after the last iteration.
+  @param[out]   normr0    The 2-norm of the residual vector before the first iteration.
+  @param[out]   times     The 7-element vector of the timing information accumulated during all of the iterations.
+  @param[out]   doPreconditioning The flag to indicate whether the preconditioner should be invoked at each iteration.
+
+  @return Returns zero on success and a non-zero value otherwise.
+
+  @see CGref()
+*/
 int CG(const Geometry & geom, const SparseMatrix & A, CGData & data, const double * const b, double * const x,
 		const int max_iter, const double tolerance, int &niters, double & normr, double & normr0,
 		double * times, bool doPreconditioning) {

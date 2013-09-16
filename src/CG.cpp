@@ -68,7 +68,7 @@ int CG(const Geometry & geom, const SparseMatrix & A, CGData & data, const doubl
 
 	if (!doPreconditioning && geom.rank==0) HPCG_fout << "WARNING: PERFORMING UNPRECONDITIONED ITERATIONS" << endl;
 
-#ifdef DEBUG
+#ifdef HPCG_DEBUG
 	int print_freq = 1;
 	if (print_freq>50) print_freq=50;
 	if (print_freq<1)  print_freq=1;
@@ -82,7 +82,7 @@ int CG(const Geometry & geom, const SparseMatrix & A, CGData & data, const doubl
 	waxpby(nrow, 1.0, b, -1.0, Ap, r); // r = b - Ax (x stored in p)
 	dot(nrow, r, r, &normr, t4);
 	normr = sqrt(normr);
-#ifdef DEBUG
+#ifdef HPCG_DEBUG
 	if (geom.rank==0) HPCG_fout << "Initial Residual = "<< normr << endl;
 #endif
 
@@ -120,7 +120,7 @@ int CG(const Geometry & geom, const SparseMatrix & A, CGData & data, const doubl
 				waxpby(nrow, 1.0, r, -alpha, Ap, r);  TOCK(t2);// r = r - alpha*Ap
 		TICK(); dot(nrow, r, r, &normr, t4); TOCK(t1);
 		normr = sqrt(normr);
-#ifdef DEBUG
+#ifdef HPCG_DEBUG
 		if (geom.rank==0 && (k%print_freq == 0 || k+1 == max_iter))
 			HPCG_fout << "Iteration = "<< k << "   Scaled Residual = "<< normr/normr0 << endl;
 #endif

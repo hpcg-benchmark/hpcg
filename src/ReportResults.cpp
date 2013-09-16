@@ -21,7 +21,7 @@
 #include <mpi.h> // If this routine is not compiled with HPCG_NOMPI
 #endif
 
-#ifdef DEBUG
+#ifdef HPCG_DEBUG
 #include <fstream>
 using std::endl;
 
@@ -144,7 +144,7 @@ void ReportResults(const Geometry & geom, const SparseMatrix & A, int niters, do
         }
         
             std::string yaml = doc.generateYAML();
-#ifdef DEBUG
+#ifdef HPCG_DEBUG
             HPCG_fout << yaml;
 #endif
     }

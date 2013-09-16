@@ -21,7 +21,7 @@
 
 #include <fstream>
 #include <iostream>
-#ifdef DEBUG
+#ifdef HPCG_DETAILEDDEBUG
 using std::cin;
 #endif
 using std::endl;
@@ -276,7 +276,7 @@ int main(int argc, char *argv[]) {
     
     // Compute difference between known exact solution and computed solution
     // All processors are needed here.
-#ifdef DEBUG
+#ifdef HPCG_DEBUG
     double residual = 0;
     ierr = ComputeResidual(A.localNumberOfRows, x, xexact, &residual);
     if (ierr) HPCG_fout << "Error in call to compute_residual: " << ierr << ".\n" << endl;

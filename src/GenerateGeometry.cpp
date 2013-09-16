@@ -20,7 +20,7 @@
 #include <cstdlib>
 
 #include "GenerateGeometry.hpp"
-#ifdef DEBUG
+#ifdef HPCG_DEBUG
 #include <fstream>
 #include "hpcg.hpp"
 using std::endl;
@@ -196,7 +196,7 @@ void GenerateGeometry(int size, int rank, int numThreads, int nx, int ny, int nz
 	int ipy = (rank-ipz*npx*npy)/npx;
 	int ipx = rank%npx;
 
-#ifdef DEBUG
+#ifdef HPCG_DEBUG
 	if (rank==0)
 	HPCG_fout 	<< "size = "<< size << endl
 			<< "nx  = " << nx << endl

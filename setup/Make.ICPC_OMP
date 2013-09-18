@@ -116,7 +116,7 @@ HPCG_DEFS     = $(HPCG_OPTS) $(HPCG_INCLUDES)
 # - Compilers / linkers - Optimization flags ---------------------------
 # ----------------------------------------------------------------------
 #
-CXX          = /usr/bin/g++
+CXX          = icpc
 CXXFLAGS     = $(HPCG_DEFS) -O3 -openmp -mavx
 #
 LINKER       = $(CXX)

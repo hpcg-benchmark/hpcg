@@ -21,6 +21,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <cstdlib>
 using std::endl;
 #include <vector>
 #include <cmath>

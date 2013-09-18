@@ -21,6 +21,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <cstdlib>
 #ifdef HPCG_DETAILED_DEBUG
 using std::cin;
 #endif

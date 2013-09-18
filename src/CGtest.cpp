@@ -111,7 +111,6 @@ int CGtest(Geometry & geom, SparseMatrix & A, CGData & data, double * const b, d
       *(A.matrixDiagonal[i]) = diagA[i];
       b[i] = origB[i];
     }
-        cgtest_data->niters = niters;
         cgtest_data->normr = normr;
 
 	return 0;

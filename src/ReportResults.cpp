@@ -11,9 +11,6 @@
 // rank - My process id
 //
 
-#include "CGtest.hpp"
-#include "SymTest.hpp"
-#include "NormTest.hpp"
 #include "ReportResults.hpp"
 #include "YAML_Element.hpp"
 #include "YAML_Doc.hpp"

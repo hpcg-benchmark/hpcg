@@ -103,7 +103,7 @@ int CGref(const Geometry & geom, const SparseMatrix & A, CGData & data, const do
 
 	// Start iterations
 
-	for(int k=0; k<max_iter && normr/normr0 > tolerance; k++ ) {
+	for(int k=1; k<=max_iter && normr/normr0 > tolerance; k++ ) {
 		TICK(); 
 		if (doPreconditioning) 
 			symgsref(A, r, z); // Apply preconditioner
@@ -133,7 +133,7 @@ int CGref(const Geometry & geom, const SparseMatrix & A, CGData & data, const do
 		TICK(); dotref(nrow, r, r, &normr, t4); TOCK(t1);
 		normr = sqrt(normr);
 #ifdef HPCG_DEBUG
-		if (geom.rank==0 && (k%print_freq == 0 || k+1 == max_iter))
+		if (geom.rank==0 && (k%print_freq == 0 || k == max_iter))
 			HPCG_fout << "Iteration = "<< k << "   Scaled Residual = "<< normr/normr0 << endl;
 #endif
 		niters = k;

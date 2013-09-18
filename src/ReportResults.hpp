@@ -14,7 +14,7 @@
 #include "CGtest.hpp"
 #include "SymTest.hpp"
 
-void ReportResults(const Geometry & geom, const SparseMatrix & A, int niters, double normr, double times[],
-  CGtestData * cgtest_data, SymTestData * symtest_data, bool isValidRun);
+void ReportResults(const Geometry & geom, const SparseMatrix & A, int numberOfCgSets, int niters, double scaled_normr, double times[],
+  CGtestData * cgtest_data, SymTestData * symtest_data, NormTestData * normtest_data, int global_failure);
 
 #endif // REPORTRESULTS_HPP

@@ -11,8 +11,8 @@
 #ifndef GEOMETRY_HPP
 #define GEOMETRY_HPP
 
-typedef int local_int_t;      // This defines the type for integers that have local subdomain dimension
-//typedef long long local_int_t;      // Define as long long when local problem dimension is > 2^31
+//typedef int local_int_t;      // This defines the type for integers that have local subdomain dimension
+typedef long long local_int_t;      // Define as long long when local problem dimension is > 2^31
 
 // This macro should be defined if the global_int_t is not long long
 // in order to stop complaints from non-C++11 compliant compilers

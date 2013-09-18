@@ -94,6 +94,7 @@ int main(int argc, char *argv[]) {
     double t1 = mytimer();
 #endif
 
+    // Construct the geometry and linear system
     Geometry geom;
     GenerateGeometry(size, rank, params.numThreads, nx, ny, nz, geom);
 
@@ -257,14 +258,14 @@ int main(int argc, char *argv[]) {
 
     double total_runtime = 60.0; // run for at least one minute when in exploratory mode
     //double total_runtime = 60.0*60.0*5.0; // Run for 5 hours for official runs
-    numberOfCalls = int(total_runtime / opt_worst_time);
-    if (numberOfCalls < 1) numberOfCalls = 1; // run CG at least once
+    int numberOfCgSets = int(total_runtime / opt_worst_time);
+    if (numberOfCgSets < 1) numberOfCgSets = 1; // run CG at least once
 
     /* This is the timed run for a specified amount of time. */
 
     totalNiters = 0;
 
-    for (int i=0; i< numberOfCalls; ++i) {
+    for (int i=0; i< numberOfCgSets; ++i) {
     	for (int j=0; j< A.localNumberOfRows; ++j) x[j] = 0.0; // Zero out x
     	ierr = CG( geom, A, data, b, x, maxIters, tolerance, niters, normr, normr0, &times[0], true);
     	if (ierr) HPCG_fout << "Error in call to CG: " << ierr << ".\n" << endl;
@@ -281,12 +282,16 @@ int main(int argc, char *argv[]) {
     if (rank==0) HPCG_fout << "Difference between computed and exact  = " << residual << ".\n" << endl;
 #endif
 
+    // Test Norm Results
+    NormTestData normtest_data;
+    ierr = NormTest(&normtest_data);
+
     ////////////////////
     // Report Results //
     ////////////////////
 
     // Report results to YAML file
-    ReportResults(geom, A, totalNiters, normr/normr0, &times[0], &cgtest_data, &symtest_data, (ierr==0 && global_failure==0));
+    ReportResults(geom, A, numberOfCgSets, totalNiters, normr/normr0, &times[0], &cgtest_data, &symtest_data, &normtest_data, global_failure);
 
     // Clean up
     destroyMatrix(A);

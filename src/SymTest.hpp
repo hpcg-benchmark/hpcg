@@ -18,6 +18,7 @@
 
 struct SymTestData_STRUCT {
   double depsym_spmv, depsym_symgs;
+  int count_fail;
 };
 typedef struct SymTestData_STRUCT SymTestData;
 

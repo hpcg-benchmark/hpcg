@@ -18,7 +18,7 @@
 
 
 struct CGtestData_STRUCT {
-  int count_pass, count_fail, niters;
+  int count_pass, count_fail, expected_niters_no_prec, expected_niters_prec, niters_max_no_prec, niters_max_prec;
   double normr;
 };
 typedef struct CGtestData_STRUCT CGtestData;

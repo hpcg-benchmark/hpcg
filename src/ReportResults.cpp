@@ -13,6 +13,7 @@
 
 #include "CGtest.hpp"
 #include "SymTest.hpp"
+#include "NormTest.hpp"
 #include "ReportResults.hpp"
 #include "YAML_Element.hpp"
 #include "YAML_Doc.hpp"
@@ -28,8 +29,8 @@ using std::endl;
 #include "hpcg.hpp"
 #endif
 
-void ReportResults(const Geometry & geom, const SparseMatrix & A, int niters, double normr, double times[],
-  CGtestData * cgtest_data, SymTestData * symtest_data, bool isValidRun) {
+void ReportResults(const Geometry & geom, const SparseMatrix & A, int numberOfCgSets, int niters, double scaled_normr, double times[],
+  CGtestData * cgtest_data, SymTestData * symtest_data, NormTestData * normtest_data, int global_failure) {
 
 #ifndef HPCG_NOMPI
     double t4 = times[4];
@@ -46,7 +47,7 @@ void ReportResults(const Geometry & geom, const SparseMatrix & A, int niters, do
     
     if (geom.rank==0) { // Only PE 0 needs to compute and report timing results
 
-
+    	double fNumberOfCgSets = numberOfCgSets;
         double fniters = niters;
         double fnrow = A.totalNumberOfRows;
         double fnnz = A.totalNumberOfNonzeros;
@@ -83,59 +84,84 @@ void ReportResults(const Geometry & geom, const SparseMatrix & A, int niters, do
         doc.add("Linear System Information","");
         doc.get("Linear System Information")->add("Number of Equations",A.totalNumberOfRows);
         doc.get("Linear System Information")->add("Number of Nonzero Terms",A.totalNumberOfNonzeros);
-        
-        doc.add("Number of iterations: ", niters);
-        doc.add("Final residual: ", normr);
-        doc.add("********** Testing     Summary (times in sec) ***********","");
-        doc.add("Large Magnitude Diagonal","");
-        doc.get("Large Magnitude Diagonal")->add("Iteration count", cgtest_data->niters);
-        doc.get("Large Magnitude Diagonal")->add("Final residual", cgtest_data->normr);
-        doc.add("Departure from symmetry","");
-        doc.get("Departure from symmetry")->add("Departure for SPMV", symtest_data->depsym_spmv);
-        doc.get("Departure from symmetry")->add("Departure for SYMGS", symtest_data->depsym_symgs);
+        doc.add("Iteration Count Information","");
+
+        doc.add("********** Validation Testing Summary  ***********","");
+        doc.add("Spectral Convergence Tests","");
+        if (cgtest_data->count_fail==0)
+            doc.get("Spectral Convergence Tests")->add("Results", "PASSED");
+        else
+        	doc.get("Spectral Convergence Tests")->add("Results", "FAILED");
+        doc.get("Spectral Convergence Tests")->add("Unpreconditioned","");
+        doc.get("Spectral Convergence Tests")->get("Unpreconditioned")->add("Maximum iteration count", cgtest_data->niters_max_no_prec);
+        doc.get("Spectral Convergence Tests")->get("Unpreconditioned")->add("Expected iteration count", cgtest_data->expected_niters_no_prec);
+        doc.get("Spectral Convergence Tests")->add("Preconditioned","");
+        doc.get("Spectral Convergence Tests")->get("Preconditioned")->add("Maximum iteration count", cgtest_data->niters_max_prec);
+        doc.get("Spectral Convergence Tests")->get("Preconditioned")->add("Expected iteration count", cgtest_data->expected_niters_prec);
+
+        doc.add("Departure from Symmetry Tests","");
+        if (symtest_data->count_fail==0)
+            doc.get("Departure from Symmetry Tests")->add("Results", "PASSED");
+        else
+        	doc.get("Departure from Symmetry Tests")->add("Results", "FAILED");
+        doc.get("Departure from Symmetry Tests")->add("Departure for SPMV", symtest_data->depsym_spmv);
+        doc.get("Departure from Symmetry Tests")->add("Departure for SYMGS", symtest_data->depsym_symgs);
+
+        doc.add("********** Iterations Summary  ***********","");
+        doc.add("Iteration Count Information");
+        if (normtest_data->pass)
+            doc.get("Iteration Count Information")->add("Results", "PASSED");
+        else
+        	doc.get("Iteration Count Information")->add("Results", "FAILED");
+        doc.get("Iteration Count Information")->add("Number of CG sets :          ", numberOfCgSets);
+        doc.get("Iteration Count Information")->add("Average iterations per set : ", fniters/fNumberOfCgSets);
+        doc.get("Iteration Count Information")->add("Total number of iterations:  ", niters);
+        doc.get("Iteration Count Information")->add("Average scaled residual norm:  ", normtest_data->mean);
+        doc.get("Iteration Count Information")->add("Scaled residual variance:  ", normtest_data->variance);
+
         doc.add("********** Performance Summary (times in sec) ***********","");
         
-        doc.add("Time Summary","");
-        doc.get("Time Summary")->add("Total   ",times[0]);
-        doc.get("Time Summary")->add("DDOT    ",times[1]);
-        doc.get("Time Summary")->add("WAXPBY  ",times[2]);
-        doc.get("Time Summary")->add("SPARSEMV",times[3]);
-        doc.get("Time Summary")->add("PRECOND ",times[5]);
+        doc.add("Time Summary (Average Per CG Set)","");
+        doc.get("Time Summary")->add("Average Execution Time per CG Set",times[0]/fNumberOfCgSets);
+        doc.get("Time Summary")->add("DDOT Average Time",times[1]/fNumberOfCgSets);
+        doc.get("Time Summary")->add("WAXPBY Average Time",times[2]/fNumberOfCgSets);
+        doc.get("Time Summary")->add("SpMV Average Time",times[3]/fNumberOfCgSets);
+        doc.get("Time Summary")->add("SymGS Average Time",times[5]/fNumberOfCgSets);
         
-        doc.add("FLOPS Summary","");
-        doc.get("FLOPS Summary")->add("Total   ",fnops);
-        doc.get("FLOPS Summary")->add("DDOT    ",fnops_ddot);
-        doc.get("FLOPS Summary")->add("WAXPBY  ",fnops_waxpby);
-        doc.get("FLOPS Summary")->add("SPARSEMV",fnops_sparsemv);
-        doc.get("FLOPS Summary")->add("PRECOND ",fnops_precond);
+        doc.add("Floating Point Operations Summary","");
+        doc.get("Floating Point Operations Summary")->add("Total   ",fnops);
+        doc.get("Floating Point Operations Summary")->add("DDOT    ",fnops_ddot);
+        doc.get("Floating Point Operations Summary")->add("WAXPBY  ",fnops_waxpby);
+        doc.get("Floating Point Operations Summary")->add("SPARSEMV",fnops_sparsemv);
+        doc.get("Floating Point Operations Summary")->add("PRECOND ",fnops_precond);
         
-        doc.add("MFLOPS Summary","");
-        doc.get("MFLOPS Summary")->add("Total   ",fnops/times[0]/1.0E6);
-        doc.get("MFLOPS Summary")->add("DDOT    ",fnops_ddot/times[1]/1.0E6);
-        doc.get("MFLOPS Summary")->add("WAXPBY  ",fnops_waxpby/times[2]/1.0E6);
-        doc.get("MFLOPS Summary")->add("SPARSEMV",fnops_sparsemv/(times[3])/1.0E6);
-        doc.get("MFLOPS Summary")->add("PRECOND ",fnops_precond/(times[5])/1.0E6);
+        doc.add("GFLOP/s Summary","");
+        doc.get("GFLOP/s Summary")->add("Total   ",fnops/times[0]/1.0E9);
+        doc.get("GFLOP/s Summary")->add("DDOT    ",fnops_ddot/times[1]/1.0E9);
+        doc.get("GFLOP/s Summary")->add("WAXPBY  ",fnops_waxpby/times[2]/1.0E9);
+        doc.get("GFLOP/s Summary")->add("SPARSEMV",fnops_sparsemv/(times[3])/1.0E9);
+        doc.get("GFLOP/s Summary")->add("PRECOND ",fnops_precond/(times[5])/1.0E9);
         
         double totalSparseMVTime = times[3] + times[6];
-         doc.add("SPARSEOPS OVERHEADS","");
-         doc.get("SPARSEOPS OVERHEADS")->add("SPARSEMV  MFLOPS W OVERHEAD",fnops_sparsemv/(totalSparseMVTime)/1.0E6);
-         doc.get("SPARSEOPS OVERHEADS")->add("SPARSEOPS OVERHEAD Time", (times[7]+times[6]));
-         doc.get("SPARSEOPS OVERHEADS")->add("SPARSEOPS OVERHEAD Pct", (times[7]+times[6])/totalSparseMVTime*100.0);
-         doc.get("SPARSEOPS OVERHEADS")->add("SPARSEOPS OVERHEAD Optimization Time", (times[7]));
-         doc.get("SPARSEOPS OVERHEADS")->add("SPARSEOPS OVERHEAD Optimization Ratio vs ref SPMV+SYMGS", (times[7])/times[8]);
+         doc.add("Sparse Operations Overheads","");
+         doc.get("Sparse Operations Overheads")->add("SPMV GFLOP/s with overhead",fnops_sparsemv/(totalSparseMVTime)/1.0E9);
+         doc.get("Sparse Operations Overheads")->add("Overhead time (sec)", (times[7]+times[6]));
+         doc.get("Sparse Operations Overheads")->add("Overhead as percentage of time", (times[7]+times[6])/totalSparseMVTime*100.0);
+         doc.get("Sparse Operations Overheads")->add("Optimization phase time (sec)", (times[7]));
+         doc.get("Sparse Operations Overheads")->add("Optimization phase time vs reference SPMV+SYMGS time", (times[7])/times[8]);
 
  #ifndef HPCG_NOMPI
-        doc.add("DDOT Timing Variations","");
-        doc.get("DDOT Timing Variations")->add("Min DDOT MPI_Allreduce time",t4min);
-        doc.get("DDOT Timing Variations")->add("Max DDOT MPI_Allreduce time",t4max);
-        doc.get("DDOT Timing Variations")->add("Avg DDOT MPI_Allreduce time",t4avg);
+        doc..get("Sparse Operations Overheads")->add("DDOT Timing Variations","");
+        doc..get("Sparse Operations Overheads")->get("DDOT Timing Variations")->add("Min DDOT MPI_Allreduce time",t4min);
+        doc..get("Sparse Operations Overheads")->get("DDOT Timing Variations")->add("Max DDOT MPI_Allreduce time",t4max);
+        doc..get("Sparse Operations Overheads")->get("DDOT Timing Variations")->add("Avg DDOT MPI_Allreduce time",t4avg);
         
-        doc.get("SPARSEOPS OVERHEADS")->add("SPARSEOPS PARALLEL OVERHEAD Bdry Exch Time", (times[6]));
-        doc.get("SPARSEOPS OVERHEADS")->add("SPARSEOPS PARALLEL OVERHEAD Bdry Exch Pct", (times[6])/totalSparseMVTime*100.0);
+        doc..get("Sparse Operations Overheads")->add("Halo exchange time (sec)", (times[6]));
+        doc..get("Sparse Operations Overheads")->add("Halo exchange as percentage of SpMV time", (times[6])/totalSparseMVTime*100.0);
 #endif
         doc.add("********** Final Summary **********","");
         if (isValidRun) {
-        	doc.get("********** Final Summary **********")->add("This result is VALID with an MFLOP/s rating of", fnops/times[0]/1.0E6);
+        	doc.get("********** Final Summary **********")->add("This result is VALID with a GFLOP/s rating of", fnops/times[0]/1.0E9);
         	doc.get("********** Final Summary **********")->add("Please send the generated .yaml file to","HPCG-Results@software.sandia.gov");
         }
         else {

@@ -117,27 +117,30 @@ void ReportResults(const Geometry & geom, const SparseMatrix & A, int numberOfCg
 
         doc.add("********** Performance Summary (times in sec) ***********","");
         
-        doc.add("Time Summary (Average Time Per CG Set(sec))","");
-        doc.get("Time Summary (Average Time Per CG Set(sec))")->add("Total ",times[0]/fNumberOfCgSets);
-        doc.get("Time Summary (Average Time Per CG Set(sec))")->add("DDOT  ",times[1]/fNumberOfCgSets);
-        doc.get("Time Summary (Average Time Per CG Set(sec))")->add("WAXPBY",times[2]/fNumberOfCgSets);
-        doc.get("Time Summary (Average Time Per CG Set(sec))")->add("SpMV  ",times[3]/fNumberOfCgSets);
-        doc.get("Time Summary (Average Time Per CG Set(sec))")->add("SymGS ",times[5]/fNumberOfCgSets);
+        doc.add("Benchmark Time Summary","");
+        doc.get("Benchmark Time Summary")->add("Optimization phase",times[7]);
+        doc.get("Benchmark Time Summary")->add("DDOT  ",times[1]);
+        doc.get("Benchmark Time Summary")->add("WAXPBY",times[2]);
+        doc.get("Benchmark Time Summary")->add("SpMV  ",times[3]);
+        doc.get("Benchmark Time Summary")->add("SymGS ",times[5]);
+        doc.get("Benchmark Time Summary")->add("Total ",times[0]);
         
         doc.add("Floating Point Operations Summary","");
-        doc.get("Floating Point Operations Summary")->add("Total ",fnops);
         doc.get("Floating Point Operations Summary")->add("DDOT  ",fnops_ddot);
         doc.get("Floating Point Operations Summary")->add("WAXPBY",fnops_waxpby);
         doc.get("Floating Point Operations Summary")->add("SpMV  ",fnops_sparsemv);
         doc.get("Floating Point Operations Summary")->add("SymGS ",fnops_precond);
-        
+        doc.get("Floating Point Operations Summary")->add("Total ",fnops);
+
         doc.add("GFLOP/s Summary","");
-        doc.get("GFLOP/s Summary")->add("Total ",fnops/times[0]/1.0E9);
         doc.get("GFLOP/s Summary")->add("DDOT  ",fnops_ddot/times[1]/1.0E9);
         doc.get("GFLOP/s Summary")->add("WAXPBY",fnops_waxpby/times[2]/1.0E9);
         doc.get("GFLOP/s Summary")->add("SpMV  ",fnops_sparsemv/(times[3])/1.0E9);
         doc.get("GFLOP/s Summary")->add("SymGS ",fnops_precond/(times[5])/1.0E9);
-        
+        doc.get("GFLOP/s Summary")->add("Total ",fnops/times[0]/1.0E9);
+        // This final GFLOP/s rating includes the overhead of optimizing the data structures vs 50 iterations of CG
+        doc.get("GFLOP/s Summary")->add("Total with Optimization phase overhead",fnops/(times[0]+fNumberOfCgSets*times[7])/1.0E9);
+
         double totalSparseMVTime = times[3] + times[6];
          doc.add("Sparse Operations Overheads","");
          doc.get("Sparse Operations Overheads")->add("SpMV GFLOP/s with overhead",fnops_sparsemv/(totalSparseMVTime)/1.0E9);

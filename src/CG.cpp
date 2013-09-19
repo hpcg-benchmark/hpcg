@@ -109,7 +109,7 @@ int CG(const Geometry & geom, const SparseMatrix & A, CGData & data, const doubl
 			waxpby(nrow, 1.0, r, 0.0, r, z); // copy r to z (no preconditioning)
         TOCK(t5); // Preconditioner apply time
 
-		if (k == 0) {
+		if (k == 1) {
 			TICK(); waxpby(nrow, 1.0, z, 0.0, z, p); TOCK(t2); // Copy Mr to p
 			TICK(); dot (nrow, r, z, &rtz, t4); TOCK(t1); // rtz = r'*z
 		}

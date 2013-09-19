@@ -300,6 +300,7 @@ int main(int argc, char *argv[]) {
     // Clean up
     destroyMatrix(A);
     destroyCGData(data);
+    delete [] normtest_data.values;
     delete [] x;
     delete [] b;
     delete [] xexact;

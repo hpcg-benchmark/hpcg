@@ -26,7 +26,7 @@ using std::endl;
 #include "hpcg.hpp"
 #endif
 
-void ReportResults(const Geometry & geom, const SparseMatrix & A, int numberOfCgSets, int niters, double scaled_normr, double times[],
+void ReportResults(const Geometry & geom, const SparseMatrix & A, int numberOfCgSets, int niters, double times[],
   CGtestData * cgtest_data, SymTestData * symtest_data, NormTestData * normtest_data, int global_failure) {
 
 #ifndef HPCG_NOMPI
@@ -105,8 +105,8 @@ void ReportResults(const Geometry & geom, const SparseMatrix & A, int numberOfCg
         doc.get("Departure from Symmetry Tests")->add("Departure for SYMGS", symtest_data->depsym_symgs);
 
         doc.add("********** Iterations Summary  ***********","");
-        doc.add("Iteration Count Information");
-        if (normtest_data->pass)
+        doc.add("Iteration Count Information","");
+        if (normtest_data->pass && (!global_failure))
             doc.get("Iteration Count Information")->add("Results", "PASSED");
         else
         	doc.get("Iteration Count Information")->add("Results", "FAILED");
@@ -118,45 +118,46 @@ void ReportResults(const Geometry & geom, const SparseMatrix & A, int numberOfCg
 
         doc.add("********** Performance Summary (times in sec) ***********","");
         
-        doc.add("Time Summary (Average Per CG Set)","");
-        doc.get("Time Summary")->add("Average Execution Time per CG Set",times[0]/fNumberOfCgSets);
-        doc.get("Time Summary")->add("DDOT Average Time",times[1]/fNumberOfCgSets);
-        doc.get("Time Summary")->add("WAXPBY Average Time",times[2]/fNumberOfCgSets);
-        doc.get("Time Summary")->add("SpMV Average Time",times[3]/fNumberOfCgSets);
-        doc.get("Time Summary")->add("SymGS Average Time",times[5]/fNumberOfCgSets);
+        doc.add("Time Summary (Average Time Per CG Set(sec))","");
+        doc.get("Time Summary")->add("Total ",times[0]/fNumberOfCgSets);
+        doc.get("Time Summary")->add("DDOT  ",times[1]/fNumberOfCgSets);
+        doc.get("Time Summary")->add("WAXPBY",times[2]/fNumberOfCgSets);
+        doc.get("Time Summary")->add("SpMV  ",times[3]/fNumberOfCgSets);
+        doc.get("Time Summary")->add("SymGS ",times[5]/fNumberOfCgSets);
         
         doc.add("Floating Point Operations Summary","");
-        doc.get("Floating Point Operations Summary")->add("Total   ",fnops);
-        doc.get("Floating Point Operations Summary")->add("DDOT    ",fnops_ddot);
-        doc.get("Floating Point Operations Summary")->add("WAXPBY  ",fnops_waxpby);
-        doc.get("Floating Point Operations Summary")->add("SPARSEMV",fnops_sparsemv);
-        doc.get("Floating Point Operations Summary")->add("PRECOND ",fnops_precond);
+        doc.get("Floating Point Operations Summary")->add("Total ",fnops);
+        doc.get("Floating Point Operations Summary")->add("DDOT  ",fnops_ddot);
+        doc.get("Floating Point Operations Summary")->add("WAXPBY",fnops_waxpby);
+        doc.get("Floating Point Operations Summary")->add("SpMV  ",fnops_sparsemv);
+        doc.get("Floating Point Operations Summary")->add("SymGS ",fnops_precond);
         
         doc.add("GFLOP/s Summary","");
-        doc.get("GFLOP/s Summary")->add("Total   ",fnops/times[0]/1.0E9);
-        doc.get("GFLOP/s Summary")->add("DDOT    ",fnops_ddot/times[1]/1.0E9);
-        doc.get("GFLOP/s Summary")->add("WAXPBY  ",fnops_waxpby/times[2]/1.0E9);
-        doc.get("GFLOP/s Summary")->add("SPARSEMV",fnops_sparsemv/(times[3])/1.0E9);
-        doc.get("GFLOP/s Summary")->add("PRECOND ",fnops_precond/(times[5])/1.0E9);
+        doc.get("GFLOP/s Summary")->add("Total ",fnops/times[0]/1.0E9);
+        doc.get("GFLOP/s Summary")->add("DDOT  ",fnops_ddot/times[1]/1.0E9);
+        doc.get("GFLOP/s Summary")->add("WAXPBY",fnops_waxpby/times[2]/1.0E9);
+        doc.get("GFLOP/s Summary")->add("SpMV  ",fnops_sparsemv/(times[3])/1.0E9);
+        doc.get("GFLOP/s Summary")->add("SymGS ",fnops_precond/(times[5])/1.0E9);
         
         double totalSparseMVTime = times[3] + times[6];
          doc.add("Sparse Operations Overheads","");
-         doc.get("Sparse Operations Overheads")->add("SPMV GFLOP/s with overhead",fnops_sparsemv/(totalSparseMVTime)/1.0E9);
+         doc.get("Sparse Operations Overheads")->add("SpMV GFLOP/s with overhead",fnops_sparsemv/(totalSparseMVTime)/1.0E9);
          doc.get("Sparse Operations Overheads")->add("Overhead time (sec)", (times[7]+times[6]));
          doc.get("Sparse Operations Overheads")->add("Overhead as percentage of time", (times[7]+times[6])/totalSparseMVTime*100.0);
          doc.get("Sparse Operations Overheads")->add("Optimization phase time (sec)", (times[7]));
-         doc.get("Sparse Operations Overheads")->add("Optimization phase time vs reference SPMV+SYMGS time", (times[7])/times[8]);
+         doc.get("Sparse Operations Overheads")->add("Optimization phase time vs reference SpMV+SymGS time", (times[7])/times[8]);
 
  #ifndef HPCG_NOMPI
-        doc..get("Sparse Operations Overheads")->add("DDOT Timing Variations","");
-        doc..get("Sparse Operations Overheads")->get("DDOT Timing Variations")->add("Min DDOT MPI_Allreduce time",t4min);
-        doc..get("Sparse Operations Overheads")->get("DDOT Timing Variations")->add("Max DDOT MPI_Allreduce time",t4max);
-        doc..get("Sparse Operations Overheads")->get("DDOT Timing Variations")->add("Avg DDOT MPI_Allreduce time",t4avg);
+        doc.get("Sparse Operations Overheads")->add("DDOT Timing Variations","");
+        doc.get("Sparse Operations Overheads")->get("DDOT Timing Variations")->add("Min DDOT MPI_Allreduce time",t4min);
+        doc.get("Sparse Operations Overheads")->get("DDOT Timing Variations")->add("Max DDOT MPI_Allreduce time",t4max);
+        doc.get("Sparse Operations Overheads")->get("DDOT Timing Variations")->add("Avg DDOT MPI_Allreduce time",t4avg);
         
-        doc..get("Sparse Operations Overheads")->add("Halo exchange time (sec)", (times[6]));
-        doc..get("Sparse Operations Overheads")->add("Halo exchange as percentage of SpMV time", (times[6])/totalSparseMVTime*100.0);
+        doc.get("Sparse Operations Overheads")->add("Halo exchange time (sec)", (times[6]));
+        doc.get("Sparse Operations Overheads")->add("Halo exchange as percentage of SpMV time", (times[6])/totalSparseMVTime*100.0);
 #endif
         doc.add("********** Final Summary **********","");
+        bool isValidRun = (cgtest_data->count_fail==0) && (symtest_data->count_fail==0) && (normtest_data->pass);
         if (isValidRun) {
         	doc.get("********** Final Summary **********")->add("This result is VALID with a GFLOP/s rating of", fnops/times[0]/1.0E9);
         	doc.get("********** Final Summary **********")->add("Please send the generated .yaml file to","HPCG-Results@software.sandia.gov");

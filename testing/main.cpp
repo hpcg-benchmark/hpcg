@@ -291,7 +291,7 @@ int main(int argc, char *argv[]) {
     ////////////////////
 
     // Report results to YAML file
-    ReportResults(geom, A, numberOfCgSets, totalNiters, normr/normr0, &times[0], &cgtest_data, &symtest_data, &normtest_data, global_failure);
+    ReportResults(geom, A, numberOfCgSets, totalNiters, &times[0], &cgtest_data, &symtest_data, &normtest_data, global_failure);
 
     // Clean up
     destroyMatrix(A);

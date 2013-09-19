@@ -34,7 +34,7 @@ int NormTest(NormTestData * normtest_data) {
 	normtest_data->variance = (sumdiff/((double)normtest_data->samples));
 
 	// Determine if variation is sufficiently small to declare success
-	normtest_data->pass = (normtest_data->variance<1.0e-6)
+	normtest_data->pass = (normtest_data->variance<1.0e-6);
 
     return 0;
 }

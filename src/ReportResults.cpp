@@ -81,14 +81,13 @@ void ReportResults(const Geometry & geom, const SparseMatrix & A, int numberOfCg
         doc.add("Linear System Information","");
         doc.get("Linear System Information")->add("Number of Equations",A.totalNumberOfRows);
         doc.get("Linear System Information")->add("Number of Nonzero Terms",A.totalNumberOfNonzeros);
-        doc.add("Iteration Count Information","");
 
         doc.add("********** Validation Testing Summary  ***********","");
         doc.add("Spectral Convergence Tests","");
         if (cgtest_data->count_fail==0)
-            doc.get("Spectral Convergence Tests")->add("Results", "PASSED");
+            doc.get("Spectral Convergence Tests")->add("Result", "PASSED");
         else
-        	doc.get("Spectral Convergence Tests")->add("Results", "FAILED");
+        	doc.get("Spectral Convergence Tests")->add("Result", "FAILED");
         doc.get("Spectral Convergence Tests")->add("Unpreconditioned","");
         doc.get("Spectral Convergence Tests")->get("Unpreconditioned")->add("Maximum iteration count", cgtest_data->niters_max_no_prec);
         doc.get("Spectral Convergence Tests")->get("Unpreconditioned")->add("Expected iteration count", cgtest_data->expected_niters_no_prec);
@@ -98,32 +97,32 @@ void ReportResults(const Geometry & geom, const SparseMatrix & A, int numberOfCg
 
         doc.add("Departure from Symmetry Tests","");
         if (symtest_data->count_fail==0)
-            doc.get("Departure from Symmetry Tests")->add("Results", "PASSED");
+            doc.get("Departure from Symmetry Tests")->add("Result", "PASSED");
         else
-        	doc.get("Departure from Symmetry Tests")->add("Results", "FAILED");
+        	doc.get("Departure from Symmetry Tests")->add("Result", "FAILED");
         doc.get("Departure from Symmetry Tests")->add("Departure for SPMV", symtest_data->depsym_spmv);
         doc.get("Departure from Symmetry Tests")->add("Departure for SYMGS", symtest_data->depsym_symgs);
 
         doc.add("********** Iterations Summary  ***********","");
         doc.add("Iteration Count Information","");
         if (normtest_data->pass && (!global_failure))
-            doc.get("Iteration Count Information")->add("Results", "PASSED");
+            doc.get("Iteration Count Information")->add("Result", "PASSED");
         else
-        	doc.get("Iteration Count Information")->add("Results", "FAILED");
-        doc.get("Iteration Count Information")->add("Number of CG sets :          ", numberOfCgSets);
-        doc.get("Iteration Count Information")->add("Average iterations per set : ", fniters/fNumberOfCgSets);
-        doc.get("Iteration Count Information")->add("Total number of iterations:  ", niters);
-        doc.get("Iteration Count Information")->add("Average scaled residual norm:  ", normtest_data->mean);
-        doc.get("Iteration Count Information")->add("Scaled residual variance:  ", normtest_data->variance);
+        	doc.get("Iteration Count Information")->add("Result", "FAILED");
+        doc.get("Iteration Count Information")->add("Number of CG sets", numberOfCgSets);
+        doc.get("Iteration Count Information")->add("Average iterations per set", fniters/fNumberOfCgSets);
+        doc.get("Iteration Count Information")->add("Total number of iterations", niters);
+        doc.get("Iteration Count Information")->add("Average scaled residual norm", normtest_data->mean);
+        doc.get("Iteration Count Information")->add("Scaled residual variance", normtest_data->variance);
 
         doc.add("********** Performance Summary (times in sec) ***********","");
         
         doc.add("Time Summary (Average Time Per CG Set(sec))","");
-        doc.get("Time Summary")->add("Total ",times[0]/fNumberOfCgSets);
-        doc.get("Time Summary")->add("DDOT  ",times[1]/fNumberOfCgSets);
-        doc.get("Time Summary")->add("WAXPBY",times[2]/fNumberOfCgSets);
-        doc.get("Time Summary")->add("SpMV  ",times[3]/fNumberOfCgSets);
-        doc.get("Time Summary")->add("SymGS ",times[5]/fNumberOfCgSets);
+        doc.get("Time Summary (Average Time Per CG Set(sec))")->add("Total ",times[0]/fNumberOfCgSets);
+        doc.get("Time Summary (Average Time Per CG Set(sec))")->add("DDOT  ",times[1]/fNumberOfCgSets);
+        doc.get("Time Summary (Average Time Per CG Set(sec))")->add("WAXPBY",times[2]/fNumberOfCgSets);
+        doc.get("Time Summary (Average Time Per CG Set(sec))")->add("SpMV  ",times[3]/fNumberOfCgSets);
+        doc.get("Time Summary (Average Time Per CG Set(sec))")->add("SymGS ",times[5]/fNumberOfCgSets);
         
         doc.add("Floating Point Operations Summary","");
         doc.get("Floating Point Operations Summary")->add("Total ",fnops);

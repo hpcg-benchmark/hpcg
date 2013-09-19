@@ -53,6 +53,7 @@ using std::endl;
 #include "CGData.hpp"
 #include "CGtest.hpp"
 #include "SymTest.hpp"
+#include "NormTest.hpp"
 
 int main(int argc, char *argv[]) {
 
@@ -264,12 +265,16 @@ int main(int argc, char *argv[]) {
     /* This is the timed run for a specified amount of time. */
 
     totalNiters = 0;
+    NormTestData normtest_data;
+    normtest_data.samples = numberOfCgSets;
+    normtest_data.values = new double[numberOfCgSets];
 
     for (int i=0; i< numberOfCgSets; ++i) {
     	for (int j=0; j< A.localNumberOfRows; ++j) x[j] = 0.0; // Zero out x
     	ierr = CG( geom, A, data, b, x, maxIters, tolerance, niters, normr, normr0, &times[0], true);
     	if (ierr) HPCG_fout << "Error in call to CG: " << ierr << ".\n" << endl;
     	if (rank==0) HPCG_fout << "Call [" << i << "] Scaled Residual [" << normr/normr0 << "]" << endl;
+    	normtest_data.values[i] = normr/normr0; // Record scaled residual from this run
 	totalNiters += niters;
     }
     
@@ -283,7 +288,6 @@ int main(int argc, char *argv[]) {
 #endif
 
     // Test Norm Results
-    NormTestData normtest_data;
     ierr = NormTest(&normtest_data);
 
     ////////////////////

@@ -139,7 +139,8 @@ void ReportResults(const Geometry & geom, const SparseMatrix & A, int numberOfCg
         doc.get("GFLOP/s Summary")->add("SymGS ",fnops_precond/(times[5])/1.0E9);
         doc.get("GFLOP/s Summary")->add("Total ",fnops/times[0]/1.0E9);
         // This final GFLOP/s rating includes the overhead of optimizing the data structures vs 50 iterations of CG
-        doc.get("GFLOP/s Summary")->add("Total with Optimization phase overhead",fnops/(times[0]+fNumberOfCgSets*times[7])/1.0E9);
+        double totalGflops = fnops/(times[0]+fNumberOfCgSets*times[7])/1.0E9;
+        doc.get("GFLOP/s Summary")->add("Total with Optimization phase overhead",totalGflops);
 
         double totalSparseMVTime = times[3] + times[6];
          doc.add("Sparse Operations Overheads","");
@@ -161,12 +162,12 @@ void ReportResults(const Geometry & geom, const SparseMatrix & A, int numberOfCg
         doc.add("********** Final Summary **********","");
         bool isValidRun = (cgtest_data->count_fail==0) && (symtest_data->count_fail==0) && (normtest_data->pass);
         if (isValidRun) {
-        	doc.get("********** Final Summary **********")->add("This result is VALID with a GFLOP/s rating of", fnops/times[0]/1.0E9);
-        	doc.get("********** Final Summary **********")->add("Please send the generated .yaml file to","HPCG-Results@software.sandia.gov");
+        	doc.get("********** Final Summary **********")->add("This result is VALID with a GFLOP/s rating of", totalGflops);
+        	doc.get("********** Final Summary **********")->add("Please send the YAML file contents to","HPCG-Results@software.sandia.gov");
         }
         else {
         	doc.get("********** Final Summary **********")->add("This result is","INVALID.");
-        	doc.get("********** Final Summary **********")->add("Please review output in the generated .yaml file","You may NOT submit these results for consideration.");
+        	doc.get("********** Final Summary **********")->add("Please review the YAML file contents","You may NOT submit these results for consideration.");
         }
         
             std::string yaml = doc.generateYAML();

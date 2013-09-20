@@ -56,21 +56,22 @@ void ReportResults(const Geometry & geom, const SparseMatrix & A, int numberOfCg
         double fnops_precond = fniters*3.0*fnnz; // Two GS sweeps, but only use lower triangle for first sweep
         double fnops = fnops_ddot+fnops_waxpby+fnops_sparsemv+fnops_precond;
         
-        YAML_Doc doc("benchmark-hpcg", "0.1");
+        YAML_Doc doc("HPCG-Benchmark", "0.2");
+        doc.add("HPCG Benchmark","Version 0.2 September 20, 2013");
         
         doc.add("Machine Summary","");
         doc.get("Machine Summary")->add("Distributed Processes",geom.size);
         doc.get("Machine Summary")->add("Threads per processes",geom.numThreads);
 
-        doc.add("Processor Dimensions","");
-        doc.get("Processor Dimensions")->add("npx",geom.npx);
-        doc.get("Processor Dimensions")->add("npy",geom.npy);
-        doc.get("Processor Dimensions")->add("npz",geom.npz);
-        
         doc.add("Global Problem Dimensions","");
         doc.get("Global Problem Dimensions")->add("Global nx",geom.npx*geom.nx);
         doc.get("Global Problem Dimensions")->add("Global ny",geom.npy*geom.ny);
         doc.get("Global Problem Dimensions")->add("Global nz",geom.npz*geom.nz);
+
+        doc.add("Processor Dimensions","");
+        doc.get("Processor Dimensions")->add("npx",geom.npx);
+        doc.get("Processor Dimensions")->add("npy",geom.npy);
+        doc.get("Processor Dimensions")->add("npz",geom.npz);
         
         doc.add("Local Domain Dimensions","");
         doc.get("Local Domain Dimensions")->add("nx",geom.nx);
@@ -95,49 +96,56 @@ void ReportResults(const Geometry & geom, const SparseMatrix & A, int numberOfCg
         doc.get("Spectral Convergence Tests")->get("Preconditioned")->add("Maximum iteration count", cgtest_data->niters_max_prec);
         doc.get("Spectral Convergence Tests")->get("Preconditioned")->add("Expected iteration count", cgtest_data->expected_niters_prec);
 
-        doc.add("Departure from Symmetry Tests","");
+        doc.add("Departure from Symmetry (x'Ay-y'Ax)","");
         if (symtest_data->count_fail==0)
-            doc.get("Departure from Symmetry Tests")->add("Result", "PASSED");
+            doc.get("Departure from Symmetry (x'Ay-y'Ax)")->add("Result", "PASSED");
         else
-        	doc.get("Departure from Symmetry Tests")->add("Result", "FAILED");
-        doc.get("Departure from Symmetry Tests")->add("Departure for SPMV", symtest_data->depsym_spmv);
-        doc.get("Departure from Symmetry Tests")->add("Departure for SYMGS", symtest_data->depsym_symgs);
+        	doc.get("Departure from Symmetry (x'Ay-y'Ax)")->add("Result", "FAILED");
+        doc.get("Departure from Symmetry (x'Ay-y'Ax)")->add("Departure for SPMV", symtest_data->depsym_spmv);
+        doc.get("Departure from Symmetry (x'Ay-y'Ax)")->add("Departure for SYMGS", symtest_data->depsym_symgs);
 
         doc.add("********** Iterations Summary  ***********","");
         doc.add("Iteration Count Information","");
-        if (normtest_data->pass && (!global_failure))
+        if (!global_failure)
             doc.get("Iteration Count Information")->add("Result", "PASSED");
         else
         	doc.get("Iteration Count Information")->add("Result", "FAILED");
         doc.get("Iteration Count Information")->add("Number of CG sets", numberOfCgSets);
         doc.get("Iteration Count Information")->add("Average iterations per set", fniters/fNumberOfCgSets);
         doc.get("Iteration Count Information")->add("Total number of iterations", niters);
-        doc.get("Iteration Count Information")->add("Average scaled residual norm", normtest_data->mean);
-        doc.get("Iteration Count Information")->add("Scaled residual variance", normtest_data->variance);
+
+        doc.add("********** Reproducibility Summary  ***********","");
+        doc.add("Reproducibility Information","");
+        if (normtest_data->pass)
+             doc.get("Reproducibility Information")->add("Result", "PASSED");
+         else
+         	doc.get("Reproducibility Information")->add("Result", "FAILED");
+        doc.get("Reproducibility Information")->add("Scaled residual mean", normtest_data->mean);
+        doc.get("Reproducibility Information")->add("Scaled residual variance", normtest_data->variance);
 
         doc.add("********** Performance Summary (times in sec) ***********","");
         
         doc.add("Benchmark Time Summary","");
         doc.get("Benchmark Time Summary")->add("Optimization phase",times[7]);
-        doc.get("Benchmark Time Summary")->add("DDOT  ",times[1]);
+        doc.get("Benchmark Time Summary")->add("DDOT",times[1]);
         doc.get("Benchmark Time Summary")->add("WAXPBY",times[2]);
-        doc.get("Benchmark Time Summary")->add("SpMV  ",times[3]);
-        doc.get("Benchmark Time Summary")->add("SymGS ",times[5]);
-        doc.get("Benchmark Time Summary")->add("Total ",times[0]);
+        doc.get("Benchmark Time Summary")->add("SpMV",times[3]);
+        doc.get("Benchmark Time Summary")->add("SymGS",times[5]);
+        doc.get("Benchmark Time Summary")->add("Total",times[0]);
         
         doc.add("Floating Point Operations Summary","");
-        doc.get("Floating Point Operations Summary")->add("DDOT  ",fnops_ddot);
+        doc.get("Floating Point Operations Summary")->add("DDOT",fnops_ddot);
         doc.get("Floating Point Operations Summary")->add("WAXPBY",fnops_waxpby);
-        doc.get("Floating Point Operations Summary")->add("SpMV  ",fnops_sparsemv);
-        doc.get("Floating Point Operations Summary")->add("SymGS ",fnops_precond);
-        doc.get("Floating Point Operations Summary")->add("Total ",fnops);
+        doc.get("Floating Point Operations Summary")->add("SpMV",fnops_sparsemv);
+        doc.get("Floating Point Operations Summary")->add("SymGS",fnops_precond);
+        doc.get("Floating Point Operations Summary")->add("Total",fnops);
 
         doc.add("GFLOP/s Summary","");
-        doc.get("GFLOP/s Summary")->add("DDOT  ",fnops_ddot/times[1]/1.0E9);
+        doc.get("GFLOP/s Summary")->add("DDOT",fnops_ddot/times[1]/1.0E9);
         doc.get("GFLOP/s Summary")->add("WAXPBY",fnops_waxpby/times[2]/1.0E9);
-        doc.get("GFLOP/s Summary")->add("SpMV  ",fnops_sparsemv/(times[3])/1.0E9);
-        doc.get("GFLOP/s Summary")->add("SymGS ",fnops_precond/(times[5])/1.0E9);
-        doc.get("GFLOP/s Summary")->add("Total ",fnops/times[0]/1.0E9);
+        doc.get("GFLOP/s Summary")->add("SpMV",fnops_sparsemv/(times[3])/1.0E9);
+        doc.get("GFLOP/s Summary")->add("SymGS",fnops_precond/(times[5])/1.0E9);
+        doc.get("GFLOP/s Summary")->add("Total",fnops/times[0]/1.0E9);
         // This final GFLOP/s rating includes the overhead of optimizing the data structures vs 50 iterations of CG
         double totalGflops = fnops/(times[0]+fNumberOfCgSets*times[7])/1.0E9;
         doc.get("GFLOP/s Summary")->add("Total with Optimization phase overhead",totalGflops);
@@ -162,11 +170,11 @@ void ReportResults(const Geometry & geom, const SparseMatrix & A, int numberOfCg
         doc.add("********** Final Summary **********","");
         bool isValidRun = (cgtest_data->count_fail==0) && (symtest_data->count_fail==0) && (normtest_data->pass);
         if (isValidRun) {
-        	doc.get("********** Final Summary **********")->add("This result is VALID with a GFLOP/s rating of", totalGflops);
+        	doc.get("********** Final Summary **********")->add("HPCG result is VALID with a GFLOP/s rating of", totalGflops);
         	doc.get("********** Final Summary **********")->add("Please send the YAML file contents to","HPCG-Results@software.sandia.gov");
         }
         else {
-        	doc.get("********** Final Summary **********")->add("This result is","INVALID.");
+        	doc.get("********** Final Summary **********")->add("HPCG result is","INVALID.");
         	doc.get("********** Final Summary **********")->add("Please review the YAML file contents","You may NOT submit these results for consideration.");
         }
         

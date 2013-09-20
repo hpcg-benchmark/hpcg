@@ -37,9 +37,9 @@ using std::endl;
 
   @param[in]  geom   data structure that stores the parallel run parameters and the factoring of total number of processes into three dimensional grid
   @param[in]  A      The known system matrix
-  @param[out] b      The allocated and generated right hand side vector
-  @param[out] x      The allocated solution vector with entries set to 0.0
-  @param[out] xexact The allocated solution vector with entries set to the exact solution
+  @param[out] b      The newly allocated and generated right hand side vector
+  @param[out] x      The newly allocated solution vector with entries set to 0.0
+  @param[out] xexact The newly allocated solution vector with entries set to the exact solution
 
   @see GenerateGeometry
 */

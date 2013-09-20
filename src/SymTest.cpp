@@ -8,16 +8,11 @@
 // ************************************************************************
 //@HEADER
 
-// Changelog
-//
-// Version 0.3
-// - Added timing of setup time for sparse MV
-// - Corrected percentages reported for sparse MV with overhead
-//
-/////////////////////////////////////////////////////////////////////////
+/*!
+ @file SymTest.cpp
 
-// Main routine of a program that calls the HPCG conjugate gradient
-// solver to solve the problem, and then prints results.
+ HPCG routine
+ */
 
 #include <fstream>
 #include <iostream>
@@ -42,6 +37,23 @@ using std::endl;
 #include "ExchangeHalo.hpp"
 #endif
 
+/*!
+  Tests symmetry-preserving properties of the sparse matrix vector multiply and
+  symmetric Gauss-Siedel routines.
+
+  @param[in]    geom   The description of the problem's geometry.
+  @param[in]    A      The known system matrix
+  @param[in]    b      The known right hand side vector
+  @param[in]    xexact The exact solution vector
+  @param[inout] symtest_data The data structure with the results of the CG symmetry test including pass/fail information
+
+  @see dot
+  @see dotref
+  @see spmv
+  @see spmvref
+  @see symgs
+  @see symgsref
+*/
 int SymTest(Geometry & geom, SparseMatrix & A, double * const b, double * const xexact, SymTestData * symtest_data) {
 
     local_int_t nrow = A.localNumberOfRows;

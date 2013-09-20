@@ -8,34 +8,41 @@
 // ************************************************************************
 //@HEADER
 
-/////////////////////////////////////////////////////////////////////////
+/*!
+ @file WriteProblem.cpp
 
-// Routine to dump:
-// - matrix in row, col, val format for analysis with Matlab
-// - x, xexact, b as simple arrays of numbers.
-//
-// Writes to A.dat, x.dat, xexact.dat and b.dat, respectivly.
-// NOTE:  THIS CODE ONLY WORKS ON SINGLE PROCESSOR RUNS
-// Read into matlab using:
-//   load A.dat
-//   A=spconvert(A);
-//   load x.dat
-//   load xexact.dat
-//   load b.dat
-
-// A - known matrix 
-// x - Initial guess to solution
-// xexact - Generated exact solution
-// b - Right hand side
-
-// Returns with -1 if used with more than one MPI process.
-// Returns with 0 otherwise.
-
-/////////////////////////////////////////////////////////////////////////
+ HPCG routine
+ */
 
 #include <cstdio>
 #include "WriteProblem.hpp"
 #include "Geometry.hpp"
+
+
+/*!
+  Routine to dump:
+   - matrix in row, col, val format for analysis with MATLAB
+   - x, xexact, b as simple arrays of numbers.
+
+   Writes to A.dat, x.dat, xexact.dat and b.dat, respectivly.
+
+   NOTE:  THIS CODE ONLY WORKS ON SINGLE PROCESSOR RUNS
+
+   Read into MATLAB using:
+
+       load A.dat
+       A=spconvert(A);
+       load x.dat
+       load xexact.dat
+       load b.dat
+
+  @param[in] A - known matrix 
+  @param[in] x - Initial guess to solution
+  @param[in] xexact - Generated exact solution
+  @param[in] b - Right hand side
+
+  @return Returns with -1 if used with more than one MPI process. Returns with 0 otherwise.
+*/
 int WriteProblem( const Geometry & geom, const SparseMatrix & A,
 			const double * const b, const double * const x, const double * const xexact) {
 

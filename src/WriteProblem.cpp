@@ -36,12 +36,15 @@
        load xexact.dat
        load b.dat
 
-  @param[in] A - known matrix 
-  @param[in] x - Initial guess to solution
-  @param[in] xexact - Generated exact solution
-  @param[in] b - Right hand side
+  @param[in] geom   The description of the problem's geometry.
+  @param[in] A      The known system matrix
+  @param[in] b      The known right hand side vector
+  @param[in] x      The solution vector computed by CG iteration
+  @param[in] xexact Generated exact solution
 
   @return Returns with -1 if used with more than one MPI process. Returns with 0 otherwise.
+
+  @see GenerateProblem
 */
 int WriteProblem( const Geometry & geom, const SparseMatrix & A,
 			const double * const b, const double * const x, const double * const xexact) {

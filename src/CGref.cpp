@@ -41,8 +41,8 @@ using std::endl;
   Reference routine to compute an approximate solution to Ax = b
 
   @param[in]    geom The description of the problem's geometry.
-  @param[in]    A    The known system matrix
-  @param[in]    data The data structure with all necessary CG vectors preallocated
+  @param[inout] A    The known system matrix
+  @param[inout] data The data structure with all necessary CG vectors preallocated
   @param[in]    b    The known right hand side vector
   @param[inout] x    On entry: the initial guess; on exit: the new approximate solution
   @param[in]    max_iter  The maximum number of iterations to perform, even if tolerance is not met.
@@ -51,7 +51,7 @@ using std::endl;
   @param[out]   normr     The 2-norm of the residual vector after the last iteration.
   @param[out]   normr0    The 2-norm of the residual vector before the first iteration.
   @param[out]   times     The 7-element vector of the timing information accumulated during all of the iterations.
-  @param[out]   doPreconditioning The flag to indicate whether the preconditioner should be invoked at each iteration.
+  @param[in]    doPreconditioning The flag to indicate whether the preconditioner should be invoked at each iteration.
 
   @return Returns zero on success and a non-zero value otherwise.
 

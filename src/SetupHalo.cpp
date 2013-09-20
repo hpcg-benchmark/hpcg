@@ -8,6 +8,12 @@
 // ************************************************************************
 //@HEADER
 
+/*!
+ @file CG.cpp
+
+ HPCG routine
+ */
+
 #ifdef HPCG_DETAILED_DEBUG
 #include <fstream>
 using std::endl;
@@ -28,6 +34,15 @@ using std::endl;
 #include <omp.h>
 #endif
 
+/*!
+  Prepares system matrix data structure and creates data necessary necessary
+  for communication of boundary values of this process.
+
+  @param[in]    geom The description of the problem's geometry.
+  @param[inout] A    The known system matrix
+
+  @see ExchangeHalo
+*/
 void SetupHalo(const Geometry & geom, SparseMatrix & A) {
 
 	// Extract Matrix pieces

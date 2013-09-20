@@ -6,10 +6,12 @@
 //
 // ************************************************************************
 //@HEADER
-// Input
-// size - Number of MPI processes
-// rank - My process id
-//
+
+/*!
+ @file ReportResults.cpp
+
+ HPCG routine
+ */
 
 #include "ReportResults.hpp"
 #include "YAML_Element.hpp"
@@ -26,6 +28,21 @@ using std::endl;
 #include "hpcg.hpp"
 #endif
 
+/*!
+ Creates a YAML file and writes the information about the HPCG run, its results, and validity.
+
+  @param[in] geom The description of the problem's geometry.
+  @param[in] A    The known system matrix
+  @param[in] numberOfCgSets Number of CG runs performed
+  @param[in] niters Number of preconditioned CG iterations performed to lower the residual below a threshold
+  @param[in] times  Vector of cumulative timings for each of the phases of a preconditioned CG iteration
+  @param[in] cgtest_data the data structure with the results of the CG-correctness test including pass/fail information
+  @param[in] symtest_data the data structure with the results of the CG symmetry test including pass/fail information
+  @param[in] normtest_data the data structure with the results of the CG norm test including pass/fail information
+  @param[in] global_failure indicates whether a failure occured during the correctness tests of CG
+
+  @see YAML_Doc
+*/
 void ReportResults(const Geometry & geom, const SparseMatrix & A, int numberOfCgSets, int niters, double times[],
   CGtestData * cgtest_data, SymTestData * symtest_data, NormTestData * normtest_data, int global_failure) {
 

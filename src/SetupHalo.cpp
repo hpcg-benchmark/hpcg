@@ -9,7 +9,7 @@
 //@HEADER
 
 /*!
- @file CG.cpp
+ @file SetupHalo.cpp
 
  HPCG routine
  */

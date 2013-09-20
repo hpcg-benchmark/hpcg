@@ -41,8 +41,8 @@ using std::endl;
   Test the correctness of the Preconditined CG implementation by using a system matrix with a dominant diagonal.
 
   @param[in]    geom The description of the problem's geometry.
-  @param[in]    A    The known matrix stored as an HPC_Sparse_Matrix struct
-  @param[int]   data the data structure with all necessary CG vectors preallocated
+  @param[in]    A    The known system matrix
+  @param[in]    data the data structure with all necessary CG vectors preallocated
   @param[in]    b    The known right hand side vector
   @param[inout] x    On entry: the initial guess; on exit: the new approximate solution
   @param[out]   cgtest_data the data structure with the results of the test including pass/fail information

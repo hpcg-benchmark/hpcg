@@ -7,14 +7,11 @@
 // ************************************************************************
 //@HEADER
 
-// Input
-// size - Number of MPI processes
-// rank - My process id
-// nx, ny, nz - Number of grid points for each local block in the x, y, z dimensions, resp.
-//
-// Output
-// npx, npy, npz - Factoring of np into 3D cubed
-// ipx, ipy, ipz - x, y, z coordinate of this process in the npx by npy by npz processor cube.
+/*!
+ @file GenerateGeometry.cpp
+
+ HPCG routine
+ */
 
 #include <cmath>
 #include <cstdlib>
@@ -185,6 +182,19 @@ gen_min_area3(int n, int *f1, int *f2, int *f3) {
   }
 }
 
+/*!
+  Computes the factorization of the total number of processes into a
+  3-dimensional process grid that is as close as possible to a cube. The
+  quality of the factorization depends on the prime number structure of the
+  total number of processes. It then stores this decompostion together with the
+  parallel parameters of the run in the geometry data structure.
+
+  @param[in]  size total number of MPI processes
+  @param[in]  rank this process' rank among other MPI processes
+  @param[in]  numThreads number of OpenMP threads in this process
+  @param[in]  nx, ny, nz number of grid points for each local block in the x, y, and z dimensions, respectively
+  @param[out] geom data structure that will store the above parameters and the factoring of total number of processes into three dimensions
+*/
 void GenerateGeometry(int size, int rank, int numThreads, int nx, int ny, int nz, Geometry & geom) {
 
 	int npx, npy, npz;

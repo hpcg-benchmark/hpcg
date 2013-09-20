@@ -8,12 +8,24 @@
 // ************************************************************************
 //@HEADER
 
+/*!
+ @file ExchangeHalo.cpp
+
+ HPCG routine
+ */
+
 #ifndef HPCG_NOMPI  // Compile this routine only if running in parallel
 #include <mpi.h>
 #include "Geometry.hpp"
 #include "ExchangeHalo.hpp"
 #include <cstdlib>
 
+/*!
+  Communicates data that is at the border of the part of the domain assigned to this processor.
+
+  @param[in]    A The known system matrix
+  @param[inout] x On entry: the local vector entries followed by entries to be communicated; on exit: the vector with non-local entries updated by other processors
+ */
 void ExchangeHalo(const SparseMatrix & A, const double *x) {
 
   // Extract Matrix pieces

@@ -41,8 +41,8 @@ using std::endl;
   Reference routine to compute an approximate solution to Ax = b
 
   @param[in]    geom The description of the problem's geometry.
-  @param[in]    A    The known matrix stored as an HPC_Sparse_Matrix struct
-  @param[int]   data The data structure with all necessary CG vectors preallocated
+  @param[in]    A    The known system matrix
+  @param[in]    data The data structure with all necessary CG vectors preallocated
   @param[in]    b    The known right hand side vector
   @param[inout] x    On entry: the initial guess; on exit: the new approximate solution
   @param[in]    max_iter  The maximum number of iterations to perform, even if tolerance is not met.

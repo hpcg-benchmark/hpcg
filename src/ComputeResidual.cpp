@@ -8,17 +8,12 @@
 // ************************************************************************
 //@HEADER
 
-/////////////////////////////////////////////////////////////////////////
+/*!
+ @file ComputeResidual.cpp
 
-// Routine to compute the inf-norm difference between two vectors where:
+ HPCG routine
+ */
 
-// n - number of vector elements (on this processor)
-
-// v1, v2 - input vectors
-
-// residual - pointer to scalar value, on exit will contain result.
-
-/////////////////////////////////////////////////////////////////////////
 #ifdef HPCG_DETAILED_DEBUG
 #include <fstream>
 #include "hpcg.hpp"
@@ -38,6 +33,15 @@
 #include <omp.h> // If this routine is not compiled with HPCG_NOOPENMP
 #endif
 
+/*!
+  Routine to compute the inf-norm difference between two vectors where:
+
+  @param[in]  n        number of vector elements (local to this processor)
+  @param[in]  v1, v2   input vectors
+  @param[out] residual pointer to scalar value; on exit, will contain result: inf-norm difference
+
+  @return Returns zero on success and a non-zero value otherwise.
+*/
 int ComputeResidual(const local_int_t n, const double * const v1,
                     const double * const v2, double * const residual) {
 

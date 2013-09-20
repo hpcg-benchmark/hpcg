@@ -8,12 +8,11 @@
 // ************************************************************************
 //@HEADER
 
-/////////////////////////////////////////////////////////////////////////
+/*!
+ @file GenerateProblem.cpp
 
-// Routine to read a sparse matrix, right hand side, initial guess, 
-// and exact solution (as computed by a direct solver).
-
-/////////////////////////////////////////////////////////////////////////
+ HPCG routine
+ */
 
 #if defined(HPCG_DEBUG) || defined(HPCG_DETAILED_DEBUG)
 #include <fstream>
@@ -31,6 +30,19 @@ using std::endl;
 #ifndef HPCG_NOOPENMP
 #include <omp.h>
 #endif
+
+/*!
+  Routine to read a sparse matrix, right hand side, initial guess, and exact
+  solution (as computed by a direct solver).
+
+  @param[in]  geom   data structure that stores the parallel run parameters and the factoring of total number of processes into three dimensional grid
+  @param[in]  A      The known system matrix
+  @param[out] b      The allocated and generated right hand side vector
+  @param[out] x      The allocated solution vector with entries set to 0.0
+  @param[out] xexact The allocated solution vector with entries set to the exact solution
+
+  @see GenerateGeometry
+*/
 
 void GenerateProblem(const Geometry & geom, SparseMatrix & A, double **b, double **x, double **xexact) {
 

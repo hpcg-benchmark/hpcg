@@ -1,3 +1,9 @@
+/*!
+ @file YAML_Doc.cpp
+
+ HPCG routine
+ */
+
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
@@ -6,7 +12,14 @@
 #include "YAML_Doc.hpp"
 using namespace std;
 
-//set the microapp_name and version which will become part of the YAML doc.
+/*!
+  Sets the application name and version which will become part of the YAML doc.
+
+  @param[in] miniApp_Name application name
+  @param[in] miniApp_Version application name
+  @param[in] destination_Directory destination directory for the YAML document
+  @param[in] destination_FileName file name for the YAML document
+*/
 YAML_Doc::YAML_Doc(const std::string& miniApp_Name, const std::string& miniApp_Version, const std::string& destination_Directory, const std::string& destination_FileName){
   miniAppName = miniApp_Name;
   miniAppVersion = miniApp_Version;
@@ -18,9 +31,8 @@ YAML_Doc::YAML_Doc(const std::string& miniApp_Name, const std::string& miniApp_V
 YAML_Doc::~YAML_Doc(void){
 }
 
-/*
-* generates YAML from the elements of the document and saves it
-* to a file
+/*!
+  Generates YAML from the elements of the document and saves it to a file.
 */
 string YAML_Doc::generateYAML(){
   string yaml;
@@ -63,5 +75,3 @@ string YAML_Doc::generateYAML(){
   myfile.close();
   return yaml;
 }
-
-

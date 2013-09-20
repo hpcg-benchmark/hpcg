@@ -1,3 +1,9 @@
+/*!
+ @file YAML_Element.cpp
+
+ HPCG routine
+ */
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -15,10 +21,13 @@ YAML_Element::~YAML_Element(){
   children.clear();
 }
 
-/*
-* Add an element to the vector
-* QUESTION: if an element is not added because the key already exists,
-* will this lead to memory leakage?
+/*!
+  Add an element to the vector
+  QUESTION: if an element is not added because the key already exists,
+  will this lead to memory leakage?
+
+  @param[in] key_arg   The key under which the element is stored
+  @param[in] value_arg The value of the element
 */
 YAML_Element* YAML_Element::add(const std::string& key_arg, double value_arg) {
   this->value = "";
@@ -28,6 +37,12 @@ YAML_Element* YAML_Element::add(const std::string& key_arg, double value_arg) {
   return element;
 }
 
+/*!
+  Add an element to the vector
+
+  @param[in] key_arg   The key under which the element is stored
+  @param[in] value_arg The value of the element
+*/
 YAML_Element* YAML_Element::add(const std::string& key_arg, int value_arg) {
   this->value = "";
   string converted_value = convert_int_to_string(value_arg);
@@ -38,6 +53,12 @@ YAML_Element* YAML_Element::add(const std::string& key_arg, int value_arg) {
 
 #ifndef HPCG_NO_LONG_LONG
 
+/*!
+  Add an element to the vector
+
+  @param[in] key_arg   The key under which the element is stored
+  @param[in] value_arg The value of the element
+*/
 YAML_Element* YAML_Element::add(const std::string& key_arg, long long value_arg) {
   this->value = "";
   string converted_value = convert_long_long_to_string(value_arg);
@@ -48,6 +69,12 @@ YAML_Element* YAML_Element::add(const std::string& key_arg, long long value_arg)
 
 #endif
 
+/*!
+  Add an element to the vector
+
+  @param[in] key_arg   The key under which the element is stored
+  @param[in] value_arg The value of the element
+*/
 YAML_Element* YAML_Element::add(const std::string& key_arg, size_t value_arg) {
   this->value = "";
   string converted_value = convert_size_t_to_string(value_arg);
@@ -56,6 +83,12 @@ YAML_Element* YAML_Element::add(const std::string& key_arg, size_t value_arg) {
   return element;
 }
 
+/*!
+  Add an element to the vector
+
+  @param[in] key_arg   The key under which the element is stored
+  @param[in] value_arg The value of the element
+*/
 YAML_Element* YAML_Element::add(const std::string& key_arg, const std::string& value_arg) {
   this->value = "";
   YAML_Element* element = new YAML_Element(key_arg, value_arg);
@@ -63,10 +96,12 @@ YAML_Element* YAML_Element::add(const std::string& key_arg, const std::string& v
   return element;
 }
 
-/*
-* returns pointer to the YAML_Element for the given key.
-* I, cam, believe an exception should be thrown if there is no
-* element in the vector for the specified key
+/*!
+  Returns the pointer to the YAML_Element for the given key.
+  I, cam, believe an exception should be thrown if there is no
+  element in the vector for the specified key
+
+  @param[in] key_arg   The key under which the element was stored
 */
 YAML_Element* YAML_Element::get(const std::string& key_arg) {
   for (size_t i=0; i<children.size(); i++) {
@@ -77,10 +112,12 @@ YAML_Element* YAML_Element::get(const std::string& key_arg) {
   return 0;
 }
 
-/*
-* prints a line of a YAML document.  Correct YAML depends on
-* correct spacing; the parameter space should be the proper
-* amount of space for the parent element
+/*!
+  Prints a line of a YAML document.  Correct YAML depends on
+  correct spacing; the parameter space should be the proper
+  amount of space for the parent element
+
+  @param[in] space spacing inserted at the beginning of the line
 */
 string YAML_Element::printYAML(std::string space){
   string yaml_line = space + key + ": " + value + "\n";
@@ -91,11 +128,22 @@ string YAML_Element::printYAML(std::string space){
   return yaml_line;
 }
 
+/*!
+  Converts a double precision value to a string.
+
+  @param[in] value_arg The value to be converted.
+*/
 string YAML_Element::convert_double_to_string(double value_arg){
   stringstream strm;
   strm << value_arg;
   return strm.str();
 }
+
+/*!
+  Converts a integer value to a string.
+
+  @param[in] value_arg The value to be converted.
+*/
 string YAML_Element::convert_int_to_string(int value_arg){
   stringstream strm;
   strm << value_arg;
@@ -104,6 +152,11 @@ string YAML_Element::convert_int_to_string(int value_arg){
 
 #ifndef HPCG_NO_LONG_LONG
 
+/*!
+  Converts a "long long" integer value to a string.
+
+  @param[in] value_arg The value to be converted.
+*/
 string YAML_Element::convert_long_long_to_string(long long value_arg){
   stringstream strm;
   strm << value_arg;
@@ -112,6 +165,11 @@ string YAML_Element::convert_long_long_to_string(long long value_arg){
 
 #endif
 
+/*!
+  Converts a "size_t" integer value to a string.
+
+  @param[in] value_arg The value to be converted.
+*/
 string YAML_Element::convert_size_t_to_string(size_t value_arg){
   stringstream strm;
   strm << value_arg;

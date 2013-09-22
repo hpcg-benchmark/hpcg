@@ -34,8 +34,9 @@
 using std::endl;
 
 
-#define TICK()  t0 = mytimer() // Use TICK and TOCK to time a code section
-#define TOCK(t) t += mytimer() - t0
+// Use TICK and TOCK to time a code section in MATLAB-like fashion
+#define TICK()  t0 = mytimer() //!< record current time in 't0'
+#define TOCK(t) t += mytimer() - t0 //!< store time difference in 't' using time in 't0'
 
 /*!
   Routine to compute an approximate solution to Ax = b

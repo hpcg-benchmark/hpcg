@@ -8,20 +8,11 @@
 // ************************************************************************
 //@HEADER
 
-/////////////////////////////////////////////////////////////////////////
+/*!
+ @file dotref.cpp
 
-// Routine to compute the dot product of two vectors where:
-
-// n - number of vector elements (on this processor)
-
-// x, y - input vectors
-
-// residual - pointer to scalar value, on exit will contain result.
-
-// This is the reference DOT impmentation.  It CANNOT be modified for the
-// purposes of this benchmark.
-
-/////////////////////////////////////////////////////////////////////////
+ HPCG routine
+ */
 
 #ifndef HPCG_NOMPI
 #include <mpi.h>
@@ -33,6 +24,19 @@
 
 #include "dotref.hpp"
 
+/*!
+  Routine to compute the dot product of two vectors where:
+
+  This is the reference DOT implementation.  It _CANNOT_ be modified for the
+  purposes of this benchmark.
+
+  @param[in] n the number of vector elements (on this processor)
+  @param[in] x, y the input vectors
+  @param[in] result a pointer to scalar value, on exit will contain result.
+  @param[out] time_allreduce the time it took to perform the communication between processes
+
+  @see dot
+*/
 int dotref (const local_int_t n, const double * const x, const double * const y,
 	  double * const result, double & time_allreduce) {  
   double local_result = 0.0;

@@ -8,27 +8,31 @@
 // ************************************************************************
 //@HEADER
 
-/////////////////////////////////////////////////////////////////////////
+/*!
+ @file waxpbyref.cpp
 
-// Routine to compute the update of a vector with the sum of two
-// scaled vectors where:
-
-// w = alpha*x + beta*y
-// n - number of vector elements (on this processor)
-// x, y - input vectors
-// alpha, beta - scalars applied to x and y respectively.
-// w - output vector.
-
-// This is the reference WAXPBY impmentation.  It CANNOT be modified for the
-// purposes of this benchmark.
-
-/////////////////////////////////////////////////////////////////////////
+ HPCG routine
+ */
 
 #include "waxpbyref.hpp"
 #ifndef HPCG_NOOPENMP
 #include <omp.h>
 #endif
 
+/*!
+  Routine to compute the update of a vector with the sum of two
+  scaled vectors where: w = alpha*x + beta*y
+
+  This is the reference WAXPBY impmentation.  It CANNOT be modified for the
+  purposes of this benchmark.
+
+  @param[in] n the number of vector elements (on this processor)
+  @param[in] alpha, beta the scalars applied to x and y respectively.
+  @param[in] x, y the input vectors
+  @param[out] w the output vector.
+
+  @see waxpby
+*/
 int waxpbyref (const local_int_t n, const double alpha, const double * const x,
 	    const double beta, const double * const y,
 		     double * const w) {

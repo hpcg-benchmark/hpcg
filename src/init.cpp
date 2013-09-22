@@ -21,7 +21,7 @@
 
 #include "hpcg.hpp"
 
-std::ofstream HPCG_fout;
+std::ofstream HPCG_fout; //!< output file stream for logging activities during HPCG run
 
 static int
 startswith(const char *s, const char *prefix) {

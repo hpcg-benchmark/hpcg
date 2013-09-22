@@ -28,6 +28,8 @@
   @param[out] result a pointer to scalar value, on exit will contain the result.
   @param[out] time_allreduce the time it took to perform the communication between processes
 
+  @return returns 0 upon success and non-zero otherwise
+
   @see dotref
 */
 int dot (const local_int_t n, const double * const x, const double * const y,

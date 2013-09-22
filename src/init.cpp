@@ -43,6 +43,8 @@ startswith(const char *s, const char *prefix) {
   @param[in] argv_p the pointer to the "argv" parameter passed to the main() function
   @param[out] params the reference to the data structures that is filled the basic parameters of the run
 
+  @return returns 0 upon success and non-zero otherwise
+
   @see HPCG_Finalize
 */
 int

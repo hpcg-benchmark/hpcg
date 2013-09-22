@@ -38,6 +38,8 @@
   @param[in]  x the input vector
   @param[out] y On exit contains the result of one symmetric GS sweep with x as the RHS.
 
+  @return returns 0 upon success and non-zero otherwise
+
   @see symgsref
 */
 int symgs( const SparseMatrix & A, const double * const x, double * const y) {

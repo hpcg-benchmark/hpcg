@@ -31,6 +31,8 @@
   @param[in] x, y the input vectors
   @param[out] w the output vector.
 
+  @return returns 0 upon success and non-zero otherwise
+
   @see waxpby
 */
 int waxpbyref (const local_int_t n, const double alpha, const double * const x,

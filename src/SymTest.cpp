@@ -47,6 +47,8 @@ using std::endl;
   @param[in]    xexact The exact solution vector
   @param[inout] symtest_data The data structure with the results of the CG symmetry test including pass/fail information
 
+  @return returns 0 upon success and non-zero otherwise
+
   @see dot
   @see dotref
   @see spmv

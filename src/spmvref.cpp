@@ -31,6 +31,8 @@
   @param[in]  x the known vector
   @param[out] y the On exit contains the result: Ax.
 
+  @return returns 0 upon success and non-zero otherwise
+
   @see spmv
 */
 int spmvref( const SparseMatrix & A, const double * const x, double * const y) {

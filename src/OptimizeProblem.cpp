@@ -26,6 +26,8 @@
   @param[inout] x      The solution vector to be computed in future CG iteration
   @param[inout] xexact The exact solution vector
 
+  @return returns 0 upon success and non-zero otherwise
+
   @see GenerateGeometry
   @see GenerateProblem
 */

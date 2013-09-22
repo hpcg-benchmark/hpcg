@@ -1,3 +1,8 @@
+/*!
+ @file init.cpp
+
+ HPCG routine
+ */
 
 #include <ctime>
 #include <cstdio>
@@ -26,6 +31,20 @@ startswith(const char *s, const char *prefix) {
     return 1;
 }
 
+/*!
+  Initializes an HPCG run by obtaining problem parameters (from a file on
+  command line) and then broadcasts them to all nodes. It also initializes
+  loggin I/O streams that are used throughout the HPCG run. Only MPI rank 0
+  performs I/O operations.
+  
+  The function assumes that MPI has already been initialized for MPI runs.
+
+  @param[in] argc_p the pointer to the "argc" parameter passed to the main() function
+  @param[in] argv_p the pointer to the "argv" parameter passed to the main() function
+  @param[out] params the reference to the data structures that is filled the basic parameters of the run
+
+  @see HPCG_Finalize
+*/
 int
 HPCG_Init(int *argc_p, char ***argv_p, HPCG_Params & params) {
   int argc = *argc_p;

@@ -72,9 +72,9 @@ class YAML_Element {
   std::string printYAML(std::string space);
   
 protected:
-  std::string key;
-  std::string value;
-  std::vector<YAML_Element*> children;
+  std::string key; //!< the key under which the element is stored
+  std::string value; //!< the value of the stored element
+  std::vector<YAML_Element*> children; //!< children elements of this element
 
 private:
   std::string convert_double_to_string(double value_arg);

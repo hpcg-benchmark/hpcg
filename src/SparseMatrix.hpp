@@ -16,35 +16,35 @@
 #include "Geometry.hpp"
 
 struct SparseMatrix_STRUCT {
-  char   *title;
-  global_int_t totalNumberOfRows;
-  global_int_t totalNumberOfNonzeros;
-  local_int_t localNumberOfRows;
-  local_int_t localNumberOfColumns;  // Must be defined in make_local_matrix
-  local_int_t localNumberOfNonzeros;  //Make this a globlal since it can get big
-  char  * nonzerosInRow;  // The number of nonzeros in a row will always be 27 or fewer
-  global_int_t ** mtxIndG;
-  local_int_t ** mtxIndL;
-  double ** matrixValues;
-  double ** matrixDiagonal;
-  std::map< global_int_t, local_int_t > globalToLocalMap;
-  std::vector< global_int_t > localToGlobalMap;
+  char   *title; //!< name of the sparse matrix
+  global_int_t totalNumberOfRows; //!< total number of matrix rows across all processes
+  global_int_t totalNumberOfNonzeros; //!< total number of matrix nonzeros across all processes
+  local_int_t localNumberOfRows; //!< number of rows local to this process
+  local_int_t localNumberOfColumns;  //!< number of columns local to this process
+  local_int_t localNumberOfNonzeros;  //!< number of nonzeros local to this process
+  char  * nonzerosInRow;  //!< The number of nonzeros in a row will always be 27 or fewer
+  global_int_t ** mtxIndG; //!< matrix indices as global values
+  local_int_t ** mtxIndL; //!< matrix indices as local values
+  double ** matrixValues; //!< values of matrix entries
+  double ** matrixDiagonal; //!< values of matrix diagonal entries
+  std::map< global_int_t, local_int_t > globalToLocalMap; //!< global-to-local mapping
+  std::vector< global_int_t > localToGlobalMap; //!< local-to-global mapping
 
-  /*
+  /*!
    This is for storing optimized data structres created in OptimizeProblem and
    used inside optimized spmv().
    */
   void *optimization_data;
 
 #ifndef HPCG_NOMPI
-  local_int_t numberOfExternalValues;
-  int numberOfSendNeighbors;
-  local_int_t totalToBeSent;
-  local_int_t *elementsToSend;
-  int *neighbors;
-  local_int_t *receiveLength;
-  local_int_t *sendLength;
-  double *sendBuffer;
+  local_int_t numberOfExternalValues; //!< number of entries that are external to this process
+  int numberOfSendNeighbors; //!< number of neighboring processes that will be send local data
+  local_int_t totalToBeSent; //!< total number of entries to be sent
+  local_int_t *elementsToSend; //!< elements to send to neighboring processes
+  int *neighbors; //!< neighboring processes
+  local_int_t *receiveLength; //!< lenghts of messages received from neighboring processes
+  local_int_t *sendLength; //!< lenghts of messages sent to neighboring processes
+  double *sendBuffer; //!< send buffer for non-blocking sends
 #endif
 };
 typedef struct SparseMatrix_STRUCT SparseMatrix;

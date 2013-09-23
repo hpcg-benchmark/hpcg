@@ -26,6 +26,12 @@
 // ************************************************************************
 //@HEADER
 
+/*!
+ @file YAML_Doc.hpp
+
+ HPCG YAML classes
+ */
+
 // Changelog
 //
 // Version 0.1
@@ -112,10 +118,10 @@ class YAML_Doc: public YAML_Element {
   std::string generateYAML();
 
 protected:
-  std::string miniAppName;
-  std::string miniAppVersion;
-  std::string destinationDirectory;
-  std::string destinationFileName;
+  std::string miniAppName; //!< the name of the application that generated the YAML output
+  std::string miniAppVersion; //!< the version of the application that generated the YAML output
+  std::string destinationDirectory; //!< the destination directory for the generated the YAML output
+  std::string destinationFileName; //!< the filename for the generated the YAML output
 };
 #endif // YAML_DOC_HPP
 

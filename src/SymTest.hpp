@@ -17,8 +17,9 @@
 #include "CGData.hpp"
 
 struct SymTestData_STRUCT {
-  double depsym_spmv, depsym_symgs;
-  int count_fail;
+  double depsym_spmv; //!< departure from symmetry for the SPMV kernel
+  double depsym_symgs; //!< departure from symmetry for the SYMGS kernel
+  int count_fail; //!< number of failures in the symmetry tests
 };
 typedef struct SymTestData_STRUCT SymTestData;
 

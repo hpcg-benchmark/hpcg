@@ -13,10 +13,11 @@
 
 
 struct NormTestData_STRUCT {
-  double * values;
-  double mean, variance;
-  int samples;
-  bool pass;
+  double * values; //!< sample values
+  double mean;     //!< mean of all sampes
+  double variance; //!< variance of mean
+  int samples;     //!< number of samples
+  bool pass;       //!< pass/fail indicator
 };
 typedef struct NormTestData_STRUCT NormTestData;
 

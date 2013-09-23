@@ -28,6 +28,8 @@ YAML_Element::~YAML_Element(){
 
   @param[in] key_arg   The key under which the element is stored
   @param[in] value_arg The value of the element
+
+  @return Returns the added element
 */
 YAML_Element* YAML_Element::add(const std::string& key_arg, double value_arg) {
   this->value = "";
@@ -42,6 +44,8 @@ YAML_Element* YAML_Element::add(const std::string& key_arg, double value_arg) {
 
   @param[in] key_arg   The key under which the element is stored
   @param[in] value_arg The value of the element
+
+  @return Returns the added element
 */
 YAML_Element* YAML_Element::add(const std::string& key_arg, int value_arg) {
   this->value = "";
@@ -58,6 +62,8 @@ YAML_Element* YAML_Element::add(const std::string& key_arg, int value_arg) {
 
   @param[in] key_arg   The key under which the element is stored
   @param[in] value_arg The value of the element
+
+  @return Returns the added element
 */
 YAML_Element* YAML_Element::add(const std::string& key_arg, long long value_arg) {
   this->value = "";
@@ -74,6 +80,8 @@ YAML_Element* YAML_Element::add(const std::string& key_arg, long long value_arg)
 
   @param[in] key_arg   The key under which the element is stored
   @param[in] value_arg The value of the element
+
+  @return Returns the added element
 */
 YAML_Element* YAML_Element::add(const std::string& key_arg, size_t value_arg) {
   this->value = "";
@@ -88,6 +96,8 @@ YAML_Element* YAML_Element::add(const std::string& key_arg, size_t value_arg) {
 
   @param[in] key_arg   The key under which the element is stored
   @param[in] value_arg The value of the element
+
+  @return Returns the added element
 */
 YAML_Element* YAML_Element::add(const std::string& key_arg, const std::string& value_arg) {
   this->value = "";
@@ -102,6 +112,8 @@ YAML_Element* YAML_Element::add(const std::string& key_arg, const std::string& v
   element in the vector for the specified key
 
   @param[in] key_arg   The key under which the element was stored
+
+  @return If found, returns the element, otherwise returns NULL
 */
 YAML_Element* YAML_Element::get(const std::string& key_arg) {
   for (size_t i=0; i<children.size(); i++) {
@@ -118,6 +130,8 @@ YAML_Element* YAML_Element::get(const std::string& key_arg) {
   amount of space for the parent element
 
   @param[in] space spacing inserted at the beginning of the line
+
+  @return Returns a single line of the YAML document without the leading white space
 */
 string YAML_Element::printYAML(std::string space){
   string yaml_line = space + key + ": " + value + "\n";

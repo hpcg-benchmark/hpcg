@@ -33,6 +33,8 @@ YAML_Doc::~YAML_Doc(void){
 
 /*!
   Generates YAML from the elements of the document and saves it to a file.
+
+  @return returns the complete YAML document as a string
 */
 string YAML_Doc::generateYAML(){
   string yaml;

@@ -1,26 +1,7 @@
 //@HEADER
 // ************************************************************************
 // 
-//               Mantevo: A collection of mini-applications for HPC
-//                 Copyright (2008) Sandia Corporation
-// 
-// Under terms of Contract DE-AC04-94AL85000, there is a non-exclusive
-// license for use of this work by or on behalf of the U.S. Government.
-// 
-// This library is free software; you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as
-// published by the Free Software Foundation; either version 2.1 of the
-// License, or (at your option) any later version.
-//  
-// This library is distributed in the hope that it will be useful, but
-// WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-// Lesser General Public License for more details.
-//  
-// You should have received a copy of the GNU Lesser General Public
-// License along with this library; if not, write to the Free Software
-// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
-// USA
+//               HPCG: Simple Conjugate Gradient Benchmark Code
 // Questions? Contact Michael A. Heroux (maherou@sandia.gov) 
 // 
 // ************************************************************************
@@ -44,12 +25,12 @@
 #include <string>
 #include "YAML_Element.hpp"
 
-//! The Mantevo YAML_Doc class for the uniform collecting and reporting of performance data for mini-applications
+//! The YAML_Doc class for the uniform collecting and reporting of performance data for HPCG
 
 /*!
 
 The YAML_Doc class works in conjuction with the YAML_Element class to facilitate easy collecting and reporting of YAML-formatted
-data that can be then registered with the Mantevo results collection website.
+data that can be then registered with the HPCG results collection website.
 
 \code
 

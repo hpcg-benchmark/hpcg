@@ -8,6 +8,12 @@
 // ************************************************************************
 //@HEADER
 
+/*!
+ @file SparseMatrix.hpp
+
+ HPCG data structures for the sparse matrix
+ */
+
 #ifndef SPARSEMATRIX_HPP
 #define SPARSEMATRIX_HPP
 
@@ -49,6 +55,11 @@ struct SparseMatrix_STRUCT {
 };
 typedef struct SparseMatrix_STRUCT SparseMatrix;
 
+/*!
+  Initializes the known system matrix data structure members to 0.
+
+  @param[in] A the known system matrix
+ */
 inline void initializeMatrix(SparseMatrix & A) {
 	A.title = 0;
 	A.totalNumberOfRows = 0;
@@ -75,6 +86,11 @@ inline void initializeMatrix(SparseMatrix & A) {
 	return;
 }
 
+/*!
+  Deallocates the members of the data structure of the known system matrix provided they are not 0.
+
+  @param[in] A the known system matrix
+ */
 inline void destroyMatrix(SparseMatrix & A) {
 
 	for (int i = 0; i< A.localNumberOfRows; ++i) {
@@ -101,4 +117,3 @@ inline void destroyMatrix(SparseMatrix & A) {
 }
 
 #endif // SPARSEMATRIX_HPP
-

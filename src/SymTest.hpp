@@ -8,6 +8,12 @@
 // ************************************************************************
 //@HEADER
 
+/*!
+ @file SymTest.hpp
+
+ HPCG data structures for symmetry testing
+ */
+
 #ifndef SYMTEST_HPP
 #define SYMTEST_HPP
 

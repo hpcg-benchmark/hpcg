@@ -8,6 +8,12 @@
 // ************************************************************************
 //@HEADER
 
+/*!
+ @file CGtest.hpp
+
+ HPCG data structure
+ */
+
 #ifndef CGTEST_HPP
 #define CGTEST_HPP
 

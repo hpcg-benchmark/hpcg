@@ -8,19 +8,28 @@
 // ************************************************************************
 //@HEADER
 
+/*!
+ @file CG.cpp
+
+ HPCG routine
+ */
+
 // Changelog
 //
 // Version 0.1
-// - Compute the mean and standard deviation of the array of norm results
 //
 /////////////////////////////////////////////////////////////////////////
-
-// Main routine of a program that calls the HPCG conjugate gradient
-// solver to solve the problem, and then prints results.
 
 #include <cmath>
 #include "NormTest.hpp"
 
+/*!
+  Computes the mean and standard deviation of the array of norm results.
+
+  @param[in] normtest_data data structure with the norm test results
+
+  @return Returns 0 upon success or non-zero otherwise
+*/
 int NormTest(NormTestData * normtest_data) {
 
 	// Compute mean

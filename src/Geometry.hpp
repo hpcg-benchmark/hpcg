@@ -8,20 +8,38 @@
 // ************************************************************************
 //@HEADER
 
+/*!
+ @file Geometry.hpp
+
+ HPCG data structure for problem geometry
+ */
+
 #ifndef GEOMETRY_HPP
 #define GEOMETRY_HPP
 
-//typedef int local_int_t;      // This defines the type for integers that have local subdomain dimension
-typedef long long local_int_t;      // Define as long long when local problem dimension is > 2^31
+/*!
+  This defines the type for integers that have local subdomain dimension.
+
+  Define as "long long" when local problem dimension is > 2^31
+*/
+//typedef int local_int_t;
+typedef long long local_int_t;
+
+/*!
+  This defines the type for integers that have global dimension
+
+  Define as "long long" when global problem dimension is > 2^31
+*/
+//typedef int global_int_t;
+typedef long long global_int_t;
 
 // This macro should be defined if the global_int_t is not long long
-// in order to stop complaints from non-C++11 compliant compilers
+// in order to stop complaints from non-C++11 compliant compilers.
 //#define HPCG_NO_LONG_LONG
-//typedef int global_int_t;     // This defines the type for integers that have global dimension
-typedef long long global_int_t;     // Define as long long when global problem dimension is > 2^31
 
-// This is a data structure to contain all processor navigation information
-
+/*!
+  This is a data structure to contain all processor geometry information
+*/
 struct Geometry_STRUCT {
   int size; //!< Number of MPI processes
   int rank; //!< This process' rank in the range [0 to size - 1]
@@ -39,8 +57,16 @@ struct Geometry_STRUCT {
 };
 typedef struct Geometry_STRUCT Geometry;
 
+/*!
+  Returns the rank of the MPI process that is assigned the global row index
+  given as the input argument.
+
+  @param[in] geom  The description of the problem's geometry.
+  @param[in] index The global row index
+
+  @return Returns the MPI rank of the process assigned the row
+*/
 inline int getRankOfMatrixRow(const Geometry & geom, global_int_t index) {
-	// For the global row id given in the argument index, return the MPI process rank that is assigned that row
 	int gnx = geom.nx*geom.npx;
 	int gny = geom.ny*geom.npy;
 
@@ -52,7 +78,6 @@ inline int getRankOfMatrixRow(const Geometry & geom, global_int_t index) {
 	int ipx = ix/geom.nx;
 	int rank = ipx+ipy*geom.npx+ipz*geom.npy*geom.npx;
 	return(rank);
-
 }
 
 

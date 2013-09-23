@@ -7,6 +7,12 @@
 // ************************************************************************
 //@HEADER
 
+/*!
+ @file YAML_Element.hpp
+
+ HPCG data structures for YAML output
+ */
+
 // Changelog
 //
 // Version 0.1

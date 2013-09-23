@@ -8,6 +8,12 @@
 // ************************************************************************
 //@HEADER
 
+/*!
+ @file NormTest.hpp
+
+ HPCG data structure
+ */
+
 #ifndef NORMTEST_HPP
 #define NORMTEST_HPP
 

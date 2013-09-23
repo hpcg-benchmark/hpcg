@@ -8,6 +8,12 @@
 // ************************************************************************
 //@HEADER
 
+/*!
+ @file hpcg.hpp
+
+ HPCG data structures and functions
+ */
+
 #ifndef HPCG_HPP
 #define HPCG_HPP
 
@@ -23,6 +29,9 @@ struct HPCG_Params_STRUCT {
   int ny; //!< Number of y-direction grid points for each local subdomain
   int nz; //!< Number of z-direction grid points for each local subdomain
 };
+/*!
+  HPCG_Params is a shorthand for HPCG_Params_STRUCT
+ */
 typedef HPCG_Params_STRUCT HPCG_Params;
 
 extern int HPCG_Init(int *argc_p, char ***argv_p, HPCG_Params & params);

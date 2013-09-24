@@ -2,7 +2,7 @@
   include 'common/page.php';
   $page = new Page();
   $page->setPathToWebRoot('');
-  $page->setPageTitle('Mantevo - Download');
+  $page->setPageTitle('HPCG - Download');
   $page->setNavIdentifier('download');
  
   $y = <<< END
@@ -33,10 +33,10 @@ END;
 
 <div class="breadcrumb">Download</div>
 
-<h3>Mantevo Suite Release Version 1.0.2</h3>
+<h3>HPCG Suite Release Version 1.0.2</h3>
 
-<p>The current Mantevo Suite Release version is 1.0.2.  Each proxy application
-included in the Suite is distributed separately.  Mantevo Suite Release 1.0.2
+<p>The current HPCG Suite Release version is 1.0.2.  Each proxy application
+included in the Suite is distributed separately.  HPCG Suite Release 1.0.2
 is comprised of seven miniapplications, and one minidriver. This release
 contains the same version of many of the proxy applications as the 1.0.1 Suite
 Release. Whenever a new version of a proxy application is released, 
@@ -80,20 +80,20 @@ the Suite Release version is incremented.</p>
 
 <p><b>**</b> New version for Suite Release 1.0.2.
 
-<h3>Mantevo Tools</h3>
+<h3>HPCG Tools</h3>
 
 <ul>
-<li><a href="https://github.com/dwbarne/PYLOTDB">Co-Pylot</a>: Post-processing tool that accepts Mantevo YAML output files and stores each as a record in a MySQL database and can display the results in graphs and charts.</li>
+<li><a href="https://github.com/dwbarne/PYLOTDB">Co-Pylot</a>: Post-processing tool that accepts HPCG YAML output files and stores each as a record in a MySQL database and can display the results in graphs and charts.</li>
 </ul>
 <br/>
 <h2>Open Source Software</h2>
 
-<p>Mantevo proxy applications are open source software.  Some Mantevo proxy
+<p>HPCG proxy applications are open source software.  Some HPCG proxy
 applications are available for download under a
 <a href="http://www.gnu.org/copyleft/lgpl.html">GNU Lesser General Public License (LGPL)</a>,
 others are available under a <a href="https://github.com/exmatex/CoMD/blob/master/copyright.txt">BSD License</a>. The license for each proxy app is specified
  in the applicable tarball.  Release announcements will be sent
-to the Mantevo-Announce@software.sandia.gov mail list.</p>
+to the HPCG-Announce@software.sandia.gov mail list.</p>
 
 <!--
 <ul>

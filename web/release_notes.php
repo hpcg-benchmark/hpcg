@@ -2,7 +2,7 @@
   include 'common/page.php';
   $page = new Page();
   $page->setPathToWebRoot('');
-  $page->setPageTitle('Mantevo - Release Notes');
+  $page->setPageTitle('HPCG - Release Notes');
   $page->setNavIdentifier('download');
  
   $y = <<< END
@@ -16,19 +16,19 @@ END;
 
 <div class="breadcrumb"><a href="download.php">Download</a> - Release Notes</div>
 
-<h3> Mantevo Suite Release 1.0</h3>
+<h3> HPCG Suite Release 1.0</h3>
 
-<p>The first official release of the Mantevo suite of mini applications and
+<p>The first official release of the HPCG suite of mini applications and
 mini drivers is available for download.</p>
 
-<p>Mantevo packages are small programs that embody one or more performance impacting elements of large-scale production applications.  A number of Mantevo packages have already been successfully used as part of the "co-design" of new computer systems and applications during this time of rapid transition to scalable multicore and accelerator based computer systems.</p>
+<p>HPCG packages are small programs that embody one or more performance impacting elements of large-scale production applications.  A number of HPCG packages have already been successfully used as part of the "co-design" of new computer systems and applications during this time of rapid transition to scalable multicore and accelerator based computer systems.</p>
 
-<p>Mantevo Suite Release 1.0 includes eight packages, including seven Miniapplications: CloverLeaf, CoMD, HPCCG, MiniFE, MiniGhost, MiniMD, and MiniXyce, and one Minidriver: EpetraBenchmarkTest.</p>
+<p>HPCG Suite Release 1.0 includes eight packages, including seven Miniapplications: CloverLeaf, CoMD, HPCCG, MiniFE, MiniGhost, MiniMD, and MiniXyce, and one Minidriver: EpetraBenchmarkTest.</p>
  
 <p>For more information, or to download these packages, visit the following links.</p>
 
-<p>Mantevo website: <a href="http://mantevo.org">Mantevo.org</a><br/>
-Mantevo Suite 1.0 <a href="http://mantevo.org/download.php">Download page</a>
+<p>HPCG website: <a href="http://hpcg.org">HPCG.org</a><br/>
+HPCG Suite 1.0 <a href="http://hpcg.org/download.php">Download page</a>
 </p>
 
 <!--

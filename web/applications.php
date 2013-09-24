@@ -2,7 +2,7 @@
   include 'common/page.php';
   $page = new Page();
   $page->setPathToWebRoot('');
-  $page->setPageTitle('Mantevo - Applications');
+  $page->setPageTitle('HPCG - Applications');
   $page->setNavIdentifier('about');
 
   $x = <<< END
@@ -20,14 +20,14 @@ END;
 
     <p><b>Current activities:</b>
 
-Mantevo miniapps and minidrivers target a variety of application domains.  Presently we address aspects of the following domains.
+HPCG miniapps and minidrivers target a variety of application domains.  Presently we address aspects of the following domains.
 	
 <ul>
 <li><b>Implicit unstructured partial differential equations:</b> 
-       Although this is a very broad area, a number of Mantevo packages address it fairly well.
+       Although this is a very broad area, a number of HPCG packages address it fairly well.
        This is because many of these applications have a highly localized, operation-intensive phase for constructing a sparse linear
-       system, followed by solution of the system via an iterative sparse solver.  This is the most mature area for Mantevo since it
-       is one of the most important areas for Sandia, where Mantevo started. The following miniapps and minidrivers address this domain:</li>
+       system, followed by solution of the system via an iterative sparse solver.  This is the most mature area for HPCG since it
+       is one of the most important areas for Sandia, where HPCG started. The following miniapps and minidrivers address this domain:</li>
     <ul>
       <li><b>MiniFE:</b> (Miniapp) Intended to be the best approximation to an unstructured implicit finite that includes 
                          all important computational phases.</li>
@@ -42,7 +42,7 @@ Mantevo miniapps and minidrivers target a variety of application domains.  Prese
 
 <li><b>Explicit unstructured partial differential equations:</b> 
        Again this is a very broad area, and very important.  This domain is typified by indirect
-       addressing, vector operations and contact detection.  Mantevo has one miniapp in this area, and a few others under development.</li>
+       addressing, vector operations and contact detection.  HPCG has one miniapp in this area, and a few others under development.</li>
     <ul>
       <li> <b>phdMesh:</b> Parallel heterogeneous dynamic mesh application.  Exhibits the performance characteristics 
 	of the contact search operations in an explicit finite element application.</li>

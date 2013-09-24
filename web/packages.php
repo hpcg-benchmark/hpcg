@@ -2,7 +2,7 @@
   include 'common/page.php';
   $page = new Page();
   $page->setPathToWebRoot('');
-  $page->setPageTitle('Mantevo - Packages');
+  $page->setPageTitle('HPCG - Packages');
   $page->setNavIdentifier('packages');
 ?>
 
@@ -61,6 +61,6 @@ domain.</li>
       </ul>
     </ul>
 
-<p>* Denotes a miniapp/minidriver that is included in the Mantevo Suite 1.0
+<p>* Denotes a miniapp/minidriver that is included in the HPCG Suite 1.0
 release.</p>
 <?php include 'common/footer.html' ?>

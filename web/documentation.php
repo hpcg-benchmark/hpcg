@@ -2,7 +2,7 @@
   include 'common/page.php';
   $page = new Page();
   $page->setPathToWebRoot('');
-  $page->setPageTitle('Mantevo - Documentation');
+  $page->setPageTitle('HPCG - Documentation');
   $page->setNavIdentifier('resources');
 
   $x = <<< END
@@ -18,7 +18,7 @@ END;
 <div class="breadcrumb"><a href="resources.php">Resources</a> - Documentation</div>
 
 <p>Reference Documentation for Common Utilities, specifically YAML classes, is <a href="common/html/index.html">here.</a></p>
-<p>Each Mantevo package maintains its own documentation in the software distribution.</p>
+<p>Each HPCG package maintains its own documentation in the software distribution.</p>
 
 <!--
 <ul class="docs">

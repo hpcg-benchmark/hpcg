@@ -2,7 +2,7 @@
   include 'common/page.php';
   $page = new Page();
   $page->setPathToWebRoot('');
-  $page->setPageTitle('Mantevo - Developer Tools');
+  $page->setPageTitle('HPCG - Developer Tools');
   $page->setNavIdentifier('resources');
 
   $x = <<< END
@@ -18,9 +18,9 @@ END;
 
 <div class="breadcrumb"><a href="resources.php">Resources</a> - Developer Tools</div>
 
-<p>Please contact the project leader for access to Mantevo developer tools.</p>
-<p>Once you have an account on software.sandia.gov and are a member of the Unix groups MantevoDevelopers and MantevoUsers, you can obtain a working copy of the archive using the following command (note this is a single command, even if it appears to be two):</p>
-<p>svn checkout svn+ssh://username@software.sandia.gov/space/sandiasvn/public/mantevo/trunk Mantevo</p>
+<p>Please contact the project leader for access to HPCG developer tools.</p>
+<p>Once you have an account on software.sandia.gov and are a member of the Unix groups HPCGDevelopers and HPCGUsers, you can obtain a working copy of the archive using the following command (note this is a single command, even if it appears to be two):</p>
+<p>svn checkout svn+ssh://username@software.sandia.gov/space/sandiasvn/public/hpcg/trunk HPCG</p>
 
 <!--
 <h2>Repository (restricted access)</h2>

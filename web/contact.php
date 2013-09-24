@@ -2,7 +2,7 @@
   include 'common/page.php';
   $page = new Page();
   $page->setPathToWebRoot('');
-  $page->setPageTitle('Mantevo - Contact');
+  $page->setPageTitle('HPCG - Contact');
   $page->setNavIdentifier('home');
  
   $y = <<< END

@@ -2,7 +2,7 @@
   include 'common/page.php';
   $page = new Page();
   $page->setPathToWebRoot('');
-  $page->setPageTitle('Mantevo - Resources');
+  $page->setPageTitle('HPCG - Resources');
   $page->setNavIdentifier('resources');
 ?>
 
@@ -12,7 +12,7 @@
 
 
 <p>Please follow the links to the left to find more in-depth information about
-the Mantevo project.</p>
+the HPCG project.</p>
 
 
 <?php include 'common/footer.html' ?>

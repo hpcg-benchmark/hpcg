@@ -2,7 +2,7 @@
   include 'common/page.php';
   $page = new Page();
   $page->setPathToWebRoot('');
-  $page->setPageTitle('Mantevo - News');
+  $page->setPageTitle('HPCG - News');
   $page->setNavIdentifier('home');
  
   $y = <<< END
@@ -16,8 +16,8 @@ END;
 
 <div class="breadcrumb"><a href="default.php">Home</a> - News</div>
 
-<strong>Thursday, December 13th, 2012</strong> - Mantevo Suite Release 1.0, the
-first release of the Mantevo Suite, is now <a href="download.php">available for download</a>.  See the <a href="release_notes.php">release notes</a> for more information.<br/><br/>
+<strong>Thursday, December 13th, 2012</strong> - HPCG Suite Release 1.0, the
+first release of the HPCG Suite, is now <a href="download.php">available for download</a>.  See the <a href="release_notes.php">release notes</a> for more information.<br/><br/>
 
 <!--
 

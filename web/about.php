@@ -2,7 +2,7 @@
   include 'common/page.php';
   $page = new Page();
   $page->setPathToWebRoot('');
-  $page->setPageTitle('Mantevo - About');
+  $page->setPageTitle('HPCG - About');
   $page->setNavIdentifier('about');
 ?>
 
@@ -10,9 +10,9 @@
 
 <div class="breadcrumb">About</div>
 
-<h3>About the Mantevo project</h3>
+<h3>About the HPCG project</h3>
 
-<p>The Mantevo project is an effort to provide open-source software packages for the analysis, prediction and
+<p>The HPCG project is an effort to provide open-source software packages for the analysis, prediction and
  improvement of high performance computing applications.</p>
 
     <p><b>Goals for the project include:</b>
@@ -37,9 +37,9 @@
   </ul>
   </p>
 
-<h3>Mantevo Overview Paper</h3>
+<h3>HPCG Overview Paper</h3>
 
-<p><a href=MantevoOverview.pdf> Improving Performance via Mini-applications (Mantevo Overview) </a></p>
+<p><a href=HPCGOverview.pdf> Improving Performance via Mini-applications (HPCG Overview) </a></p>
 
       
 <br/>

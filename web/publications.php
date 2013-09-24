@@ -2,7 +2,7 @@
   include 'common/page.php';
   $page = new Page();
   $page->setPathToWebRoot('');
-  $page->setPageTitle('Mantevo - Publications');
+  $page->setPageTitle('HPCG - Publications');
   $page->setNavIdentifier('resources');
 ?>
 
@@ -11,13 +11,13 @@
 <div class="breadcrumb"><a href="resources.php">Resources</a> - Publications</div>
 
 <ul class="docs">
-<li><a href="MantevoOverview.pdf"> Improving Performance via Mini-applications (Mantevo Overview) (.pdf)</a></li>
+<li><a href="HPCGOverview.pdf"> Improving Performance via Mini-applications (HPCG Overview) (.pdf)</a></li>
 <li><a href="HerouxBeenThereDoneThat.pdf">Been There, Done That: Lessons Learned from SMP Computing (.pdf)</a></li>
 <li><a href="Heroux_GP2_talk.pdf">Using GPUs and CPUs for Engineering Applications: Challenges and Issues (.pdf)</a></li>
 <li><a href="SomeThoughtsOnMulticore.pdf">Some Thoughts on Multicore (.pdf)</a></li>
 <li><a href="http://www.iop.org/EJ/abstract/1742-6596/125/1/012035">
                 Design issues for numerical libraries on scalable multicore architectures (SciDAC 2008 paper)</a></li>
-<li><a href="mantevo_views.pdf">Mantevo Views: A Flexible System for Gathering and Analyzing Data for the Mantevo Project (.pdf)</a></li>
+<li><a href="hpcg_views.pdf">HPCG Views: A Flexible System for Gathering and Analyzing Data for the HPCG Project (.pdf)</a></li>
 <li><a href="http://dl.acm.org/citation.cfm?id=2148600.2148602&coll=DL&dl=GUIDE&CFID=326785201&CFTOKEN=67857032">Mini-applications: Vehicles for Co-Design (SC11 Best Poster)</a></li>
 </ul>
 <!--

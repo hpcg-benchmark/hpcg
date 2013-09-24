@@ -104,7 +104,7 @@ int main(int argc, char *argv[]) {
     double *b, *x, *xexact;
     GenerateProblem(geom, A, &b, &x, &xexact);
     SetupHalo(geom, A);
-    initializeCGData(A, data);
+    InitializeSparseCGData(A, data);
 
 
     // Use this array for collecting timing information
@@ -298,8 +298,8 @@ int main(int argc, char *argv[]) {
     ReportResults(geom, A, numberOfCgSets, totalNiters, &times[0], &testcg_data, &symtest_data, &normtest_data, global_failure);
 
     // Clean up
-    destroyMatrix(A);
-    destroyCGData(data);
+    DeleteMatrix(A);
+    DeleteCGData(data);
     delete [] normtest_data.values;
     delete [] x;
     delete [] b;

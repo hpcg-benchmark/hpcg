@@ -60,7 +60,7 @@ typedef struct SparseMatrix_STRUCT SparseMatrix;
 
   @param[in] A the known system matrix
  */
-inline void initializeMatrix(SparseMatrix & A) {
+inline void InitializeSparseMatrix(SparseMatrix & A) {
 	A.title = 0;
 	A.totalNumberOfRows = 0;
 	A.totalNumberOfNonzeros = 0;
@@ -91,7 +91,7 @@ inline void initializeMatrix(SparseMatrix & A) {
 
   @param[in] A the known system matrix
  */
-inline void destroyMatrix(SparseMatrix & A) {
+inline void DeleteMatrix(SparseMatrix & A) {
 
 	for (int i = 0; i< A.localNumberOfRows; ++i) {
 		delete [] A.matrixValues[i];
@@ -112,7 +112,7 @@ inline void destroyMatrix(SparseMatrix & A) {
 	if(A.sendLength)            delete [] A.sendLength;
 	if(A.sendBuffer)            delete [] A.sendBuffer;
 #endif
-	initializeMatrix(A);
+	InitializeSparseMatrix(A);
 	return;
 }
 

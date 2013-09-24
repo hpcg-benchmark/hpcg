@@ -1,0 +1,12 @@
+--brackets=attach
+--indent=spaces=2
+--convert-tabs
+--max-instatement-indent=2
+--pad-header
+--keep-one-line-blocks
+--keep-one-line-statements
+--align-pointer=middle
+--align-reference=middle
+--preserve-date
+--verbose
+--lineend=linux

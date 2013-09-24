@@ -36,7 +36,7 @@ using std::endl;
   @param[in] numberOfCgSets Number of CG runs performed
   @param[in] niters Number of preconditioned CG iterations performed to lower the residual below a threshold
   @param[in] times  Vector of cumulative timings for each of the phases of a preconditioned CG iteration
-  @param[in] cgtest_data the data structure with the results of the CG-correctness test including pass/fail information
+  @param[in] testcg_data the data structure with the results of the CG-correctness test including pass/fail information
   @param[in] symtest_data the data structure with the results of the CG symmetry test including pass/fail information
   @param[in] normtest_data the data structure with the results of the CG norm test including pass/fail information
   @param[in] global_failure indicates whether a failure occured during the correctness tests of CG
@@ -44,7 +44,7 @@ using std::endl;
   @see YAML_Doc
 */
 void ReportResults(const Geometry & geom, const SparseMatrix & A, int numberOfCgSets, int niters, double times[],
-  CGtestData * cgtest_data, SymTestData * symtest_data, NormTestData * normtest_data, int global_failure) {
+  TestCGData * testcg_data, SymTestData * symtest_data, NormTestData * normtest_data, int global_failure) {
 
 #ifndef HPCG_NOMPI
     double t4 = times[4];
@@ -102,16 +102,16 @@ void ReportResults(const Geometry & geom, const SparseMatrix & A, int numberOfCg
 
         doc.add("********** Validation Testing Summary  ***********","");
         doc.add("Spectral Convergence Tests","");
-        if (cgtest_data->count_fail==0)
+        if (testcg_data->count_fail==0)
             doc.get("Spectral Convergence Tests")->add("Result", "PASSED");
         else
         	doc.get("Spectral Convergence Tests")->add("Result", "FAILED");
         doc.get("Spectral Convergence Tests")->add("Unpreconditioned","");
-        doc.get("Spectral Convergence Tests")->get("Unpreconditioned")->add("Maximum iteration count", cgtest_data->niters_max_no_prec);
-        doc.get("Spectral Convergence Tests")->get("Unpreconditioned")->add("Expected iteration count", cgtest_data->expected_niters_no_prec);
+        doc.get("Spectral Convergence Tests")->get("Unpreconditioned")->add("Maximum iteration count", testcg_data->niters_max_no_prec);
+        doc.get("Spectral Convergence Tests")->get("Unpreconditioned")->add("Expected iteration count", testcg_data->expected_niters_no_prec);
         doc.get("Spectral Convergence Tests")->add("Preconditioned","");
-        doc.get("Spectral Convergence Tests")->get("Preconditioned")->add("Maximum iteration count", cgtest_data->niters_max_prec);
-        doc.get("Spectral Convergence Tests")->get("Preconditioned")->add("Expected iteration count", cgtest_data->expected_niters_prec);
+        doc.get("Spectral Convergence Tests")->get("Preconditioned")->add("Maximum iteration count", testcg_data->niters_max_prec);
+        doc.get("Spectral Convergence Tests")->get("Preconditioned")->add("Expected iteration count", testcg_data->expected_niters_prec);
 
         doc.add("Departure from Symmetry (x'Ay-y'Ax)","");
         if (symtest_data->count_fail==0)
@@ -185,7 +185,7 @@ void ReportResults(const Geometry & geom, const SparseMatrix & A, int numberOfCg
         doc.get("Sparse Operations Overheads")->add("Halo exchange as percentage of SpMV time", (times[6])/totalSparseMVTime*100.0);
 #endif
         doc.add("********** Final Summary **********","");
-        bool isValidRun = (cgtest_data->count_fail==0) && (symtest_data->count_fail==0) && (normtest_data->pass);
+        bool isValidRun = (testcg_data->count_fail==0) && (symtest_data->count_fail==0) && (normtest_data->pass);
         if (isValidRun) {
         	doc.get("********** Final Summary **********")->add("HPCG result is VALID with a GFLOP/s rating of", totalGflops);
         	doc.get("********** Final Summary **********")->add("Please send the YAML file contents to","HPCG-Results@software.sandia.gov");

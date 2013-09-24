@@ -5,7 +5,7 @@ arch = UNKNOWN
 
 include setup/Make.$(arch)
 
-HPCG_DEPS = src/CG.o src/CG_ref.o src/CGtest.o src/ComputeResidual.o \
+HPCG_DEPS = src/CG.o src/CG_ref.o src/TestCG.o src/ComputeResidual.o \
          src/ExchangeHalo.o src/GenerateGeometry.o src/GenerateProblem.o \
          src/OptimizeProblem.o src/ReportResults.o src/SetupHalo.o src/SymTest.o src/NormTest.o \
          src/WriteProblem.o src/YAML_Doc.o src/YAML_Element.o src/dot.o \

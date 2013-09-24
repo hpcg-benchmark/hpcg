@@ -51,7 +51,7 @@ using std::endl;
 #include "Geometry.hpp"
 #include "SparseMatrix.hpp"
 #include "CGData.hpp"
-#include "CGtest.hpp"
+#include "TestCG.hpp"
 #include "SymTest.hpp"
 #include "NormTest.hpp"
 
@@ -129,15 +129,15 @@ int main(int argc, char *argv[]) {
 #ifdef HPCG_DEBUG
     t1 = mytimer();
 #endif
-    CGtestData cgtest_data;
-    cgtest_data.count_pass = cgtest_data.count_fail = 0;
-    CGtest(geom, A, data, b, x, &cgtest_data);
+    TestCGData testcg_data;
+    testcg_data.count_pass = testcg_data.count_fail = 0;
+    TestCG(geom, A, data, b, x, &testcg_data);
 
     SymTestData symtest_data;
     SymTest(geom, A, b, xexact, &symtest_data);
 
 #ifdef HPCG_DEBUG
-    if (rank==0) HPCG_fout << "Total validation (CGtest and SymTest) execution time in main (sec) = " << mytimer() - t1 << endl;
+    if (rank==0) HPCG_fout << "Total validation (TestCG and SymTest) execution time in main (sec) = " << mytimer() - t1 << endl;
 #endif
 
 #ifdef HPCG_DEBUG
@@ -295,7 +295,7 @@ int main(int argc, char *argv[]) {
     ////////////////////
 
     // Report results to YAML file
-    ReportResults(geom, A, numberOfCgSets, totalNiters, &times[0], &cgtest_data, &symtest_data, &normtest_data, global_failure);
+    ReportResults(geom, A, numberOfCgSets, totalNiters, &times[0], &testcg_data, &symtest_data, &normtest_data, global_failure);
 
     // Clean up
     destroyMatrix(A);

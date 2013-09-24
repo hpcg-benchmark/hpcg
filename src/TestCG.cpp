@@ -9,7 +9,7 @@
 //@HEADER
 
 /*!
- @file CGtest.cpp
+ @file TestCG.cpp
 
  HPCG routine
  */
@@ -32,7 +32,7 @@ using std::endl;
 
 #include "hpcg.hpp"
 
-#include "CGtest.hpp"
+#include "TestCG.hpp"
 #include "CG.hpp"
 #include "Geometry.hpp"
 #include "SparseMatrix.hpp"
@@ -45,13 +45,13 @@ using std::endl;
   @param[in]    data the data structure with all necessary CG vectors preallocated
   @param[in]    b    The known right hand side vector
   @param[inout] x    On entry: the initial guess; on exit: the new approximate solution
-  @param[out]   cgtest_data the data structure with the results of the test including pass/fail information
+  @param[out]   testcg_data the data structure with the results of the test including pass/fail information
 
   @return Returns zero on success and a non-zero value otherwise.
 
   @see CG()
  */
-int CGtest(Geometry & geom, SparseMatrix & A, CGData & data, double * const b, double * const x, CGtestData * cgtest_data) {
+int TestCG(Geometry & geom, SparseMatrix & A, CGData & data, double * const b, double * const x, TestCGData * testcg_data) {
 
 
     // Use this array for collecting timing information
@@ -80,24 +80,24 @@ int CGtest(Geometry & geom, SparseMatrix & A, CGData & data, double * const b, d
     int maxIters = 50;
     int numberOfCgCalls = 2;
     double tolerance = 1.0e-12; // Set tolerance to reasonable value for grossly scaled diagonal terms
-    cgtest_data->expected_niters_no_prec = 12; // For the unpreconditioned CG call, we should take about 10 iterations, permit 12
-    cgtest_data->expected_niters_prec = 2;   // For the preconditioned case, we should take about 1 iteration, per 2
-    cgtest_data->niters_max_no_prec = 0;
-    cgtest_data->niters_max_prec = 0;
+    testcg_data->expected_niters_no_prec = 12; // For the unpreconditioned CG call, we should take about 10 iterations, permit 12
+    testcg_data->expected_niters_prec = 2;   // For the preconditioned case, we should take about 1 iteration, per 2
+    testcg_data->niters_max_no_prec = 0;
+    testcg_data->niters_max_prec = 0;
     for (int k=0; k<2; ++k) { // This loop tests both unpreconditioned and preconditioned runs
-      int expected_niters = cgtest_data->expected_niters_no_prec;
-      if (k==1) expected_niters = cgtest_data->expected_niters_prec;
+      int expected_niters = testcg_data->expected_niters_no_prec;
+      if (k==1) expected_niters = testcg_data->expected_niters_prec;
       for (int i=0; i< numberOfCgCalls; ++i) {
         for (int j=0; j< A.localNumberOfRows; ++j) x[j] = 0.0; // Zero out x
         int ierr = CG( geom, A, data, b, x, maxIters, tolerance, niters, normr, normr0, &times[0], k==1);
         if (ierr) HPCG_fout << "Error in call to CG: " << ierr << ".\n" << endl;
         if (niters <= expected_niters) {
-          ++cgtest_data->count_pass;
+          ++testcg_data->count_pass;
         } else {
-          ++cgtest_data->count_fail;
+          ++testcg_data->count_fail;
         }
-        if (k==0 && niters>cgtest_data->niters_max_no_prec) cgtest_data->niters_max_no_prec = niters; // Keep track of largest iter count
-        if (k==1 && niters>cgtest_data->niters_max_prec) cgtest_data->niters_max_prec = niters; // Same for preconditioned run
+        if (k==0 && niters>testcg_data->niters_max_no_prec) testcg_data->niters_max_no_prec = niters; // Keep track of largest iter count
+        if (k==1 && niters>testcg_data->niters_max_prec) testcg_data->niters_max_prec = niters; // Same for preconditioned run
         if (geom.rank==0) {
           HPCG_fout << "Call [" << i << "] Number of Iterations [" << niters <<"] Scaled Residual [" << normr/normr0 << "]" << endl;
           if (niters > expected_niters)
@@ -111,7 +111,7 @@ int CGtest(Geometry & geom, SparseMatrix & A, CGData & data, double * const b, d
       *(A.matrixDiagonal[i]) = diagA[i];
       b[i] = origB[i];
     }
-        cgtest_data->normr = normr;
+        testcg_data->normr = normr;
 
 	return 0;
 }

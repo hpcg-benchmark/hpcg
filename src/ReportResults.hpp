@@ -11,11 +11,11 @@
 #define REPORTRESULTS_HPP
 #include "Geometry.hpp"
 #include "SparseMatrix.hpp"
-#include "CGtest.hpp"
+#include "TestCG.hpp"
 #include "SymTest.hpp"
 #include "NormTest.hpp"
 
 void ReportResults(const Geometry & geom, const SparseMatrix & A, int numberOfCgSets, int niters, double times[],
-  CGtestData * cgtest_data, SymTestData * symtest_data, NormTestData * normtest_data, int global_failure);
+  TestCGData * testcg_data, SymTestData * symtest_data, NormTestData * normtest_data, int global_failure);
 
 #endif // REPORTRESULTS_HPP

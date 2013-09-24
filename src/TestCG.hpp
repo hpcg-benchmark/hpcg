@@ -9,13 +9,13 @@
 //@HEADER
 
 /*!
- @file CGtest.hpp
+ @file TestCG.hpp
 
  HPCG data structure
  */
 
-#ifndef CGTEST_HPP
-#define CGTEST_HPP
+#ifndef TESTCG_HPP
+#define TESTCG_HPP
 
 #include "hpcg.hpp"
 #include "SparseMatrix.hpp"
@@ -23,7 +23,7 @@
 #include "CGData.hpp"
 
 
-struct CGtestData_STRUCT {
+struct TestCGData_STRUCT {
   int count_pass; //!< number of succesful tests
   int count_fail;  //!< number of succesful tests
   int expected_niters_no_prec; //!< expected number of test CG iterations without preconditioning with diagonally dominant matrix (~12)
@@ -32,9 +32,9 @@ struct CGtestData_STRUCT {
   int niters_max_prec; //!< maximum number of test CG iterations without predictitioner
   double normr; //!< residual norm achieved during test CG iterations
 };
-typedef struct CGtestData_STRUCT CGtestData;
+typedef struct TestCGData_STRUCT TestCGData;
 
-extern int CGtest(Geometry & geom, SparseMatrix & A, CGData & data, double * const b, double * const x, CGtestData * cgtest_data);
+extern int TestCG(Geometry & geom, SparseMatrix & A, CGData & data, double * const b, double * const x, TestCGData * testcg_data);
 
-#endif  // CGTEST_HPP
+#endif  // TESTCG_HPP
 

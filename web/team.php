@@ -20,43 +20,15 @@ END;
 
 <tr><th>Leaders:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp </th>
 <td><a href="http://www.cs.sandia.gov/~maherou/">Mike Heroux</a>,
-<a href="http://www.sandia.gov/~rfbarre/">Richard Barrett</a></td>
+<td><a href="http://www.netlib.org/utk/people/JackDongarra/">Jack Dongarra</a></td></tr>
+<td><a href="http://web.eecs.utk.edu/~luszczek/">Piotr Luszczek</a></td></tr>
+
 </tr>
 </table>
 </br>
 <table>
 <tr><th>Contributors:</th>
-<td>David Beckingsale,
-<a href="mailto:dwbarne@sandia.gov">Daniel Barnette</a>,
-Ted Barragy,
-Mike Boulton,
-</br>Shao-Ping Chen,
-<a href="mailto:pscrozi@sandia.gov">Paul Crozier</a>,
-<a href="mailto:dwdoerf@sandia.gov">Doug Doerfler</a>,
-<a href="mailto:hcedwar@sandia.gov">Carter Edwards</a>,
-</br>Wayne Gaudin,
-Tim Germann,
-<a href="mailto:sdhammo@sandia.gov">Simon Hammond</a>,
-Andy Herdman,
-</br>Stephen Jarvis,
-Justin Lijutens,
-<a href="mailto:ptlin@sandia.gov">Paul Lin</a>,
-Andrew Mallinson,
-</br>Simon McIntosh-Smith,
-Jamaludin Mohd-Yusof,
-Oliver Perks,
-</br>Steve Plimpton,
-David Richards,
-Christopher Sewell,
-Gregg Skinner,
-</br><a href="mailto:dstark@sandia.gov">Dylan Stark</a>,
-Sriram Swainarayan,
-<a href="mailto:hkthorn@sandia.gov">Heidi Thornquist</a>,
-Tim Trucano,
-</br><a href="mailto:crtrott@sandia.gov">Christian Trott</a>,
-<a href="mailto:ctvaugh@sandia.gov">Courtenay Vaughan</a>,
-Art Voter,
-<a href="mailto:william@sandia.gov">Alan Williams</a></td>
+</td>
 
 </tr>
 </table>

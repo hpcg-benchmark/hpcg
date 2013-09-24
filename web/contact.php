@@ -21,8 +21,9 @@ END;
 <table cellspacing="0" cellpadding="0">
 
 <tr><th>Primary Contacts:</th>
+<td><a href="http://www.netlib.org/utk/people/JackDongarra/">Jack Dongarra</a></td></tr>
 <td><a href="http://www.cs.sandia.gov/~maherou">Michael Heroux,</a></td>
-<td><a href="http://www.sandia.gov/~rfbarre">Richard Barrett</a></td></tr>
+<td><a href="http://web.eecs.utk.edu/~luszczek/">Piotr Luszczek</a></td></tr>
 
 </table>
 

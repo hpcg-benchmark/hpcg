@@ -10,36 +10,27 @@
 
 <div class="breadcrumb">About</div>
 
-<h3>About the HPCG project</h3>
+<h3>About the HPCG Benchmark Project</h3>
 
-<p>The HPCG project is an effort to provide open-source software packages for the analysis, prediction and
- improvement of high performance computing applications.</p>
+<p>The HPCG Benchmark project is an effort to create a more relevant metric for ranking HPC systems 
+than the current Top 500 High Performance LINPACK code.</p>
 
-    <p><b>Goals for the project include:</b>
+    <p><b>HPCG is a complete, stand-alone code that measures the performance of basic operations in a unified code:</b>
       
     <ul>
-      <li>Predict performance of real applications in new situations.</li>
-      <li>Aid computer systems design decisions.</li>
-      <li>Foster communication between applications, libraries and computer systems developers.</li>
-      <li>Guide application and library developers in algorithm and software design choices for new systems.</li>
-    <li> Provide open source software to promote informed algorithm, application and architecture decisions in the HPC community.</li>
+      <li>Sparse matrix-vector multiplication.</li>
+      <li>Sparse triangular solve.</li>
+      <li>Vector updates.</li>
+      <li>Global dot products.</li>
+      <li>Driven by an additive Schwarz, symmetric Gauss-Seidel preconditioned conjugate gradient algorithm.</li>
+      <li>Reference implementation is written in C++ with MPI and OpenMP support.</li>
   </ul>
   </p>
       
-    <p><b>Project features:</b>
-      
-    <ul>
-      <li>Miniapplication and minidriver development done by application developers with years of experience.</li>
-      <li>Software available as open source.</li>
-      <li>Application space coverage includes: Implicit unstructured PDE applications, explicit dynamics (contact), 
-          molecular dynamics, circuit simulation.</li>
-      <li>Multiple versions of some miniapplications, including MPI, OpenMP, BEC, Qthreads.</li>
-  </ul>
-  </p>
+<h3>HPCG Overview Papers</h3>
 
-<h3>HPCG Overview Paper</h3>
-
-<p><a href=HPCGOverview.pdf> Improving Performance via Mini-applications (HPCG Overview) </a></p>
+<p><a href=HPCG-Benchmark.pdf> Toward a New Metric for Ranking High Performance Computing Systems</a></p>
+<p><a href=HPCG-Specification.pdf> HPCG Technical Specification</a></p>
 
       
 <br/>

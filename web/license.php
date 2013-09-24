@@ -13,8 +13,6 @@
 
 <p>HPCG proxy applications are open source software.  Some HPCG proxy
 applications are available for download under a 
-<a href="http://www.gnu.org/copyleft/lgpl.html">GNU Lesser General Public License (LGPL)</a>,
-others are available under a <a href="https://github.com/exmatex/CoMD/blob/master/copyright.txt">BSD License</a>. The license for each proxy app is specified
- in the applicable tarball.</p>
+<a href="http://opensource.org/licenses/BSD-3-Clause">New BSD License</a>.</p>
 
 <?php include 'common/footer.html' ?>

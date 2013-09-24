@@ -8,14 +8,14 @@
 // ************************************************************************
 //@HEADER
 
-#ifndef CGREF_HPP
-#define CGREF_HPP
+#ifndef CG_REF_HPP
+#define CG_REF_HPP
 
 #include "SparseMatrix.hpp"
 #include "Geometry.hpp"
 #include "CGData.hpp"
 
-int CGref(const Geometry & geom, const SparseMatrix & A, CGData & data, const double * const b, double * const x,
+int CG_ref(const Geometry & geom, const SparseMatrix & A, CGData & data, const double * const b, double * const x,
 	  const int max_iter, const double tolerance, int & niters, double & normr,  double & normr0,
           double * times, bool doPreconditioning);
 
@@ -32,4 +32,4 @@ int CGref(const Geometry & geom, const SparseMatrix & A, CGData & data, const do
 // times - array of timing information
 // doPreconditioning - bool to specify whether or not symmetric GS will be applied.
 
-#endif  // CGREF_HPP
+#endif  // CG_REF_HPP

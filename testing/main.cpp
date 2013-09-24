@@ -47,7 +47,7 @@ using std::endl;
 #include "symgsref.hpp"
 #include "ComputeResidual.hpp"
 #include "CG.hpp"
-#include "CGref.hpp"
+#include "CG_ref.hpp"
 #include "Geometry.hpp"
 #include "SparseMatrix.hpp"
 #include "CGData.hpp"
@@ -202,7 +202,7 @@ int main(int argc, char *argv[]) {
     int err_count = 0;
     for (int i=0; i< numberOfCalls; ++i) {
     	for (int j=0; j< A.localNumberOfRows; ++j) x[j] = 0.0; // start x at all zeros
-    	ierr = CGref( geom, A, data, b, x, maxIters, tolerance, niters, normr, normr0, &ref_times[0], true);
+    	ierr = CG_ref( geom, A, data, b, x, maxIters, tolerance, niters, normr, normr0, &ref_times[0], true);
     	if (ierr) ++err_count; // count the number of errors in CG
 	totalNiters += niters;
     }

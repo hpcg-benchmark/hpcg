@@ -56,7 +56,7 @@ using std::endl;
 
   @return Returns zero on success and a non-zero value otherwise.
 
-  @see CGref()
+  @see CG_ref()
 */
 int CG(const Geometry & geom, const SparseMatrix & A, CGData & data, const double * const b, double * const x,
 		const int max_iter, const double tolerance, int &niters, double & normr, double & normr0,

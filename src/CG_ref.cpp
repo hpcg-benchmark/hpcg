@@ -9,7 +9,7 @@
 //@HEADER
 
 /*!
- @file CGref.cpp
+ @file CG_ref.cpp
 
  HPCG routine
  */
@@ -20,7 +20,7 @@
 
 #include "hpcg.hpp"
 
-#include "CGref.hpp"
+#include "CG_ref.hpp"
 #include "mytimer.hpp"
 #include "spmvref.hpp"
 #include "symgsref.hpp"
@@ -58,7 +58,7 @@ using std::endl;
 
   @see CG()
 */
-int CGref(const Geometry & geom, const SparseMatrix & A, CGData & data, const double * const b, double * const x,
+int CG_ref(const Geometry & geom, const SparseMatrix & A, CGData & data, const double * const b, double * const x,
 		const int max_iter, const double tolerance, int &niters, double & normr, double & normr0,
 		double * times, bool doPreconditioning) {
 

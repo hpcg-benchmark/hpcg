@@ -5,7 +5,7 @@ arch = UNKNOWN
 include setup/Make.$(arch)
 
 
-HPCG_DEPS = src/CG.o src/CGref.o src/CGtest.o src/ComputeResidual.o src/ExchangeHalo.o src/GenerateGeometry.o src/GenerateProblem.o src/OptimizeProblem.o src/ReportResults.o src/SetupHalo.o src/SymTest.o src/NormTest.o src/WriteProblem.o src/YAML_Doc.o src/YAML_Element.o src/dot.o src/dotref.o src/mytimer.o src/spmv.o src/spmvref.o src/symgs.o src/symgsref.o src/waxpby.o src/waxpbyref.o src/init.o src/finalize.o
+HPCG_DEPS = src/CG.o src/CG_ref.o src/CGtest.o src/ComputeResidual.o src/ExchangeHalo.o src/GenerateGeometry.o src/GenerateProblem.o src/OptimizeProblem.o src/ReportResults.o src/SetupHalo.o src/SymTest.o src/NormTest.o src/WriteProblem.o src/YAML_Doc.o src/YAML_Element.o src/dot.o src/dotref.o src/mytimer.o src/spmv.o src/spmvref.o src/symgs.o src/symgsref.o src/waxpby.o src/waxpbyref.o src/init.o src/finalize.o
 
 all: bin/xhpcg
 
@@ -23,7 +23,7 @@ testing/main.o: HPCG_SRC_PATH/testing/main.cpp
 src/CG.o: HPCG_SRC_PATH/src/CG.cpp
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
-src/CGref.o: HPCG_SRC_PATH/src/CGref.cpp
+src/CG_ref.o: HPCG_SRC_PATH/src/CG_ref.cpp
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
 src/CGtest.o: HPCG_SRC_PATH/src/CGtest.cpp

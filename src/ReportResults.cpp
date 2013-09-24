@@ -37,14 +37,14 @@ using std::endl;
   @param[in] niters Number of preconditioned CG iterations performed to lower the residual below a threshold
   @param[in] times  Vector of cumulative timings for each of the phases of a preconditioned CG iteration
   @param[in] testcg_data    the data structure with the results of the CG-correctness test including pass/fail information
-  @param[in] symtest_data   the data structure with the results of the CG symmetry test including pass/fail information
+  @param[in] testsymmetry_data the data structure with the results of the CG symmetry test including pass/fail information
   @param[in] testnorms_data the data structure with the results of the CG norm test including pass/fail information
   @param[in] global_failure indicates whether a failure occured during the correctness tests of CG
 
   @see YAML_Doc
 */
 void ReportResults(const Geometry & geom, const SparseMatrix & A, int numberOfCgSets, int niters, double times[],
-  TestCGData * testcg_data, SymTestData * symtest_data, TestNormsData * testnorms_data, int global_failure) {
+  TestCGData * testcg_data, TestSymmetryData * testsymmetry_data, TestNormsData * testnorms_data, int global_failure) {
 
 #ifndef HPCG_NOMPI
     double t4 = times[4];
@@ -114,12 +114,12 @@ void ReportResults(const Geometry & geom, const SparseMatrix & A, int numberOfCg
         doc.get("Spectral Convergence Tests")->get("Preconditioned")->add("Expected iteration count", testcg_data->expected_niters_prec);
 
         doc.add("Departure from Symmetry (x'Ay-y'Ax)","");
-        if (symtest_data->count_fail==0)
+        if (testsymmetry_data->count_fail==0)
             doc.get("Departure from Symmetry (x'Ay-y'Ax)")->add("Result", "PASSED");
         else
         	doc.get("Departure from Symmetry (x'Ay-y'Ax)")->add("Result", "FAILED");
-        doc.get("Departure from Symmetry (x'Ay-y'Ax)")->add("Departure for SpMV", symtest_data->depsym_spmv);
-        doc.get("Departure from Symmetry (x'Ay-y'Ax)")->add("Departure for SymGS", symtest_data->depsym_symgs);
+        doc.get("Departure from Symmetry (x'Ay-y'Ax)")->add("Departure for SpMV", testsymmetry_data->depsym_spmv);
+        doc.get("Departure from Symmetry (x'Ay-y'Ax)")->add("Departure for SymGS", testsymmetry_data->depsym_symgs);
 
         doc.add("********** Iterations Summary  ***********","");
         doc.add("Iteration Count Information","");
@@ -185,7 +185,7 @@ void ReportResults(const Geometry & geom, const SparseMatrix & A, int numberOfCg
         doc.get("Sparse Operations Overheads")->add("Halo exchange as percentage of SpMV time", (times[6])/totalSparseMVTime*100.0);
 #endif
         doc.add("********** Final Summary **********","");
-        bool isValidRun = (testcg_data->count_fail==0) && (symtest_data->count_fail==0) && (testnorms_data->pass);
+        bool isValidRun = (testcg_data->count_fail==0) && (testsymmetry_data->count_fail==0) && (testnorms_data->pass);
         if (isValidRun) {
         	doc.get("********** Final Summary **********")->add("HPCG result is VALID with a GFLOP/s rating of", totalGflops);
         	doc.get("********** Final Summary **********")->add("Please send the YAML file contents to","HPCG-Results@software.sandia.gov");

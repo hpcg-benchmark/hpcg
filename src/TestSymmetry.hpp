@@ -9,26 +9,26 @@
 //@HEADER
 
 /*!
- @file SymTest.hpp
+ @file TestSymmetry.hpp
 
  HPCG data structures for symmetry testing
  */
 
-#ifndef SYMTEST_HPP
-#define SYMTEST_HPP
+#ifndef TESTSYMMETRY_HPP
+#define TESTSYMMETRY_HPP
 
 #include "hpcg.hpp"
 #include "SparseMatrix.hpp"
 #include "Geometry.hpp"
 #include "CGData.hpp"
 
-struct SymTestData_STRUCT {
-  double depsym_spmv; //!< departure from symmetry for the SPMV kernel
+struct TestSymmetryData_STRUCT {
+  double depsym_spmv;  //!< departure from symmetry for the SPMV kernel
   double depsym_symgs; //!< departure from symmetry for the SYMGS kernel
-  int count_fail; //!< number of failures in the symmetry tests
+  int    count_fail;   //!< number of failures in the symmetry tests
 };
-typedef struct SymTestData_STRUCT SymTestData;
+typedef struct TestSymmetryData_STRUCT TestSymmetryData;
 
-extern int SymTest(Geometry & geom, SparseMatrix & A, double * const b, double * const xexact, SymTestData * symtest_data);
+extern int TestSymmetry(Geometry & geom, SparseMatrix & A, double * const b, double * const xexact, TestSymmetryData * testsymmetry_data);
 
-#endif  // SYMTEST_HPP
+#endif  // TESTSYMMETRY_HPP

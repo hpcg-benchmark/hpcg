@@ -9,7 +9,7 @@
 //@HEADER
 
 /*!
- @file SymTest.cpp
+ @file TestSymmetry.cpp
 
  HPCG routine
  */
@@ -32,7 +32,7 @@ using std::endl;
 #include "ComputeResidual.hpp"
 #include "Geometry.hpp"
 #include "SparseMatrix.hpp"
-#include "SymTest.hpp"
+#include "TestSymmetry.hpp"
 #ifndef HPCG_NOMPI
 #include "ExchangeHalo.hpp"
 #endif
@@ -45,7 +45,7 @@ using std::endl;
   @param[in]    A      The known system matrix
   @param[in]    b      The known right hand side vector
   @param[in]    xexact The exact solution vector
-  @param[inout] symtest_data The data structure with the results of the CG symmetry test including pass/fail information
+  @param[inout] testsymmetry_data The data structure with the results of the CG symmetry test including pass/fail information
 
   @return returns 0 upon success and non-zero otherwise
 
@@ -56,7 +56,7 @@ using std::endl;
   @see ComputeSYMGS
   @see ComputeSYMGS_ref
 */
-int SymTest(Geometry & geom, SparseMatrix & A, double * const b, double * const xexact, SymTestData * symtest_data) {
+int TestSymmetry(Geometry & geom, SparseMatrix & A, double * const b, double * const xexact, TestSymmetryData * testsymmetry_data) {
 
     local_int_t nrow = A.localNumberOfRows;
     local_int_t ncol = A.localNumberOfColumns;
@@ -65,7 +65,7 @@ int SymTest(Geometry & geom, SparseMatrix & A, double * const b, double * const 
     double * y_overlap = new double [ncol]; // Overlapped copy of y vector
     double * b_computed = new double [nrow]; // Computed RHS vector
     double t4 = 0.0; // Needed for dot-product call, otherwise unused
-    symtest_data->count_fail = 0;
+    testsymmetry_data->count_fail = 0;
 
     // Test symmetry of matrix
 
@@ -94,9 +94,9 @@ int SymTest(Geometry & geom, SparseMatrix & A, double * const b, double * const 
     double ytAx = 0.0;
     ierr = ComputeDotProduct(nrow, y_overlap, b_computed, &ytAx, t4); // b_computed = A*y_overlap
     if (ierr) HPCG_fout << "Error in call to dot: " << ierr << ".\n" << endl;
-    symtest_data->depsym_spmv = std::fabs((long double) (xtAy - ytAx));
-    if (symtest_data->depsym_spmv > 1.0e-4) ++symtest_data->count_fail;  // If the difference is > 10e-4, count it wrong
-    if (geom.rank==0) HPCG_fout << "Departure from symmetry for SpMV abs(x'*A*y - y'*A*x) = " << symtest_data->depsym_spmv << endl;
+    testsymmetry_data->depsym_spmv = std::fabs((long double) (xtAy - ytAx));
+    if (testsymmetry_data->depsym_spmv > 1.0e-4) ++testsymmetry_data->count_fail;  // If the difference is > 10e-4, count it wrong
+    if (geom.rank==0) HPCG_fout << "Departure from symmetry for SpMV abs(x'*A*y - y'*A*x) = " << testsymmetry_data->depsym_spmv << endl;
 
     // Test symmetry of symmetric Gauss-Seidel
 
@@ -113,9 +113,9 @@ int SymTest(Geometry & geom, SparseMatrix & A, double * const b, double * const 
     double ytMinvx = 0.0;
     ierr = ComputeDotProduct(nrow, y_overlap, b_computed, &ytMinvx, t4); // b_computed = A*y_overlap
     if (ierr) HPCG_fout << "Error in call to dot: " << ierr << ".\n" << endl;
-    symtest_data->depsym_symgs = std::fabs((long double) (xtMinvy - ytMinvx));
-    if (symtest_data->depsym_symgs > 1.0e-4) ++symtest_data->count_fail;  // If the difference is > 10e-4, count it wrong
-    if (geom.rank==0) HPCG_fout << "Departure from symmetry for SymGS abs(x'*Minv*y - y'*Minv*x) = " << symtest_data->depsym_symgs << endl;
+    testsymmetry_data->depsym_symgs = std::fabs((long double) (xtMinvy - ytMinvx));
+    if (testsymmetry_data->depsym_symgs > 1.0e-4) ++testsymmetry_data->count_fail;  // If the difference is > 10e-4, count it wrong
+    if (geom.rank==0) HPCG_fout << "Departure from symmetry for SymGS abs(x'*Minv*y - y'*Minv*x) = " << testsymmetry_data->depsym_symgs << endl;
 
     for (int i=0; i< nrow; ++i) x_overlap[i] = xexact[i]; // Copy exact answer into overlap vector
 

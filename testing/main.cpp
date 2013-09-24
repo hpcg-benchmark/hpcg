@@ -52,7 +52,7 @@ using std::endl;
 #include "SparseMatrix.hpp"
 #include "CGData.hpp"
 #include "TestCG.hpp"
-#include "SymTest.hpp"
+#include "TestSymmetry.hpp"
 #include "TestNorms.hpp"
 
 int main(int argc, char *argv[]) {
@@ -133,11 +133,11 @@ int main(int argc, char *argv[]) {
     testcg_data.count_pass = testcg_data.count_fail = 0;
     TestCG(geom, A, data, b, x, &testcg_data);
 
-    SymTestData symtest_data;
-    SymTest(geom, A, b, xexact, &symtest_data);
+    TestSymmetryData testsymmetry_data;
+    TestSymmetry(geom, A, b, xexact, &testsymmetry_data);
 
 #ifdef HPCG_DEBUG
-    if (rank==0) HPCG_fout << "Total validation (TestCG and SymTest) execution time in main (sec) = " << mytimer() - t1 << endl;
+    if (rank==0) HPCG_fout << "Total validation (TestCG and TestSymmetry) execution time in main (sec) = " << mytimer() - t1 << endl;
 #endif
 
 #ifdef HPCG_DEBUG
@@ -295,7 +295,7 @@ int main(int argc, char *argv[]) {
     ////////////////////
 
     // Report results to YAML file
-    ReportResults(geom, A, numberOfCgSets, totalNiters, &times[0], &testcg_data, &symtest_data, &testnorms_data, global_failure);
+    ReportResults(geom, A, numberOfCgSets, totalNiters, &times[0], &testcg_data, &testsymmetry_data, &testnorms_data, global_failure);
 
     // Clean up
     DeleteMatrix(A);

@@ -5,7 +5,7 @@ arch = UNKNOWN
 include setup/Make.$(arch)
 
 
-HPCG_DEPS = src/CG.o src/CG_ref.o src/TestCG.o src/ComputeResidual.o src/ExchangeHalo.o src/GenerateGeometry.o src/GenerateProblem.o src/OptimizeProblem.o src/ReportResults.o src/SetupHalo.o src/SymTest.o src/TestNorms.o src/WriteProblem.o src/YAML_Doc.o src/YAML_Element.o src/ComputeDotProduct.o src/ComputeDotProduct_ref.o src/mytimer.o src/ComputeSPMV.o src/ComputeSPMV_ref.o src/ComputeSYMGS.o src/ComputeSYMGS_ref.o src/ComputeWAXPBY.o src/ComputeWAXPBY_ref.o src/init.o src/finalize.o
+HPCG_DEPS = src/CG.o src/CG_ref.o src/TestCG.o src/ComputeResidual.o src/ExchangeHalo.o src/GenerateGeometry.o src/GenerateProblem.o src/OptimizeProblem.o src/ReportResults.o src/SetupHalo.o src/TestSymmetry.o src/TestNorms.o src/WriteProblem.o src/YAML_Doc.o src/YAML_Element.o src/ComputeDotProduct.o src/ComputeDotProduct_ref.o src/mytimer.o src/ComputeSPMV.o src/ComputeSPMV_ref.o src/ComputeSYMGS.o src/ComputeSYMGS_ref.o src/ComputeWAXPBY.o src/ComputeWAXPBY_ref.o src/init.o src/finalize.o
 
 all: bin/xhpcg
 
@@ -50,7 +50,7 @@ src/ReportResults.o: HPCG_SRC_PATH/src/ReportResults.cpp
 src/SetupHalo.o: HPCG_SRC_PATH/src/SetupHalo.cpp
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
-src/SymTest.o: HPCG_SRC_PATH/src/SymTest.cpp
+src/TestSymmetry.o: HPCG_SRC_PATH/src/TestSymmetry.cpp
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
 src/TestNorms.o: HPCG_SRC_PATH/src/TestNorms.cpp

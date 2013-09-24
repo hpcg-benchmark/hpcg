@@ -1,0 +1,69 @@
+<?php echo'<?xml version="1.0" encoding="utf-8"?>'; ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<!-- head ################################################################## -->
+<head>
+  <title><?php echo $page->getPageTitle(); ?></title>
+  <meta name="description" content="The Mantevo Project Home Page" />
+  <meta name="keywords" content="optimization, uncertainty quantification, 
+    analysis, large-scale, engineering, c++, prallel computing" />
+  <meta name="sandia.approval_type" content="formal" />
+  <meta name="sandia.approved" content="2012-1333W" />
+  <link rev="owns" title="Michael A. Heroux" href="mailto:maherou@sandia.gov" />
+  <meta name="Author" content="Michael A. Heroux" />
+  <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <link rel="icon" href="<?php echo $page->getPathToWebRoot(); ?>common/favicon.ico" type="image/x-icon" />
+  <link rel="shortcut icon" href="<?php echo $page->getPathToWebRoot(); ?>common/favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" type="text/css" 
+    href="<?php echo $page->getPathToWebRoot(); ?>common/html.css" />
+  <link rel="stylesheet" type="text/css" 
+    href="<?php echo $page->getPathToWebRoot(); ?>common/main.css" />
+  <link rel="stylesheet" type="text/css" 
+    href="<?php echo $page->getStyleSheet(); ?>" />
+  <script language="JavaScript" type="text/javascript"> <!--
+    <?php echo $page->getInlineScripts(); ?>
+  //--> </script>
+  <style type="text/css"> <!--
+    <?php echo $page->getInlineStyles(); ?>
+    <?php #if ($page->getPageIdentifier() == "home") {
+      echo "body { background-color: #eee5d3; }";
+    #} ?>
+  //--> </style>
+  
+</head>
+
+<!-- body ################################################################## -->
+<body id="<?php echo $page->getPageIdentifier(); ?>" 
+  class="<?php echo $page->getNavIdentifier(); ?>" 
+  <?php echo $page->getBodyAttributes(); ?>>
+
+  <!-- header ============================================================== -->
+  <div id="headerContainer"><div id="header">
+    <a href="<?php echo $page->getPathToWebRoot(); ?>default.php">
+      <img src="<?php echo $page->getPathToWebRoot(); ?>common/logo_mantevo_blue.jpg" 
+        style="float: center;" alt="The Mantevo Project"/></a>
+    <br clear="both"/>
+  </div></div>
+      
+  <!-- content ============================================================= -->
+  <div id="contentContainer">
+
+    <!-- mainNav =========================================================== -->
+    <div id="mainNavContainer">
+      <ul id="mainNav">
+        <li id="tabHome"><a href="<?php echo $page->getPathToWebRoot(); ?>default.php">Home</a></li>
+        <li id="tabAbout"><a href="<?php echo $page->getPathToWebRoot(); ?>about.php">About</a></li>
+        <li id="tabResources"><a href="<?php echo $page->getPathToWebRoot(); ?>resources.php">Resources</a></li>
+        <li id="tabEvents"><a href="<?php echo $page->getPathToWebRoot(); ?>events.php">Events</a></li>
+        <li id="tabPackages"><a href="<?php echo $page->getPathToWebRoot(); ?>packages.php">Packages</a></li>
+        <li id="tabDownload"><a href="<?php echo $page->getPathToWebRoot(); ?>download.php">Download</a></li>
+      </ul><br clear="all"/>
+    </div>
+   
+    <div id="content">
+    <!-- contentMain ======================================================= -->
+    <div id="contentMain">
+

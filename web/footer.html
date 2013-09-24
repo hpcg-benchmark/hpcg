@@ -1,0 +1,102 @@
+    </div>
+  
+    <!-- nav =============================================================== -->
+    <div id="nav">
+      <?php include($page->getNav()); ?>
+
+      <?php if ($page->getPageIdentifier() == "home") { ?> 
+      <div id="navLogos">
+        <!--
+        <a href="http://www.sandia.gov/NNSA/ASC/">
+        <img src="<?php echo $page->getPathToWebRoot(); ?>common/logo_asc.jpg"
+        alt="Advance Simulation and Computing" /></a>
+        -->
+      </div>
+      <?php } ?>
+
+    </div>
+  
+    <br clear="all"/>
+  </div><br clear="all"/>
+
+  <!-- footer ============================================================== -->
+  <div id="footerContainer"><div id="footer">
+
+    <div class="footerColumn">
+    <h5><a href="<?php echo $page->getPathToWebRoot(); ?>default.php">Home</a></h5>
+    <ul>
+    <li><a href="<?php echo $page->getPathToWebRoot(); ?>news.php">News</a></li>
+    <li><a href="<?php echo $page->getPathToWebRoot(); ?>contact.php">Contact</a></li>
+    </ul>
+    </div>
+
+    <div class="footerColumn">
+    <h5><a href="<?php echo $page->getPathToWebRoot(); ?>about.php">About</a></h5>
+    <ul>
+    <li><a href="<?php echo $page->getPathToWebRoot(); ?>applications.php">Applications</a></li>
+    <li><a href="<?php echo $page->getPathToWebRoot(); ?>research.php">Research</a></li>
+    <li><a href="<?php echo $page->getPathToWebRoot(); ?>software_design.php">Software Design</a></li>
+    <li><a href="<?php echo $page->getPathToWebRoot(); ?>team.php">Team</a></li>
+    </ul>
+    </div>
+
+    <div class="footerColumn">
+    <h5><a href="<?php echo $page->getPathToWebRoot(); ?>resources.php">Resources</a></h5>
+    <ul>
+    <li><a href="<?php echo $page->getPathToWebRoot(); ?>faq.php">FAQ</a></li>
+    <li><a href="<?php echo $page->getPathToWebRoot(); ?>documentation.php">Documentation</a></li>
+    <li><a href="<?php echo $page->getPathToWebRoot(); ?>publications.php">Publications</a></li>
+    <li><a href="<?php echo $page->getPathToWebRoot(); ?>mail_lists.php">Mail Lists</a></li>
+    <li><a href="<?php echo $page->getPathToWebRoot(); ?>developer_tools.php">Developer Tools</a></li>
+    </ul>
+    </div>
+
+    <div class="footerColumn">
+    <h5><a href="<?php echo $page->getPathToWebRoot(); ?>events.php">Events</a></h5>
+    <ul>
+    <li><a href="<?php echo $page->getPathToWebRoot(); ?>ProxyAppSC12Tutorial.php">SC12 Proxy App Tutorial</a></li>
+
+    <li><a href="<?php echo $page->getPathToWebRoot(); ?>MiniAppsValidation2010-08.php">Miniapps Validation Workshop</a></li>
+    </ul>
+    </div>
+
+    <div class="footerColumn">
+    <h5><a href="<?php echo $page->getpathtowebroot(); ?>packages.php">Packages</a></h5>
+    <ul>
+    <!--<li><a href="<?php echo $page->getPathToWebRoot(); ?>release_notes.php">Release Notes</a></li>-->
+    </ul>
+    </div>
+
+    <div class="footerColumn">
+    <h5><a href="<?php echo $page->getpathtowebroot(); ?>download.php">Download</a></h5>
+    <ul>
+    <li><a href="<?php echo $page->getPathToWebRoot(); ?>license.php">License</a></li>
+    <li><a href="<?php echo $page->getPathToWebRoot(); ?>release_notes.php">Release Notes</a></li>
+    </ul>
+    </div>
+
+    <br clear="all"/><br/><br/>
+
+    <table id="smallPrint" cellspacing="0" cellpadding="0"><tr>
+    <td class="left">
+      <a href="mailto:jmwille@sandia.gov">Site Contact</a>
+    </td>
+    </tr></table>
+
+    <br clear="all"/>
+  </div></div>
+  
+  <!-- logos =============================================================== -->
+  <!--
+  <?php if ($page->getPageIdentifier() != "home") { ?>
+  <div id="logosContainer"><div id="logos">
+
+    <a href="http://www.sandia.gov/NNSA/ASC/">
+    <img src="<?php echo $page->getPathToWebRoot(); ?>common/logo_asc.jpg"
+    alt="Advance Simulation and Computing" /></a>
+
+  </div></div>
+  <?php } ?>
+  -->
+
+</body></html>

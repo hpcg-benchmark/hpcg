@@ -28,7 +28,7 @@ using std::endl;
 
 #include "spmv.hpp"
 #include "symgs.hpp"
-#include "dot.hpp"
+#include "ComputeDotProduct.hpp"
 #include "ComputeResidual.hpp"
 #include "Geometry.hpp"
 #include "SparseMatrix.hpp"
@@ -49,8 +49,8 @@ using std::endl;
 
   @return returns 0 upon success and non-zero otherwise
 
-  @see dot
-  @see dotref
+  @see ComputeDotProduct
+  @see ComputeDotProduct_ref
   @see spmv
   @see spmvref
   @see symgs
@@ -64,7 +64,7 @@ int SymTest(Geometry & geom, SparseMatrix & A, double * const b, double * const 
     double * x_overlap = new double [ncol]; // Overlapped copy of x vector
     double * y_overlap = new double [ncol]; // Overlapped copy of y vector
     double * b_computed = new double [nrow]; // Computed RHS vector
-    double t4 = 0.0; // Needed for dot call, otherwise unused
+    double t4 = 0.0; // Needed for dot-product call, otherwise unused
     symtest_data->count_fail = 0;
 
     // Test symmetry of matrix
@@ -82,7 +82,7 @@ int SymTest(Geometry & geom, SparseMatrix & A, double * const b, double * const 
     int ierr = spmv(A, y_overlap, b_computed); // b_computed = A*y_overlap
     if (ierr) HPCG_fout << "Error in call to spmv: " << ierr << ".\n" << endl;
     double xtAy = 0.0;
-    ierr = dot(nrow, x_overlap, b_computed, &xtAy, t4); // b_computed = A*y_overlap
+    ierr = ComputeDotProduct(nrow, x_overlap, b_computed, &xtAy, t4); // b_computed = A*y_overlap
     if (ierr) HPCG_fout << "Error in call to dot: " << ierr << ".\n" << endl;
 
     // Next, compute y'*A*x
@@ -92,7 +92,7 @@ int SymTest(Geometry & geom, SparseMatrix & A, double * const b, double * const 
     ierr = spmv(A, x_overlap, b_computed); // b_computed = A*y_overlap
     if (ierr) HPCG_fout << "Error in call to spmv: " << ierr << ".\n" << endl;
     double ytAx = 0.0;
-    ierr = dot(nrow, y_overlap, b_computed, &ytAx, t4); // b_computed = A*y_overlap
+    ierr = ComputeDotProduct(nrow, y_overlap, b_computed, &ytAx, t4); // b_computed = A*y_overlap
     if (ierr) HPCG_fout << "Error in call to dot: " << ierr << ".\n" << endl;
     symtest_data->depsym_spmv = std::fabs((long double) (xtAy - ytAx));
     if (symtest_data->depsym_spmv > 1.0e-4) ++symtest_data->count_fail;  // If the difference is > 10e-4, count it wrong
@@ -104,14 +104,14 @@ int SymTest(Geometry & geom, SparseMatrix & A, double * const b, double * const 
     ierr = symgs(A, y_overlap, b_computed); // b_computed = Minv*y_overlap
     if (ierr) HPCG_fout << "Error in call to symgs: " << ierr << ".\n" << endl;
     double xtMinvy = 0.0;
-    ierr = dot(nrow, x_overlap, b_computed, &xtMinvy, t4); // b_computed = A*y_overlap
+    ierr = ComputeDotProduct(nrow, x_overlap, b_computed, &xtMinvy, t4); // b_computed = A*y_overlap
     if (ierr) HPCG_fout << "Error in call to dot: " << ierr << ".\n" << endl;
 
     // Next, compute y'*Minv*x
     ierr = symgs(A, x_overlap, b_computed); // b_computed = Minv*y_overlap
     if (ierr) HPCG_fout << "Error in call to symgs: " << ierr << ".\n" << endl;
     double ytMinvx = 0.0;
-    ierr = dot(nrow, y_overlap, b_computed, &ytMinvx, t4); // b_computed = A*y_overlap
+    ierr = ComputeDotProduct(nrow, y_overlap, b_computed, &ytMinvx, t4); // b_computed = A*y_overlap
     if (ierr) HPCG_fout << "Error in call to dot: " << ierr << ".\n" << endl;
     symtest_data->depsym_symgs = std::fabs((long double) (xtMinvy - ytMinvx));
     if (symtest_data->depsym_symgs > 1.0e-4) ++symtest_data->count_fail;  // If the difference is > 10e-4, count it wrong

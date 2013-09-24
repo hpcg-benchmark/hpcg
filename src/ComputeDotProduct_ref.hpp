@@ -7,10 +7,10 @@
 // ************************************************************************
 //@HEADER
 
-#ifndef DOTREF_HPP
-#define DOTREF_HPP
+#ifndef COMPUTEDOTPRODUCT_REF_HPP
+#define COMPUTEDOTPRODUCT_REF_HPP
 #include "Geometry.hpp"
-int dotref (const local_int_t n, const double * const x, const double * const y,
+int ComputeDotProduct_ref(const local_int_t n, const double * const x, const double * const y,
 	  double * const result, double & time_allreduce);
 
-#endif // DOTREF_HPP
+#endif // COMPUTEDOTPRODUCT_REF_HPP

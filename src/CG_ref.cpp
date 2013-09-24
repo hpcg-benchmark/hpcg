@@ -24,7 +24,7 @@
 #include "mytimer.hpp"
 #include "spmvref.hpp"
 #include "symgsref.hpp"
-#include "dotref.hpp"
+#include "ComputeDotProduct_ref.hpp"
 #include "waxpbyref.hpp"
 
 #ifndef HPCG_NOMPI
@@ -93,7 +93,7 @@ int CG_ref(const Geometry & geom, const SparseMatrix & A, CGData & data, const d
 #endif
 	spmvref(A, p, Ap);
 	waxpbyref(nrow, 1.0, b, -1.0, Ap, r); // r = b - Ax (x stored in p)
-	dotref(nrow, r, r, &normr, t4);
+	ComputeDotProduct_ref(nrow, r, r, &normr, t4);
 	normr = sqrt(normr);
 #ifdef HPCG_DEBUG
 	if (geom.rank==0) HPCG_fout << "Initial Residual = "<< normr << endl;
@@ -114,11 +114,11 @@ int CG_ref(const Geometry & geom, const SparseMatrix & A, CGData & data, const d
 
 		if (k == 1) {
 			TICK(); waxpbyref(nrow, 1.0, z, 0.0, z, p); TOCK(t2); // Copy Mr to p
-			TICK(); dotref(nrow, r, z, &rtz, t4); TOCK(t1); // rtz = r'*z
+			TICK(); ComputeDotProduct_ref(nrow, r, z, &rtz, t4); TOCK(t1); // rtz = r'*z
 		}
 		else {
 			oldrtz = rtz;
-			TICK(); dotref(nrow, r, z, &rtz, t4); TOCK(t1); // rtz = r'*z
+			TICK(); ComputeDotProduct_ref(nrow, r, z, &rtz, t4); TOCK(t1); // rtz = r'*z
 			beta = rtz/oldrtz;
 			TICK(); waxpbyref(nrow, 1.0, z, beta, p, p);  TOCK(t2); // p = beta*p + z
 		}
@@ -127,11 +127,11 @@ int CG_ref(const Geometry & geom, const SparseMatrix & A, CGData & data, const d
 		TICK(); ExchangeHalo(A,p); TOCK(t6);
 #endif
 		TICK(); spmvref(A, p, Ap); TOCK(t3); // Ap = A*p
-		TICK(); dotref(nrow, p, Ap, &pAp, t4); TOCK(t1); // alpha = p'*Ap
+		TICK(); ComputeDotProduct_ref(nrow, p, Ap, &pAp, t4); TOCK(t1); // alpha = p'*Ap
 		alpha = rtz/pAp;
 		TICK(); waxpbyref(nrow, 1.0, x, alpha, p, x);// x = x + alpha*p
 				waxpbyref(nrow, 1.0, r, -alpha, Ap, r);  TOCK(t2);// r = r - alpha*Ap
-		TICK(); dotref(nrow, r, r, &normr, t4); TOCK(t1);
+		TICK(); ComputeDotProduct_ref(nrow, r, r, &normr, t4); TOCK(t1);
 		normr = sqrt(normr);
 #ifdef HPCG_DEBUG
 		if (geom.rank==0 && (k%print_freq == 0 || k == max_iter))
@@ -141,7 +141,7 @@ int CG_ref(const Geometry & geom, const SparseMatrix & A, CGData & data, const d
 	}
 
 	// Store times
-	times[1] += t1; // dot time
+	times[1] += t1; // dot product time
 	times[2] += t2; // waxpby time
 	times[3] += t3; // spmv time
 	times[4] += t4; // AllReduce time

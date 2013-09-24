@@ -9,7 +9,7 @@
 //@HEADER
 
 /*!
- @file dotref.cpp
+ @file ComputeDotProduct_ref.cpp
 
  HPCG routine
  */
@@ -22,12 +22,12 @@
 #include <omp.h>
 #endif
 
-#include "dotref.hpp"
+#include "ComputeDotProduct_ref.hpp"
 
 /*!
   Routine to compute the dot product of two vectors where:
 
-  This is the reference DOT implementation.  It _CANNOT_ be modified for the
+  This is the reference dot-product implementation.  It _CANNOT_ be modified for the
   purposes of this benchmark.
 
   @param[in] n the number of vector elements (on this processor)
@@ -37,9 +37,9 @@
 
   @return returns 0 upon success and non-zero otherwise
 
-  @see dot
+  @see ComputeDotProduct
 */
-int dotref (const local_int_t n, const double * const x, const double * const y,
+int ComputeDotProduct_ref(const local_int_t n, const double * const x, const double * const y,
 	  double * const result, double & time_allreduce) {  
   double local_result = 0.0;
   if (y==x) {

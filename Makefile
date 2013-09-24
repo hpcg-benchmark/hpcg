@@ -8,8 +8,8 @@ include setup/Make.$(arch)
 HPCG_DEPS = src/CG.o src/CG_ref.o src/TestCG.o src/ComputeResidual.o \
          src/ExchangeHalo.o src/GenerateGeometry.o src/GenerateProblem.o \
          src/OptimizeProblem.o src/ReportResults.o src/SetupHalo.o src/SymTest.o src/TestNorms.o \
-         src/WriteProblem.o src/YAML_Doc.o src/YAML_Element.o src/dot.o \
-         src/dotref.o src/finalize.o src/init.o src/mytimer.o src/spmv.o \
+         src/WriteProblem.o src/YAML_Doc.o src/YAML_Element.o src/ComputeDotProduct.o \
+         src/ComputeDotProduct_ref.o src/finalize.o src/init.o src/mytimer.o src/spmv.o \
          src/spmvref.o src/symgs.o src/symgsref.o src/waxpby.o src/waxpbyref.o
 
 bin/xhpcg: testing/main.o $(HPCG_DEPS)

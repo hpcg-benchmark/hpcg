@@ -9,19 +9,20 @@
 //@HEADER
 
 /*!
- @file dot.cpp
+ @file ComputeDotProduct.cpp
 
  HPCG routine
  */
 
-#include "dot.hpp"
-#include "dotref.hpp"
+#include "ComputeDotProduct.hpp"
+#include "ComputeDotProduct_ref.hpp"
 
 /*!
   Routine to compute the dot product of two vectors.
 
-  This routine calls the reference DOT implementation by default, but can be
-  replaced by a custom, optimized routine suited for the target system.
+  This routine calls the reference dot-product implementation by default, but
+  can be replaced by a custom routine that is optimized and better suited for
+  the target system.
 
   @param[in]  n the number of vector elements (on this processor)
   @param[in]  x, y the input vectors
@@ -30,10 +31,10 @@
 
   @return returns 0 upon success and non-zero otherwise
 
-  @see dotref
+  @see ComputeDotProduct_ref
 */
-int dot (const local_int_t n, const double * const x, const double * const y,
+int ComputeDotProduct(const local_int_t n, const double * const x, const double * const y,
 	  double * const result, double & time_allreduce) {  
 
-  return(dotref(n, x, y, result, time_allreduce));
+  return(ComputeDotProduct_ref(n, x, y, result, time_allreduce));
 }

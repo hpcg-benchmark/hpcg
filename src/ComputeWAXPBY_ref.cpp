@@ -9,12 +9,12 @@
 //@HEADER
 
 /*!
- @file waxpbyref.cpp
+ @file ComputeWAXPBY_ref.cpp
 
  HPCG routine
  */
 
-#include "waxpbyref.hpp"
+#include "ComputeWAXPBY_ref.hpp"
 #ifndef HPCG_NOOPENMP
 #include <omp.h>
 #endif
@@ -33,9 +33,9 @@
 
   @return returns 0 upon success and non-zero otherwise
 
-  @see waxpby
+  @see ComputeWAXPBY
 */
-int waxpbyref (const local_int_t n, const double alpha, const double * const x,
+int ComputeWAXPBY_ref(const local_int_t n, const double alpha, const double * const x,
 	    const double beta, const double * const y,
 		     double * const w) {
   if (alpha==1.0) {

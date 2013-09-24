@@ -7,10 +7,10 @@
 // 
 // ************************************************************************
 //@HEADER
-#ifndef WAXPBYREF_HPP
-#define WAXPBYREF_HPP
+#ifndef COMPUTEWAXPBY_HPP
+#define COMPUTEWAXPBY_HPP
 #include "Geometry.hpp"
-int waxpbyref (const local_int_t n, const double alpha, const double * const x,
+int ComputeWAXPBY(const local_int_t n, const double alpha, const double * const x,
 	    const double beta, const double * const y, 
 		     double * const w);
-#endif // WAXPBYREF_HPP
+#endif // COMPUTEWAXPBY_HPP

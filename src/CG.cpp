@@ -25,7 +25,7 @@
 #include "ComputeSPMV.hpp"
 #include "ComputeSYMGS.hpp"
 #include "ComputeDotProduct.hpp"
-#include "waxpby.hpp"
+#include "ComputeWAXPBY.hpp"
 
 #ifndef HPCG_NOMPI
 #include "ExchangeHalo.hpp"
@@ -85,12 +85,12 @@ int CG(const Geometry & geom, const SparseMatrix & A, CGData & data, const doubl
 	if (print_freq<1)  print_freq=1;
 #endif
 	// p is of length ncols, copy x to p for sparse MV operation
-	waxpby(nrow, 1.0, x, 0.0, x, p);
+	ComputeWAXPBY(nrow, 1.0, x, 0.0, x, p);
 #ifndef HPCG_NOMPI
 	TICK(); ExchangeHalo(A,p); TOCK(t6);
 #endif
 	ComputeSPMV(A, p, Ap);
-	waxpby(nrow, 1.0, b, -1.0, Ap, r); // r = b - Ax (x stored in p)
+	ComputeWAXPBY(nrow, 1.0, b, -1.0, Ap, r); // r = b - Ax (x stored in p)
 	ComputeDotProduct(nrow, r, r, &normr, t4);
 	normr = sqrt(normr);
 #ifdef HPCG_DEBUG
@@ -107,18 +107,18 @@ int CG(const Geometry & geom, const SparseMatrix & A, CGData & data, const doubl
 		if (doPreconditioning) 
 			ComputeSYMGS(A, r, z); // Apply preconditioner
 		else
-			waxpby(nrow, 1.0, r, 0.0, r, z); // copy r to z (no preconditioning)
+			ComputeWAXPBY(nrow, 1.0, r, 0.0, r, z); // copy r to z (no preconditioning)
         TOCK(t5); // Preconditioner apply time
 
 		if (k == 1) {
-			TICK(); waxpby(nrow, 1.0, z, 0.0, z, p); TOCK(t2); // Copy Mr to p
+			TICK(); ComputeWAXPBY(nrow, 1.0, z, 0.0, z, p); TOCK(t2); // Copy Mr to p
 			TICK(); ComputeDotProduct (nrow, r, z, &rtz, t4); TOCK(t1); // rtz = r'*z
 		}
 		else {
 			oldrtz = rtz;
 			TICK(); ComputeDotProduct (nrow, r, z, &rtz, t4); TOCK(t1); // rtz = r'*z
 			beta = rtz/oldrtz;
-			TICK(); waxpby (nrow, 1.0, z, beta, p, p);  TOCK(t2); // p = beta*p + z
+			TICK(); ComputeWAXPBY (nrow, 1.0, z, beta, p, p);  TOCK(t2); // p = beta*p + z
 		}
 
 #ifndef HPCG_NOMPI
@@ -127,8 +127,8 @@ int CG(const Geometry & geom, const SparseMatrix & A, CGData & data, const doubl
 		TICK(); ComputeSPMV(A, p, Ap); TOCK(t3); // Ap = A*p
 		TICK(); ComputeDotProduct(nrow, p, Ap, &pAp, t4); TOCK(t1); // alpha = p'*Ap
 		alpha = rtz/pAp;
-		TICK(); waxpby(nrow, 1.0, x, alpha, p, x);// x = x + alpha*p
-				waxpby(nrow, 1.0, r, -alpha, Ap, r);  TOCK(t2);// r = r - alpha*Ap
+		TICK(); ComputeWAXPBY(nrow, 1.0, x, alpha, p, x);// x = x + alpha*p
+				ComputeWAXPBY(nrow, 1.0, r, -alpha, Ap, r);  TOCK(t2);// r = r - alpha*Ap
 		TICK(); ComputeDotProduct(nrow, r, r, &normr, t4); TOCK(t1);
 		normr = sqrt(normr);
 #ifdef HPCG_DEBUG
@@ -140,7 +140,7 @@ int CG(const Geometry & geom, const SparseMatrix & A, CGData & data, const doubl
 
 	// Store times
 	times[1] += t1; // dot-product time
-	times[2] += t2; // waxpby time
+	times[2] += t2; // WAXPBY time
 	times[3] += t3; // SPMV time
 	times[4] += t4; // AllReduce time
 	times[5] += t5; // preconditioner apply time

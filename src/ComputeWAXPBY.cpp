@@ -9,13 +9,13 @@
 //@HEADER
 
 /*!
- @file waxpby.cpp
+ @file ComputeWAXPBY.cpp
 
  HPCG routine
  */
 
-#include "waxpby.hpp"
-#include "waxpbyref.hpp"
+#include "ComputeWAXPBY.hpp"
+#include "ComputeWAXPBY_ref.hpp"
 
 /*!
   Routine to compute the update of a vector with the sum of two
@@ -32,10 +32,10 @@
 
   @return returns 0 upon success and non-zero otherwise
 
-  @see waxpbyref
+  @see ComputeWAXPBY_ref
 */
-int waxpby (const local_int_t n, const double alpha, const double * const x,
+int ComputeWAXPBY(const local_int_t n, const double alpha, const double * const x,
 	    const double beta, const double * const y,
 		     double * const w) {
-  return(waxpbyref(n, alpha, x, beta, y, w));
+  return(ComputeWAXPBY_ref(n, alpha, x, beta, y, w));
 }

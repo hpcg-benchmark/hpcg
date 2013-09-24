@@ -43,7 +43,7 @@ using std::endl;
 #include "WriteProblem.hpp"
 #include "ReportResults.hpp"
 #include "mytimer.hpp"
-#include "spmvref.hpp"
+#include "ComputeSPMV_ref.hpp"
 #include "symgsref.hpp"
 #include "ComputeResidual.hpp"
 #include "CG.hpp"
@@ -145,10 +145,10 @@ int main(int argc, char *argv[]) {
 #endif
 
     ///////////////////////////////////////
-    // Reference spmv+symgs Timing Phase //
+    // Reference SpMV+symgs Timing Phase //
     ///////////////////////////////////////
 
-    // Call Reference SPMV and SYMGS. Compute Optimization time as ratio of times in these routines
+    // Call Reference SpMV and SYMGS. Compute Optimization time as ratio of times in these routines
 
     local_int_t nrow = A.localNumberOfRows;
 	local_int_t ncol = A.localNumberOfColumns;
@@ -157,7 +157,7 @@ int main(int argc, char *argv[]) {
 	double * b_computed = new double [nrow]; // Computed RHS vector
 
 
-	// Record execution time of reference spmv and symgs kernels for reporting times
+	// Record execution time of reference SpMV and symgs kernels for reporting times
 	// First load vector with random values
 	for (int i=0; i<nrow; ++i) {
 		x_overlap[i] = ((double) rand() / (RAND_MAX)) + 1;
@@ -169,15 +169,15 @@ int main(int argc, char *argv[]) {
 #ifndef HPCG_NOMPI
 		ExchangeHalo(A,x_overlap);
 #endif
-		ierr = spmvref(A, x_overlap, b_computed); // b_computed = A*x_overlap
-		if (ierr) HPCG_fout << "Error in call to spmv: " << ierr << ".\n" << endl;
+		ierr = ComputeSPMV_ref(A, x_overlap, b_computed); // b_computed = A*x_overlap
+		if (ierr) HPCG_fout << "Error in call to SpMV: " << ierr << ".\n" << endl;
 		ierr = symgsref(A, x_overlap, b_computed); // b_computed = Minv*y_overlap
 		if (ierr) HPCG_fout << "Error in call to symgs: " << ierr << ".\n" << endl;
 	}
     times[8] = (mytimer() - t_begin)/((double) numberOfCalls);  // Total time divided by number of calls.
 
 #ifdef HPCG_DEBUG
-    if (rank==0) HPCG_fout << "Total spmv+symgs timing phase execution time in main (sec) = " << mytimer() - t1 << endl;
+    if (rank==0) HPCG_fout << "Total SpMV+symgs timing phase execution time in main (sec) = " << mytimer() - t1 << endl;
 #endif
 
     ///////////////////////////////

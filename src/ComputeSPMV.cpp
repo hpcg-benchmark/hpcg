@@ -9,19 +9,19 @@
 //@HEADER
 
 /*!
- @file spmv.cpp
+ @file ComputeSPMV.cpp
 
  HPCG routine
  */
 
-#include "spmv.hpp"
-#include "spmvref.hpp"
+#include "ComputeSPMV.hpp"
+#include "ComputeSPMV_ref.hpp"
 
 /*!
-  Routine to compute matrix vector product y = Ax where:
+  Routine to compute sparse matrix vector product y = Ax where:
   Precondition: First call exchange_externals to get off-processor values of x
 
-  This routine calls the reference spmv implementation by default, but
+  This routine calls the reference SpMV implementation by default, but
   can be replaced by a custom, optimized routine suited for
   the target system.
 
@@ -31,9 +31,9 @@
 
   @return returns 0 upon success and non-zero otherwise
 
-  @see spmvref
+  @see ComputeSPMV_ref
 */
-int spmv( const SparseMatrix & A, const double * const x, double * const y) {
+int ComputeSPMV( const SparseMatrix & A, const double * const x, double * const y) {
 
-	return(spmvref(A, x, y));
+	return(ComputeSPMV_ref(A, x, y));
 }

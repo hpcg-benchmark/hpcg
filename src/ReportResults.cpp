@@ -69,7 +69,7 @@ void ReportResults(const Geometry & geom, const SparseMatrix & A, int numberOfCg
         // Op counts come from implementation of CG in CG.cpp
         double fnops_ddot = fniters*6.0*fnrow; // 3 ddots with nrow adds and nrow mults
         double fnops_waxpby = fniters*6.0*fnrow; // 3 waxpbys with nrow adds and nrow mults
-        double fnops_sparsemv = fniters*2.0*fnnz; // 1 spmv with nnz adds and nnz mults
+        double fnops_sparsemv = fniters*2.0*fnnz; // 1 SpMV with nnz adds and nnz mults
         double fnops_precond = fniters*3.0*fnnz; // Two GS sweeps, but only use lower triangle for first sweep
         double fnops = fnops_ddot+fnops_waxpby+fnops_sparsemv+fnops_precond;
         
@@ -118,7 +118,7 @@ void ReportResults(const Geometry & geom, const SparseMatrix & A, int numberOfCg
             doc.get("Departure from Symmetry (x'Ay-y'Ax)")->add("Result", "PASSED");
         else
         	doc.get("Departure from Symmetry (x'Ay-y'Ax)")->add("Result", "FAILED");
-        doc.get("Departure from Symmetry (x'Ay-y'Ax)")->add("Departure for SPMV", symtest_data->depsym_spmv);
+        doc.get("Departure from Symmetry (x'Ay-y'Ax)")->add("Departure for SpMV", symtest_data->depsym_spmv);
         doc.get("Departure from Symmetry (x'Ay-y'Ax)")->add("Departure for SYMGS", symtest_data->depsym_symgs);
 
         doc.add("********** Iterations Summary  ***********","");

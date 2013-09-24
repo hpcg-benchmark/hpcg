@@ -8,11 +8,11 @@
 // ************************************************************************
 //@HEADER
 
-#ifndef SPMVREF_HPP
-#define SPMVREF_HPP
+#ifndef COMPUTESPMV_REF_HPP
+#define COMPUTESPMV_REF_HPP
 #include "Geometry.hpp"
 #include "SparseMatrix.hpp"
 
-int spmvref( const SparseMatrix & A, const double * const x, double * const y);
+int ComputeSPMV_ref( const SparseMatrix & A, const double * const x, double * const y);
 
-#endif  // SPMVREF_HPP
+#endif  // COMPUTESPMV_REF_HPP

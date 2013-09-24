@@ -26,7 +26,7 @@ using std::endl;
 
 #include "hpcg.hpp"
 
-#include "spmv.hpp"
+#include "ComputeSPMV.hpp"
 #include "symgs.hpp"
 #include "ComputeDotProduct.hpp"
 #include "ComputeResidual.hpp"
@@ -51,8 +51,8 @@ using std::endl;
 
   @see ComputeDotProduct
   @see ComputeDotProduct_ref
-  @see spmv
-  @see spmvref
+  @see ComputeSPMV
+  @see ComputeSPMV_ref
   @see symgs
   @see symgsref
 */
@@ -79,8 +79,8 @@ int SymTest(Geometry & geom, SparseMatrix & A, double * const b, double * const 
 #ifndef HPCG_NOMPI
     ExchangeHalo(A,y_overlap);
 #endif
-    int ierr = spmv(A, y_overlap, b_computed); // b_computed = A*y_overlap
-    if (ierr) HPCG_fout << "Error in call to spmv: " << ierr << ".\n" << endl;
+    int ierr = ComputeSPMV(A, y_overlap, b_computed); // b_computed = A*y_overlap
+    if (ierr) HPCG_fout << "Error in call to SpMV: " << ierr << ".\n" << endl;
     double xtAy = 0.0;
     ierr = ComputeDotProduct(nrow, x_overlap, b_computed, &xtAy, t4); // b_computed = A*y_overlap
     if (ierr) HPCG_fout << "Error in call to dot: " << ierr << ".\n" << endl;
@@ -89,14 +89,14 @@ int SymTest(Geometry & geom, SparseMatrix & A, double * const b, double * const 
 #ifndef HPCG_NOMPI
     ExchangeHalo(A,x_overlap);
 #endif
-    ierr = spmv(A, x_overlap, b_computed); // b_computed = A*y_overlap
-    if (ierr) HPCG_fout << "Error in call to spmv: " << ierr << ".\n" << endl;
+    ierr = ComputeSPMV(A, x_overlap, b_computed); // b_computed = A*y_overlap
+    if (ierr) HPCG_fout << "Error in call to SpMV: " << ierr << ".\n" << endl;
     double ytAx = 0.0;
     ierr = ComputeDotProduct(nrow, y_overlap, b_computed, &ytAx, t4); // b_computed = A*y_overlap
     if (ierr) HPCG_fout << "Error in call to dot: " << ierr << ".\n" << endl;
     symtest_data->depsym_spmv = std::fabs((long double) (xtAy - ytAx));
     if (symtest_data->depsym_spmv > 1.0e-4) ++symtest_data->count_fail;  // If the difference is > 10e-4, count it wrong
-    if (geom.rank==0) HPCG_fout << "Departure from symmetry for spmv abs(x'*A*y - y'*A*x) = " << symtest_data->depsym_spmv << endl;
+    if (geom.rank==0) HPCG_fout << "Departure from symmetry for SpMV abs(x'*A*y - y'*A*x) = " << symtest_data->depsym_spmv << endl;
 
     // Test symmetry of symmetric Gauss-Seidel
 
@@ -125,8 +125,8 @@ int SymTest(Geometry & geom, SparseMatrix & A, double * const b, double * const 
 #ifndef HPCG_NOMPI
       ExchangeHalo(A,x_overlap);
 #endif
-      ierr = spmv(A, x_overlap, b_computed); // b_computed = A*x_overlap
-      if (ierr) HPCG_fout << "Error in call to spmv: " << ierr << ".\n" << endl;
+      ierr = ComputeSPMV(A, x_overlap, b_computed); // b_computed = A*x_overlap
+      if (ierr) HPCG_fout << "Error in call to SpMV: " << ierr << ".\n" << endl;
       if ((ierr = ComputeResidual(A.localNumberOfRows, b, b_computed, &residual)))
         HPCG_fout << "Error in call to compute_residual: " << ierr << ".\n" << endl;
       if (geom.rank==0) HPCG_fout << "SpMV call [" << i << "] Residual [" << residual << "]" << endl;

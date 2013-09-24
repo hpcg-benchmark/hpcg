@@ -38,7 +38,7 @@ struct SparseMatrix_STRUCT {
 
   /*!
    This is for storing optimized data structres created in OptimizeProblem and
-   used inside optimized spmv().
+   used inside optimized ComputeSPMV().
    */
   void *optimization_data;
 

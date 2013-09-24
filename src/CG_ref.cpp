@@ -22,7 +22,7 @@
 
 #include "CG_ref.hpp"
 #include "mytimer.hpp"
-#include "spmvref.hpp"
+#include "ComputeSPMV_ref.hpp"
 #include "symgsref.hpp"
 #include "ComputeDotProduct_ref.hpp"
 #include "waxpbyref.hpp"
@@ -91,7 +91,7 @@ int CG_ref(const Geometry & geom, const SparseMatrix & A, CGData & data, const d
 #ifndef HPCG_NOMPI
 	TICK(); ExchangeHalo(A,p); TOCK(t6);
 #endif
-	spmvref(A, p, Ap);
+	ComputeSPMV_ref(A, p, Ap);
 	waxpbyref(nrow, 1.0, b, -1.0, Ap, r); // r = b - Ax (x stored in p)
 	ComputeDotProduct_ref(nrow, r, r, &normr, t4);
 	normr = sqrt(normr);
@@ -126,7 +126,7 @@ int CG_ref(const Geometry & geom, const SparseMatrix & A, CGData & data, const d
 #ifndef HPCG_NOMPI
 		TICK(); ExchangeHalo(A,p); TOCK(t6);
 #endif
-		TICK(); spmvref(A, p, Ap); TOCK(t3); // Ap = A*p
+		TICK(); ComputeSPMV_ref(A, p, Ap); TOCK(t3); // Ap = A*p
 		TICK(); ComputeDotProduct_ref(nrow, p, Ap, &pAp, t4); TOCK(t1); // alpha = p'*Ap
 		alpha = rtz/pAp;
 		TICK(); waxpbyref(nrow, 1.0, x, alpha, p, x);// x = x + alpha*p
@@ -143,7 +143,7 @@ int CG_ref(const Geometry & geom, const SparseMatrix & A, CGData & data, const d
 	// Store times
 	times[1] += t1; // dot product time
 	times[2] += t2; // waxpby time
-	times[3] += t3; // spmv time
+	times[3] += t3; // SPMV time
 	times[4] += t4; // AllReduce time
 	times[5] += t5; // preconditioner apply time
 #ifndef HPCG_NOMPI

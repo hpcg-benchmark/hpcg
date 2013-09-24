@@ -9,12 +9,12 @@
 //@HEADER
 
 /*!
- @file spmvref.cpp
+ @file ComputeSPMV_ref.cpp
 
  HPCG routine
  */
 
-#include "spmvref.hpp"
+#include "ComputeSPMV_ref.hpp"
 
 #ifndef HPCG_NOOPENMP
 #include <omp.h>
@@ -33,9 +33,9 @@
 
   @return returns 0 upon success and non-zero otherwise
 
-  @see spmv
+  @see ComputeSPMV
 */
-int spmvref( const SparseMatrix & A, const double * const x, double * const y) {
+int ComputeSPMV_ref( const SparseMatrix & A, const double * const x, double * const y) {
 
 	const local_int_t nrow = A.localNumberOfRows;
 #ifndef HPCG_NOOPENMP

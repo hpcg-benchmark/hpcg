@@ -8,11 +8,11 @@
 // ************************************************************************
 //@HEADER
 
-#ifndef SPMV_HPP
-#define SPMV_HPP
+#ifndef COMPUTESPMV_HPP
+#define COMPUTESPMV_HPP
 #include "Geometry.hpp"
 #include "SparseMatrix.hpp"
 
-int spmv( const SparseMatrix & A, const double * const x, double * const y);
+int ComputeSPMV( const SparseMatrix & A, const double * const x, double * const y);
 
-#endif  // SPMV_HPP
+#endif  // COMPUTESPMV_HPP

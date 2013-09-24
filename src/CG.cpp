@@ -22,7 +22,7 @@
 
 #include "CG.hpp"
 #include "mytimer.hpp"
-#include "spmv.hpp"
+#include "ComputeSPMV.hpp"
 #include "symgs.hpp"
 #include "ComputeDotProduct.hpp"
 #include "waxpby.hpp"
@@ -89,7 +89,7 @@ int CG(const Geometry & geom, const SparseMatrix & A, CGData & data, const doubl
 #ifndef HPCG_NOMPI
 	TICK(); ExchangeHalo(A,p); TOCK(t6);
 #endif
-	spmv(A, p, Ap);
+	ComputeSPMV(A, p, Ap);
 	waxpby(nrow, 1.0, b, -1.0, Ap, r); // r = b - Ax (x stored in p)
 	ComputeDotProduct(nrow, r, r, &normr, t4);
 	normr = sqrt(normr);
@@ -124,7 +124,7 @@ int CG(const Geometry & geom, const SparseMatrix & A, CGData & data, const doubl
 #ifndef HPCG_NOMPI
 		TICK(); ExchangeHalo(A,p); TOCK(t6);
 #endif
-		TICK(); spmv(A, p, Ap); TOCK(t3); // Ap = A*p
+		TICK(); ComputeSPMV(A, p, Ap); TOCK(t3); // Ap = A*p
 		TICK(); ComputeDotProduct(nrow, p, Ap, &pAp, t4); TOCK(t1); // alpha = p'*Ap
 		alpha = rtz/pAp;
 		TICK(); waxpby(nrow, 1.0, x, alpha, p, x);// x = x + alpha*p
@@ -141,7 +141,7 @@ int CG(const Geometry & geom, const SparseMatrix & A, CGData & data, const doubl
 	// Store times
 	times[1] += t1; // dot-product time
 	times[2] += t2; // waxpby time
-	times[3] += t3; // spmv time
+	times[3] += t3; // SPMV time
 	times[4] += t4; // AllReduce time
 	times[5] += t5; // preconditioner apply time
 #ifndef HPCG_NOMPI

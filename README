@@ -35,6 +35,17 @@ Installation
 
 See the file ``INSTALL`` in this directory.
 
+=============
+Documentation
+=============
+
+The source code documentation can be generated with a Doxygen (version 1.8 or
+newer). In this directory type::
+
+    doxygen tools/hpcg.dox
+
+Doxygen will then generate various output formats in the ``out`` directory.
+
 ======
 Tuning
 ======

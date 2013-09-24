@@ -9,16 +9,16 @@
 //@HEADER
 
 /*!
- @file symgsref.cpp
+ @file ComputeSYMGS_ref.cpp
 
  HPCG routine
  */
 
 #include "Geometry.hpp"
-#include "symgsref.hpp"
+#include "ComputeSYMGS_ref.hpp"
 
 /*!
-  Routine to one step of symmetrix Gauss-Seidel:
+  Computes one step of symmetric Gauss-Seidel:
 
   Assumption about the structure of matrix A:
   - Each row 'i' of the matrix has nonzero diagonal value whose address is matrixDiagonal[i]
@@ -39,9 +39,9 @@
 
   @return returns 0 upon success and non-zero otherwise
 
-  @see symgs
+  @see ComputeSYMGS
 */
-int symgsref( const SparseMatrix & A, const double * const x, double * const y) {
+int ComputeSYMGS_ref( const SparseMatrix & A, const double * const x, double * const y) {
 
   const local_int_t nrow = A.localNumberOfRows;
    double ** matrixDiagonal = A.matrixDiagonal;  // An array of pointers to the diagonal entries A.matrixValues

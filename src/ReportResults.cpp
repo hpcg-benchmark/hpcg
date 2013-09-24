@@ -119,7 +119,7 @@ void ReportResults(const Geometry & geom, const SparseMatrix & A, int numberOfCg
         else
         	doc.get("Departure from Symmetry (x'Ay-y'Ax)")->add("Result", "FAILED");
         doc.get("Departure from Symmetry (x'Ay-y'Ax)")->add("Departure for SpMV", symtest_data->depsym_spmv);
-        doc.get("Departure from Symmetry (x'Ay-y'Ax)")->add("Departure for SYMGS", symtest_data->depsym_symgs);
+        doc.get("Departure from Symmetry (x'Ay-y'Ax)")->add("Departure for SymGS", symtest_data->depsym_symgs);
 
         doc.add("********** Iterations Summary  ***********","");
         doc.add("Iteration Count Information","");

@@ -9,14 +9,14 @@
 //@HEADER
 
 /*!
- @file symgs.cpp
+ @file ComputeSYMGS.cpp
 
  HPCG routine
  */
 
 #include "Geometry.hpp"
-#include "symgs.hpp"
-#include "symgsref.hpp"
+#include "ComputeSYMGS.hpp"
+#include "ComputeSYMGS_ref.hpp"
 
 /*!
   Routine to one step of symmetrix Gauss-Seidel:
@@ -40,11 +40,11 @@
 
   @return returns 0 upon success and non-zero otherwise
 
-  @see symgsref
+  @see ComputeSYMGS_ref
 */
-int symgs( const SparseMatrix & A, const double * const x, double * const y) {
+int ComputeSYMGS( const SparseMatrix & A, const double * const x, double * const y) {
 
-  return(symgsref(A, x, y));
+  return(ComputeSYMGS_ref(A, x, y));
 
 }
 

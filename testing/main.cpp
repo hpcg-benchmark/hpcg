@@ -44,7 +44,7 @@ using std::endl;
 #include "ReportResults.hpp"
 #include "mytimer.hpp"
 #include "ComputeSPMV_ref.hpp"
-#include "symgsref.hpp"
+#include "ComputeSYMGS_ref.hpp"
 #include "ComputeResidual.hpp"
 #include "CG.hpp"
 #include "CG_ref.hpp"
@@ -145,7 +145,7 @@ int main(int argc, char *argv[]) {
 #endif
 
     ///////////////////////////////////////
-    // Reference SpMV+symgs Timing Phase //
+    // Reference SpMV+SymGS Timing Phase //
     ///////////////////////////////////////
 
     // Call Reference SpMV and SYMGS. Compute Optimization time as ratio of times in these routines
@@ -157,7 +157,7 @@ int main(int argc, char *argv[]) {
 	double * b_computed = new double [nrow]; // Computed RHS vector
 
 
-	// Record execution time of reference SpMV and symgs kernels for reporting times
+	// Record execution time of reference SpMV and SymGS kernels for reporting times
 	// First load vector with random values
 	for (int i=0; i<nrow; ++i) {
 		x_overlap[i] = ((double) rand() / (RAND_MAX)) + 1;
@@ -171,13 +171,13 @@ int main(int argc, char *argv[]) {
 #endif
 		ierr = ComputeSPMV_ref(A, x_overlap, b_computed); // b_computed = A*x_overlap
 		if (ierr) HPCG_fout << "Error in call to SpMV: " << ierr << ".\n" << endl;
-		ierr = symgsref(A, x_overlap, b_computed); // b_computed = Minv*y_overlap
-		if (ierr) HPCG_fout << "Error in call to symgs: " << ierr << ".\n" << endl;
+		ierr = ComputeSYMGS_ref(A, x_overlap, b_computed); // b_computed = Minv*y_overlap
+		if (ierr) HPCG_fout << "Error in call to SymGS: " << ierr << ".\n" << endl;
 	}
     times[8] = (mytimer() - t_begin)/((double) numberOfCalls);  // Total time divided by number of calls.
 
 #ifdef HPCG_DEBUG
-    if (rank==0) HPCG_fout << "Total SpMV+symgs timing phase execution time in main (sec) = " << mytimer() - t1 << endl;
+    if (rank==0) HPCG_fout << "Total SpMV+SymGS timing phase execution time in main (sec) = " << mytimer() - t1 << endl;
 #endif
 
     ///////////////////////////////

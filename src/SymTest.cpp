@@ -27,7 +27,7 @@ using std::endl;
 #include "hpcg.hpp"
 
 #include "ComputeSPMV.hpp"
-#include "symgs.hpp"
+#include "ComputeSYMGS.hpp"
 #include "ComputeDotProduct.hpp"
 #include "ComputeResidual.hpp"
 #include "Geometry.hpp"
@@ -53,8 +53,8 @@ using std::endl;
   @see ComputeDotProduct_ref
   @see ComputeSPMV
   @see ComputeSPMV_ref
-  @see symgs
-  @see symgsref
+  @see ComputeSYMGS
+  @see ComputeSYMGS_ref
 */
 int SymTest(Geometry & geom, SparseMatrix & A, double * const b, double * const xexact, SymTestData * symtest_data) {
 
@@ -101,21 +101,21 @@ int SymTest(Geometry & geom, SparseMatrix & A, double * const b, double * const 
     // Test symmetry of symmetric Gauss-Seidel
 
     // Compute x'*Minv*y
-    ierr = symgs(A, y_overlap, b_computed); // b_computed = Minv*y_overlap
-    if (ierr) HPCG_fout << "Error in call to symgs: " << ierr << ".\n" << endl;
+    ierr = ComputeSYMGS(A, y_overlap, b_computed); // b_computed = Minv*y_overlap
+    if (ierr) HPCG_fout << "Error in call to SymGS: " << ierr << ".\n" << endl;
     double xtMinvy = 0.0;
     ierr = ComputeDotProduct(nrow, x_overlap, b_computed, &xtMinvy, t4); // b_computed = A*y_overlap
     if (ierr) HPCG_fout << "Error in call to dot: " << ierr << ".\n" << endl;
 
     // Next, compute y'*Minv*x
-    ierr = symgs(A, x_overlap, b_computed); // b_computed = Minv*y_overlap
-    if (ierr) HPCG_fout << "Error in call to symgs: " << ierr << ".\n" << endl;
+    ierr = ComputeSYMGS(A, x_overlap, b_computed); // b_computed = Minv*y_overlap
+    if (ierr) HPCG_fout << "Error in call to SymGS: " << ierr << ".\n" << endl;
     double ytMinvx = 0.0;
     ierr = ComputeDotProduct(nrow, y_overlap, b_computed, &ytMinvx, t4); // b_computed = A*y_overlap
     if (ierr) HPCG_fout << "Error in call to dot: " << ierr << ".\n" << endl;
     symtest_data->depsym_symgs = std::fabs((long double) (xtMinvy - ytMinvx));
     if (symtest_data->depsym_symgs > 1.0e-4) ++symtest_data->count_fail;  // If the difference is > 10e-4, count it wrong
-    if (geom.rank==0) HPCG_fout << "Departure from symmetry for symgs abs(x'*Minv*y - y'*Minv*x) = " << symtest_data->depsym_symgs << endl;
+    if (geom.rank==0) HPCG_fout << "Departure from symmetry for SymGS abs(x'*Minv*y - y'*Minv*x) = " << symtest_data->depsym_symgs << endl;
 
     for (int i=0; i< nrow; ++i) x_overlap[i] = xexact[i]; // Copy exact answer into overlap vector
 

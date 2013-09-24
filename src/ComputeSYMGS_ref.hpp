@@ -8,10 +8,10 @@
 // ************************************************************************
 //@HEADER
 
-#ifndef SYMGS_HPP
-#define SYMGS_HPP
+#ifndef COMPUTESYMGS_REF_HPP
+#define COMPUTESYMGS_REF_HPP
 #include "SparseMatrix.hpp"
 
-int symgs( const SparseMatrix  & A, const double * const x, double * const y);
+int ComputeSYMGS_ref( const SparseMatrix  & A, const double * const x, double * const y);
 
-#endif // SYMGS_HPP
+#endif // COMPUTESYMGS_REF_HPP

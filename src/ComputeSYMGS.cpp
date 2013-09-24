@@ -1,10 +1,10 @@
 
 //@HEADER
 // ************************************************************************
-// 
+//
 //               HPCG: Simple Conjugate Gradient Benchmark Code
-// Questions? Contact Michael A. Heroux (maherou@sandia.gov) 
-// 
+// Questions? Contact Michael A. Heroux (maherou@sandia.gov)
+//
 // ************************************************************************
 //@HEADER
 
@@ -34,7 +34,7 @@
   - We then perform one back sweep.
        - For simplicity we include the diagonal contribution in the for-j loop, then correct the sum after
 
-  @param[in]  A the known system matrix 
+  @param[in]  A the known system matrix
   @param[in]  x the input vector
   @param[out] y On exit contains the result of one symmetric GS sweep with x as the RHS.
 

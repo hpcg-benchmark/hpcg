@@ -1,10 +1,10 @@
 
 //@HEADER
 // ************************************************************************
-// 
+//
 //               HPCG: Simple Conjugate Gradient Benchmark Code
-// Questions? Contact Michael A. Heroux (maherou@sandia.gov) 
-// 
+// Questions? Contact Michael A. Heroux (maherou@sandia.gov)
+//
 // ************************************************************************
 //@HEADER
 
@@ -67,17 +67,17 @@ typedef struct Geometry_STRUCT Geometry;
   @return Returns the MPI rank of the process assigned the row
 */
 inline int ComputeRankOfMatrixRow(const Geometry & geom, global_int_t index) {
-	int gnx = geom.nx*geom.npx;
-	int gny = geom.ny*geom.npy;
+  int gnx = geom.nx*geom.npx;
+  int gny = geom.ny*geom.npy;
 
-	int iz = index/(gny*gnx);
-	int iy = (index-iz*gny*gnx)/gnx;
-	int ix = index%gnx;
-	int ipz = iz/geom.nz;
-	int ipy = iy/geom.ny;
-	int ipx = ix/geom.nx;
-	int rank = ipx+ipy*geom.npx+ipz*geom.npy*geom.npx;
-	return(rank);
+  int iz = index/(gny*gnx);
+  int iy = (index-iz*gny*gnx)/gnx;
+  int ix = index%gnx;
+  int ipz = iz/geom.nz;
+  int ipy = iy/geom.ny;
+  int ipx = ix/geom.nx;
+  int rank = ipx+ipy*geom.npx+ipz*geom.npy*geom.npx;
+  return(rank);
 }
 
 

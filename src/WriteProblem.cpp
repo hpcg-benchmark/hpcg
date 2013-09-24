@@ -1,10 +1,10 @@
 
 //@HEADER
 // ************************************************************************
-// 
+//
 //               HPCG: Simple Conjugate Gradient Benchmark Code
-// Questions? Contact Michael A. Heroux (maherou@sandia.gov) 
-// 
+// Questions? Contact Michael A. Heroux (maherou@sandia.gov)
+//
 // ************************************************************************
 //@HEADER
 
@@ -47,31 +47,31 @@
   @see GenerateProblem
 */
 int WriteProblem( const Geometry & geom, const SparseMatrix & A,
-			const double * const b, const double * const x, const double * const xexact) {
+    const double * const b, const double * const x, const double * const xexact) {
 
-	if (geom.size!=1) return(-1); //TODO Only works on one processor.  Need better error handler
-	const global_int_t nrow = A.totalNumberOfRows;
+  if (geom.size!=1) return(-1); //TODO Only works on one processor.  Need better error handler
+  const global_int_t nrow = A.totalNumberOfRows;
 
-	FILE * fA = 0, * fx = 0, * fxexact = 0, * fb = 0;
-    fA = fopen("A.dat", "w");
-    fx = fopen("x.dat", "w");
-    fxexact = fopen("xexact.dat", "w");
-    fb = fopen("b.dat", "w");
+  FILE * fA = 0, * fx = 0, * fxexact = 0, * fb = 0;
+  fA = fopen("A.dat", "w");
+  fx = fopen("x.dat", "w");
+  fxexact = fopen("xexact.dat", "w");
+  fb = fopen("b.dat", "w");
 
   for (global_int_t i=0; i< nrow; i++) {
-      const double * const currentRowValues = A.matrixValues[i];
-      const global_int_t * const currentRowIndices = A.mtxIndG[i];
-      const int currentNumberOfNonzeros = A.nonzerosInRow[i];
-      for (int j=0; j< currentNumberOfNonzeros; j++)
+    const double * const currentRowValues = A.matrixValues[i];
+    const global_int_t * const currentRowIndices = A.mtxIndG[i];
+    const int currentNumberOfNonzeros = A.nonzerosInRow[i];
+    for (int j=0; j< currentNumberOfNonzeros; j++)
 #ifdef HPCG_NO_LONG_LONG
-    	  fprintf(fA, " %d %d %22.16e\n",i+1,(global_int_t)(currentRowIndices[j]+1),currentRowValues[j]);
+      fprintf(fA, " %d %d %22.16e\n",i+1,(global_int_t)(currentRowIndices[j]+1),currentRowValues[j]);
 #else
-	  	  fprintf(fA, " %lld %lld %22.16e\n",i+1,(global_int_t)(currentRowIndices[j]+1),currentRowValues[j]);
+      fprintf(fA, " %lld %lld %22.16e\n",i+1,(global_int_t)(currentRowIndices[j]+1),currentRowValues[j]);
 #endif
-      fprintf(fx, "%22.16e\n",x[i]);
-      fprintf(fxexact, "%22.16e\n",xexact[i]);
-      fprintf(fb, "%22.16e\n",b[i]);
-    }
+    fprintf(fx, "%22.16e\n",x[i]);
+    fprintf(fxexact, "%22.16e\n",xexact[i]);
+    fprintf(fb, "%22.16e\n",b[i]);
+  }
 
   fclose(fA);
   fclose(fx);

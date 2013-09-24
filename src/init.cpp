@@ -24,11 +24,11 @@
 std::ofstream HPCG_fout; //!< output file stream for logging activities during HPCG run
 
 static int
-startswith(const char *s, const char *prefix) {
-    size_t n = strlen( prefix );
-    if (strncmp( s, prefix, n ))
-        return 0;
-    return 1;
+startswith(const char * s, const char * prefix) {
+  size_t n = strlen( prefix );
+  if (strncmp( s, prefix, n ))
+    return 0;
+  return 1;
 }
 
 /*!
@@ -36,7 +36,7 @@ startswith(const char *s, const char *prefix) {
   command line) and then broadcasts them to all nodes. It also initializes
   loggin I/O streams that are used throughout the HPCG run. Only MPI rank 0
   performs I/O operations.
-  
+
   The function assumes that MPI has already been initialized for MPI runs.
 
   @param[in] argc_p the pointer to the "argc" parameter passed to the main() function
@@ -48,14 +48,14 @@ startswith(const char *s, const char *prefix) {
   @see HPCG_Finalize
 */
 int
-HPCG_Init(int *argc_p, char ***argv_p, HPCG_Params & params) {
+HPCG_Init(int * argc_p, char ** *argv_p, HPCG_Params & params) {
   int argc = *argc_p;
-  char **argv = *argv_p;
+  char ** argv = *argv_p;
   char fname[80];
   int i, j, iparams[3];
   char cparams[3][6] = {"--nx=", "--ny=", "--nz="};
   time_t rawtime;
-  tm *ptm;
+  tm * ptm;
 
   /* for sequential and some MPI implementations it's OK to read first three args */
   for (i = 0; i < 3; ++i)
@@ -68,7 +68,7 @@ HPCG_Init(int *argc_p, char ***argv_p, HPCG_Params & params) {
         if (sscanf(argv[i]+strlen(cparams[j]), "%d", iparams+j) != 1 || iparams[j] < 10) iparams[j] = 0;
 
   if (! iparams[0] && ! iparams[1] && ! iparams[2]) { /* no geometry arguments on the command line */
-    FILE *f = fopen("hpcg.dat", "r");
+    FILE * f = fopen("hpcg.dat", "r");
     if (f) {
       for (i = 0; i < 3; ++i)
         if (fscanf(f, "%d", iparams+i) != 1 || iparams[i] < 10) iparams[i] = 0;
@@ -105,7 +105,7 @@ HPCG_Init(int *argc_p, char ***argv_p, HPCG_Params & params) {
 #ifdef HPCG_NOOPENMP
   params.numThreads = 1;
 #else
-#pragma omp parallel
+  #pragma omp parallel
   params.numThreads = omp_get_num_threads();
 #endif
 
@@ -121,7 +121,7 @@ HPCG_Init(int *argc_p, char ***argv_p, HPCG_Params & params) {
     char local[15];
     sprintf( local, "%d_", params.comm_rank );
     sprintf( fname, "hpcg_log_%s%04d%02d%02d_%02d:%02d:%02d.txt", local,
-      1900 + ptm->tm_year, ptm->tm_mon+1, ptm->tm_mday, ptm->tm_hour, ptm->tm_min, ptm->tm_sec );
+        1900 + ptm->tm_year, ptm->tm_mon+1, ptm->tm_mday, ptm->tm_hour, ptm->tm_min, ptm->tm_sec );
     HPCG_fout.open(fname);
 #else
     HPCG_fout.open("/dev/null");

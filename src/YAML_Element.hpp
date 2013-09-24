@@ -1,9 +1,9 @@
 //@HEADER
 // ************************************************************************
-// 
+//
 //               HPCG: Simple Conjugate Gradient Benchmark Code
-// Questions? Contact Michael A. Heroux (maherou@sandia.gov) 
-// 
+// Questions? Contact Michael A. Heroux (maherou@sandia.gov)
+//
 // ************************************************************************
 //@HEADER
 
@@ -32,36 +32,36 @@
   the related YAML_Doc class, provide a uniform facility for gathering and reporting this data using the YAML text format.
 */
 class YAML_Element {
-  public:
+public:
 
   //! Default constructor.
-  YAML_Element (){key="";value="";}
+  YAML_Element () {key=""; value="";}
   //! Construct with known key-value pair
-  YAML_Element (const std::string& key_arg, const std::string& value_arg);
+  YAML_Element (const std::string & key_arg, const std::string & value_arg);
   //! Destructor
   ~YAML_Element ();
   //! Key accessor method
-  std::string getKey(){return key;}
+  std::string getKey() {return key;}
   //! Add a child element to an element list associated with this element, value of type double
-  YAML_Element* add(const std::string& key_arg, double value_arg);
+  YAML_Element * add(const std::string & key_arg, double value_arg);
   //! Add a child element to an element list associated with this element, value of type int
-  YAML_Element* add(const std::string& key_arg, int value_arg);
+  YAML_Element * add(const std::string & key_arg, int value_arg);
 #ifndef HPCG_NO_LONG_LONG
   //! Add a child element to an element list associated with this element, value of type long long
-  YAML_Element* add(const std::string& key_arg, long long value_arg);
+  YAML_Element * add(const std::string & key_arg, long long value_arg);
 #endif
   //! Add a child element to an element list associated with this element, value of type size_t
-  YAML_Element* add(const std::string& key_arg, size_t value_arg);
+  YAML_Element * add(const std::string & key_arg, size_t value_arg);
   //! Add a child element to an element list associated with this element, value of type string
-  YAML_Element* add(const std::string& key_arg, const std::string& value_arg);
+  YAML_Element * add(const std::string & key_arg, const std::string & value_arg);
   //! get the element in the list with the given key
-  YAML_Element* get(const std::string& key_arg);
+  YAML_Element * get(const std::string & key_arg);
   std::string printYAML(std::string space);
-  
+
 protected:
   std::string key; //!< the key under which the element is stored
   std::string value; //!< the value of the stored element
-  std::vector<YAML_Element*> children; //!< children elements of this element
+  std::vector<YAML_Element *> children; //!< children elements of this element
 
 private:
   std::string convert_double_to_string(double value_arg);

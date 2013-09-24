@@ -1,10 +1,10 @@
 
 //@HEADER
 // ************************************************************************
-// 
+//
 //               HPCG: Simple Conjugate Gradient Benchmark Code
-// Questions? Contact Michael A. Heroux (maherou@sandia.gov) 
-// 
+// Questions? Contact Michael A. Heroux (maherou@sandia.gov)
+//
 // ************************************************************************
 //@HEADER
 
@@ -12,5 +12,5 @@
 #define COMPUTERESIDUAL_HPP
 #include "Geometry.hpp"
 int ComputeResidual(const local_int_t n, const double * const v1,
-                    const double * const v2, double * const residual);
+    const double * const v2, double * const residual);
 #endif // COMPUTERESIDUAL_HPP

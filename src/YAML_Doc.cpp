@@ -20,7 +20,7 @@ using namespace std;
   @param[in] destination_Directory destination directory for the YAML document
   @param[in] destination_FileName file name for the YAML document
 */
-YAML_Doc::YAML_Doc(const std::string& miniApp_Name, const std::string& miniApp_Version, const std::string& destination_Directory, const std::string& destination_FileName){
+YAML_Doc::YAML_Doc(const std::string & miniApp_Name, const std::string & miniApp_Version, const std::string & destination_Directory, const std::string & destination_FileName) {
   miniAppName = miniApp_Name;
   miniAppVersion = miniApp_Version;
   destinationDirectory = destination_Directory;
@@ -28,7 +28,7 @@ YAML_Doc::YAML_Doc(const std::string& miniApp_Name, const std::string& miniApp_V
 }
 
 //inherits the destructor from YAML_Element
-YAML_Doc::~YAML_Doc(void){
+YAML_Doc::~YAML_Doc(void) {
 }
 
 /*!
@@ -36,14 +36,14 @@ YAML_Doc::~YAML_Doc(void){
 
   @return returns the complete YAML document as a string
 */
-string YAML_Doc::generateYAML(){
+string YAML_Doc::generateYAML() {
   string yaml;
   yaml =  yaml + miniAppName + "\n";
   yaml =  yaml +  miniAppVersion + "\n";
-  for(size_t i=0; i<children.size(); i++){
+  for (size_t i=0; i<children.size(); i++) {
     yaml = yaml + children[i]->printYAML("");
   }
-  
+
   time_t rawtime;
   tm * ptm;
   time ( &rawtime );
@@ -51,12 +51,12 @@ string YAML_Doc::generateYAML(){
   char sdate[25];
   //use tm_mon+1 because tm_mon is 0 .. 11 instead of 1 .. 12
   sprintf (sdate,"%04d:%02d:%02d-%02d:%02d:%02d",ptm->tm_year + 1900, ptm->tm_mon+1,
-    ptm->tm_mday, ptm->tm_hour, ptm->tm_min,ptm->tm_sec);
+      ptm->tm_mday, ptm->tm_hour, ptm->tm_min,ptm->tm_sec);
 
   string filename;
-  if (destinationFileName=="") 
+  if (destinationFileName=="")
     filename = miniAppName + "-" + miniAppVersion + "_";
-  else 
+  else
     filename = destinationFileName;
   filename = filename + string(sdate) + ".yaml";
   if (destinationDirectory!="" && destinationDirectory!=".") {
@@ -67,8 +67,7 @@ string YAML_Doc::generateYAML(){
     system(mkdir_cmd.c_str());
 #endif
     filename = destinationDirectory + "/" + destinationFileName;
-  }
-  else 
+  } else
     filename = "./" + filename;
 
   ofstream myfile;

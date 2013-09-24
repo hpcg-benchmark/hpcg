@@ -26,18 +26,18 @@
 */
 int TestNorms(TestNormsData * testnorms_data) {
 
-	// Compute mean
-	double mean = 0.0;
-	for (int i= 0; i<testnorms_data->samples; ++i) mean += testnorms_data->values[i];
-	testnorms_data->mean = (mean/((double)testnorms_data->samples));
+  // Compute mean
+  double mean = 0.0;
+  for (int i= 0; i<testnorms_data->samples; ++i) mean += testnorms_data->values[i];
+  testnorms_data->mean = (mean/((double)testnorms_data->samples));
 
-	// Compute variance
-	double sumdiff = 0.0;
-	for (int i= 0; i<testnorms_data->samples; ++i) sumdiff += (testnorms_data->values[i] - mean) * (testnorms_data->values[i] - mean);
-	testnorms_data->variance = (sumdiff/((double)testnorms_data->samples));
+  // Compute variance
+  double sumdiff = 0.0;
+  for (int i= 0; i<testnorms_data->samples; ++i) sumdiff += (testnorms_data->values[i] - mean) * (testnorms_data->values[i] - mean);
+  testnorms_data->variance = (sumdiff/((double)testnorms_data->samples));
 
-	// Determine if variation is sufficiently small to declare success
-	testnorms_data->pass = (testnorms_data->variance<1.0e-6);
+  // Determine if variation is sufficiently small to declare success
+  testnorms_data->pass = (testnorms_data->variance<1.0e-6);
 
-    return 0;
+  return 0;
 }

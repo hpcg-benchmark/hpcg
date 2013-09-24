@@ -1,10 +1,10 @@
 
 //@HEADER
 // ************************************************************************
-// 
+//
 //               HPCG: Simple Conjugate Gradient Benchmark Code
-// Questions? Contact Michael A. Heroux (maherou@sandia.gov) 
-// 
+// Questions? Contact Michael A. Heroux (maherou@sandia.gov)
+//
 // ************************************************************************
 //@HEADER
 
@@ -40,17 +40,16 @@
   @see ComputeDotProduct
 */
 int ComputeDotProduct_ref(const local_int_t n, const double * const x, const double * const y,
-	  double * const result, double & time_allreduce) {  
+    double * const result, double & time_allreduce) {
   double local_result = 0.0;
   if (y==x) {
 #ifndef HPCG_NOOPENMP
-#pragma omp parallel for reduction (+:local_result)
+    #pragma omp parallel for reduction (+:local_result)
 #endif
     for (local_int_t i=0; i<n; i++) local_result += x[i]*x[i];
-  }
-  else {
+  } else {
 #ifndef HPCG_NOOPENMP
-#pragma omp parallel for reduction (+:local_result)
+    #pragma omp parallel for reduction (+:local_result)
 #endif
     for (local_int_t i=0; i<n; i++) local_result += x[i]*y[i];
   }
@@ -59,8 +58,8 @@ int ComputeDotProduct_ref(const local_int_t n, const double * const x, const dou
   // Use MPI's reduce function to collect all partial sums
   double t0 = mytimer();
   double global_result = 0.0;
-  MPI_Allreduce(&local_result, &global_result, 1, MPI_DOUBLE, MPI_SUM, 
-                MPI_COMM_WORLD);
+  MPI_Allreduce(&local_result, &global_result, 1, MPI_DOUBLE, MPI_SUM,
+      MPI_COMM_WORLD);
   *result = global_result;
   time_allreduce += mytimer() - t0;
 #else

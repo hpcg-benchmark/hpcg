@@ -1,10 +1,10 @@
 
 //@HEADER
 // ************************************************************************
-// 
+//
 //               HPCG: Simple Conjugate Gradient Benchmark Code
-// Questions? Contact Michael A. Heroux (maherou@sandia.gov) 
-// 
+// Questions? Contact Michael A. Heroux (maherou@sandia.gov)
+//
 // ************************************************************************
 //@HEADER
 
@@ -13,5 +13,5 @@
 #include "Geometry.hpp"
 #include "SparseMatrix.hpp"
 
-void GenerateProblem(const Geometry & geom, SparseMatrix &A, double **b, double **x, double **xexact);
+void GenerateProblem(const Geometry & geom, SparseMatrix & A, double ** b, double ** x, double ** xexact);
 #endif // GENERATEPROBLEM_HPP

@@ -1,10 +1,10 @@
 
 //@HEADER
 // ************************************************************************
-// 
+//
 //               HPCG: Simple Conjugate Gradient Benchmark Code
-// Questions? Contact Michael A. Heroux (maherou@sandia.gov) 
-// 
+// Questions? Contact Michael A. Heroux (maherou@sandia.gov)
+//
 // ************************************************************************
 //@HEADER
 
@@ -25,7 +25,7 @@
   can be replaced by a custom, optimized routine suited for
   the target system.
 
-  @param[in]  A the known system matrix 
+  @param[in]  A the known system matrix
   @param[in]  x the known vector
   @param[out] y the On exit contains the result: Ax.
 
@@ -35,5 +35,5 @@
 */
 int ComputeSPMV( const SparseMatrix & A, const double * const x, double * const y) {
 
-	return(ComputeSPMV_ref(A, x, y));
+  return(ComputeSPMV_ref(A, x, y));
 }

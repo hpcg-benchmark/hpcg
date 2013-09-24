@@ -35,7 +35,7 @@
   @see ComputeWAXPBY_ref
 */
 int ComputeWAXPBY(const local_int_t n, const double alpha, const double * const x,
-	    const double beta, const double * const y,
-		     double * const w) {
+    const double beta, const double * const y,
+    double * const w) {
   return(ComputeWAXPBY_ref(n, alpha, x, beta, y, w));
 }

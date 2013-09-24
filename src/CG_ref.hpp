@@ -1,10 +1,10 @@
 
 //@HEADER
 // ************************************************************************
-// 
+//
 //               HPCG: Simple Conjugate Gradient Benchmark Code
-// Questions? Contact Michael A. Heroux (maherou@sandia.gov) 
-// 
+// Questions? Contact Michael A. Heroux (maherou@sandia.gov)
+//
 // ************************************************************************
 //@HEADER
 
@@ -16,8 +16,8 @@
 #include "CGData.hpp"
 
 int CG_ref(const Geometry & geom, const SparseMatrix & A, CGData & data, const double * const b, double * const x,
-	  const int max_iter, const double tolerance, int & niters, double & normr,  double & normr0,
-          double * times, bool doPreconditioning);
+    const int max_iter, const double tolerance, int & niters, double & normr,  double & normr0,
+    double * times, bool doPreconditioning);
 
 // this function will compute the Conjugate Gradient iterations.
 // geom - Domain and processor topology information

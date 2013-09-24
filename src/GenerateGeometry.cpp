@@ -32,7 +32,7 @@ typedef struct Counter_s {
 } Counter;
 
 static void
-Counter_new(Counter *this_, int *counts, int length) {
+Counter_new(Counter * this_, int * counts, int length) {
   int i;
 
   this_->length = length;
@@ -47,7 +47,7 @@ Counter_new(Counter *this_, int *counts, int length) {
 }
 
 static void
-Counter_next(Counter *this_) {
+Counter_next(Counter * this_) {
   int i;
 
   for (i = 0; i < this_->length; ++i) {
@@ -61,7 +61,7 @@ Counter_next(Counter *this_) {
 }
 
 static int
-Counter_is_zero(Counter *this_) {
+Counter_is_zero(Counter * this_) {
   int i;
   for (i = 0; i < this_->length; ++i)
     if (this_->cur_counts[i]) return 0;
@@ -69,7 +69,7 @@ Counter_is_zero(Counter *this_) {
 }
 
 static int
-Counter_product(Counter *this_, int *multipliers) {
+Counter_product(Counter * this_, int * multipliers) {
   int i, j, k=0, x=1;
 
   for (i = 0; i < this_->length; ++i)
@@ -82,7 +82,7 @@ Counter_product(Counter *this_, int *multipliers) {
 }
 
 static void
-Counter_max_cur_sub(Counter *this_, Counter *that, Counter *res) {
+Counter_max_cur_sub(Counter * this_, Counter * that, Counter * res) {
   int i;
 
   res->length = this_->length;
@@ -93,7 +93,7 @@ Counter_max_cur_sub(Counter *this_, Counter *that, Counter *res) {
 }
 
 static void
-primefactor_i(int x, int *factors) {
+primefactor_i(int x, int * factors) {
   int i, d, sq=(int)(sqrt((double)x))+1L;
   div_t r;
 
@@ -120,7 +120,7 @@ primefactor_i(int x, int *factors) {
   factors[i] = 0; /* terminate with 0 */
 }
 static void
-gen_min_area3(int n, int *f1, int *f2, int *f3) {
+gen_min_area3(int n, int * f1, int * f2, int * f3) {
   int i, j, df_cnt;
   int tf1, tf2, tf3;
   int factors[32+1], distinct_factors[32+1], count_factors[32+1];
@@ -197,43 +197,43 @@ gen_min_area3(int n, int *f1, int *f2, int *f3) {
 */
 void GenerateGeometry(int size, int rank, int numThreads, int nx, int ny, int nz, Geometry & geom) {
 
-	int npx, npy, npz;
+  int npx, npy, npz;
 
-	gen_min_area3( size, &npx, &npy, &npz );
+  gen_min_area3( size, &npx, &npy, &npz );
 
-	// Now compute this process's indices in the 3D cube
-	int ipz = rank/(npx*npy);
-	int ipy = (rank-ipz*npx*npy)/npx;
-	int ipx = rank%npx;
+  // Now compute this process's indices in the 3D cube
+  int ipz = rank/(npx*npy);
+  int ipy = (rank-ipz*npx*npy)/npx;
+  int ipx = rank%npx;
 
 #ifdef HPCG_DEBUG
-	if (rank==0)
-	HPCG_fout 	<< "size = "<< size << endl
-			<< "nx  = " << nx << endl
-			<< "ny  = " << ny << endl
-			<< "nz  = " << nz << endl
-			<< "npx = " << npx << endl
-			<< "npy = " << npy << endl
-			<< "npz = " << npz << endl;
+  if (rank==0)
+    HPCG_fout   << "size = "<< size << endl
+        << "nx  = " << nx << endl
+        << "ny  = " << ny << endl
+        << "nz  = " << nz << endl
+        << "npx = " << npx << endl
+        << "npy = " << npy << endl
+        << "npz = " << npz << endl;
 
-	HPCG_fout    << "For rank = " << rank << endl
-			<< "ipx = " << ipx << endl
-			<< "ipy = " << ipy << endl
-			<< "ipz = " << ipz << endl;
+  HPCG_fout    << "For rank = " << rank << endl
+      << "ipx = " << ipx << endl
+      << "ipy = " << ipy << endl
+      << "ipz = " << ipz << endl;
 
-	assert(size==npx*npy*npz);
+  assert(size==npx*npy*npz);
 #endif
-	geom.size = size;
-	geom.rank = rank;
-	geom.numThreads = numThreads;
-	geom.nx = nx;
-	geom.ny = ny;
-	geom.nz = nz;
-	geom.npx = npx;
-	geom.npy = npy;
-	geom.npz = npz;
-	geom.ipx = ipx;
-	geom.ipy = ipy;
-	geom.ipz = ipz;
-	return;
+  geom.size = size;
+  geom.rank = rank;
+  geom.numThreads = numThreads;
+  geom.nx = nx;
+  geom.ny = ny;
+  geom.nz = nz;
+  geom.npx = npx;
+  geom.npy = npy;
+  geom.npz = npz;
+  geom.ipx = ipx;
+  geom.ipy = ipy;
+  geom.ipz = ipz;
+  return;
 }

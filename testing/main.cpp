@@ -53,7 +53,7 @@ using std::endl;
 #include "CGData.hpp"
 #include "TestCG.hpp"
 #include "SymTest.hpp"
-#include "NormTest.hpp"
+#include "TestNorms.hpp"
 
 int main(int argc, char *argv[]) {
 
@@ -265,16 +265,16 @@ int main(int argc, char *argv[]) {
     /* This is the timed run for a specified amount of time. */
 
     totalNiters = 0;
-    NormTestData normtest_data;
-    normtest_data.samples = numberOfCgSets;
-    normtest_data.values = new double[numberOfCgSets];
+    TestNormsData testnorms_data;
+    testnorms_data.samples = numberOfCgSets;
+    testnorms_data.values = new double[numberOfCgSets];
 
     for (int i=0; i< numberOfCgSets; ++i) {
     	for (int j=0; j< A.localNumberOfRows; ++j) x[j] = 0.0; // Zero out x
     	ierr = CG( geom, A, data, b, x, maxIters, tolerance, niters, normr, normr0, &times[0], true);
     	if (ierr) HPCG_fout << "Error in call to CG: " << ierr << ".\n" << endl;
     	if (rank==0) HPCG_fout << "Call [" << i << "] Scaled Residual [" << normr/normr0 << "]" << endl;
-    	normtest_data.values[i] = normr/normr0; // Record scaled residual from this run
+    	testnorms_data.values[i] = normr/normr0; // Record scaled residual from this run
 	totalNiters += niters;
     }
     
@@ -288,19 +288,19 @@ int main(int argc, char *argv[]) {
 #endif
 
     // Test Norm Results
-    ierr = NormTest(&normtest_data);
+    ierr = TestNorms(&testnorms_data);
 
     ////////////////////
     // Report Results //
     ////////////////////
 
     // Report results to YAML file
-    ReportResults(geom, A, numberOfCgSets, totalNiters, &times[0], &testcg_data, &symtest_data, &normtest_data, global_failure);
+    ReportResults(geom, A, numberOfCgSets, totalNiters, &times[0], &testcg_data, &symtest_data, &testnorms_data, global_failure);
 
     // Clean up
     DeleteMatrix(A);
     DeleteCGData(data);
-    delete [] normtest_data.values;
+    delete [] testnorms_data.values;
     delete [] x;
     delete [] b;
     delete [] xexact;

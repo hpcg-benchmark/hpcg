@@ -64,7 +64,7 @@ void SetupHalo(const Geometry & geom, SparseMatrix & A) {
 #else // Run this section if compiling for MPI
 
 	// Scan global IDs of the nonzeros in the matrix.  Determine if the column ID matches a row ID.  If not:
-	// 1) We call the getRankOfMatrixRow function, which tells us the rank of the processor owning the row ID.
+	// 1) We call the ComputeRankOfMatrixRow function, which tells us the rank of the processor owning the row ID.
 	//	We need to receive this value of the x vector during the halo exchange.
 	// 2) We record our row ID since we know that the other processor will need this value from us, due to symmetry.
 
@@ -78,7 +78,7 @@ void SetupHalo(const Geometry & geom, SparseMatrix & A) {
 		global_int_t currentGlobalRow = A.localToGlobalMap[i];
 		for (int j=0; j<nonzerosInRow[i]; j++) {
 			global_int_t curIndex = mtxIndG[i][j];
-			int rankIdOfColumnEntry = getRankOfMatrixRow(geom, curIndex);
+			int rankIdOfColumnEntry = ComputeRankOfMatrixRow(geom, curIndex);
 #ifdef HPCG_DETAILED_DEBUG
 			HPCG_fout << "rank, row , col, globalToLocalMap[col] = " << geom.rank << " " << currentGlobalRow << " "
 					<< curIndex << " " << A.globalToLocalMap[curIndex] << endl;
@@ -142,7 +142,7 @@ void SetupHalo(const Geometry & geom, SparseMatrix & A) {
 	for (local_int_t i=0; i< localNumberOfRows; i++) {
 		for (int j=0; j<nonzerosInRow[i]; j++) {
 			global_int_t curIndex = mtxIndG[i][j];
-			int rankIdOfColumnEntry = getRankOfMatrixRow(geom, curIndex);
+			int rankIdOfColumnEntry = ComputeRankOfMatrixRow(geom, curIndex);
 			if (geom.rank==rankIdOfColumnEntry) { // My column index, so convert to local index
 				mtxIndL[i][j] = A.globalToLocalMap[curIndex];
 			}

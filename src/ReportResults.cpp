@@ -36,15 +36,15 @@ using std::endl;
   @param[in] numberOfCgSets Number of CG runs performed
   @param[in] niters Number of preconditioned CG iterations performed to lower the residual below a threshold
   @param[in] times  Vector of cumulative timings for each of the phases of a preconditioned CG iteration
-  @param[in] testcg_data the data structure with the results of the CG-correctness test including pass/fail information
-  @param[in] symtest_data the data structure with the results of the CG symmetry test including pass/fail information
-  @param[in] normtest_data the data structure with the results of the CG norm test including pass/fail information
+  @param[in] testcg_data    the data structure with the results of the CG-correctness test including pass/fail information
+  @param[in] symtest_data   the data structure with the results of the CG symmetry test including pass/fail information
+  @param[in] testnorms_data the data structure with the results of the CG norm test including pass/fail information
   @param[in] global_failure indicates whether a failure occured during the correctness tests of CG
 
   @see YAML_Doc
 */
 void ReportResults(const Geometry & geom, const SparseMatrix & A, int numberOfCgSets, int niters, double times[],
-  TestCGData * testcg_data, SymTestData * symtest_data, NormTestData * normtest_data, int global_failure) {
+  TestCGData * testcg_data, SymTestData * symtest_data, TestNormsData * testnorms_data, int global_failure) {
 
 #ifndef HPCG_NOMPI
     double t4 = times[4];
@@ -133,12 +133,12 @@ void ReportResults(const Geometry & geom, const SparseMatrix & A, int numberOfCg
 
         doc.add("********** Reproducibility Summary  ***********","");
         doc.add("Reproducibility Information","");
-        if (normtest_data->pass)
+        if (testnorms_data->pass)
              doc.get("Reproducibility Information")->add("Result", "PASSED");
          else
          	doc.get("Reproducibility Information")->add("Result", "FAILED");
-        doc.get("Reproducibility Information")->add("Scaled residual mean", normtest_data->mean);
-        doc.get("Reproducibility Information")->add("Scaled residual variance", normtest_data->variance);
+        doc.get("Reproducibility Information")->add("Scaled residual mean", testnorms_data->mean);
+        doc.get("Reproducibility Information")->add("Scaled residual variance", testnorms_data->variance);
 
         doc.add("********** Performance Summary (times in sec) ***********","");
         
@@ -185,7 +185,7 @@ void ReportResults(const Geometry & geom, const SparseMatrix & A, int numberOfCg
         doc.get("Sparse Operations Overheads")->add("Halo exchange as percentage of SpMV time", (times[6])/totalSparseMVTime*100.0);
 #endif
         doc.add("********** Final Summary **********","");
-        bool isValidRun = (testcg_data->count_fail==0) && (symtest_data->count_fail==0) && (normtest_data->pass);
+        bool isValidRun = (testcg_data->count_fail==0) && (symtest_data->count_fail==0) && (testnorms_data->pass);
         if (isValidRun) {
         	doc.get("********** Final Summary **********")->add("HPCG result is VALID with a GFLOP/s rating of", totalGflops);
         	doc.get("********** Final Summary **********")->add("Please send the YAML file contents to","HPCG-Results@software.sandia.gov");

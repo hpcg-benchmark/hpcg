@@ -13,9 +13,9 @@
 #include "SparseMatrix.hpp"
 #include "TestCG.hpp"
 #include "SymTest.hpp"
-#include "NormTest.hpp"
+#include "TestNorms.hpp"
 
 void ReportResults(const Geometry & geom, const SparseMatrix & A, int numberOfCgSets, int niters, double times[],
-  TestCGData * testcg_data, SymTestData * symtest_data, NormTestData * normtest_data, int global_failure);
+  TestCGData * testcg_data, SymTestData * symtest_data, TestNormsData * testnorms_data, int global_failure);
 
 #endif // REPORTRESULTS_HPP

@@ -9,24 +9,24 @@
 //@HEADER
 
 /*!
- @file NormTest.hpp
+ @file TestNorms.hpp
 
  HPCG data structure
  */
 
-#ifndef NORMTEST_HPP
-#define NORMTEST_HPP
+#ifndef TESTNORMS_HPP
+#define TESTNORMS_HPP
 
 
-struct NormTestData_STRUCT {
+struct TestNormsData_STRUCT {
   double * values; //!< sample values
-  double mean;     //!< mean of all sampes
+  double   mean;   //!< mean of all sampes
   double variance; //!< variance of mean
-  int samples;     //!< number of samples
-  bool pass;       //!< pass/fail indicator
+  int    samples;  //!< number of samples
+  bool   pass;     //!< pass/fail indicator
 };
-typedef struct NormTestData_STRUCT NormTestData;
+typedef struct TestNormsData_STRUCT TestNormsData;
 
-extern int NormTest(NormTestData * normtest_data);
+extern int TestNorms(TestNormsData * testnorms_data);
 
-#endif  // NORMTEST_HPP
+#endif  // TESTNORMS_HPP

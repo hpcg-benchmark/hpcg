@@ -66,7 +66,7 @@ typedef struct Geometry_STRUCT Geometry;
 
   @return Returns the MPI rank of the process assigned the row
 */
-inline int getRankOfMatrixRow(const Geometry & geom, global_int_t index) {
+inline int ComputeRankOfMatrixRow(const Geometry & geom, global_int_t index) {
 	int gnx = geom.nx*geom.npx;
 	int gny = geom.ny*geom.npy;
 

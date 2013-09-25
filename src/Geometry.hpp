@@ -22,8 +22,8 @@
 
   Define as "long long" when local problem dimension is > 2^31
 */
-//typedef int local_int_t;
-typedef long long local_int_t;
+typedef int local_int_t;
+//typedef long long local_int_t;
 
 /*!
   This defines the type for integers that have global dimension

@@ -3,8 +3,8 @@ High Performance Conjugate Gradient Benchmark (HPCG)
 ####################################################
 
 :Author: Jack Dongarra and Michael Heroux and Piotr Luszczek
-:Date: August 22, 2013
-:Revision: 0.1
+:Date: September 25, 2013
+:Revision: 0.3
 
 ============
 Introduction
@@ -63,5 +63,5 @@ Known problems and bugs with this release are documented in the file
 Further information
 ===================
 
-Check out  the website  http://icl.utk.edu/benchmark/hpcg/  for the latest
+Check out  the website  http://software.sandia.gov/hpcg for the latest
 information.

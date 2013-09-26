@@ -46,7 +46,7 @@ NOTE: The instructions in this file assume you are working with a version
    the results are valid, and explain how to report them.
 
    Example commands:
-      less benchmark-hpcg-0.1_2013:09:11-13:39:25.yaml
-      mail hpcg-results@software.sandia.gov < benchmark-hpcg-0.1_2013:09:11-13:39:25.yaml 
+      less HPCG-Benchmark-0.2_2013:09:25-17:17:52.yaml
+      mail hpcg-results@software.sandia.gov < HPCG-Benchmark-0.2_2013:09:25-17:17:52.yaml 
 
 6) If results are not valid, do not submit them.

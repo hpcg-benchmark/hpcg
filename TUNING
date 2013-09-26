@@ -1,9 +1,9 @@
 ==============================================================
  Performance Tuning and setting up the input data file HPCG.dat
  
- Current as of release HPCG - 0.1 - August 22, 2013
+ Current as of release HPCG - 0.3 - September 25, 2013
 ==============================================================
- Check out  the website  www.netlib.org/benchmark/hpcg  for the
+ Check out  the website  http://software.sandia.gov/hpcg for the
  latest information.
 
  After  having  built  the executable hpcg/bin/<arch>/xhpcg, one

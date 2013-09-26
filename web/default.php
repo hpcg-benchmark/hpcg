@@ -29,7 +29,7 @@
 <div class="releaseBox">
   <p>The current release update is: <strong>0.3</strong></p>
 
-  <p>Released: <strong>January 1, 2008</strong></p>
+  <p>Released: <strong>September 25, 2013</strong></p>
 
   <p><a href="download.php">Download HPCG 0.3 now</a>.</p>
 </div>

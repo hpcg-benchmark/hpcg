@@ -3,12 +3,29 @@ High Performance Conjugate Gradient Benchmark (HPCG)
 ####################################################
 
 :Author: Jack Dongarra and Michael Heroux and Piotr Luszczek
-:Revision: 0.1
-:Date: August 22, 2013
+:Revision: 0.3
+:Date: September 25, 2013
 
 ===============
 History of HPCG
 ===============
+
+-----------
+Version 0.3
+-----------
+
+* Given out to friendly testers.
+* Includes Doxygen output.
+* Numerous small changes.
+* Substantially improved output.
+* Tested on large systems.
+
+-----------
+Version 0.2
+-----------
+* Given out to "friends".
+* Numerous small changes.
+
 
 -----------
 Version 0.1

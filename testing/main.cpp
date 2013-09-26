@@ -8,13 +8,11 @@
 // ************************************************************************
 //@HEADER
 
-// Changelog
-//
-// Version 0.3
-// - Added timing of setup time for sparse MV
-// - Corrected percentages reported for sparse MV with overhead
-//
-/////////////////////////////////////////////////////////////////////////
+/*!
+ @file main.cpp
+
+ HPCG rouine
+ */
 
 // Main routine of a program that calls the HPCG conjugate gradient
 // solver to solve the problem, and then prints results.
@@ -55,6 +53,15 @@ using std::endl;
 #include "TestSymmetry.hpp"
 #include "TestNorms.hpp"
 
+/*!
+  Main driver program: Construct synthetic problem, run V&V tests, compute benchmark parameters, run benchmark, report results.
+
+  @param[in]  argc Standard argument count.  Should equal 1 (no arguments passed in) or 4 (nx, ny, nz passed in)
+  @param[in]  argv Standard argument array.  If argc==1, argv is unused.  If argc==4, argv[1], argv[2], argv[3] will be interpreted as nx, ny, nz, resp.
+
+  @return Returns zero on success and a non-zero value otherwise.
+
+*/
 int main(int argc, char * argv[]) {
 
 #ifndef HPCG_NOMPI

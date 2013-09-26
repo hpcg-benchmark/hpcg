@@ -11,8 +11,8 @@
 <div class="breadcrumb"><a href="resources.php">Resources</a> - Publications</div>
 
 <ul class="docs">
-<li><a href="HPCG-Benchmark.pdf"> Toward a New Metric for Ranking High Performance Computing Systems (.pdf)</a></li>
-<li><a href="HPCG-Specification.pdf"> HPCG Technical Specification (.pdf)</a></li>
+<li><a href="doc/HPCG-Benchmark.pdf"> Toward a New Metric for Ranking High Performance Computing Systems (.pdf)</a></li>
+<li><a href="doc/HPCG-Specification.pdf"> HPCG Technical Specification (.pdf)</a></li>
 </ul>
 
 <?php include 'common/footer.html' ?>

@@ -24,6 +24,6 @@ END;
 
 <p>Previous releases can be found <a href="download_previous.php">here</a>.</p>
 
-  HPCG: <a href="downloads/HPCG-0.3.tar.gz">Reference Version 0.3</a>
+  HPCG: <a href="downloads/hpcg-0.3.tar.gz">Reference Version 0.3</a>
 
 <?php include 'common/footer.html' ?>

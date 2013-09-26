@@ -1,0 +1,8 @@
+#!/bin/sh
+# Run this script from the main hpcg directory:
+# hpcg> updateDoxWeb
+doxygen tools/hpcg.dox
+cd out
+scp -r html maherou@software.sandia.gov:/var/www/html/hpcg/
+ssh maherou@software.sandia.gov chmod a+rx /var/www/html/hpcg/html
+ssh maherou@software.sandia.gov chmod a+r /var/www/html/hpcg/html/*

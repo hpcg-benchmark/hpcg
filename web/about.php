@@ -29,8 +29,8 @@ than the current Top 500 High Performance LINPACK code.</p>
       
 <h3>HPCG Overview Papers</h3>
 
-<p><a href=HPCG-Benchmark.pdf> Toward a New Metric for Ranking High Performance Computing Systems</a></p>
-<p><a href=HPCG-Specification.pdf> HPCG Technical Specification</a></p>
+<p><a href=doc/HPCG-Benchmark.pdf> Toward a New Metric for Ranking High Performance Computing Systems</a></p>
+<p><a href=doc/HPCG-Specification.pdf> HPCG Technical Specification</a></p>
 
       
 <br/>

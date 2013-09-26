@@ -17,5 +17,4 @@
       </ul>
     </ul>
 
-release.</p>
 <?php include 'common/footer.html' ?>

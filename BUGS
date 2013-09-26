@@ -3,6 +3,9 @@
 
  Current as of release HPCG - 0.3 - September 25, 2013
 ==============================================================
+- Known failure in MPI_Irecv call in ExchangeHalo.cpp when 
+  local_int_t is 'long long' with 4000 MPI processes on the
+  Sandia system chama.  Bug is being explored.
 
 ==============================================================
  

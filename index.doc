@@ -1,0 +1,65 @@
+/*! \mainpage HPCG: High Performance Conjugate Gradient Benchmark
+
+\section HPCG_outline Outline
+
+<ul>
+<li>\ref HPCG_intro
+<li>\ref HPCG_startup
+  <ul>
+  <li>\ref HPCG_quickstart
+  <li>\ref HPCG_readme
+  <li>\ref HPCG_installation
+  <li>\ref HPCG_tuning
+  </ul>
+<li>\ref HPCG_details
+  <ul>
+  <li>\ref HPCG_history
+  <li>\ref HPCG_bugs
+  <li>\ref HPCG_todo
+  <li>\ref HPCG_copyright
+  </ul>
+</ul>
+
+\section HPCG_intro Introduction
+HPCG is a self-contained benchmark that generates and solves a synthetic 3D sparse linear system
+using a local symmetric Gauss-Seidel preconditioned conjugate gradient method.
+
+\section HPCG_startup Getting started
+
+This content is found in the main directory of the HPCG distribution tar file.
+
+\subsection HPCG_quickstart Quick Start
+
+\verbinclude QUICKSTART
+
+\subsection HPCG_readme README file
+
+\verbinclude README
+
+\subsection HPCG_installation Installation Instructions
+
+\verbinclude INSTALL
+
+\subsection HPCG_tuning Tuning HPCG
+
+\verbinclude TUNING
+
+\section HPCG_details Details about HPCG
+
+\subsection HPCG_history Code History
+
+\verbinclude HISTORY
+
+\subsection HPCG_bugs Known Bugs
+
+\verbinclude BUGS
+
+\subsection HPCG_todo Next Project Efforts
+
+\verbinclude TODO
+
+\subsection HPCG_copyright Copyright Statement
+
+\verbinclude COPYRIGHT
+
+*/

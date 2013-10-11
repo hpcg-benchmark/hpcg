@@ -15,6 +15,6 @@ END;
 
 <div class="breadcrumb"><a href="resources.php">Resources</a> - FAQ</div>
 
-<p>None at this point.</p>
+<p>See the FAQ section in the <a href="doc/HPCG-Specification.pdf">HPCG Specification</a> document.</p>
 
 <?php include 'common/footer.html' ?>

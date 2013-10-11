@@ -10,6 +10,6 @@
 
 <div class="breadcrumb"><a href="events.php">Events</a> - SC13 Birds-of-a-Feather</div>
 
-<p>More announced later </p>
+<p>Part of the TOP500 BOF, Tuesday, November 19, 5:30 pm, Mile High Room</p>
 
 <?php include 'common/footer.html' ?>

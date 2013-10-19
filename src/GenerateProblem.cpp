@@ -46,23 +46,26 @@ using std::endl;
 
 void GenerateProblem(const Geometry & geom, SparseMatrix & A, double ** b, double ** x, double ** xexact) {
 
-  int nx = geom.nx;
-  int ny = geom.ny;
-  int nz = geom.nz;
-  int npx = geom.npx;
-  int npy = geom.npy;
-  int npz = geom.npz;
-  int ipx = geom.ipx;
-  int ipy = geom.ipy;
-  int ipz = geom.ipz;
-  int gnx = nx*npx;
-  int gny = ny*npy;
-  int gnz = nz*npz;
+  // Make local copies of geometry information.  Use global_int_t since the RHS products in the calculations
+  // below may result in global range values.
+  global_int_t nx = geom.nx;
+  global_int_t ny = geom.ny;
+  global_int_t nz = geom.nz;
+  global_int_t npx = geom.npx;
+  global_int_t npy = geom.npy;
+  global_int_t npz = geom.npz;
+  global_int_t ipx = geom.ipx;
+  global_int_t ipy = geom.ipy;
+  global_int_t ipz = geom.ipz;
+  global_int_t size = geom.size;
+  global_int_t gnx = nx*npx;
+  global_int_t gny = ny*npy;
+  global_int_t gnz = nz*npz;
 
-  local_int_t localNumberOfRows = nx*ny*nz; // This is the size of our subblock
+  global_int_t localNumberOfRows = nx*ny*nz; // This is the size of our subblock
   // If this assert fails, it most likely means that the local_int_t is set to int and should be set to long long
   assert(localNumberOfRows>0); // Throw an exception of the number of rows is less than zero (can happen if int overflow)
-  int numberOfNonzerosPerRow = 27; // We are approximating a 27-point finite element/volume/difference 3D stencil
+  global_int_t numberOfNonzerosPerRow = 27; // We are approximating a 27-point finite element/volume/difference 3D stencil
 
   global_int_t totalNumberOfRows = localNumberOfRows*geom.size; // Total number of grid points in mesh
   // If this assert fails, it most likely means that the global_int_t is set to int and should be set to long long

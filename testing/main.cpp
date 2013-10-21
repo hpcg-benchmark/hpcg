@@ -11,7 +11,7 @@
 /*!
  @file main.cpp
 
- HPCG rouine
+ HPCG routine
  */
 
 // Main routine of a program that calls the HPCG conjugate gradient
@@ -248,6 +248,14 @@ int main(int argc, char * argv[]) {
 
     totalNiters += niters;
   }
+
+#ifndef HPCG_NOMPI
+// Get the absolute worst time across all MPI ranks (time in CG can be different)
+  double local_opt_worst_time = opt_worst_time;
+  MPI_Allreduce(&local_opt_worst_time, &opt_worst_time, 1, MPI_DOUBLE, MPI_MAX, MPI_COMM_WORLD);
+#endif
+
+
   if (rank == 0 && err_count) HPCG_fout << err_count << " error(s) in call(s) to optimized CG." << endl;
   if (tolerance_failures) {
     global_failure = 1;

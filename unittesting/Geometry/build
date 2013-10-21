@@ -1,0 +1,2 @@
+g++ -c -I../../src ../../src/GenerateGeometry.cpp -o GenerateGeometry.o
+g++ -I../../src main.cpp GenerateGeometry.o -o xTestGeometry

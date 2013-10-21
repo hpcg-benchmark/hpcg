@@ -16,7 +16,7 @@
 
 // Changelog
 //
-// Version 0.3
+// Version 0.4
 // - Added timing of setup time for sparse MV
 // - Corrected percentages reported for sparse MV with overhead
 //

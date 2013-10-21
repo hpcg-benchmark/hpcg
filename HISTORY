@@ -3,12 +3,22 @@ High Performance Conjugate Gradient Benchmark (HPCG)
 ####################################################
 
 :Author: Jack Dongarra and Michael Heroux and Piotr Luszczek
-:Revision: 0.3
+:Revision: 0.4
 :Date: September 25, 2013
 
 ===============
 History of HPCG
 ===============
+
+-----------
+Version 0.4
+-----------
+
+* Fixed bugs in integer computations where intermediate 32-bit
+  integer computations resulted in values that exceeded the
+  32-bit range and gave incorrect results.
+* Fixed the computation of the number of CG set runs to take
+  into account varying timing results across MPI processes.
 
 -----------
 Version 0.3

@@ -13,7 +13,7 @@
     <ul>
 	<li><b>Versions of HPCG:</b></li>
     <ul>
-     <li><b>Reference:</b> <a href="downloads/hpcg-0.3.tar.gz">HPCG 0.3 Reference code</a>
+     <li><b>Reference:</b> <a href="downloads/hpcg-0.4.tar.gz">HPCG 0.4 Reference code</a>
       </ul>
     </ul>
 

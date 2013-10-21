@@ -18,12 +18,12 @@ END;
 
 <div class="breadcrumb">Download</div>
 
-<h3>HPCG Benchmark Release Version 0.3 (Alpha) </h3>
+<h3>HPCG Benchmark Release Version 0.4 (Alpha) </h3>
 
-<p>The current HPCG Suite Release version is 0.3. </p>
+<p>The current HPCG Suite Release version is 0.4. </p>
 
 <p>Previous releases can be found <a href="download_previous.php">here</a>.</p>
 
-  HPCG: <a href="downloads/hpcg-0.3.tar.gz">Reference Version 0.3</a>
+  HPCG: <a href="downloads/hpcg-0.4.tar.gz">Reference Version 0.4</a>
 
 <?php include 'common/footer.html' ?>

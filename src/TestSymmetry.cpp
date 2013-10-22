@@ -94,8 +94,8 @@ int TestSymmetry(Geometry & geom, SparseMatrix & A, double * const b, double * c
   double ytAx = 0.0;
   ierr = ComputeDotProduct(nrow, y_overlap, b_computed, &ytAx, t4); // b_computed = A*y_overlap
   if (ierr) HPCG_fout << "Error in call to dot: " << ierr << ".\n" << endl;
-  testsymmetry_data->depsym_spmv = std::fabs((long double) (xtAy - ytAx));
-  if (testsymmetry_data->depsym_spmv > 1.0e-4) ++testsymmetry_data->count_fail;  // If the difference is > 10e-4, count it wrong
+  testsymmetry_data->depsym_spmv = std::fabs((long double) (xtAy - ytAx))/((double) A.totalNumberOfRows); // Scale by  n
+  if (testsymmetry_data->depsym_spmv > 1.0e-13) ++testsymmetry_data->count_fail;  // If the difference is > 10e-13, count it wrong
   if (geom.rank==0) HPCG_fout << "Departure from symmetry for SpMV abs(x'*A*y - y'*A*x) = " << testsymmetry_data->depsym_spmv << endl;
 
   // Test symmetry of symmetric Gauss-Seidel
@@ -113,8 +113,8 @@ int TestSymmetry(Geometry & geom, SparseMatrix & A, double * const b, double * c
   double ytMinvx = 0.0;
   ierr = ComputeDotProduct(nrow, y_overlap, b_computed, &ytMinvx, t4); // b_computed = A*y_overlap
   if (ierr) HPCG_fout << "Error in call to dot: " << ierr << ".\n" << endl;
-  testsymmetry_data->depsym_symgs = std::fabs((long double) (xtMinvy - ytMinvx));
-  if (testsymmetry_data->depsym_symgs > 1.0e-4) ++testsymmetry_data->count_fail;  // If the difference is > 10e-4, count it wrong
+  testsymmetry_data->depsym_symgs = std::fabs((long double) (xtMinvy - ytMinvx))/((double) A.totalNumberOfRows); // Scale by square root of n
+  if (testsymmetry_data->depsym_symgs > 1.0e-13) ++testsymmetry_data->count_fail;  // If the difference is > 10e-13, count it wrong
   if (geom.rank==0) HPCG_fout << "Departure from symmetry for SymGS abs(x'*Minv*y - y'*Minv*x) = " << testsymmetry_data->depsym_symgs << endl;
 
   for (int i=0; i< nrow; ++i) x_overlap[i] = xexact[i]; // Copy exact answer into overlap vector

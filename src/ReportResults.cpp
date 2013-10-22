@@ -74,7 +74,7 @@ void ReportResults(const Geometry & geom, const SparseMatrix & A, int numberOfCg
     double fnops = fnops_ddot+fnops_waxpby+fnops_sparsemv+fnops_precond;
 
     YAML_Doc doc("HPCG-Benchmark", "0.4");
-    doc.add("HPCG Benchmark","Version 0.4 September 25, 2013");
+    doc.add("HPCG Benchmark","Version 0.4 October 21, 2013");
 
     doc.add("Machine Summary","");
     doc.get("Machine Summary")->add("Distributed Processes",geom.size);
@@ -113,13 +113,13 @@ void ReportResults(const Geometry & geom, const SparseMatrix & A, int numberOfCg
     doc.get("Spectral Convergence Tests")->get("Preconditioned")->add("Maximum iteration count", testcg_data->niters_max_prec);
     doc.get("Spectral Convergence Tests")->get("Preconditioned")->add("Expected iteration count", testcg_data->expected_niters_prec);
 
-    doc.add("Departure from Symmetry (x'Ay-y'Ax)","");
+    doc.add("Departure from Symmetry (x'Ay-y'Ax)/N","");
     if (testsymmetry_data->count_fail==0)
-      doc.get("Departure from Symmetry (x'Ay-y'Ax)")->add("Result", "PASSED");
+      doc.get("Departure from Symmetry (x'Ay-y'Ax)/N")->add("Result", "PASSED");
     else
-      doc.get("Departure from Symmetry (x'Ay-y'Ax)")->add("Result", "FAILED");
-    doc.get("Departure from Symmetry (x'Ay-y'Ax)")->add("Departure for SpMV", testsymmetry_data->depsym_spmv);
-    doc.get("Departure from Symmetry (x'Ay-y'Ax)")->add("Departure for SymGS", testsymmetry_data->depsym_symgs);
+      doc.get("Departure from Symmetry (x'Ay-y'Ax)/N")->add("Result", "FAILED");
+    doc.get("Departure from Symmetry (x'Ay-y'Ax)/N")->add("Departure for SpMV", testsymmetry_data->depsym_spmv);
+    doc.get("Departure from Symmetry (x'Ay-y'Ax)/N")->add("Departure for SymGS", testsymmetry_data->depsym_symgs);
 
     doc.add("********** Iterations Summary  ***********","");
     doc.add("Iteration Count Information","");

@@ -93,7 +93,7 @@ inline void InitializeSparseMatrix(SparseMatrix & A) {
  */
 inline void DeleteMatrix(SparseMatrix & A) {
 
-  for (int i = 0; i< A.localNumberOfRows; ++i) {
+  for (local_int_t i = 0; i< A.localNumberOfRows; ++i) {
     delete [] A.matrixValues[i];
     delete [] A.mtxIndG[i];
     delete [] A.mtxIndL[i];

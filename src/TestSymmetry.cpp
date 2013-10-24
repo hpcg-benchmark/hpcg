@@ -16,6 +16,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <cfloat>
 #include <cstdlib>
 using std::endl;
 #include <vector>
@@ -75,10 +76,14 @@ int TestSymmetry(Geometry & geom, SparseMatrix & A, double * const b, double * c
     y_overlap[i] = rand() / (double)(RAND_MAX) + 1;
   }
 
+  double xNorm2, yNorm2;
+  double ANorm = 2 * 27.0;
+
   // Next, compute x'*A*y
 #ifndef HPCG_NOMPI
   ExchangeHalo(A,y_overlap);
 #endif
+  ComputeDotProduct(nrow, y_overlap, y_overlap, &yNorm2, t4);
   int ierr = ComputeSPMV(A, y_overlap, b_computed); // b_computed = A*y_overlap
   if (ierr) HPCG_fout << "Error in call to SpMV: " << ierr << ".\n" << endl;
   double xtAy = 0.0;
@@ -89,13 +94,14 @@ int TestSymmetry(Geometry & geom, SparseMatrix & A, double * const b, double * c
 #ifndef HPCG_NOMPI
   ExchangeHalo(A,x_overlap);
 #endif
-  ierr = ComputeSPMV(A, x_overlap, b_computed); // b_computed = A*y_overlap
+  ComputeDotProduct(nrow, x_overlap, x_overlap, &xNorm2, t4);
+  ierr = ComputeSPMV(A, x_overlap, b_computed); // b_computed = A*x_overlap
   if (ierr) HPCG_fout << "Error in call to SpMV: " << ierr << ".\n" << endl;
   double ytAx = 0.0;
   ierr = ComputeDotProduct(nrow, y_overlap, b_computed, &ytAx, t4); // b_computed = A*y_overlap
   if (ierr) HPCG_fout << "Error in call to dot: " << ierr << ".\n" << endl;
-  testsymmetry_data->depsym_spmv = std::fabs((long double) (xtAy - ytAx))/((double) A.totalNumberOfRows); // Scale by  n
-  if (testsymmetry_data->depsym_spmv > 1.0e-13) ++testsymmetry_data->count_fail;  // If the difference is > 10e-13, count it wrong
+  testsymmetry_data->depsym_spmv = std::fabs((long double) (xtAy - ytAx))/((xNorm2*ANorm*yNorm2 + xNorm2*ANorm*yNorm2) * (DBL_EPSILON));
+  if (testsymmetry_data->depsym_spmv > 1.0) ++testsymmetry_data->count_fail;  // If the difference is > 1, count it wrong
   if (geom.rank==0) HPCG_fout << "Departure from symmetry for SpMV abs(x'*A*y - y'*A*x) = " << testsymmetry_data->depsym_spmv << endl;
 
   // Test symmetry of symmetric Gauss-Seidel
@@ -104,17 +110,17 @@ int TestSymmetry(Geometry & geom, SparseMatrix & A, double * const b, double * c
   ierr = ComputeSYMGS(A, y_overlap, b_computed); // b_computed = Minv*y_overlap
   if (ierr) HPCG_fout << "Error in call to SymGS: " << ierr << ".\n" << endl;
   double xtMinvy = 0.0;
-  ierr = ComputeDotProduct(nrow, x_overlap, b_computed, &xtMinvy, t4); // b_computed = A*y_overlap
+  ierr = ComputeDotProduct(nrow, x_overlap, b_computed, &xtMinvy, t4); // b_computed = A*x_overlap
   if (ierr) HPCG_fout << "Error in call to dot: " << ierr << ".\n" << endl;
 
   // Next, compute y'*Minv*x
-  ierr = ComputeSYMGS(A, x_overlap, b_computed); // b_computed = Minv*y_overlap
+  ierr = ComputeSYMGS(A, x_overlap, b_computed); // b_computed = Minv*x_overlap
   if (ierr) HPCG_fout << "Error in call to SymGS: " << ierr << ".\n" << endl;
   double ytMinvx = 0.0;
   ierr = ComputeDotProduct(nrow, y_overlap, b_computed, &ytMinvx, t4); // b_computed = A*y_overlap
   if (ierr) HPCG_fout << "Error in call to dot: " << ierr << ".\n" << endl;
-  testsymmetry_data->depsym_symgs = std::fabs((long double) (xtMinvy - ytMinvx))/((double) A.totalNumberOfRows); // Scale by square root of n
-  if (testsymmetry_data->depsym_symgs > 1.0e-13) ++testsymmetry_data->count_fail;  // If the difference is > 10e-13, count it wrong
+  testsymmetry_data->depsym_symgs = std::fabs((long double) (xtMinvy - ytMinvx))/((xNorm2*ANorm*yNorm2 + xNorm2*ANorm*yNorm2) * (DBL_EPSILON));
+  if (testsymmetry_data->depsym_symgs > 1.0) ++testsymmetry_data->count_fail;  // If the difference is > 1, count it wrong
   if (geom.rank==0) HPCG_fout << "Departure from symmetry for SymGS abs(x'*Minv*y - y'*Minv*x) = " << testsymmetry_data->depsym_symgs << endl;
 
   for (int i=0; i< nrow; ++i) x_overlap[i] = xexact[i]; // Copy exact answer into overlap vector

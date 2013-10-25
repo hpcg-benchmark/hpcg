@@ -27,11 +27,10 @@
 <!--
 <div class="releaseBoxContainer">
 <div class="releaseBox">
-  <p>The current release update is: <strong>0.4</strong></p>
+  <p>The current release update is: <strong>0.5</strong></p>
 
-  <p>Released: <strong>October 21, 2013</strong></p>
+  <p>Released: <strong>October 25, 2013</strong></p>
 
-  <p><a href="download.php">Download HPCG 0.4 now</a>.</p>
 </div>
 </div>
 -->

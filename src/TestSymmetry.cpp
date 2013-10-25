@@ -100,9 +100,9 @@ int TestSymmetry(Geometry & geom, SparseMatrix & A, double * const b, double * c
   double ytAx = 0.0;
   ierr = ComputeDotProduct(nrow, y_overlap, b_computed, &ytAx, t4); // b_computed = A*y_overlap
   if (ierr) HPCG_fout << "Error in call to dot: " << ierr << ".\n" << endl;
-  testsymmetry_data->depsym_spmv = std::fabs((long double) (xtAy - ytAx))/((xNorm2*ANorm*yNorm2 + xNorm2*ANorm*yNorm2) * (DBL_EPSILON));
+  testsymmetry_data->depsym_spmv = std::fabs((long double) (xtAy - ytAx))/((xNorm2*ANorm*yNorm2 + yNorm2*ANorm*xNorm2) * (DBL_EPSILON));
   if (testsymmetry_data->depsym_spmv > 1.0) ++testsymmetry_data->count_fail;  // If the difference is > 1, count it wrong
-  if (geom.rank==0) HPCG_fout << "Departure from symmetry for SpMV abs(x'*A*y - y'*A*x) = " << testsymmetry_data->depsym_spmv << endl;
+  if (geom.rank==0) HPCG_fout << "Departure from symmetry (scaled) for SpMV abs(x'*A*y - y'*A*x) = " << testsymmetry_data->depsym_spmv << endl;
 
   // Test symmetry of symmetric Gauss-Seidel
 
@@ -119,9 +119,9 @@ int TestSymmetry(Geometry & geom, SparseMatrix & A, double * const b, double * c
   double ytMinvx = 0.0;
   ierr = ComputeDotProduct(nrow, y_overlap, b_computed, &ytMinvx, t4); // b_computed = A*y_overlap
   if (ierr) HPCG_fout << "Error in call to dot: " << ierr << ".\n" << endl;
-  testsymmetry_data->depsym_symgs = std::fabs((long double) (xtMinvy - ytMinvx))/((xNorm2*ANorm*yNorm2 + xNorm2*ANorm*yNorm2) * (DBL_EPSILON));
+  testsymmetry_data->depsym_symgs = std::fabs((long double) (xtMinvy - ytMinvx))/((xNorm2*ANorm*yNorm2 + yNorm2*ANorm*xNorm2) * (DBL_EPSILON));
   if (testsymmetry_data->depsym_symgs > 1.0) ++testsymmetry_data->count_fail;  // If the difference is > 1, count it wrong
-  if (geom.rank==0) HPCG_fout << "Departure from symmetry for SymGS abs(x'*Minv*y - y'*Minv*x) = " << testsymmetry_data->depsym_symgs << endl;
+  if (geom.rank==0) HPCG_fout << "Departure from symmetry (scaled) for SymGS abs(x'*Minv*y - y'*Minv*x) = " << testsymmetry_data->depsym_symgs << endl;
 
   for (int i=0; i< nrow; ++i) x_overlap[i] = xexact[i]; // Copy exact answer into overlap vector
 

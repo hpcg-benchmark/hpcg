@@ -113,13 +113,14 @@ void ReportResults(const Geometry & geom, const SparseMatrix & A, int numberOfCg
     doc.get("Spectral Convergence Tests")->get("Preconditioned")->add("Maximum iteration count", testcg_data->niters_max_prec);
     doc.get("Spectral Convergence Tests")->get("Preconditioned")->add("Expected iteration count", testcg_data->expected_niters_prec);
 
-    doc.add("Departure from Symmetry (x'Ay-y'Ax)/N","");
+    const char DepartureFromSymmetry[] = "Departure from Symmetry |x'Ay-y'Ax|/(||x||*||A||*||y||+||y||*||A||*||x||)/epsilon";
+    doc.add(DepartureFromSymmetry,"");
     if (testsymmetry_data->count_fail==0)
-      doc.get("Departure from Symmetry (x'Ay-y'Ax)/N")->add("Result", "PASSED");
+      doc.get(DepartureFromSymmetry)->add("Result", "PASSED");
     else
-      doc.get("Departure from Symmetry (x'Ay-y'Ax)/N")->add("Result", "FAILED");
-    doc.get("Departure from Symmetry (x'Ay-y'Ax)/N")->add("Departure for SpMV", testsymmetry_data->depsym_spmv);
-    doc.get("Departure from Symmetry (x'Ay-y'Ax)/N")->add("Departure for SymGS", testsymmetry_data->depsym_symgs);
+      doc.get(DepartureFromSymmetry)->add("Result", "FAILED");
+    doc.get(DepartureFromSymmetry)->add("Departure for SpMV", testsymmetry_data->depsym_spmv);
+    doc.get(DepartureFromSymmetry)->add("Departure for SymGS", testsymmetry_data->depsym_symgs);
 
     doc.add("********** Iterations Summary  ***********","");
     doc.add("Iteration Count Information","");

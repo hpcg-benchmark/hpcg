@@ -3,7 +3,7 @@
 # hpcg> tools/updateTarfile [version_number]
 make VERSION=$1 dist
 ssh maherou@software.sandia.gov mkdir -p /var/www/html/hpcg/downloads
-scp hpcg-0.$1.tar.gz maherou@software.sandia.gov:/var/www/html/hpcg/downloads/
+scp hpcg-$1.tar.gz maherou@software.sandia.gov:/var/www/html/hpcg/downloads/
 
 ssh maherou@software.sandia.gov chmod a+rx /var/www/html/hpcg/downloads
 ssh maherou@software.sandia.gov chmod a+r /var/www/html/hpcg/downloads/*

@@ -22,7 +22,7 @@ END;
 
 <p>The current HPCG Suite Release version is 0.5. </p>
 
-<p>Previous releases can be found <a href="download_previous.php">here</a>.</p>
+<p>Previous releases can be found <a href="packages.php">here</a>.</p>
 
   HPCG: <a href="downloads/hpcg-0.5.tar.gz">Reference Version 0.5 (25-Oct-2013)</a>
 

@@ -1,15 +1,9 @@
 #!/bin/sh
+# First edit tools/hpcg.dox and update version number of release.  Then
 # Run this script from the main hpcg directory:
-# hpcg> updateDoxWeb
+# hpcg> tools/updateDoxWeb
 doxygen tools/hpcg.dox
 cd out
 scp -r html maherou@software.sandia.gov:/var/www/html/hpcg/
 ssh maherou@software.sandia.gov chmod a+rx /var/www/html/hpcg/html
 ssh maherou@software.sandia.gov chmod a+r /var/www/html/hpcg/html/*
-cd ..
-make VERSION=0.4 dist
-ssh maherou@software.sandia.gov mkdir -p /var/www/html/hpcg/downloads
-scp hpcg-0.4.tar.gz maherou@software.sandia.gov:/var/www/html/hpcg/downloads/
-
-ssh maherou@software.sandia.gov chmod a+rx /var/www/html/hpcg/downloads
-ssh maherou@software.sandia.gov chmod a+r /var/www/html/hpcg/downloads/*

@@ -13,6 +13,7 @@
     <ul>
 	<li><b>Versions of HPCG:</b></li>
     <ul>
+     <li><b>Reference:</b> <a href="downloads/hpcg-0.6.tar.gz">HPCG 0.6 Reference code (November 11, 2013)</a>
      <li><b>Reference:</b> <a href="downloads/hpcg-0.5.tar.gz">HPCG 0.5 Reference code (October 25, 2013)</a>
      <li><b>Reference:</b> <a href="downloads/hpcg-0.4.tar.gz">HPCG 0.4 Reference code (October 21, 2013)</a>
      <li><b>Reference:</b> <a href="downloads/hpcg-0.3.tar.gz">HPCG 0.3 Reference code (September 25, 2013)</a>

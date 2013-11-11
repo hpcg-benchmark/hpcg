@@ -77,7 +77,7 @@ int TestSymmetry(Geometry & geom, SparseMatrix & A, double * const b, double * c
   }
 
   double xNorm2, yNorm2;
-  double ANorm = 2 * 27.0;
+  double ANorm = 2 * 26.0;
 
   // Next, compute x'*A*y
 #ifndef HPCG_NOMPI

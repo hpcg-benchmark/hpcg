@@ -139,7 +139,7 @@ void GenerateProblem(const Geometry & geom, SparseMatrix & A, double ** b, doubl
                     global_int_t curcol = currentGlobalRow+sz*gnx*gny+sy*gnx+sx;
                     if (curcol==currentGlobalRow) {
                       matrixDiagonal[currentLocalRow] = currentValuePointer;
-                      *currentValuePointer++ = 27.0;
+                      *currentValuePointer++ = 26.0;
                     } else {
                       *currentValuePointer++ = -1.0;
                     }
@@ -157,7 +157,7 @@ void GenerateProblem(const Geometry & geom, SparseMatrix & A, double ** b, doubl
 #endif
         localNumberOfNonzeros += numberOfNonzerosInRow; // Protect this with an atomic
         (*x)[currentLocalRow] = 0.0;
-        (*b)[currentLocalRow] = 27.0 - ((double) (numberOfNonzerosInRow-1));
+        (*b)[currentLocalRow] = 26.0 - ((double) (numberOfNonzerosInRow-1));
         (*xexact)[currentLocalRow] = 1.0;
       } // end ix loop
     } // end iy loop

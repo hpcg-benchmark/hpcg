@@ -20,7 +20,7 @@ setup_file=${src_path}/setup/Make.${arg_arch}
 
 if test ! -f $setup_file ; then
   echo
-  echo Please create the configureation file $setup_file
+  echo Please create the configuration file $setup_file
   echo
   exit 127
 fi

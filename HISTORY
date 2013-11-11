@@ -11,6 +11,18 @@ History of HPCG
 ===============
 
 -----------
+Version 0.6
+-----------
+
+* Changed the diagonal entry from 27 to 26 to influence convergence rate.
+
+-----------
+Version 0.5
+-----------
+
+* Improved the formula used for scaling of departure of symmetry
+
+-----------
 Version 0.4
 -----------
 

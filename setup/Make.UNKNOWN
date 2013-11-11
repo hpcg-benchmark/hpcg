@@ -2,7 +2,7 @@
 
 arch=UNKNOWN
 
-VERSION = 0.4
+VERSION = 0.6
 
 UNKNOWN:
 	@echo

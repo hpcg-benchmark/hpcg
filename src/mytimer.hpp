@@ -7,6 +7,7 @@
 //
 // ************************************************************************
 //@HEADER
+
 #ifndef MYTIMER_HPP
 #define MYTIMER_HPP
 double mytimer(void);

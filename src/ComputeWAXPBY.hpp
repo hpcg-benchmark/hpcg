@@ -7,6 +7,7 @@
 //
 // ************************************************************************
 //@HEADER
+
 #ifndef COMPUTEWAXPBY_HPP
 #define COMPUTEWAXPBY_HPP
 #include "Geometry.hpp"

@@ -1,8 +1,12 @@
-/*!
- @file finalize.cpp
 
- HPCG routine
- */
+//@HEADER
+// ************************************************************************
+//
+//               HPCG: Simple Conjugate Gradient Benchmark Code
+// Questions? Contact Michael A. Heroux (maherou@sandia.gov)
+//
+// ************************************************************************
+//@HEADER
 
 #include <fstream>
 

@@ -1,14 +1,16 @@
 
 //@HEADER
-// ************************************************************************
+// ***************************************************
 //
-//               HPCG: Simple Conjugate Gradient Benchmark Code
-// Questions? Contact Michael A. Heroux (maherou@sandia.gov)
+// HPCG: High Performance Conjugate Gradient Benchmark
 //
-// ************************************************************************
+// Contact:
+// Michael A. Heroux ( maherou@sandia.gov)
+// Jack Dongarra     (dongarra@eecs.utk.edu)
+// Piotr Luszczek    (luszczek@eecs.utk.edu)
+//
+// ***************************************************
 //@HEADER
-// We provide our own cube root function because the C++11 standard now define std::cbrt in cmath, but this function
-// is not universally available right now.
 
 #ifndef GENERATEGEOMETRY_HPP
 #define GENERATEGEOMETRY_HPP

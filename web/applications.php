@@ -20,7 +20,7 @@ END;
 
     <p><b>Current activities:</b>
 
-We have released HPCG Version 0.6 for alpha testing.
+We have released HPCG Version 1.0 for general availability.
 	
   </p><br/><br/>
 

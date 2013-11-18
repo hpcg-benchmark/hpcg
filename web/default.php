@@ -27,9 +27,9 @@
 <!--
 <div class="releaseBoxContainer">
 <div class="releaseBox">
-  <p>The current release update is: <strong>0.5</strong></p>
+  <p>The current release update is: <strong>1.0</strong></p>
 
-  <p>Released: <strong>October 25, 2013</strong></p>
+  <p>Released: <strong>November 19, 2013</strong></p>
 
 </div>
 </div>

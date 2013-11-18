@@ -3,18 +3,22 @@ High Performance Conjugate Gradient Benchmark (HPCG)
 ####################################################
 
 :Author: Jack Dongarra and Michael Heroux and Piotr Luszczek
-:Revision: 0.4
-:Date: September 25, 2013
+:Revision: 1.0
+:Date: November 19, 2013
 
 ===============
 History of HPCG
 ===============
 
 -----------
-Version 0.6
+Version 1.0
 -----------
 
 * Changed the diagonal entry from 27 to 26 to influence convergence rate.
+* Changed license file (COPYRIGHT) from 4-clause BSD (original BSD) to 3-clause
+BSD (modified BSD)
+* Added a line to the input file (hpcg.dat) that allows to specify time to run
+the benchmark.
 
 -----------
 Version 0.5

@@ -32,6 +32,7 @@ struct HPCG_Params_STRUCT {
   int nx; //!< Number of x-direction grid points for each local subdomain
   int ny; //!< Number of y-direction grid points for each local subdomain
   int nz; //!< Number of z-direction grid points for each local subdomain
+  int runningTime; //!< Number of seconds to run the timed portion of the benchmark
 };
 /*!
   HPCG_Params is a shorthand for HPCG_Params_STRUCT

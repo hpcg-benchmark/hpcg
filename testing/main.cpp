@@ -273,12 +273,18 @@ int main(int argc, char * argv[]) {
 
   // Here we finally run the benchmark phase
   // The variable total_runtime is the target benchmark execution time in seconds
-  // This value should be set to 60*60*5 for official runs
+  // This value should be set to 60*60*5 (5 hours) for official runs
 
-  double total_runtime = 60.0; // run for at least one minute when in exploratory mode
-  //double total_runtime = 60.0*60.0*5.0; // Run for 5 hours for official runs
+  double total_runtime = params.runningTime;
   int numberOfCgSets = int(total_runtime / opt_worst_time);
   if (numberOfCgSets < 1) numberOfCgSets = 1; // run CG at least once
+
+#ifdef HPCG_DEBUG
+  if (rank==0) {
+    HPCG_fout << "Projected running time: " << total_runtime << " seconds" << endl;
+    HPCG_fout << "Number of CG sets: " << numberOfCgSets << endl;
+  }
+#endif
 
   /* This is the timed run for a specified amount of time. */
 

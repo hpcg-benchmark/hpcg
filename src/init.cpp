@@ -29,6 +29,8 @@
 
 #include "hpcg.hpp"
 
+#include "ReadHpcgDat.hpp"
+
 std::ofstream HPCG_fout; //!< output file stream for logging activities during HPCG run
 
 static int
@@ -60,7 +62,7 @@ HPCG_Init(int * argc_p, char ** *argv_p, HPCG_Params & params) {
   int argc = *argc_p;
   char ** argv = *argv_p;
   char fname[80];
-  int i, j, iparams[3];
+  int i, j, iparams[4];
   char cparams[3][6] = {"--nx=", "--ny=", "--nz="};
   time_t rawtime;
   tm * ptm;
@@ -76,13 +78,7 @@ HPCG_Init(int * argc_p, char ** *argv_p, HPCG_Params & params) {
         if (sscanf(argv[i]+strlen(cparams[j]), "%d", iparams+j) != 1 || iparams[j] < 10) iparams[j] = 0;
 
   if (! iparams[0] && ! iparams[1] && ! iparams[2]) { /* no geometry arguments on the command line */
-    FILE * f = fopen("hpcg.dat", "r");
-    if (f) {
-      for (i = 0; i < 3; ++i)
-        if (fscanf(f, "%d", iparams+i) != 1 || iparams[i] < 10) iparams[i] = 0;
-
-      fclose(f);
-    }
+    ReadHpcgDat(iparams, iparams+3);
   }
 
   for (i = 0; i < 3; ++i) {
@@ -95,12 +91,14 @@ HPCG_Init(int * argc_p, char ** *argv_p, HPCG_Params & params) {
   }
 
 #ifndef HPCG_NOMPI
-  MPI_Bcast( iparams, 3, MPI_INT, 0, MPI_COMM_WORLD );
+  MPI_Bcast( iparams, 4, MPI_INT, 0, MPI_COMM_WORLD );
 #endif
 
   params.nx = iparams[0];
   params.ny = iparams[1];
   params.nz = iparams[2];
+
+  params.runningTime = iparams[3];
 
 #ifdef HPCG_NOMPI
   params.comm_rank = 0;

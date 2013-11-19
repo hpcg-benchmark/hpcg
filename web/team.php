@@ -26,12 +26,5 @@ END;
 </tr>
 </table>
 </br>
-<table>
-<tr><th>Contributors:</th>
-</td>
-
-</tr>
-</table>
-</br>
 
 <?php include 'common/footer.html' ?>

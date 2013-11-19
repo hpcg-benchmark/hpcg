@@ -16,9 +16,9 @@ END;
 
 <div class="breadcrumb"><a href="download.php">Download</a> - Release Notes</div>
 
-<h3> HPCG Benchmark Release 0.5</h3>
+<h3> HPCG Benchmark Release 1.0</h3>
 
-<p>This is the alpha release of HPCG for selected trial access.</p>
+<p>This is the beta release of HPCG for selected trial access.</p>
 
 
 <?php include 'common/footer.html' ?>

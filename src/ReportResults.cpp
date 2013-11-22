@@ -191,9 +191,18 @@ void ReportResults(const Geometry & geom, const SparseMatrix & A, int numberOfCg
     doc.get("Sparse Operations Overheads")->add("Halo exchange as percentage of SpMV time", (times[6])/totalSparseMVTime*100.0);
 #endif
     doc.add("********** Final Summary **********","");
-    bool isValidRun = (testcg_data->count_fail==0) && (testsymmetry_data->count_fail==0) && (testnorms_data->pass);
+    bool isValidRun = (testcg_data->count_fail==0) && (testsymmetry_data->count_fail==0) && (testnorms_data->pass) && (!global_failure);
     if (isValidRun) {
       doc.get("********** Final Summary **********")->add("HPCG result is VALID with a GFLOP/s rating of", totalGflops);
+      if (!A.optimalSPMV) {
+        doc.get("********** Final Summary **********")->add("Reference version of ComputeSPMV used","Performance results are most likely suboptimal");
+      }
+      if (!A.optimalSYMGS) {
+        if (geom.numThreads>1)
+          doc.get("********** Final Summary **********")->add("Reference version of ComputeSYMGS used and number of threads greater than 1","Performance results are severely suboptimal");
+        else // numThreads ==1
+          doc.get("********** Final Summary **********")->add("Reference version of ComputeSYMGS used","Performance results are most likely suboptimal");
+      }
       doc.get("********** Final Summary **********")->add("Please send the YAML file contents to","HPCG-Results@software.sandia.gov");
     } else {
       doc.get("********** Final Summary **********")->add("HPCG result is","INVALID.");

@@ -39,7 +39,8 @@ struct SparseMatrix_STRUCT {
   double ** matrixDiagonal; //!< values of matrix diagonal entries
   std::map< global_int_t, local_int_t > globalToLocalMap; //!< global-to-local mapping
   std::vector< global_int_t > localToGlobalMap; //!< local-to-global mapping
-
+  mutable bool optimalSPMV;
+  mutable bool optimalSYMGS;
   /*!
    This is for storing optimized data structres created in OptimizeProblem and
    used inside optimized ComputeSPMV().
@@ -76,6 +77,8 @@ inline void InitializeSparseMatrix(SparseMatrix & A) {
   A.mtxIndL = 0;
   A.matrixValues = 0;
   A.matrixDiagonal = 0;
+  A.optimalSPMV = true;
+  A.optimalSYMGS = true;
 
 #ifndef HPCG_NOMPI
   A.numberOfExternalValues = 0;

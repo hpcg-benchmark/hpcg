@@ -78,8 +78,8 @@ void ReportResults(const Geometry & geom, const SparseMatrix & A, int numberOfCg
     double fnops_precond = fniters*3.0*fnnz; // Two GS sweeps, but only use lower triangle for first sweep
     double fnops = fnops_ddot+fnops_waxpby+fnops_sparsemv+fnops_precond;
 
-    YAML_Doc doc("HPCG-Benchmark", "1.0");
-    doc.add("HPCG Benchmark","Version 1.0 November 19, 2013");
+    YAML_Doc doc("HPCG-Benchmark", "1.1");
+    doc.add("HPCG Benchmark","Version 1.1 November 26, 2013");
 
     doc.add("Machine Summary","");
     doc.get("Machine Summary")->add("Distributed Processes",geom.size);

@@ -3,12 +3,20 @@ High Performance Conjugate Gradient Benchmark (HPCG)
 ####################################################
 
 :Author: Jack Dongarra and Michael Heroux and Piotr Luszczek
-:Revision: 1.0
-:Date: November 19, 2013
+:Revision: 1.1
+:Date: November 26, 2013
 
 ===============
 History of HPCG
 ===============
+
+-----------
+Version 1.1
+-----------
+
+* Added a simple code for users remove in order to indicate whether
+optimization was done for dot-product, SPMV, SYMGS, or WAXPBY.
+* Fixed a problem with computing the variance of results from multiple runs.
 
 -----------
 Version 1.0

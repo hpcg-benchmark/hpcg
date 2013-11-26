@@ -18,7 +18,11 @@ END;
 
 <h3> HPCG Benchmark Release 1.1</h3>
 
-<p>This is the beta release of HPCG for selected trial access.</p>
+<p>This is the first update release of HPCG. See HISTORY file for more detailed list of changes.</p>
+
+<h3> HPCG Benchmark Release 1.0</h3>
+
+<p>This is the first official release of HPCG for general public access.</p>
 
 
 <?php include 'common/footer.html' ?>

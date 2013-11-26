@@ -3,18 +3,18 @@
   $page = new Page();
   $page->setPathToWebRoot('');
   $page->setPageTitle('HPCG - FAQ');
-  $page->setNavIdentifier('resources');
-
-  $x = <<< END
-END;
-  $page->setInlineStyles($x); 
-  
+  $page->setNavIdentifier('faq');
 ?>
 
 <?php include 'common/header.html' ?>
 
-<div class="breadcrumb"><a href="resources.php">Resources</a> - FAQ</div>
+<div class="breadcrumb">FAQ</div>
 
-<p>See the FAQ section in the <a href="doc/HPCG-Specification.pdf">HPCG Specification</a> document.</p>
+    <ul>
+	<li><b>FAQ:</b></li>
+        <ul>
+         <li><b>Will High Performance Linpack be replaced?</b>
+        </ul>
+    </ul>
 
 <?php include 'common/footer.html' ?>

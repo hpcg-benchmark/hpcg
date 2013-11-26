@@ -194,14 +194,20 @@ void ReportResults(const Geometry & geom, const SparseMatrix & A, int numberOfCg
     bool isValidRun = (testcg_data->count_fail==0) && (testsymmetry_data->count_fail==0) && (testnorms_data->pass) && (!global_failure);
     if (isValidRun) {
       doc.get("********** Final Summary **********")->add("HPCG result is VALID with a GFLOP/s rating of", totalGflops);
-      if (!A.optimalSPMV) {
+      if (!A.isDotProductOptimized) {
+        doc.get("********** Final Summary **********")->add("Reference version of ComputeDotProduct used","Performance results are most likely suboptimal");
+      }
+      if (!A.isSpmvOptimized) {
         doc.get("********** Final Summary **********")->add("Reference version of ComputeSPMV used","Performance results are most likely suboptimal");
       }
-      if (!A.optimalSYMGS) {
+      if (!A.isSymgsOptimized) {
         if (geom.numThreads>1)
           doc.get("********** Final Summary **********")->add("Reference version of ComputeSYMGS used and number of threads greater than 1","Performance results are severely suboptimal");
         else // numThreads ==1
           doc.get("********** Final Summary **********")->add("Reference version of ComputeSYMGS used","Performance results are most likely suboptimal");
+      }
+      if (!A.isWaxpbyOptimized) {
+        doc.get("********** Final Summary **********")->add("Reference version of ComputeWAXPBY used","Performance results are most likely suboptimal");
       }
       doc.get("********** Final Summary **********")->add("Please send the YAML file contents to","HPCG-Results@software.sandia.gov");
     } else {

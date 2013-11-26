@@ -32,13 +32,16 @@
   @param[in]  x, y the input vectors
   @param[out] result a pointer to scalar value, on exit will contain the result.
   @param[out] time_allreduce the time it took to perform the communication between processes
+  @param[out] isOptimized should be set to false if this routine uses the reference implementation (is not optimized); otherwise leave it unchanged
 
   @return returns 0 upon success and non-zero otherwise
 
   @see ComputeDotProduct_ref
 */
 int ComputeDotProduct(const local_int_t n, const double * const x, const double * const y,
-    double * const result, double & time_allreduce) {
+    double * const result, double & time_allreduce, bool & isOptimized) {
 
+  // This line and the next two lines should be removed and your version of ComputeDotProduct should be used.
+  isOptimized = false;
   return(ComputeDotProduct_ref(n, x, y, result, time_allreduce));
 }

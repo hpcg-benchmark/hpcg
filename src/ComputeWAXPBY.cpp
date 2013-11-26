@@ -33,6 +33,7 @@
   @param[in] alpha, beta the scalars applied to x and y respectively.
   @param[in] x, y the input vectors
   @param[out] w the output vector
+  @param[out] isOptimized should be set to false if this routine uses the reference implementation (is not optimized); otherwise leave it unchanged
 
   @return returns 0 upon success and non-zero otherwise
 
@@ -40,6 +41,9 @@
 */
 int ComputeWAXPBY(const local_int_t n, const double alpha, const double * const x,
     const double beta, const double * const y,
-    double * const w) {
+    double * const w, bool & isOptimized) {
+
+  // This line and the next two lines should be removed and your version of ComputeWAXPBY should be used.
+  isOptimized = false;
   return(ComputeWAXPBY_ref(n, alpha, x, beta, y, w));
 }

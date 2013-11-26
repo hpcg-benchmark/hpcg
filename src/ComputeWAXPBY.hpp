@@ -17,5 +17,5 @@
 #include "Geometry.hpp"
 int ComputeWAXPBY(const local_int_t n, const double alpha, const double * const x,
     const double beta, const double * const y,
-    double * const w);
+    double * const w, bool & isOptimized);
 #endif // COMPUTEWAXPBY_HPP

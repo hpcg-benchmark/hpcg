@@ -49,8 +49,7 @@
 int ComputeSYMGS( const SparseMatrix & A, const double * const x, double * const y) {
 
   // This line and the next two lines should be removed and your version of ComputeSYMGS should be used.
-  A.optimalSYMGS = false;
+  A.isSymgsOptimized = false;
   return(ComputeSYMGS_ref(A, x, y));
 
 }
-

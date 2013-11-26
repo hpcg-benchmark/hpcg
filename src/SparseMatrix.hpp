@@ -39,8 +39,10 @@ struct SparseMatrix_STRUCT {
   double ** matrixDiagonal; //!< values of matrix diagonal entries
   std::map< global_int_t, local_int_t > globalToLocalMap; //!< global-to-local mapping
   std::vector< global_int_t > localToGlobalMap; //!< local-to-global mapping
-  mutable bool optimalSPMV;
-  mutable bool optimalSYMGS;
+  mutable bool isDotProductOptimized;
+  mutable bool isSpmvOptimized;
+  mutable bool isSymgsOptimized;
+  mutable bool isWaxpbyOptimized;
   /*!
    This is for storing optimized data structres created in OptimizeProblem and
    used inside optimized ComputeSPMV().
@@ -77,8 +79,13 @@ inline void InitializeSparseMatrix(SparseMatrix & A) {
   A.mtxIndL = 0;
   A.matrixValues = 0;
   A.matrixDiagonal = 0;
-  A.optimalSPMV = true;
-  A.optimalSYMGS = true;
+
+  // Optimization is ON by default. The code that switches it OFF is in the
+  // functions that are meant to be optimized.
+  A.isDotProductOptimized = true;
+  A.isSpmvOptimized       = true;
+  A.isSymgsOptimized      = true;
+  A.isWaxpbyOptimized     = true;
 
 #ifndef HPCG_NOMPI
   A.numberOfExternalValues = 0;

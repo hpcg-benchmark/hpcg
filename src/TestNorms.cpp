@@ -37,6 +37,7 @@ int TestNorms(TestNormsData * testnorms_data) {
 
   // Compute variance
   double sumdiff = 0.0;
+  mean = testnorms_data->mean;
   for (int i= 0; i<testnorms_data->samples; ++i) sumdiff += (testnorms_data->values[i] - mean) * (testnorms_data->values[i] - mean);
   testnorms_data->variance = (sumdiff/((double)testnorms_data->samples));
 

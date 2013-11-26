@@ -110,6 +110,8 @@ int main(int argc, char * argv[]) {
   GenerateGeometry(size, rank, params.numThreads, nx, ny, nz, geom);
 
   SparseMatrix A;
+  InitializeSparseMatrix(A);
+
   CGData data;
   double * b, *x, *xexact;
   GenerateProblem(geom, A, &b, &x, &xexact);

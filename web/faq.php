@@ -17,7 +17,7 @@
 			We do not intend to eliminate HPL.  HPCG will provide 
 			an alternative ranking of the TOP 500 machines. We
 			expect that HPCG will take several years to both mature
-			and emerge as a widely-visible metrics.
+			and emerge as a widely-visible metric.
 
          <li><b>Isn't HPCG just another version of the STREAMS benchmark?</b>: 
 			If the reference version of HPCG is used for performance

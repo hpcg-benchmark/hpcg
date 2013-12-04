@@ -45,7 +45,7 @@ a:active {}
 body.home #tabHome a,
 body.about #tabAbout a,
 body.resources #tabResources a,
-body.packages #tabPackages a,
+body.FAQ #tabFAQ a,
 body.download #tabDownload a
   { color: #000; border-color: #727377; background: #fff; 
   border-bottom: 1px solid #fff; }

@@ -12,9 +12,10 @@
 // ***************************************************
 //@HEADER
 
-#ifndef COMPUTEWAXPBY_HPP
-#define COMPUTEWAXPBY_HPP
-#include "Vector.hpp"
-int ComputeWAXPBY(const local_int_t n, const double alpha, const Vector & x,
-    const double beta, const Vector & y, Vector & w, bool & isOptimized);
-#endif // COMPUTEWAXPBY_HPP
+#ifndef COMPUTESYMGS_HPP
+#define COMPUTESYMGS_HPP
+#include "SparseMatrix.hpp"
+
+int ComputeSYMGS( const SparseMatrix  & A, const double * const x, double * const y);
+
+#endif // COMPUTESYMGS_HPP

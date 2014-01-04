@@ -16,9 +16,10 @@
 #define OPTIMIZEPROBLEM_HPP
 
 #include "SparseMatrix.hpp"
+#include "Vector.hpp"
 #include "Geometry.hpp"
 #include "CGData.hpp"
 
-int OptimizeProblem(const Geometry & geom, SparseMatrix & A, CGData & data, double * b, double * x, double * xexact);
+int OptimizeProblem(const Geometry & geom, SparseMatrix & A, CGData & data,  Vector & b, Vector & x, Vector & xexact);
 
 #endif  // OPTIMIZEPROBLEM_HPP

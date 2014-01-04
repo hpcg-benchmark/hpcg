@@ -18,7 +18,6 @@
  HPCG routine
  */
 
-#include "Geometry.hpp"
 #include "ComputeSYMGS_ref.hpp"
 
 /*!
@@ -45,24 +44,26 @@
 
   @see ComputeSYMGS
 */
-int ComputeSYMGS_ref( const SparseMatrix & A, const double * const x, double * const y) {
+int ComputeSYMGS_ref( const SparseMatrix & A, const Vector & x, Vector & y) {
 
   const local_int_t nrow = A.localNumberOfRows;
   double ** matrixDiagonal = A.matrixDiagonal;  // An array of pointers to the diagonal entries A.matrixValues
+  const double * const xv = x.values;
+  double * const yv = y.values;
 
   for (local_int_t i=0; i< nrow; i++) {
     const double * const currentValues = A.matrixValues[i];
     const local_int_t * const currentColIndices = A.mtxIndL[i];
     const double * addressOfCurrentDiagonal = matrixDiagonal[i]; // Current diagonal value
     const int currentNumberOfNonzeros = addressOfCurrentDiagonal - currentValues;
-    double sum = x[i]; // RHS value
+    double sum = xv[i]; // RHS value
 
     for (int j=0; j< currentNumberOfNonzeros; j++) {
       local_int_t curCol = currentColIndices[j];
-      if (curCol<nrow) sum -= currentValues[j] * y[curCol];
+      if (curCol<nrow) sum -= currentValues[j] * yv[curCol];
     }
 
-    y[i] = sum/(*addressOfCurrentDiagonal);
+    yv[i] = sum/(*addressOfCurrentDiagonal);
   }
 
   // Now the back sweep.
@@ -72,15 +73,15 @@ int ComputeSYMGS_ref( const SparseMatrix & A, const double * const x, double * c
     const local_int_t * const currentColIndices = A.mtxIndL[i];
     const int currentNumberOfNonzeros = A.nonzerosInRow[i];
     const double  currentDiagonal = matrixDiagonal[i][0]; // Current diagonal value
-    double sum = x[i]; // RHS value
+    double sum = xv[i]; // RHS value
 
     for (int j = 0; j< currentNumberOfNonzeros; j++) {
       local_int_t curCol = currentColIndices[j];
-      if (curCol<nrow) sum -= currentValues[j]*y[curCol];
+      if (curCol<nrow) sum -= currentValues[j]*yv[curCol];
     }
-    sum += y[i]*currentDiagonal; // Remove diagonal contribution from previous loop
+    sum += yv[i]*currentDiagonal; // Remove diagonal contribution from previous loop
 
-    y[i] = sum/currentDiagonal;
+    yv[i] = sum/currentDiagonal;
   }
 
   return(0);

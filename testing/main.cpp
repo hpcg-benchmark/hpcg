@@ -52,6 +52,7 @@ using std::endl;
 #include "CG_ref.hpp"
 #include "Geometry.hpp"
 #include "SparseMatrix.hpp"
+#include "Vector.hpp"
 #include "CGData.hpp"
 #include "TestCG.hpp"
 #include "TestSymmetry.hpp"
@@ -113,8 +114,8 @@ int main(int argc, char * argv[]) {
   InitializeSparseMatrix(A);
 
   CGData data;
-  double * b, *x, *xexact;
-  GenerateProblem(geom, A, &b, &x, &xexact);
+  Vector b, x, xexact;
+  GenerateProblem(geom, A, b, x, xexact);
   SetupHalo(geom, A);
   InitializeSparseCGData(A, data);
 
@@ -146,7 +147,7 @@ int main(int argc, char * argv[]) {
   TestCG(geom, A, data, b, x, &testcg_data);
 
   TestSymmetryData testsymmetry_data;
-  TestSymmetry(geom, A, b, xexact, &testsymmetry_data);
+  TestSymmetry(geom, A, b, xexact, testsymmetry_data);
 
 #ifdef HPCG_DEBUG
   if (rank==0) HPCG_fout << "Total validation (TestCG and TestSymmetry) execution time in main (sec) = " << mytimer() - t1 << endl;
@@ -165,15 +166,14 @@ int main(int argc, char * argv[]) {
   local_int_t nrow = A.localNumberOfRows;
   local_int_t ncol = A.localNumberOfColumns;
 
-  double * x_overlap = new double [ncol]; // Overlapped copy of x vector
-  double * b_computed = new double [nrow]; // Computed RHS vector
+  Vector x_overlap, b_computed;
+  InitializeVector(x_overlap, ncol); // Overlapped copy of x vector
+  InitializeVector(b_computed, nrow); // Computed RHS vector
 
 
   // Record execution time of reference SpMV and SymGS kernels for reporting times
   // First load vector with random values
-  for (int i=0; i<nrow; ++i) {
-    x_overlap[i] = ((double) rand() / (RAND_MAX)) + 1;
-  }
+  FillRandomVector(x_overlap);
 
   int numberOfCalls = 10;
   double t_begin = mytimer();
@@ -213,7 +213,7 @@ int main(int argc, char * argv[]) {
   double tolerance = 0.0; // Set tolerance to zero to make all runs do max_iter iterations
   int err_count = 0;
   for (int i=0; i< numberOfCalls; ++i) {
-    for (int j=0; j< A.localNumberOfRows; ++j) x[j] = 0.0; // start x at all zeros
+    ZeroVector(x);
     ierr = CG_ref( geom, A, data, b, x, maxIters, tolerance, niters, normr, normr0, &ref_times[0], true);
     if (ierr) ++err_count; // count the number of errors in CG
     totalNiters += niters;
@@ -240,7 +240,7 @@ int main(int argc, char * argv[]) {
 
   // Compute the residual reduction and residual count for the user ordering and optimized kernels.
   for (int i=0; i< numberOfCalls; ++i) {
-    for (int j=0; j< A.localNumberOfRows; ++j) x[j] = 0.0; // start x at all zeros
+    ZeroVector(x); // start x at all zeros
     double last_cummulative_time = opt_times[0];
     ierr = CG( geom, A, data, b, x, opt_maxIters, ref_tolerance, niters, normr, normr0, &opt_times[0], true);
     if (ierr) ++err_count; // count the number of errors in CG
@@ -296,7 +296,7 @@ int main(int argc, char * argv[]) {
   testnorms_data.values = new double[numberOfCgSets];
 
   for (int i=0; i< numberOfCgSets; ++i) {
-    for (int j=0; j< A.localNumberOfRows; ++j) x[j] = 0.0; // Zero out x
+    ZeroVector(x); // Zero out x
     ierr = CG( geom, A, data, b, x, maxIters, tolerance, niters, normr, normr0, &times[0], true);
     if (ierr) HPCG_fout << "Error in call to CG: " << ierr << ".\n" << endl;
     if (rank==0) HPCG_fout << "Call [" << i << "] Scaled Residual [" << normr/normr0 << "]" << endl;
@@ -326,12 +326,12 @@ int main(int argc, char * argv[]) {
   // Clean up
   DeleteMatrix(A);
   DeleteCGData(data);
+  DeleteVector(x);
+  DeleteVector(b);
+  DeleteVector(xexact);
+  DeleteVector(x_overlap);
+  DeleteVector(b_computed);
   delete [] testnorms_data.values;
-  delete [] x;
-  delete [] b;
-  delete [] xexact;
-  delete [] x_overlap;
-  delete [] b_computed;
 
 
 

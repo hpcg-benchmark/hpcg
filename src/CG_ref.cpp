@@ -62,7 +62,7 @@ using std::endl;
 
   @see CG()
 */
-int CG_ref(const Geometry & geom, const SparseMatrix & A, CGData & data, const double * const b, double * const x,
+int CG_ref(const Geometry & geom, const SparseMatrix & A, CGData & data, const Vector & b, Vector & x,
     const int max_iter, const double tolerance, int & niters, double & normr, double & normr0,
     double * times, bool doPreconditioning) {
 
@@ -78,10 +78,10 @@ int CG_ref(const Geometry & geom, const SparseMatrix & A, CGData & data, const d
 
   local_int_t nrow = A.localNumberOfRows;
 
-  double * r = data.r; // Residual vector
-  double * z = data.z; // Preconditioned residual vector
-  double * p = data.p; // Direction vector (in MPI mode ncol>=nrow)
-  double * Ap = data.Ap;
+  Vector & r = data.r; // Residual vector
+  Vector & z = data.z; // Preconditioned residual vector
+  Vector & p = data.p; // Direction vector (in MPI mode ncol>=nrow)
+  Vector & Ap = data.Ap;
 
   if (!doPreconditioning && geom.rank==0) HPCG_fout << "WARNING: PERFORMING UNPRECONDITIONED ITERATIONS" << endl;
 
@@ -97,7 +97,7 @@ int CG_ref(const Geometry & geom, const SparseMatrix & A, CGData & data, const d
 #endif
   ComputeSPMV_ref(A, p, Ap);
   ComputeWAXPBY_ref(nrow, 1.0, b, -1.0, Ap, r); // r = b - Ax (x stored in p)
-  ComputeDotProduct_ref(nrow, r, r, &normr, t4);
+  ComputeDotProduct_ref(nrow, r, r, normr, t4);
   normr = sqrt(normr);
 #ifdef HPCG_DEBUG
   if (geom.rank==0) HPCG_fout << "Initial Residual = "<< normr << endl;
@@ -118,10 +118,10 @@ int CG_ref(const Geometry & geom, const SparseMatrix & A, CGData & data, const d
 
     if (k == 1) {
       TICK(); ComputeWAXPBY_ref(nrow, 1.0, z, 0.0, z, p); TOCK(t2); // Copy Mr to p
-      TICK(); ComputeDotProduct_ref(nrow, r, z, &rtz, t4); TOCK(t1); // rtz = r'*z
+      TICK(); ComputeDotProduct_ref(nrow, r, z, rtz, t4); TOCK(t1); // rtz = r'*z
     } else {
       oldrtz = rtz;
-      TICK(); ComputeDotProduct_ref(nrow, r, z, &rtz, t4); TOCK(t1); // rtz = r'*z
+      TICK(); ComputeDotProduct_ref(nrow, r, z, rtz, t4); TOCK(t1); // rtz = r'*z
       beta = rtz/oldrtz;
       TICK(); ComputeWAXPBY_ref(nrow, 1.0, z, beta, p, p);  TOCK(t2); // p = beta*p + z
     }
@@ -130,11 +130,11 @@ int CG_ref(const Geometry & geom, const SparseMatrix & A, CGData & data, const d
     TICK(); ExchangeHalo(A,p); TOCK(t6);
 #endif
     TICK(); ComputeSPMV_ref(A, p, Ap); TOCK(t3); // Ap = A*p
-    TICK(); ComputeDotProduct_ref(nrow, p, Ap, &pAp, t4); TOCK(t1); // alpha = p'*Ap
+    TICK(); ComputeDotProduct_ref(nrow, p, Ap, pAp, t4); TOCK(t1); // alpha = p'*Ap
     alpha = rtz/pAp;
     TICK(); ComputeWAXPBY_ref(nrow, 1.0, x, alpha, p, x);// x = x + alpha*p
     ComputeWAXPBY_ref(nrow, 1.0, r, -alpha, Ap, r);  TOCK(t2);// r = r - alpha*Ap
-    TICK(); ComputeDotProduct_ref(nrow, r, r, &normr, t4); TOCK(t1);
+    TICK(); ComputeDotProduct_ref(nrow, r, r, normr, t4); TOCK(t1);
     normr = sqrt(normr);
 #ifdef HPCG_DEBUG
     if (geom.rank==0 && (k%print_freq == 0 || k == max_iter))

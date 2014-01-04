@@ -25,6 +25,7 @@ using std::endl;
 #endif
 #include <cassert>
 
+#include "Geometry.hpp"
 #include "GenerateProblem.hpp"
 
 #ifndef HPCG_NOMPI
@@ -36,19 +37,15 @@ using std::endl;
 #endif
 
 /*!
-  Routine to read a sparse matrix, right hand side, initial guess, and exact
+  Routine to construct a prolongation/restriction operator for a given fine grid matrix
   solution (as computed by a direct solver).
 
-  @param[in]  geom   data structure that stores the parallel run parameters and the factoring of total number of processes into three dimensional grid
   @param[in]  A      The known system matrix
-  @param[out] b      The newly allocated and generated right hand side vector
-  @param[out] x      The newly allocated solution vector with entries set to 0.0
-  @param[out] xexact The newly allocated solution vector with entries set to the exact solution
-
+  @param[out] RP     Restriction/Prolongation matrix
   @see GenerateGeometry
 */
 
-void GenerateProblem(const Geometry & geom, SparseMatrix & A, Vector & b, Vector & x, Vector & xexact) {
+void GenerateProblem(const Geometry & geom, const SparseMatrix & A, SparseMatrix & RP) {
 
   // Make local copies of geometry information.  Use global_int_t since the RHS products in the calculations
   // below may result in global range values.
@@ -83,12 +80,6 @@ void GenerateProblem(const Geometry & geom, SparseMatrix & A, Vector & b, Vector
   double ** matrixValues = new double*[localNumberOfRows];
   double ** matrixDiagonal = new double*[localNumberOfRows];
 
-  InitializeVector(x, localNumberOfRows);
-  InitializeVector(b, localNumberOfRows);
-  InitializeVector(xexact, localNumberOfRows);
-  double * xv = x.values;
-  double * bv = b.values;
-  double * xexactv = xexact.values;
   A.localToGlobalMap.resize(localNumberOfRows);
 
   // Use a parallel loop to do initial assignment:
@@ -163,9 +154,6 @@ void GenerateProblem(const Geometry & geom, SparseMatrix & A, Vector & b, Vector
         #pragma omp critical
 #endif
         localNumberOfNonzeros += numberOfNonzerosInRow; // Protect this with an atomic
-        xv[currentLocalRow] = 0.0;
-        bv[currentLocalRow] = 26.0 - ((double) (numberOfNonzerosInRow-1));
-        xexactv[currentLocalRow] = 1.0;
       } // end ix loop
     } // end iy loop
   } // end iz loop

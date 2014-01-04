@@ -17,6 +17,7 @@
 
  HPCG routine
  */
+#include "Vector.hpp"
 
 #ifdef HPCG_DETAILED_DEBUG
 #include <fstream>
@@ -46,9 +47,10 @@
 
   @return Returns zero on success and a non-zero value otherwise.
 */
-int ComputeResidual(const local_int_t n, const double * const v1,
-    const double * const v2, double * const residual) {
+int ComputeResidual(const local_int_t n, const Vector & v1, const Vector & v2, double & residual) {
 
+  double * v1v = v1.values;
+  double * v2v = v2.values;
   double local_residual = 0.0;
 
 #ifndef HPCG_NOOPENMP
@@ -57,7 +59,7 @@ int ComputeResidual(const local_int_t n, const double * const v1,
     double threadlocal_residual = 0.0;
     #pragma omp for
     for (local_int_t i=0; i<n; i++) {
-      double diff = std::fabs(v1[i] - v2[i]);
+      double diff = std::fabs(v1v[i] - v2v[i]);
       if (diff > threadlocal_residual) threadlocal_residual = diff;
     }
     #pragma omp critical
@@ -67,7 +69,7 @@ int ComputeResidual(const local_int_t n, const double * const v1,
   }
 #else // No threading
   for (local_int_t i=0; i<n; i++) {
-    double diff = std::fabs(v1[i] - v2[i]);
+    double diff = std::fabs(v1v[i] - v2v[i]);
     if (diff > local_residual) local_residual = diff;
 #ifdef HPCG_DETAILED_DEBUG
     HPCG_fout << " Computed, exact, diff = " << v1[i] << " " << v2[i] << " " << diff << std::endl;
@@ -79,9 +81,9 @@ int ComputeResidual(const local_int_t n, const double * const v1,
   // Use MPI's reduce function to collect all partial sums
   double global_residual = 0;
   MPI_Allreduce(&local_residual, &global_residual, 1, MPI_DOUBLE, MPI_MAX, MPI_COMM_WORLD);
-  *residual = global_residual;
+  residual = global_residual;
 #else
-  *residual = local_residual;
+  residual = local_residual;
 #endif
 
   return(0);

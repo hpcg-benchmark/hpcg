@@ -43,19 +43,21 @@
 
   @see ComputeDotProduct
 */
-int ComputeDotProduct_ref(const local_int_t n, const double * const x, const double * const y,
-    double * const result, double & time_allreduce) {
+int ComputeDotProduct_ref(const local_int_t n, const Vector & x, const Vector & y,
+    double & result, double & time_allreduce) {
   double local_result = 0.0;
-  if (y==x) {
+  double * xv = x.values;
+  double * yv = y.values;
+  if (yv==xv) {
 #ifndef HPCG_NOOPENMP
     #pragma omp parallel for reduction (+:local_result)
 #endif
-    for (local_int_t i=0; i<n; i++) local_result += x[i]*x[i];
+    for (local_int_t i=0; i<n; i++) local_result += xv[i]*xv[i];
   } else {
 #ifndef HPCG_NOOPENMP
     #pragma omp parallel for reduction (+:local_result)
 #endif
-    for (local_int_t i=0; i<n; i++) local_result += x[i]*y[i];
+    for (local_int_t i=0; i<n; i++) local_result += xv[i]*yv[i];
   }
 
 #ifndef HPCG_NOMPI
@@ -64,10 +66,10 @@ int ComputeDotProduct_ref(const local_int_t n, const double * const x, const dou
   double global_result = 0.0;
   MPI_Allreduce(&local_result, &global_result, 1, MPI_DOUBLE, MPI_SUM,
       MPI_COMM_WORLD);
-  *result = global_result;
+  result = global_result;
   time_allreduce += mytimer() - t0;
 #else
-  *result = local_result;
+  result = local_result;
 #endif
 
   return(0);

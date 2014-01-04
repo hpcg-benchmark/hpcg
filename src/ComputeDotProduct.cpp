@@ -38,8 +38,8 @@
 
   @see ComputeDotProduct_ref
 */
-int ComputeDotProduct(const local_int_t n, const double * const x, const double * const y,
-    double * const result, double & time_allreduce, bool & isOptimized) {
+int ComputeDotProduct(const local_int_t n, const Vector & x, const Vector & y,
+    double & result, double & time_allreduce, bool & isOptimized) {
 
   // This line and the next two lines should be removed and your version of ComputeDotProduct should be used.
   isOptimized = false;

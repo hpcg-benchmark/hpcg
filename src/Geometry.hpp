@@ -34,8 +34,8 @@ typedef int local_int_t;
 
   Define as "long long" when global problem dimension is > 2^31
 */
-//typedef int global_int_t;
-typedef long long global_int_t;
+typedef int global_int_t;
+//typedef long long global_int_t;
 
 // This macro should be defined if the global_int_t is not long long
 // in order to stop complaints from non-C++11 compliant compilers.

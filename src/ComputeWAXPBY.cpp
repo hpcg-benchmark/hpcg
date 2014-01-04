@@ -39,9 +39,8 @@
 
   @see ComputeWAXPBY_ref
 */
-int ComputeWAXPBY(const local_int_t n, const double alpha, const double * const x,
-    const double beta, const double * const y,
-    double * const w, bool & isOptimized) {
+int ComputeWAXPBY(const local_int_t n, const double alpha, const Vector & x,
+    const double beta, const Vector & y, Vector & w, bool & isOptimized) {
 
   // This line and the next two lines should be removed and your version of ComputeWAXPBY should be used.
   isOptimized = false;

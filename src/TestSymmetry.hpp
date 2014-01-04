@@ -33,6 +33,6 @@ struct TestSymmetryData_STRUCT {
 };
 typedef struct TestSymmetryData_STRUCT TestSymmetryData;
 
-extern int TestSymmetry(Geometry & geom, SparseMatrix & A, double * const b, double * const xexact, TestSymmetryData * testsymmetry_data);
+extern int TestSymmetry(Geometry & geom, SparseMatrix & A, Vector & b, Vector & xexact, TestSymmetryData & testsymmetry_data);
 
 #endif  // TESTSYMMETRY_HPP

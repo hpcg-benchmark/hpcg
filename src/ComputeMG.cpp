@@ -18,6 +18,7 @@
  HPCG routine
  */
 
+#include "Geometry.hpp"
 #include "ComputeSYMGS.hpp"
 #include "ComputeSYMGS_ref.hpp"
 
@@ -45,7 +46,7 @@
 
   @see ComputeSYMGS_ref
 */
-int ComputeSYMGS( const SparseMatrix & A, const Vector & x, Vector & y) {
+int ComputeSYMGS( const SparseMatrix & A, const double * const x, double * const y) {
 
   // This line and the next two lines should be removed and your version of ComputeSYMGS should be used.
   A.isSymgsOptimized = false;

@@ -12,9 +12,10 @@
 // ***************************************************
 //@HEADER
 
-#ifndef COMPUTEWAXPBY_HPP
-#define COMPUTEWAXPBY_HPP
-#include "Vector.hpp"
-int ComputeWAXPBY(const local_int_t n, const double alpha, const Vector & x,
-    const double beta, const Vector & y, Vector & w, bool & isOptimized);
-#endif // COMPUTEWAXPBY_HPP
+#ifndef GENERATEPROBLEM_HPP
+#define GENERATEPROBLEM_HPP
+#include "Geometry.hpp"
+#include "SparseMatrix.hpp"
+
+void GenerateProblem(const Geometry & geom, const SparseMatrix & A, SparseMatrix & RP);
+#endif // GENERATEPROBLEM_HPP

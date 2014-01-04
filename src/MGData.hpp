@@ -13,24 +13,23 @@
 //@HEADER
 
 /*!
- @file CGData.hpp
+ @file MGData.hpp
 
  HPCG data structure
  */
 
-#ifndef CGDATA_HPP
-#define CGDATA_HPP
+#ifndef MGDATA_HPP
+#define MGDATA_HPP
 
 #include "SparseMatrix.hpp"
-#include "Vector.hpp"
 
-struct CGData_STRUCT {
-  Vector r; //!< pointer to residual vector
-  Vector z; //!< pointer to preconditioned residual vector
-  Vector p; //!< pointer to direction vector
-  Vector Ap; //!< pointer to Krylov vector
+struct MGData_STRUCT {
+  double * r; //!< pointer to residual vector
+  double * z; //!< pointer to preconditioned residual vector
+  double * p; //!< pointer to direction vector
+  double * Ap; //!< pointer to Krylov vector
 };
-typedef struct CGData_STRUCT CGData;
+typedef struct MGData_STRUCT MGData;
 
 /*!
  Constructor for the data structure of CG vectors.
@@ -38,13 +37,13 @@ typedef struct CGData_STRUCT CGData;
  @param[in]  A    the data structure that describes the problem matrix and its structure
  @param[out] data the data structure for CG vectors that will be allocated to get it ready for use in CG iterations
  */
-inline void InitializeSparseCGData(SparseMatrix & A, CGData & data) {
+inline void InitializeMGData(SparseMatrix & A, MGData & data) {
   local_int_t nrow = A.localNumberOfRows;
   local_int_t ncol = A.localNumberOfColumns;
-  InitializeVector(data.r, nrow);
-  InitializeVector(data.z, nrow);
-  InitializeVector(data.p, ncol);
-  InitializeVector(data.Ap, nrow);
+  data.r = new double [nrow]; // Residual vector
+  data.z = new double [nrow]; // Preconditioned residual vector
+  data.Ap = new double [nrow];
+  data.p = new double [ncol]; // Direction vector (in MPI mode ncol>=nrow)
   return;
 }
 
@@ -53,14 +52,14 @@ inline void InitializeSparseCGData(SparseMatrix & A, CGData & data) {
 
  @param[inout] data the CG vectors data structure whose storage is deallocated
  */
-inline void DeleteCGData(CGData & data) {
+inline void DeleteMGData(MGData & data) {
 
-  DeleteVector (data.r);
-  DeleteVector (data.z);
-  DeleteVector (data.p);
-  DeleteVector (data.Ap);
+  delete [] data.r;
+  delete [] data.z;
+  delete [] data.Ap;
+  delete [] data.p;
   return;
 }
 
-#endif // CGDATA_HPP
+#endif // MGDATA_HPP
 

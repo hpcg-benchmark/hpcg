@@ -55,27 +55,29 @@ using std::endl;
 
   @see CG()
  */
-int TestCG(Geometry & geom, SparseMatrix & A, CGData & data, double * const b, double * const x, TestCGData * testcg_data) {
+int TestCG(Geometry & geom, SparseMatrix & A, CGData & data, Vector & b, Vector & x, TestCGData * testcg_data) {
 
 
   // Use this array for collecting timing information
   std::vector< double > times(8,0.0);
   // Temporary storage for holding original diagonal and RHS
   std::vector< double > diagA(A.localNumberOfRows), origB(A.localNumberOfRows);
+  double * bv = b.values;
+  double * xv = x.values;
 
   // Modify the matrix diagonal to greatly exaggerate diagonal values.
   // CG should converge in about 10 iterations for this problem, regardless of problem size
   for (int i=0; i< A.localNumberOfRows; ++i) {
     global_int_t globalRowID = A.localToGlobalMap[i];
     double * curDiagA = A.matrixDiagonal[i];
-    origB[i] = b[i]; // Save original RHS value
+    origB[i] = bv[i]; // Save original RHS value
     diagA[i] = *curDiagA; // Save original diagonal value
     if (globalRowID<9) {
       *curDiagA *= (globalRowID+2)*1.0e6; // Multiply the first 9 diagonal values by RowID+2 times 1M.
-      b[i] *= (globalRowID+1)*1.0e6;
+      bv[i] *= (globalRowID+1)*1.0e6;
     } else {
       *(A.matrixDiagonal[i]) *= 1.0e6; // The rest are multiplied by 1M.
-      b[i] *= 1.0e6;
+      bv[i] *= 1.0e6;
     }
   }
   int niters = 0;
@@ -92,7 +94,7 @@ int TestCG(Geometry & geom, SparseMatrix & A, CGData & data, double * const b, d
     int expected_niters = testcg_data->expected_niters_no_prec;
     if (k==1) expected_niters = testcg_data->expected_niters_prec;
     for (int i=0; i< numberOfCgCalls; ++i) {
-      for (int j=0; j< A.localNumberOfRows; ++j) x[j] = 0.0; // Zero out x
+      ZeroVector(x); // Zero out x
       int ierr = CG( geom, A, data, b, x, maxIters, tolerance, niters, normr, normr0, &times[0], k==1);
       if (ierr) HPCG_fout << "Error in call to CG: " << ierr << ".\n" << endl;
       if (niters <= expected_niters) {
@@ -113,7 +115,7 @@ int TestCG(Geometry & geom, SparseMatrix & A, CGData & data, double * const b, d
   // Restore matrix diagonal and RHS
   for (int i=0; i< A.localNumberOfRows; ++i) {
     *(A.matrixDiagonal[i]) = diagA[i];
-    b[i] = origB[i];
+    bv[i] = origB[i];
   }
   testcg_data->normr = normr;
 

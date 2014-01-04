@@ -23,6 +23,7 @@
 
 #include "hpcg.hpp"
 #include "SparseMatrix.hpp"
+#include "Vector.hpp"
 #include "Geometry.hpp"
 #include "CGData.hpp"
 
@@ -38,7 +39,7 @@ struct TestCGData_STRUCT {
 };
 typedef struct TestCGData_STRUCT TestCGData;
 
-extern int TestCG(Geometry & geom, SparseMatrix & A, CGData & data, double * const b, double * const x, TestCGData * testcg_data);
+extern int TestCG(Geometry & geom, SparseMatrix & A, CGData & data, Vector & b, Vector & x, TestCGData * testcg_data);
 
 #endif  // TESTCG_HPP
 

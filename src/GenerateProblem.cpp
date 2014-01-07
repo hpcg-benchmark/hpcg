@@ -61,7 +61,6 @@ void GenerateProblem(const Geometry & geom, SparseMatrix & A, Vector & b, Vector
   global_int_t ipx = geom.ipx;
   global_int_t ipy = geom.ipy;
   global_int_t ipz = geom.ipz;
-  global_int_t size = geom.size;
   global_int_t gnx = nx*npx;
   global_int_t gny = ny*npy;
   global_int_t gnz = nz*npz;

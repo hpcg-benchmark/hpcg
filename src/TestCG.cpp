@@ -38,8 +38,6 @@ using std::endl;
 
 #include "TestCG.hpp"
 #include "CG.hpp"
-#include "Geometry.hpp"
-#include "SparseMatrix.hpp"
 
 /*!
   Test the correctness of the Preconditined CG implementation by using a system matrix with a dominant diagonal.
@@ -55,55 +53,59 @@ using std::endl;
 
   @see CG()
  */
-int TestCG(Geometry & geom, SparseMatrix & A, CGData & data, Vector & b, Vector & x, TestCGData * testcg_data) {
+int TestCG(Geometry & geom, SparseMatrix & A, CGData & data, Vector & b, Vector & x, TestCGData & testcg_data) {
 
 
   // Use this array for collecting timing information
   std::vector< double > times(8,0.0);
   // Temporary storage for holding original diagonal and RHS
-  std::vector< double > diagA(A.localNumberOfRows), origB(A.localNumberOfRows);
-  double * bv = b.values;
-  double * xv = x.values;
+  Vector origDiagA, exaggeratedDiagA, origB;
+  InitializeVector(origDiagA, A.localNumberOfRows);
+  InitializeVector(exaggeratedDiagA, A.localNumberOfRows);
+  InitializeVector(origB, A.localNumberOfRows);
+  CopyMatrixDiagonal(A, origDiagA);
+  CopyVector(origDiagA, exaggeratedDiagA);
+  CopyVector(b, origB);
 
   // Modify the matrix diagonal to greatly exaggerate diagonal values.
   // CG should converge in about 10 iterations for this problem, regardless of problem size
-  for (int i=0; i< A.localNumberOfRows; ++i) {
+  for (local_int_t i=0; i< A.localNumberOfRows; ++i) {
     global_int_t globalRowID = A.localToGlobalMap[i];
-    double * curDiagA = A.matrixDiagonal[i];
-    origB[i] = bv[i]; // Save original RHS value
-    diagA[i] = *curDiagA; // Save original diagonal value
     if (globalRowID<9) {
-      *curDiagA *= (globalRowID+2)*1.0e6; // Multiply the first 9 diagonal values by RowID+2 times 1M.
-      bv[i] *= (globalRowID+1)*1.0e6;
+      double scale = (globalRowID+2)*1.0e6;
+      ScaleVectorValue(exaggeratedDiagA, i, scale);
+      ScaleVectorValue(b, i, scale);
     } else {
-      *(A.matrixDiagonal[i]) *= 1.0e6; // The rest are multiplied by 1M.
-      bv[i] *= 1.0e6;
+      ScaleVectorValue(exaggeratedDiagA, i, 1.0e6);
+      ScaleVectorValue(b, i, 1.0e6);
     }
   }
+  ReplaceMatrixDiagonal(A, exaggeratedDiagA);
+
   int niters = 0;
   double normr = 0.0;
   double normr0 = 0.0;
   int maxIters = 50;
   int numberOfCgCalls = 2;
   double tolerance = 1.0e-12; // Set tolerance to reasonable value for grossly scaled diagonal terms
-  testcg_data->expected_niters_no_prec = 12; // For the unpreconditioned CG call, we should take about 10 iterations, permit 12
-  testcg_data->expected_niters_prec = 2;   // For the preconditioned case, we should take about 1 iteration, per 2
-  testcg_data->niters_max_no_prec = 0;
-  testcg_data->niters_max_prec = 0;
+  testcg_data.expected_niters_no_prec = 12; // For the unpreconditioned CG call, we should take about 10 iterations, permit 12
+  testcg_data.expected_niters_prec = 2;   // For the preconditioned case, we should take about 1 iteration, permit 2
+  testcg_data.niters_max_no_prec = 0;
+  testcg_data.niters_max_prec = 0;
   for (int k=0; k<2; ++k) { // This loop tests both unpreconditioned and preconditioned runs
-    int expected_niters = testcg_data->expected_niters_no_prec;
-    if (k==1) expected_niters = testcg_data->expected_niters_prec;
+    int expected_niters = testcg_data.expected_niters_no_prec;
+    if (k==1) expected_niters = testcg_data.expected_niters_prec;
     for (int i=0; i< numberOfCgCalls; ++i) {
       ZeroVector(x); // Zero out x
       int ierr = CG( geom, A, data, b, x, maxIters, tolerance, niters, normr, normr0, &times[0], k==1);
       if (ierr) HPCG_fout << "Error in call to CG: " << ierr << ".\n" << endl;
       if (niters <= expected_niters) {
-        ++testcg_data->count_pass;
+        ++testcg_data.count_pass;
       } else {
-        ++testcg_data->count_fail;
+        ++testcg_data.count_fail;
       }
-      if (k==0 && niters>testcg_data->niters_max_no_prec) testcg_data->niters_max_no_prec = niters; // Keep track of largest iter count
-      if (k==1 && niters>testcg_data->niters_max_prec) testcg_data->niters_max_prec = niters; // Same for preconditioned run
+      if (k==0 && niters>testcg_data.niters_max_no_prec) testcg_data.niters_max_no_prec = niters; // Keep track of largest iter count
+      if (k==1 && niters>testcg_data.niters_max_prec) testcg_data.niters_max_prec = niters; // Same for preconditioned run
       if (geom.rank==0) {
         HPCG_fout << "Call [" << i << "] Number of Iterations [" << niters <<"] Scaled Residual [" << normr/normr0 << "]" << endl;
         if (niters > expected_niters)
@@ -113,11 +115,9 @@ int TestCG(Geometry & geom, SparseMatrix & A, CGData & data, Vector & b, Vector 
   }
 
   // Restore matrix diagonal and RHS
-  for (int i=0; i< A.localNumberOfRows; ++i) {
-    *(A.matrixDiagonal[i]) = diagA[i];
-    bv[i] = origB[i];
-  }
-  testcg_data->normr = normr;
+  ReplaceMatrixDiagonal(A, origDiagA);
+  CopyVector(origB, b);
+  testcg_data.normr = normr;
 
   return 0;
 }

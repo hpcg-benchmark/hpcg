@@ -144,7 +144,7 @@ int main(int argc, char * argv[]) {
 #endif
   TestCGData testcg_data;
   testcg_data.count_pass = testcg_data.count_fail = 0;
-  TestCG(geom, A, data, b, x, &testcg_data);
+  TestCG(geom, A, data, b, x, testcg_data);
 
   TestSymmetryData testsymmetry_data;
   TestSymmetry(geom, A, b, xexact, testsymmetry_data);

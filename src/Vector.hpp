@@ -61,6 +61,18 @@ inline void ZeroVector(Vector & v) {
   return;
 }
 /*!
+  Replace specific vector entry.
+
+  @param[inout] v Vector to be modified
+  @param[in] index Local index of value to scale
+ */
+inline void ScaleVectorValue(Vector & v, local_int_t index, double value) {
+  assert(index>=0 && index < v.localLength);
+  double * vv = v.values;
+  vv[index] *= value;
+  return;
+}
+/*!
   Fill the input vector with zero values.
 
   @param[in] v

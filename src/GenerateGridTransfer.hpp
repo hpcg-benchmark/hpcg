@@ -12,10 +12,10 @@
 // ***************************************************
 //@HEADER
 
-#ifndef GENERATEPROBLEM_HPP
-#define GENERATEPROBLEM_HPP
+#ifndef GENERATEGRIDTRANSFER_HPP
+#define GENERATEGRIDTRANSFER_HPP
 #include "Geometry.hpp"
 #include "SparseMatrix.hpp"
 
-void GenerateProblem(const Geometry & geom, const SparseMatrix & A, SparseMatrix & RP);
-#endif // GENERATEPROBLEM_HPP
+void GenerateGridTransfer(const SparseMatrix & A, SparseMatrix & RP);
+#endif // GENERATEGRIDTRANSFER_HPP

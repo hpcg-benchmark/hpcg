@@ -47,7 +47,7 @@ using std::endl;
 
   @see ExchangeHalo
 */
-void SetupHalo(const Geometry & geom, SparseMatrix & A) {
+void SetupHalo(SparseMatrix & A) {
 
   // Extract Matrix pieces
 
@@ -82,12 +82,12 @@ void SetupHalo(const Geometry & geom, SparseMatrix & A) {
     global_int_t currentGlobalRow = A.localToGlobalMap[i];
     for (int j=0; j<nonzerosInRow[i]; j++) {
       global_int_t curIndex = mtxIndG[i][j];
-      int rankIdOfColumnEntry = ComputeRankOfMatrixRow(geom, curIndex);
+      int rankIdOfColumnEntry = ComputeRankOfMatrixRow(*(A.geom), curIndex);
 #ifdef HPCG_DETAILED_DEBUG
       HPCG_fout << "rank, row , col, globalToLocalMap[col] = " << geom.rank << " " << currentGlobalRow << " "
           << curIndex << " " << A.globalToLocalMap[curIndex] << endl;
 #endif
-      if (geom.rank!=rankIdOfColumnEntry) {// If column index is not a row index, then it comes from another processor
+      if (A.geom->rank!=rankIdOfColumnEntry) {// If column index is not a row index, then it comes from another processor
         receiveList[rankIdOfColumnEntry].insert(curIndex);
         sendList[rankIdOfColumnEntry].insert(currentGlobalRow); // Matrix symmetry means we know the neighbor process wants my value
       }
@@ -146,8 +146,8 @@ void SetupHalo(const Geometry & geom, SparseMatrix & A) {
   for (local_int_t i=0; i< localNumberOfRows; i++) {
     for (int j=0; j<nonzerosInRow[i]; j++) {
       global_int_t curIndex = mtxIndG[i][j];
-      int rankIdOfColumnEntry = ComputeRankOfMatrixRow(geom, curIndex);
-      if (geom.rank==rankIdOfColumnEntry) { // My column index, so convert to local index
+      int rankIdOfColumnEntry = ComputeRankOfMatrixRow(*(A.geom), curIndex);
+      if (A.geom->rank==rankIdOfColumnEntry) { // My column index, so convert to local index
         mtxIndL[i][j] = A.globalToLocalMap[curIndex];
       } else { // If column index is not a row index, then it comes from another processor
         mtxIndL[i][j] = externalToLocalMap[curIndex];

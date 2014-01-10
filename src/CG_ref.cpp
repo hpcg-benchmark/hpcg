@@ -45,7 +45,6 @@ using std::endl;
 /*!
   Reference routine to compute an approximate solution to Ax = b
 
-  @param[in]    geom The description of the problem's geometry.
   @param[inout] A    The known system matrix
   @param[inout] data The data structure with all necessary CG vectors preallocated
   @param[in]    b    The known right hand side vector
@@ -62,7 +61,7 @@ using std::endl;
 
   @see CG()
 */
-int CG_ref(const Geometry & geom, const SparseMatrix & A, CGData & data, const Vector & b, Vector & x,
+int CG_ref(const SparseMatrix & A, CGData & data, const Vector & b, Vector & x,
     const int max_iter, const double tolerance, int & niters, double & normr, double & normr0,
     double * times, bool doPreconditioning) {
 
@@ -83,7 +82,7 @@ int CG_ref(const Geometry & geom, const SparseMatrix & A, CGData & data, const V
   Vector & p = data.p; // Direction vector (in MPI mode ncol>=nrow)
   Vector & Ap = data.Ap;
 
-  if (!doPreconditioning && geom.rank==0) HPCG_fout << "WARNING: PERFORMING UNPRECONDITIONED ITERATIONS" << endl;
+  if (!doPreconditioning && A.geom->rank==0) HPCG_fout << "WARNING: PERFORMING UNPRECONDITIONED ITERATIONS" << endl;
 
 #ifdef HPCG_DEBUG
   int print_freq = 1;
@@ -100,7 +99,7 @@ int CG_ref(const Geometry & geom, const SparseMatrix & A, CGData & data, const V
   ComputeDotProduct_ref(nrow, r, r, normr, t4);
   normr = sqrt(normr);
 #ifdef HPCG_DEBUG
-  if (geom.rank==0) HPCG_fout << "Initial Residual = "<< normr << endl;
+  if (A.geom->rank==0) HPCG_fout << "Initial Residual = "<< normr << endl;
 #endif
 
   // Record initial residual for convergence testing
@@ -137,7 +136,7 @@ int CG_ref(const Geometry & geom, const SparseMatrix & A, CGData & data, const V
     TICK(); ComputeDotProduct_ref(nrow, r, r, normr, t4); TOCK(t1);
     normr = sqrt(normr);
 #ifdef HPCG_DEBUG
-    if (geom.rank==0 && (k%print_freq == 0 || k == max_iter))
+    if (A.geom->rank==0 && (k%print_freq == 0 || k == max_iter))
       HPCG_fout << "Iteration = "<< k << "   Scaled Residual = "<< normr/normr0 << endl;
 #endif
     niters = k;

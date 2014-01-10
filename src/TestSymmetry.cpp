@@ -60,7 +60,7 @@ using std::endl;
   @see ComputeSYMGS
   @see ComputeSYMGS_ref
 */
-int TestSymmetry(Geometry & geom, SparseMatrix & A, Vector & b, Vector & xexact, TestSymmetryData & testsymmetry_data) {
+int TestSymmetry(SparseMatrix & A, Vector & b, Vector & xexact, TestSymmetryData & testsymmetry_data) {
 
   local_int_t nrow = A.localNumberOfRows;
   local_int_t ncol = A.localNumberOfColumns;
@@ -105,7 +105,7 @@ int TestSymmetry(Geometry & geom, SparseMatrix & A, Vector & b, Vector & xexact,
   if (ierr) HPCG_fout << "Error in call to dot: " << ierr << ".\n" << endl;
   testsymmetry_data.depsym_spmv = std::fabs((long double) (xtAy - ytAx))/((xNorm2*ANorm*yNorm2 + yNorm2*ANorm*xNorm2) * (DBL_EPSILON));
   if (testsymmetry_data.depsym_spmv > 1.0) ++testsymmetry_data.count_fail;  // If the difference is > 1, count it wrong
-  if (geom.rank==0) HPCG_fout << "Departure from symmetry (scaled) for SpMV abs(x'*A*y - y'*A*x) = " << testsymmetry_data.depsym_spmv << endl;
+  if (A.geom->rank==0) HPCG_fout << "Departure from symmetry (scaled) for SpMV abs(x'*A*y - y'*A*x) = " << testsymmetry_data.depsym_spmv << endl;
 
   // Test symmetry of symmetric Gauss-Seidel
 
@@ -124,7 +124,7 @@ int TestSymmetry(Geometry & geom, SparseMatrix & A, Vector & b, Vector & xexact,
   if (ierr) HPCG_fout << "Error in call to dot: " << ierr << ".\n" << endl;
   testsymmetry_data.depsym_symgs = std::fabs((long double) (xtMinvy - ytMinvx))/((xNorm2*ANorm*yNorm2 + yNorm2*ANorm*xNorm2) * (DBL_EPSILON));
   if (testsymmetry_data.depsym_symgs > 1.0) ++testsymmetry_data.count_fail;  // If the difference is > 1, count it wrong
-  if (geom.rank==0) HPCG_fout << "Departure from symmetry (scaled) for SymGS abs(x'*Minv*y - y'*Minv*x) = " << testsymmetry_data.depsym_symgs << endl;
+  if (A.geom->rank==0) HPCG_fout << "Departure from symmetry (scaled) for SymGS abs(x'*Minv*y - y'*Minv*x) = " << testsymmetry_data.depsym_symgs << endl;
 
   CopyVector(xexact, x_overlap); // Copy exact answer into overlap vector
 
@@ -138,7 +138,7 @@ int TestSymmetry(Geometry & geom, SparseMatrix & A, Vector & b, Vector & xexact,
     if (ierr) HPCG_fout << "Error in call to SpMV: " << ierr << ".\n" << endl;
     if ((ierr = ComputeResidual(A.localNumberOfRows, b, b_computed, residual)))
       HPCG_fout << "Error in call to compute_residual: " << ierr << ".\n" << endl;
-    if (geom.rank==0) HPCG_fout << "SpMV call [" << i << "] Residual [" << residual << "]" << endl;
+    if (A.geom->rank==0) HPCG_fout << "SpMV call [" << i << "] Residual [" << residual << "]" << endl;
   }
   DeleteVector(x_overlap);
   DeleteVector(y_overlap);

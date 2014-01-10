@@ -48,8 +48,8 @@ using std::endl;
 
   @see YAML_Doc
 */
-void ReportResults(const Geometry & geom, const SparseMatrix & A, int numberOfCgSets, int niters, double times[],
-    TestCGData * testcg_data, TestSymmetryData * testsymmetry_data, TestNormsData * testnorms_data, int global_failure) {
+void ReportResults(const SparseMatrix & A, int numberOfCgSets, int niters, double times[],
+		const TestCGData & testcg_data, const TestSymmetryData & testsymmetry_data, const TestNormsData & testnorms_data, int global_failure) {
 
 #ifndef HPCG_NOMPI
   double t4 = times[4];
@@ -59,12 +59,12 @@ void ReportResults(const Geometry & geom, const SparseMatrix & A, int numberOfCg
   MPI_Allreduce(&t4, &t4min, 1, MPI_DOUBLE, MPI_MIN, MPI_COMM_WORLD);
   MPI_Allreduce(&t4, &t4max, 1, MPI_DOUBLE, MPI_MAX, MPI_COMM_WORLD);
   MPI_Allreduce(&t4, &t4avg, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-  t4avg = t4avg/((double) geom.size);
+  t4avg = t4avg/((double) A.geom->size);
 #endif
 
   // initialize YAML doc
 
-  if (geom.rank==0) { // Only PE 0 needs to compute and report timing results
+  if (A.geom->rank==0) { // Only PE 0 needs to compute and report timing results
 
     double fNumberOfCgSets = numberOfCgSets;
     double fniters = niters;
@@ -82,23 +82,23 @@ void ReportResults(const Geometry & geom, const SparseMatrix & A, int numberOfCg
     doc.add("HPCG Benchmark","Version 1.1 November 26, 2013");
 
     doc.add("Machine Summary","");
-    doc.get("Machine Summary")->add("Distributed Processes",geom.size);
-    doc.get("Machine Summary")->add("Threads per processes",geom.numThreads);
+    doc.get("Machine Summary")->add("Distributed Processes",A.geom->size);
+    doc.get("Machine Summary")->add("Threads per processes",A.geom->numThreads);
 
     doc.add("Global Problem Dimensions","");
-    doc.get("Global Problem Dimensions")->add("Global nx",geom.npx*geom.nx);
-    doc.get("Global Problem Dimensions")->add("Global ny",geom.npy*geom.ny);
-    doc.get("Global Problem Dimensions")->add("Global nz",geom.npz*geom.nz);
+    doc.get("Global Problem Dimensions")->add("Global nx",A.geom->npx*A.geom->nx);
+    doc.get("Global Problem Dimensions")->add("Global ny",A.geom->npy*A.geom->ny);
+    doc.get("Global Problem Dimensions")->add("Global nz",A.geom->npz*A.geom->nz);
 
     doc.add("Processor Dimensions","");
-    doc.get("Processor Dimensions")->add("npx",geom.npx);
-    doc.get("Processor Dimensions")->add("npy",geom.npy);
-    doc.get("Processor Dimensions")->add("npz",geom.npz);
+    doc.get("Processor Dimensions")->add("npx",A.geom->npx);
+    doc.get("Processor Dimensions")->add("npy",A.geom->npy);
+    doc.get("Processor Dimensions")->add("npz",A.geom->npz);
 
     doc.add("Local Domain Dimensions","");
-    doc.get("Local Domain Dimensions")->add("nx",geom.nx);
-    doc.get("Local Domain Dimensions")->add("ny",geom.ny);
-    doc.get("Local Domain Dimensions")->add("nz",geom.nz);
+    doc.get("Local Domain Dimensions")->add("nx",A.geom->nx);
+    doc.get("Local Domain Dimensions")->add("ny",A.geom->ny);
+    doc.get("Local Domain Dimensions")->add("nz",A.geom->nz);
 
 
     doc.add("Linear System Information","");
@@ -107,25 +107,25 @@ void ReportResults(const Geometry & geom, const SparseMatrix & A, int numberOfCg
 
     doc.add("********** Validation Testing Summary  ***********","");
     doc.add("Spectral Convergence Tests","");
-    if (testcg_data->count_fail==0)
+    if (testcg_data.count_fail==0)
       doc.get("Spectral Convergence Tests")->add("Result", "PASSED");
     else
       doc.get("Spectral Convergence Tests")->add("Result", "FAILED");
     doc.get("Spectral Convergence Tests")->add("Unpreconditioned","");
-    doc.get("Spectral Convergence Tests")->get("Unpreconditioned")->add("Maximum iteration count", testcg_data->niters_max_no_prec);
-    doc.get("Spectral Convergence Tests")->get("Unpreconditioned")->add("Expected iteration count", testcg_data->expected_niters_no_prec);
+    doc.get("Spectral Convergence Tests")->get("Unpreconditioned")->add("Maximum iteration count", testcg_data.niters_max_no_prec);
+    doc.get("Spectral Convergence Tests")->get("Unpreconditioned")->add("Expected iteration count", testcg_data.expected_niters_no_prec);
     doc.get("Spectral Convergence Tests")->add("Preconditioned","");
-    doc.get("Spectral Convergence Tests")->get("Preconditioned")->add("Maximum iteration count", testcg_data->niters_max_prec);
-    doc.get("Spectral Convergence Tests")->get("Preconditioned")->add("Expected iteration count", testcg_data->expected_niters_prec);
+    doc.get("Spectral Convergence Tests")->get("Preconditioned")->add("Maximum iteration count", testcg_data.niters_max_prec);
+    doc.get("Spectral Convergence Tests")->get("Preconditioned")->add("Expected iteration count", testcg_data.expected_niters_prec);
 
     const char DepartureFromSymmetry[] = "Departure from Symmetry |x'Ay-y'Ax|/(||x||*||A||*||y||+||y||*||A||*||x||)/epsilon";
     doc.add(DepartureFromSymmetry,"");
-    if (testsymmetry_data->count_fail==0)
+    if (testsymmetry_data.count_fail==0)
       doc.get(DepartureFromSymmetry)->add("Result", "PASSED");
     else
       doc.get(DepartureFromSymmetry)->add("Result", "FAILED");
-    doc.get(DepartureFromSymmetry)->add("Departure for SpMV", testsymmetry_data->depsym_spmv);
-    doc.get(DepartureFromSymmetry)->add("Departure for SymGS", testsymmetry_data->depsym_symgs);
+    doc.get(DepartureFromSymmetry)->add("Departure for SpMV", testsymmetry_data.depsym_spmv);
+    doc.get(DepartureFromSymmetry)->add("Departure for SymGS", testsymmetry_data.depsym_symgs);
 
     doc.add("********** Iterations Summary  ***********","");
     doc.add("Iteration Count Information","");
@@ -139,12 +139,12 @@ void ReportResults(const Geometry & geom, const SparseMatrix & A, int numberOfCg
 
     doc.add("********** Reproducibility Summary  ***********","");
     doc.add("Reproducibility Information","");
-    if (testnorms_data->pass)
+    if (testnorms_data.pass)
       doc.get("Reproducibility Information")->add("Result", "PASSED");
     else
       doc.get("Reproducibility Information")->add("Result", "FAILED");
-    doc.get("Reproducibility Information")->add("Scaled residual mean", testnorms_data->mean);
-    doc.get("Reproducibility Information")->add("Scaled residual variance", testnorms_data->variance);
+    doc.get("Reproducibility Information")->add("Scaled residual mean", testnorms_data.mean);
+    doc.get("Reproducibility Information")->add("Scaled residual variance", testnorms_data.variance);
 
     doc.add("********** Performance Summary (times in sec) ***********","");
 
@@ -191,7 +191,7 @@ void ReportResults(const Geometry & geom, const SparseMatrix & A, int numberOfCg
     doc.get("Sparse Operations Overheads")->add("Halo exchange as percentage of SpMV time", (times[6])/totalSparseMVTime*100.0);
 #endif
     doc.add("********** Final Summary **********","");
-    bool isValidRun = (testcg_data->count_fail==0) && (testsymmetry_data->count_fail==0) && (testnorms_data->pass) && (!global_failure);
+    bool isValidRun = (testcg_data.count_fail==0) && (testsymmetry_data.count_fail==0) && (testnorms_data.pass) && (!global_failure);
     if (isValidRun) {
       doc.get("********** Final Summary **********")->add("HPCG result is VALID with a GFLOP/s rating of", totalGflops);
       if (!A.isDotProductOptimized) {
@@ -201,7 +201,7 @@ void ReportResults(const Geometry & geom, const SparseMatrix & A, int numberOfCg
         doc.get("********** Final Summary **********")->add("Reference version of ComputeSPMV used","Performance results are most likely suboptimal");
       }
       if (!A.isSymgsOptimized) {
-        if (geom.numThreads>1)
+        if (A.geom->numThreads>1)
           doc.get("********** Final Summary **********")->add("Reference version of ComputeSYMGS used and number of threads greater than 1","Performance results are severely suboptimal");
         else // numThreads ==1
           doc.get("********** Final Summary **********")->add("Reference version of ComputeSYMGS used","Performance results are most likely suboptimal");

@@ -14,9 +14,8 @@
 
 #ifndef SETUPHALO_HPP
 #define SETUPHALO_HPP
-#include "Geometry.hpp"
 #include "SparseMatrix.hpp"
 
-void SetupHalo(const Geometry & geom, SparseMatrix & A);
+void SetupHalo(SparseMatrix & A);
 
 #endif // SETUPHALO_HPP

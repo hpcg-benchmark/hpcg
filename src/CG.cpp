@@ -62,7 +62,7 @@ using std::endl;
 
   @see CG_ref()
 */
-int CG(const Geometry & geom, const SparseMatrix & A, CGData & data, const Vector & b, Vector & x,
+int CG(const SparseMatrix & A, CGData & data, const Vector & b, Vector & x,
     const int max_iter, const double tolerance, int & niters, double & normr, double & normr0,
     double * times, bool doPreconditioning) {
 
@@ -81,7 +81,7 @@ int CG(const Geometry & geom, const SparseMatrix & A, CGData & data, const Vecto
   Vector & p = data.p; // Direction vector (in MPI mode ncol>=nrow)
   Vector & Ap = data.Ap;
 
-  if (!doPreconditioning && geom.rank==0) HPCG_fout << "WARNING: PERFORMING UNPRECONDITIONED ITERATIONS" << endl;
+  if (!doPreconditioning && A.geom->rank==0) HPCG_fout << "WARNING: PERFORMING UNPRECONDITIONED ITERATIONS" << endl;
 
 #ifdef HPCG_DEBUG
   int print_freq = 1;
@@ -98,7 +98,7 @@ int CG(const Geometry & geom, const SparseMatrix & A, CGData & data, const Vecto
   ComputeDotProduct(nrow, r, r, normr, t4, A.isDotProductOptimized);
   normr = sqrt(normr);
 #ifdef HPCG_DEBUG
-  if (geom.rank==0) HPCG_fout << "Initial Residual = "<< normr << endl;
+  if (A.geom->rank==0) HPCG_fout << "Initial Residual = "<< normr << endl;
 #endif
 
   // Record initial residual for convergence testing
@@ -135,7 +135,7 @@ int CG(const Geometry & geom, const SparseMatrix & A, CGData & data, const Vecto
     TICK(); ComputeDotProduct(nrow, r, r, normr, t4, A.isDotProductOptimized); TOCK(t1);
     normr = sqrt(normr);
 #ifdef HPCG_DEBUG
-    if (geom.rank==0 && (k%print_freq == 0 || k == max_iter))
+    if (A.geom->rank==0 && (k%print_freq == 0 || k == max_iter))
       HPCG_fout << "Iteration = "<< k << "   Scaled Residual = "<< normr/normr0 << endl;
 #endif
     niters = k;

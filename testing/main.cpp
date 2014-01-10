@@ -111,12 +111,12 @@ int main(int argc, char * argv[]) {
   GenerateGeometry(size, rank, params.numThreads, nx, ny, nz, geom);
 
   SparseMatrix A;
-  InitializeSparseMatrix(A);
+  InitializeSparseMatrix(A, geom);
 
   CGData data;
   Vector b, x, xexact;
-  GenerateProblem(geom, A, b, x, xexact);
-  SetupHalo(geom, A);
+  GenerateProblem(A, b, x, xexact);
+  SetupHalo(A);
   InitializeSparseCGData(A, data);
 
 
@@ -124,14 +124,14 @@ int main(int argc, char * argv[]) {
   std::vector< double > times(9,0.0);
 
   // Call user-tunable set up function.
-  double t7 = mytimer(); OptimizeProblem(geom, A, data, b, x, xexact); t7 = mytimer() - t7;
+  double t7 = mytimer(); OptimizeProblem(A, data, b, x, xexact); t7 = mytimer() - t7;
   times[7] = t7;
 #ifdef HPCG_DEBUG
   if (rank==0) HPCG_fout << "Total problem setup time in main (sec) = " << mytimer() - t1 << endl;
 #endif
 
 #ifdef HPCG_DETAILED_DEBUG
-  if (geom.size==1) WriteProblem(geom, A, b, x, xexact);
+  if (geom.size==1) WriteProblem(A, b, x, xexact);
 #endif
 
 
@@ -144,10 +144,10 @@ int main(int argc, char * argv[]) {
 #endif
   TestCGData testcg_data;
   testcg_data.count_pass = testcg_data.count_fail = 0;
-  TestCG(geom, A, data, b, x, testcg_data);
+  TestCG(A, data, b, x, testcg_data);
 
   TestSymmetryData testsymmetry_data;
-  TestSymmetry(geom, A, b, xexact, testsymmetry_data);
+  TestSymmetry(A, b, xexact, testsymmetry_data);
 
 #ifdef HPCG_DEBUG
   if (rank==0) HPCG_fout << "Total validation (TestCG and TestSymmetry) execution time in main (sec) = " << mytimer() - t1 << endl;
@@ -214,7 +214,7 @@ int main(int argc, char * argv[]) {
   int err_count = 0;
   for (int i=0; i< numberOfCalls; ++i) {
     ZeroVector(x);
-    ierr = CG_ref( geom, A, data, b, x, maxIters, tolerance, niters, normr, normr0, &ref_times[0], true);
+    ierr = CG_ref( A, data, b, x, maxIters, tolerance, niters, normr, normr0, &ref_times[0], true);
     if (ierr) ++err_count; // count the number of errors in CG
     totalNiters += niters;
   }
@@ -242,7 +242,7 @@ int main(int argc, char * argv[]) {
   for (int i=0; i< numberOfCalls; ++i) {
     ZeroVector(x); // start x at all zeros
     double last_cummulative_time = opt_times[0];
-    ierr = CG( geom, A, data, b, x, opt_maxIters, ref_tolerance, niters, normr, normr0, &opt_times[0], true);
+    ierr = CG( A, data, b, x, opt_maxIters, ref_tolerance, niters, normr, normr0, &opt_times[0], true);
     if (ierr) ++err_count; // count the number of errors in CG
     if (normr / normr0 > ref_tolerance) ++tolerance_failures; // the number of failures to reduce residual
 
@@ -297,7 +297,7 @@ int main(int argc, char * argv[]) {
 
   for (int i=0; i< numberOfCgSets; ++i) {
     ZeroVector(x); // Zero out x
-    ierr = CG( geom, A, data, b, x, maxIters, tolerance, niters, normr, normr0, &times[0], true);
+    ierr = CG( A, data, b, x, maxIters, tolerance, niters, normr, normr0, &times[0], true);
     if (ierr) HPCG_fout << "Error in call to CG: " << ierr << ".\n" << endl;
     if (rank==0) HPCG_fout << "Call [" << i << "] Scaled Residual [" << normr/normr0 << "]" << endl;
     testnorms_data.values[i] = normr/normr0; // Record scaled residual from this run
@@ -314,14 +314,14 @@ int main(int argc, char * argv[]) {
 #endif
 
   // Test Norm Results
-  ierr = TestNorms(&testnorms_data);
+  ierr = TestNorms(testnorms_data);
 
   ////////////////////
   // Report Results //
   ////////////////////
 
   // Report results to YAML file
-  ReportResults(geom, A, numberOfCgSets, totalNiters, &times[0], &testcg_data, &testsymmetry_data, &testnorms_data, global_failure);
+  ReportResults(A, numberOfCgSets, totalNiters, &times[0], testcg_data, testsymmetry_data, testnorms_data, global_failure);
 
   // Clean up
   DeleteMatrix(A);

@@ -45,30 +45,32 @@ using std::endl;
   @see GenerateGeometry
 */
 
-void GenerateProblem(const Geometry & geom, const SparseMatrix & A, SparseMatrix & RP) {
+void GenerateGridTransfer(const SparseMatrix & A, SparseMatrix & RP) {
 
   // Make local copies of geometry information.  Use global_int_t since the RHS products in the calculations
   // below may result in global range values.
-  global_int_t nx = geom.nx;
-  global_int_t ny = geom.ny;
-  global_int_t nz = geom.nz;
-  global_int_t npx = geom.npx;
-  global_int_t npy = geom.npy;
-  global_int_t npz = geom.npz;
-  global_int_t ipx = geom.ipx;
-  global_int_t ipy = geom.ipy;
-  global_int_t ipz = geom.ipz;
-  global_int_t size = geom.size;
+  global_int_t nx = A.geom->nx;
+  global_int_t ny = A.geom->ny;
+  global_int_t nz = A.geom->nz;
+  global_int_t npx = A.geom->npx;
+  global_int_t npy = A.geom->npy;
+  global_int_t npz = A.geom->npz;
+  global_int_t ipx = A.geom->ipx;
+  global_int_t ipy = A.geom->ipy;
+  global_int_t ipz = A.geom->ipz;
+  global_int_t size = A.geom->size;
   global_int_t gnx = nx*npx;
   global_int_t gny = ny*npy;
   global_int_t gnz = nz*npz;
 
-  global_int_t localNumberOfRows = nx*ny*nz; // This is the size of our subblock
+
+
+  local_int_t localNumberOfRows = nx*ny*nz; // This is the size of our subblock
   // If this assert fails, it most likely means that the local_int_t is set to int and should be set to long long
   assert(localNumberOfRows>0); // Throw an exception of the number of rows is less than zero (can happen if int overflow)
   global_int_t numberOfNonzerosPerRow = 27; // We are approximating a 27-point finite element/volume/difference 3D stencil
 
-  global_int_t totalNumberOfRows = localNumberOfRows*geom.size; // Total number of grid points in mesh
+  global_int_t totalNumberOfRows = localNumberOfRows*A.geom->size; // Total number of grid points in mesh
   // If this assert fails, it most likely means that the global_int_t is set to int and should be set to long long
   assert(totalNumberOfRows>0); // Throw an exception of the number of rows is less than zero (can happen if int overflow)
 
@@ -123,7 +125,7 @@ void GenerateProblem(const Geometry & geom, const SparseMatrix & A, SparseMatrix
 
         A.localToGlobalMap[currentLocalRow] = currentGlobalRow;
 #ifdef HPCG_DETAILED_DEBUG
-        HPCG_fout << " rank, globalRow, localRow = " << geom.rank << " " << currentGlobalRow << " " << A.globalToLocalMap[currentGlobalRow] << endl;
+        HPCG_fout << " rank, globalRow, localRow = " << A.geom->rank << " " << currentGlobalRow << " " << A.globalToLocalMap[currentGlobalRow] << endl;
 #endif
         char numberOfNonzerosInRow = 0;
         double * currentValuePointer = matrixValues[currentLocalRow]; // Pointer to current value in current row
@@ -158,8 +160,8 @@ void GenerateProblem(const Geometry & geom, const SparseMatrix & A, SparseMatrix
     } // end iy loop
   } // end iz loop
 #ifdef HPCG_DETAILED_DEBUG
-  HPCG_fout     << "Process " << geom.rank << " of " << geom.size <<" has " << localNumberOfRows    << " rows."     << endl
-      << "Process " << geom.rank << " of " << geom.size <<" has " << localNumberOfNonzeros<< " nonzeros." <<endl;
+  HPCG_fout     << "Process " << A.geom->rank << " of " << A.geom->size <<" has " << localNumberOfRows    << " rows."     << endl
+      << "Process " << A.geom->rank << " of " << A.geom->size <<" has " << localNumberOfNonzeros<< " nonzeros." <<endl;
 #endif
 
   global_int_t totalNumberOfNonzeros = 0;

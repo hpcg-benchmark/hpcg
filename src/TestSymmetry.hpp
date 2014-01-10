@@ -23,7 +23,6 @@
 
 #include "hpcg.hpp"
 #include "SparseMatrix.hpp"
-#include "Geometry.hpp"
 #include "CGData.hpp"
 
 struct TestSymmetryData_STRUCT {
@@ -33,6 +32,6 @@ struct TestSymmetryData_STRUCT {
 };
 typedef struct TestSymmetryData_STRUCT TestSymmetryData;
 
-extern int TestSymmetry(Geometry & geom, SparseMatrix & A, Vector & b, Vector & xexact, TestSymmetryData & testsymmetry_data);
+extern int TestSymmetry(SparseMatrix & A, Vector & b, Vector & xexact, TestSymmetryData & testsymmetry_data);
 
 #endif  // TESTSYMMETRY_HPP

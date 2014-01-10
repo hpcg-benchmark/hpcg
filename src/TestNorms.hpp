@@ -31,6 +31,6 @@ struct TestNormsData_STRUCT {
 };
 typedef struct TestNormsData_STRUCT TestNormsData;
 
-extern int TestNorms(TestNormsData * testnorms_data);
+extern int TestNorms(TestNormsData & testnorms_data);
 
 #endif  // TESTNORMS_HPP

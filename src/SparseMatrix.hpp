@@ -29,6 +29,7 @@
 
 struct SparseMatrix_STRUCT {
   char  * title; //!< name of the sparse matrix
+  Geometry * geom; //!< geometry associated with this matrix
   global_int_t totalNumberOfRows; //!< total number of matrix rows across all processes
   global_int_t totalNumberOfNonzeros; //!< total number of matrix nonzeros across all processes
   local_int_t localNumberOfRows; //!< number of rows local to this process
@@ -69,8 +70,9 @@ typedef struct SparseMatrix_STRUCT SparseMatrix;
 
   @param[in] A the known system matrix
  */
-inline void InitializeSparseMatrix(SparseMatrix & A) {
+inline void InitializeSparseMatrix(SparseMatrix & A, Geometry & geom) {
   A.title = 0;
+  A.geom = &geom;
   A.totalNumberOfRows = 0;
   A.totalNumberOfNonzeros = 0;
   A.localNumberOfRows = 0;
@@ -154,7 +156,7 @@ inline void DeleteMatrix(SparseMatrix & A) {
   if (A.sendLength)            delete [] A.sendLength;
   if (A.sendBuffer)            delete [] A.sendBuffer;
 #endif
-  InitializeSparseMatrix(A);
+  InitializeSparseMatrix(A, *(A.geom));
   return;
 }
 

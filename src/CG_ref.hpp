@@ -17,10 +17,9 @@
 
 #include "SparseMatrix.hpp"
 #include "Vector.hpp"
-#include "Geometry.hpp"
 #include "CGData.hpp"
 
-int CG_ref(const Geometry & geom, const SparseMatrix & A, CGData & data, const Vector & b, Vector & x,
+int CG_ref(const SparseMatrix & A, CGData & data, const Vector & b, Vector & x,
     const int max_iter, const double tolerance, int & niters, double & normr,  double & normr0,
     double * times, bool doPreconditioning);
 

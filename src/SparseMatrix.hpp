@@ -51,6 +51,7 @@ struct SparseMatrix_STRUCT {
    used inside optimized ComputeSPMV().
    */
   void * optimization_data;
+  MGData * mgData; // Pointer to the coarse level data for this fine matrix
 
 #ifndef HPCG_NOMPI
   local_int_t numberOfExternalValues; //!< number of entries that are external to this process
@@ -70,9 +71,9 @@ typedef struct SparseMatrix_STRUCT SparseMatrix;
 
   @param[in] A the known system matrix
  */
-inline void InitializeSparseMatrix(SparseMatrix & A, Geometry & geom) {
+inline void InitializeSparseMatrix(SparseMatrix & A, Geometry * geom) {
   A.title = 0;
-  A.geom = &geom;
+  A.geom = geom;
   A.totalNumberOfRows = 0;
   A.totalNumberOfNonzeros = 0;
   A.localNumberOfRows = 0;
@@ -101,6 +102,7 @@ inline void InitializeSparseMatrix(SparseMatrix & A, Geometry & geom) {
   A.sendLength = 0;
   A.sendBuffer = 0;
 #endif
+  A.mgData = 0; // Fine-to-coarse grid transfer initially not defined.
   return;
 }
 
@@ -142,6 +144,7 @@ inline void DeleteMatrix(SparseMatrix & A) {
     delete [] A.mtxIndG[i];
     delete [] A.mtxIndL[i];
   }
+
   if (A.title)                  delete [] A.title;
   if (A.nonzerosInRow)             delete [] A.nonzerosInRow;
   if (A.mtxIndG) delete [] A.mtxIndG;
@@ -156,7 +159,9 @@ inline void DeleteMatrix(SparseMatrix & A) {
   if (A.sendLength)            delete [] A.sendLength;
   if (A.sendBuffer)            delete [] A.sendBuffer;
 #endif
-  InitializeSparseMatrix(A, *(A.geom));
+
+  if (A.geom!=0) { delete A.geom; A.geom = 0;}
+  if (A.mgData!=0) { DeleteMGData(*A.mgData); delete A.mgData; A.mgData = 0;} // Delete MG data
   return;
 }
 

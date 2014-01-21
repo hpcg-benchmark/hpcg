@@ -12,8 +12,9 @@
 // ***************************************************
 //@HEADER
 
-#ifndef GENERATEGEOMETRY_HPP
-#define GENERATEGEOMETRY_HPP
-#include "Geometry.hpp"
-void GenerateGeometry(int size, int rank, int numThreads, int nx, int ny, int nz, Geometry * geom);
-#endif // GENERATEGEOMETRY_HPP
+#ifndef COMPUTEPROLONGATION_REF_HPP
+#define COMPUTEPROLONGATION_REF_HPP
+#include "Vector.hpp"
+#include "SparseMatrix.hpp"
+int ComputeRestriction_ref(const SparseMatrix & A, const Vector & x);
+#endif // COMPUTEPROLONGATION_REF_HPP

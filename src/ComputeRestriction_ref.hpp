@@ -12,10 +12,9 @@
 // ***************************************************
 //@HEADER
 
-#ifndef GENERATEGRIDTRANSFER_HPP
-#define GENERATEGRIDTRANSFER_HPP
-#include "Geometry.hpp"
+#ifndef COMPUTERESTRICTION_REF_HPP
+#define COMPUTERESTRICTION_REF_HPP
+#include "Vector.hpp"
 #include "SparseMatrix.hpp"
-
-void GenerateGridTransfer(const SparseMatrix & A, SparseMatrix & RP);
-#endif // GENERATEGRIDTRANSFER_HPP
+int ComputeRestriction_ref(const SparseMatrix & A, const Vector & x);
+#endif // COMPUTERESTRICTION_REF_HPP

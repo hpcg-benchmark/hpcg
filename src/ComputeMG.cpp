@@ -18,9 +18,8 @@
  HPCG routine
  */
 
-#include "Geometry.hpp"
-#include "ComputeSYMGS.hpp"
-#include "ComputeSYMGS_ref.hpp"
+#include "ComputeMG.hpp"
+#include "ComputeMG_ref.hpp"
 
 /*!
   Routine to one step of symmetrix Gauss-Seidel:
@@ -46,10 +45,10 @@
 
   @see ComputeSYMGS_ref
 */
-int ComputeSYMGS( const SparseMatrix & A, const double * const x, double * const y) {
+int ComputeMG( const SparseMatrix & A, const Vector & x, Vector & y) {
 
   // This line and the next two lines should be removed and your version of ComputeSYMGS should be used.
   A.isSymgsOptimized = false;
-  return(ComputeSYMGS_ref(A, x, y));
+  return(ComputeMG_ref(A, x, y));
 
 }

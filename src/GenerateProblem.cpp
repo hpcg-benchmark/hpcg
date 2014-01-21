@@ -41,14 +41,14 @@ using std::endl;
 
   @param[in]  geom   data structure that stores the parallel run parameters and the factoring of total number of processes into three dimensional grid
   @param[in]  A      The known system matrix
-  @param[out] b      The newly allocated and generated right hand side vector
-  @param[out] x      The newly allocated solution vector with entries set to 0.0
-  @param[out] xexact The newly allocated solution vector with entries set to the exact solution
+  @param[inout] b      The newly allocated and generated right hand side vector (b is set to zero if xexact is zero on entry)
+  @param[inout] x      The newly allocated solution vector with entries set to 0.0
+  @param[inout] xexact The newly allocated solution vector with entries set to the exact solution (if the xexact pointer is non-zero on entry)
 
   @see GenerateGeometry
 */
 
-void GenerateProblem(SparseMatrix & A, Vector & b, Vector & x, Vector & xexact) {
+void GenerateProblem(SparseMatrix & A, Vector & b, Vector & x, Vector * xexact) {
 
   // Make local copies of geometry information.  Use global_int_t since the RHS products in the calculations
   // below may result in global range values.
@@ -68,7 +68,7 @@ void GenerateProblem(SparseMatrix & A, Vector & b, Vector & x, Vector & xexact) 
   local_int_t localNumberOfRows = nx*ny*nz; // This is the size of our subblock
   // If this assert fails, it most likely means that the local_int_t is set to int and should be set to long long
   assert(localNumberOfRows>0); // Throw an exception of the number of rows is less than zero (can happen if int overflow)
-  global_int_t numberOfNonzerosPerRow = 27; // We are approximating a 27-point finite element/volume/difference 3D stencil
+  local_int_t numberOfNonzerosPerRow = 27; // We are approximating a 27-point finite element/volume/difference 3D stencil
 
   global_int_t totalNumberOfRows = localNumberOfRows*A.geom->size; // Total number of grid points in mesh
   // If this assert fails, it most likely means that the global_int_t is set to int and should be set to long long
@@ -84,10 +84,11 @@ void GenerateProblem(SparseMatrix & A, Vector & b, Vector & x, Vector & xexact) 
 
   InitializeVector(x, localNumberOfRows);
   InitializeVector(b, localNumberOfRows);
-  InitializeVector(xexact, localNumberOfRows);
+  if (xexact!=0) InitializeVector(*xexact, localNumberOfRows);
   double * xv = x.values;
   double * bv = b.values;
-  double * xexactv = xexact.values;
+  double * xexactv = 0;
+  if (xexact!=0) xexactv = xexact->values; // Only compute exact solution if requested
   A.localToGlobalMap.resize(localNumberOfRows);
 
   // Use a parallel loop to do initial assignment:
@@ -163,8 +164,13 @@ void GenerateProblem(SparseMatrix & A, Vector & b, Vector & x, Vector & xexact) 
 #endif
         localNumberOfNonzeros += numberOfNonzerosInRow; // Protect this with an atomic
         xv[currentLocalRow] = 0.0;
-        bv[currentLocalRow] = 26.0 - ((double) (numberOfNonzerosInRow-1));
-        xexactv[currentLocalRow] = 1.0;
+        if (xexact!=0) {
+          bv[currentLocalRow] = 26.0 - ((double) (numberOfNonzerosInRow-1));
+          (*xexactv)[currentLocalRow] = 1.0;
+        }
+        else {
+          bv[currentLocalRow] = 0.0;
+        }
       } // end ix loop
     } // end iy loop
   } // end iz loop

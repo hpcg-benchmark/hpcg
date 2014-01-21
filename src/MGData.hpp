@@ -21,43 +21,60 @@
 #ifndef MGDATA_HPP
 #define MGDATA_HPP
 
+#include <cassert>
 #include "SparseMatrix.hpp"
+#include "Vector.hpp"
 
 struct MGData_STRUCT {
-  double * r; //!< pointer to residual vector
-  double * z; //!< pointer to preconditioned residual vector
-  double * p; //!< pointer to direction vector
-  double * Ap; //!< pointer to Krylov vector
+  int numberOfPresmootherSteps; // Call ComputeSYMGS this many times prior to coarsening
+  int numberOfPostsmootherSteps; // Call ComputeSYMGS this many times after coarsening
+  local_int_t * f2cOperator; //!< 1D array containing the fine operator local IDs that will be injected into coarse space.
+  SparseMatrix * Ac; // Coarse grid matrix
+  Vector * rc; // coarse grid residual vector
+  Vector * xc; // coarse grid solution vector
+  Vector * Axf; // fine grid residual vector
+  /*!
+   This is for storing optimized data structres created in OptimizeProblem and
+   used inside optimized ComputeSPMV().
+   */
+  void * optimization_data;
 };
 typedef struct MGData_STRUCT MGData;
 
 /*!
  Constructor for the data structure of CG vectors.
 
- @param[in]  A    the data structure that describes the problem matrix and its structure
+ @param[in] Ac - Fully-formed coarse matrix
+ @param[in] f2cOperator -
  @param[out] data the data structure for CG vectors that will be allocated to get it ready for use in CG iterations
  */
-inline void InitializeMGData(SparseMatrix & A, MGData & data) {
-  local_int_t nrow = A.localNumberOfRows;
-  local_int_t ncol = A.localNumberOfColumns;
-  data.r = new double [nrow]; // Residual vector
-  data.z = new double [nrow]; // Preconditioned residual vector
-  data.Ap = new double [nrow];
-  data.p = new double [ncol]; // Direction vector (in MPI mode ncol>=nrow)
+inline void InitializeMGData(SparseMatrix * Ac, local_int_t * f2cOperator, Vector * rc, Vector * xc, Vector * Axf, MGData & data) {
+  data.numberOfPresmootherSteps = 3;
+  data.numberOfPostsmootherSteps = 3;
+  data.Ac = Ac;
+  data.f2cOperator = f2cOperator; // Space for injection operator
+  data.rc = rc;
+  data.xc = xc;
+  data.Axf = Axf;
   return;
 }
 
 /*!
  Destructor for the CG vectors data.
 
- @param[inout] data the CG vectors data structure whose storage is deallocated
+ @param[inout] data the MG data structure whose storage is deallocated
  */
 inline void DeleteMGData(MGData & data) {
 
-  delete [] data.r;
-  delete [] data.z;
-  delete [] data.Ap;
-  delete [] data.p;
+  delete [] data.f2cOperator;
+  DeleteVector(*data.Axf);
+  DeleteVector(*data.rc);
+  DeleteVector(*data.xc);
+  delete data.Axf;
+  delete data.rc;
+  delete data.xc;
+  if (data.Ac!=0) { DeleteMatrix(*data.Ac); delete data.Ac; data.Ac = 0;} // Recursively delete coarse matrices.
+
   return;
 }
 

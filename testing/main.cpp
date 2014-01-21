@@ -107,16 +107,24 @@ int main(int argc, char * argv[]) {
 #endif
 
   // Construct the geometry and linear system
-  Geometry geom;
+  Geometry * geom = new Geometry;
   GenerateGeometry(size, rank, params.numThreads, nx, ny, nz, geom);
 
   SparseMatrix A;
   InitializeSparseMatrix(A, geom);
 
-  CGData data;
   Vector b, x, xexact;
   GenerateProblem(A, b, x, xexact);
   SetupHalo(A);
+  int nlevels = 2; // Number of multigrid levels
+  SparseMatrix * curLevelMatrix = &A;
+  for (int level = 1; level< nlevels; ++level) {
+	  GenerateCoarseProblem(*curLevelMatrix);
+	  curLevelMatrix = curLevelMatrix->Ac; // Make the just-constructed coarse grid the next level
+  }
+
+
+  CGData data;
   InitializeSparseCGData(A, data);
 
 

@@ -33,20 +33,20 @@
   Routine to construct a prolongation/restriction operator for a given fine grid matrix
   solution (as computed by a direct solver).
 
-  @param[inout]  A      The known system matrix, on output its coarse operator and fine-to-coarse operator will be defined.
+  @param[inout]  Af - The known system matrix, on output its coarse operator, fine-to-coarse operator and auxiliary vectors will be defined.
 */
 
-void GenerateCoarseProblem(const SparseMatrix & A) {
+void GenerateCoarseProblem(const SparseMatrix & Af) {
 
   // Make local copies of geometry information.  Use global_int_t since the RHS products in the calculations
   // below may result in global range values.
-  global_int_t nxf = A.geom->nx;
-  global_int_t nyf = A.geom->ny;
-  global_int_t nzf = A.geom->nz;
+  global_int_t nxf = Af.geom->nx;
+  global_int_t nyf = Af.geom->ny;
+  global_int_t nzf = Af.geom->nz;
 
   local_int_t nxc, nyc, nzc; //Coarse nx, ny, nz
   nxc = nxf/2; nyc = nyf/2; nzc = nzf/2;
-  local_int_t * f2cOperator = new local_int_t[A.localNumberOfRows];
+  local_int_t * f2cOperator = new local_int_t[Af.localNumberOfRows];
   local_int_t localNumberOfRows = nxc*nyc*nzc; // This is the size of our subblock
   // If this assert fails, it most likely means that the local_int_t is set to int and should be set to long long
   assert(localNumberOfRows>0); // Throw an exception of the number of rows is less than zero (can happen if int overflow)
@@ -81,20 +81,21 @@ void GenerateCoarseProblem(const SparseMatrix & A) {
 
   // Construct the geometry and linear system
   Geometry * geomc = new Geometry;
-  GenerateGeometry(A.geom->size, A.geom->rank, A.geom->numThreads, nxc, nyc, nzc, geomc);
+  GenerateGeometry(Af.geom->size, Af.geom->rank, Af.geom->numThreads, nxc, nyc, nzc, geomc);
 
   SparseMatrix * Ac;
   InitializeSparseMatrix(*Ac, geomc);
   Vector *rc = new Vector;
   Vector *xc = new Vector;
   Vector *xexactc = 0; // We don't want an exact solution
-  GenerateProblem(*Ac, *rc, *xc, *xexactc);
+  GenerateProblem(*Ac, *rc, *xc, xexactc);
   SetupHalo(*Ac);
   Vector * Axf = new Vector;
-  InitializeVector(*Axf, A.localNumberOfColumns);
+  InitializeVector(*Axf, Af.localNumberOfColumns);
+  Af.Ac = Ac;
   MGData * mgData = new MGData;
-  InitializeMGData(Ac, f2cOperator, rc, xc, Axf, *mgData);
-  A.mgData = mgData;
+  InitializeMGData(f2cOperator, rc, xc, Axf, *mgData);
+  Af.mgData = mgData;
 
   return;
 }

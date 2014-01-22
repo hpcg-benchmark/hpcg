@@ -42,7 +42,7 @@ inline void InitializeSparseCGData(SparseMatrix & A, CGData & data) {
   local_int_t nrow = A.localNumberOfRows;
   local_int_t ncol = A.localNumberOfColumns;
   InitializeVector(data.r, nrow);
-  InitializeVector(data.z, nrow);
+  InitializeVector(data.z, ncol);
   InitializeVector(data.p, ncol);
   InitializeVector(data.Ap, nrow);
   return;

@@ -17,6 +17,6 @@
 #include "SparseMatrix.hpp"
 #include "Vector.hpp"
 
-int ComputeSYMGS_ref( const SparseMatrix  & A, const Vector & x, Vector & y);
+int ComputeSYMGS_ref( const SparseMatrix  & A, const Vector & r, Vector & x);
 
 #endif // COMPUTESYMGS_REF_HPP

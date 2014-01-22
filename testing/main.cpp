@@ -39,6 +39,7 @@ using std::endl;
 
 #include "GenerateGeometry.hpp"
 #include "GenerateProblem.hpp"
+#include "GenerateCoarseProblem.hpp"
 #include "SetupHalo.hpp"
 #include "ExchangeHalo.hpp"
 #include "OptimizeProblem.hpp"
@@ -114,12 +115,12 @@ int main(int argc, char * argv[]) {
   InitializeSparseMatrix(A, geom);
 
   Vector b, x, xexact;
-  GenerateProblem(A, b, x, xexact);
+  GenerateProblem(A, b, x, &xexact);
   SetupHalo(A);
   int nlevels = 2; // Number of multigrid levels
   SparseMatrix * curLevelMatrix = &A;
   for (int level = 1; level< nlevels; ++level) {
-	  GenerateCoarseProblem(*curLevelMatrix);
+	  //GenerateCoarseProblem(*curLevelMatrix);
 	  curLevelMatrix = curLevelMatrix->Ac; // Make the just-constructed coarse grid the next level
   }
 
@@ -332,7 +333,7 @@ int main(int argc, char * argv[]) {
   ReportResults(A, numberOfCgSets, totalNiters, &times[0], testcg_data, testsymmetry_data, testnorms_data, global_failure);
 
   // Clean up
-  DeleteMatrix(A);
+  DeleteMatrix(A); // This delete will recursively delete all coarse grid data
   DeleteCGData(data);
   DeleteVector(x);
   DeleteVector(b);

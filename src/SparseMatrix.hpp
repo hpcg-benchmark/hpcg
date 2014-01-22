@@ -26,6 +26,7 @@
 #include <cassert>
 #include "Geometry.hpp"
 #include "Vector.hpp"
+#include "MGData.hpp"
 
 struct SparseMatrix_STRUCT {
   char  * title; //!< name of the sparse matrix
@@ -50,8 +51,9 @@ struct SparseMatrix_STRUCT {
    This is for storing optimized data structres created in OptimizeProblem and
    used inside optimized ComputeSPMV().
    */
-  void * optimization_data;
+  struct SparseMatrix_STRUCT * Ac; // Coarse grid matrix
   MGData * mgData; // Pointer to the coarse level data for this fine matrix
+  void * optimization_data;  // pointer that can be used to store implementation-specific data
 
 #ifndef HPCG_NOMPI
   local_int_t numberOfExternalValues; //!< number of entries that are external to this process
@@ -103,6 +105,7 @@ inline void InitializeSparseMatrix(SparseMatrix & A, Geometry * geom) {
   A.sendBuffer = 0;
 #endif
   A.mgData = 0; // Fine-to-coarse grid transfer initially not defined.
+  A.Ac =0;
   return;
 }
 
@@ -161,6 +164,7 @@ inline void DeleteMatrix(SparseMatrix & A) {
 #endif
 
   if (A.geom!=0) { delete A.geom; A.geom = 0;}
+  if (A.Ac!=0) { DeleteMatrix(*A.Ac); delete A.Ac; A.Ac = 0;} // Delete coarse matrix
   if (A.mgData!=0) { DeleteMGData(*A.mgData); delete A.mgData; A.mgData = 0;} // Delete MG data
   return;
 }

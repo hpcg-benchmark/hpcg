@@ -17,6 +17,6 @@
 #include "SparseMatrix.hpp"
 #include "Vector.hpp"
 
-int ComputeMG_ref(const SparseMatrix  & A, const Vector & x, Vector & y);
+int ComputeMG_ref(const SparseMatrix  & A, const Vector & r, Vector & x);
 
 #endif // COMPUTEMG_REF_HPP

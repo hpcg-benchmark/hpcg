@@ -166,10 +166,10 @@ void GenerateProblem(SparseMatrix & A, Vector & b, Vector & x, Vector * xexact) 
         xv[currentLocalRow] = 0.0;
         if (xexact!=0) {
           bv[currentLocalRow] = 26.0 - ((double) (numberOfNonzerosInRow-1));
-          (*xexactv)[currentLocalRow] = 1.0;
+          xexactv[currentLocalRow] = 1.0;
         }
         else {
-          bv[currentLocalRow] = 0.0;
+          bv[currentLocalRow] = 0.0; // If xexact not present, then just initialize b to zero
         }
       } // end ix loop
     } // end iy loop

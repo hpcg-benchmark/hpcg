@@ -27,7 +27,7 @@
 #include "CG_ref.hpp"
 #include "mytimer.hpp"
 #include "ComputeSPMV_ref.hpp"
-#include "ComputeSYMGS_ref.hpp"
+#include "ComputeMG_ref.hpp"
 #include "ComputeDotProduct_ref.hpp"
 #include "ComputeWAXPBY_ref.hpp"
 
@@ -110,7 +110,7 @@ int CG_ref(const SparseMatrix & A, CGData & data, const Vector & b, Vector & x,
   for (int k=1; k<=max_iter && normr/normr0 > tolerance; k++ ) {
     TICK();
     if (doPreconditioning)
-      ComputeSYMGS_ref(A, r, z); // Apply preconditioner
+      ComputeMG_ref(A, r, z); // Apply preconditioner
     else
       ComputeWAXPBY_ref(nrow, 1.0, r, 0.0, r, z); // copy r to z (no preconditioning)
     TOCK(t5); // Preconditioner apply time

@@ -31,7 +31,7 @@ using std::endl;
 #include "hpcg.hpp"
 
 #include "ComputeSPMV.hpp"
-#include "ComputeSYMGS.hpp"
+#include "ComputeMG.hpp"
 #include "ComputeDotProduct.hpp"
 #include "ComputeResidual.hpp"
 #include "Geometry.hpp"
@@ -57,8 +57,8 @@ using std::endl;
   @see ComputeDotProduct_ref
   @see ComputeSPMV
   @see ComputeSPMV_ref
-  @see ComputeSYMGS
-  @see ComputeSYMGS_ref
+  @see ComputeMG
+  @see ComputeMG_ref
 */
 int TestSymmetry(SparseMatrix & A, Vector & b, Vector & xexact, TestSymmetryData & testsymmetry_data) {
 
@@ -110,21 +110,21 @@ int TestSymmetry(SparseMatrix & A, Vector & b, Vector & xexact, TestSymmetryData
   // Test symmetry of symmetric Gauss-Seidel
 
   // Compute x'*Minv*y
-  ierr = ComputeSYMGS(A, y_overlap, b_computed); // b_computed = Minv*y_overlap
-  if (ierr) HPCG_fout << "Error in call to SymGS: " << ierr << ".\n" << endl;
+  ierr = ComputeMG(A, y_overlap, b_computed); // b_computed = Minv*y_overlap
+  if (ierr) HPCG_fout << "Error in call to MG: " << ierr << ".\n" << endl;
   double xtMinvy = 0.0;
   ierr = ComputeDotProduct(nrow, x_overlap, b_computed, xtMinvy, t4, A.isDotProductOptimized); // b_computed = A*x_overlap
   if (ierr) HPCG_fout << "Error in call to dot: " << ierr << ".\n" << endl;
 
   // Next, compute y'*Minv*x
-  ierr = ComputeSYMGS(A, x_overlap, b_computed); // b_computed = Minv*x_overlap
-  if (ierr) HPCG_fout << "Error in call to SymGS: " << ierr << ".\n" << endl;
+  ierr = ComputeMG(A, x_overlap, b_computed); // b_computed = Minv*x_overlap
+  if (ierr) HPCG_fout << "Error in call to MG: " << ierr << ".\n" << endl;
   double ytMinvx = 0.0;
   ierr = ComputeDotProduct(nrow, y_overlap, b_computed, ytMinvx, t4, A.isDotProductOptimized); // b_computed = A*y_overlap
   if (ierr) HPCG_fout << "Error in call to dot: " << ierr << ".\n" << endl;
-  testsymmetry_data.depsym_symgs = std::fabs((long double) (xtMinvy - ytMinvx))/((xNorm2*ANorm*yNorm2 + yNorm2*ANorm*xNorm2) * (DBL_EPSILON));
-  if (testsymmetry_data.depsym_symgs > 1.0) ++testsymmetry_data.count_fail;  // If the difference is > 1, count it wrong
-  if (A.geom->rank==0) HPCG_fout << "Departure from symmetry (scaled) for SymGS abs(x'*Minv*y - y'*Minv*x) = " << testsymmetry_data.depsym_symgs << endl;
+  testsymmetry_data.depsym_mg = std::fabs((long double) (xtMinvy - ytMinvx))/((xNorm2*ANorm*yNorm2 + yNorm2*ANorm*xNorm2) * (DBL_EPSILON));
+  if (testsymmetry_data.depsym_mg > 1.0) ++testsymmetry_data.count_fail;  // If the difference is > 1, count it wrong
+  if (A.geom->rank==0) HPCG_fout << "Departure from symmetry (scaled) for MG abs(x'*Minv*y - y'*Minv*x) = " << testsymmetry_data.depsym_mg << endl;
 
   CopyVector(xexact, x_overlap); // Copy exact answer into overlap vector
 

@@ -117,10 +117,10 @@ int main(int argc, char * argv[]) {
   Vector b, x, xexact;
   GenerateProblem(A, b, x, &xexact);
   SetupHalo(A);
-  int nlevels = 2; // Number of multigrid levels
+  int nlevels = 2; // Number of levels including first
   SparseMatrix * curLevelMatrix = &A;
   for (int level = 1; level< nlevels; ++level) {
-	  //GenerateCoarseProblem(*curLevelMatrix);
+	  GenerateCoarseProblem(*curLevelMatrix);
 	  curLevelMatrix = curLevelMatrix->Ac; // Make the just-constructed coarse grid the next level
   }
 

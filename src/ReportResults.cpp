@@ -125,7 +125,7 @@ void ReportResults(const SparseMatrix & A, int numberOfCgSets, int niters, doubl
     else
       doc.get(DepartureFromSymmetry)->add("Result", "FAILED");
     doc.get(DepartureFromSymmetry)->add("Departure for SpMV", testsymmetry_data.depsym_spmv);
-    doc.get(DepartureFromSymmetry)->add("Departure for SymGS", testsymmetry_data.depsym_symgs);
+    doc.get(DepartureFromSymmetry)->add("Departure for MG", testsymmetry_data.depsym_mg);
 
     doc.add("********** Iterations Summary  ***********","");
     doc.add("Iteration Count Information","");
@@ -153,21 +153,21 @@ void ReportResults(const SparseMatrix & A, int numberOfCgSets, int niters, doubl
     doc.get("Benchmark Time Summary")->add("DDOT",times[1]);
     doc.get("Benchmark Time Summary")->add("WAXPBY",times[2]);
     doc.get("Benchmark Time Summary")->add("SpMV",times[3]);
-    doc.get("Benchmark Time Summary")->add("SymGS",times[5]);
+    doc.get("Benchmark Time Summary")->add("MG",times[5]);
     doc.get("Benchmark Time Summary")->add("Total",times[0]);
 
     doc.add("Floating Point Operations Summary","");
     doc.get("Floating Point Operations Summary")->add("DDOT",fnops_ddot);
     doc.get("Floating Point Operations Summary")->add("WAXPBY",fnops_waxpby);
     doc.get("Floating Point Operations Summary")->add("SpMV",fnops_sparsemv);
-    doc.get("Floating Point Operations Summary")->add("SymGS",fnops_precond);
+    doc.get("Floating Point Operations Summary")->add("MG",fnops_precond);
     doc.get("Floating Point Operations Summary")->add("Total",fnops);
 
     doc.add("GFLOP/s Summary","");
     doc.get("GFLOP/s Summary")->add("DDOT",fnops_ddot/times[1]/1.0E9);
     doc.get("GFLOP/s Summary")->add("WAXPBY",fnops_waxpby/times[2]/1.0E9);
     doc.get("GFLOP/s Summary")->add("SpMV",fnops_sparsemv/(times[3])/1.0E9);
-    doc.get("GFLOP/s Summary")->add("SymGS",fnops_precond/(times[5])/1.0E9);
+    doc.get("GFLOP/s Summary")->add("MG",fnops_precond/(times[5])/1.0E9);
     doc.get("GFLOP/s Summary")->add("Total",fnops/times[0]/1.0E9);
     // This final GFLOP/s rating includes the overhead of optimizing the data structures vs 50 iterations of CG
     double totalGflops = fnops/(times[0]+fNumberOfCgSets*times[7])/1.0E9;
@@ -179,7 +179,7 @@ void ReportResults(const SparseMatrix & A, int numberOfCgSets, int niters, doubl
     doc.get("Sparse Operations Overheads")->add("Overhead time (sec)", (times[7]+times[6]));
     doc.get("Sparse Operations Overheads")->add("Overhead as percentage of time", (times[7]+times[6])/totalSparseMVTime*100.0);
     doc.get("Sparse Operations Overheads")->add("Optimization phase time (sec)", (times[7]));
-    doc.get("Sparse Operations Overheads")->add("Optimization phase time vs reference SpMV+SymGS time", (times[7])/times[8]);
+    doc.get("Sparse Operations Overheads")->add("Optimization phase time vs reference SpMV+MG time", (times[7])/times[8]);
 
 #ifndef HPCG_NOMPI
     doc.get("Sparse Operations Overheads")->add("DDOT Timing Variations","");

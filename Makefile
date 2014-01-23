@@ -11,7 +11,8 @@ HPCG_DEPS = src/CG.o src/CG_ref.o src/TestCG.o src/ComputeResidual.o \
 	 src/SetupHalo.o src/TestSymmetry.o src/TestNorms.o src/WriteProblem.o \
          src/YAML_Doc.o src/YAML_Element.o src/ComputeDotProduct.o \
          src/ComputeDotProduct_ref.o src/finalize.o src/init.o src/mytimer.o src/ComputeSPMV.o \
-         src/ComputeSPMV_ref.o src/ComputeSYMGS.o src/ComputeSYMGS_ref.o src/ComputeWAXPBY.o src/ComputeWAXPBY_ref.o
+         src/ComputeSPMV_ref.o src/ComputeSYMGS.o src/ComputeSYMGS_ref.o src/ComputeWAXPBY.o src/ComputeWAXPBY_ref.o \
+         src/ComputeMG_ref.o src/ComputeMG.o ComputeProlongation_ref.o ComputeRestriction_ref.o GenerateCoarseProblem.o
 
 bin/xhpcg: testing/main.o $(HPCG_DEPS)
 	$(LINKER) $(LINKFLAGS) $? -o $@ $(HPCG_LIBS)

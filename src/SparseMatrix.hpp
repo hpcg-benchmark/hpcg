@@ -51,8 +51,8 @@ struct SparseMatrix_STRUCT {
    This is for storing optimized data structres created in OptimizeProblem and
    used inside optimized ComputeSPMV().
    */
-  struct SparseMatrix_STRUCT * Ac; // Coarse grid matrix
-  MGData * mgData; // Pointer to the coarse level data for this fine matrix
+  mutable struct SparseMatrix_STRUCT * Ac; // Coarse grid matrix
+  mutable MGData * mgData; // Pointer to the coarse level data for this fine matrix
   void * optimization_data;  // pointer that can be used to store implementation-specific data
 
 #ifndef HPCG_NOMPI

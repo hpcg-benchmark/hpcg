@@ -27,7 +27,7 @@
 #include "CG.hpp"
 #include "mytimer.hpp"
 #include "ComputeSPMV.hpp"
-#include "ComputeSYMGS.hpp"
+#include "ComputeMG.hpp"
 #include "ComputeDotProduct.hpp"
 #include "ComputeWAXPBY.hpp"
 
@@ -109,7 +109,7 @@ int CG(const SparseMatrix & A, CGData & data, const Vector & b, Vector & x,
   for (int k=1; k<=max_iter && normr/normr0 > tolerance; k++ ) {
     TICK();
     if (doPreconditioning)
-      ComputeSYMGS(A, r, z); // Apply preconditioner
+      ComputeMG(A, r, z); // Apply preconditioner
     else
       ComputeWAXPBY(nrow, 1.0, r, 0.0, r, z, A.isWaxpbyOptimized); // copy r to z (no preconditioning)
     TOCK(t5); // Preconditioner apply time

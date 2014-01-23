@@ -33,13 +33,13 @@
 
   Symmetric Gauss-Seidel notes:
   - We use the input vector x as the RHS and start with an initial guess for y of all zeros.
-  - We perform one forward sweep.  x is initially zero the first GS sweep, but we do not attempt to exploit this fact.
+  - We perform one forward sweep.  x should be initially zero on the first GS sweep, but we do not attempt to exploit this fact.
   - We then perform one back sweep.
   - For simplicity we include the diagonal contribution in the for-j loop, then correct the sum after
 
   @param[in] A the known system matrix
   @param[in] r the input vector
-  @param[in] x On exit contains the result of one symmetric GS sweep with r as the RHS.
+  @param[inout] x On entry, x should contain relevant values, on exit x contains the result of one symmetric GS sweep with r as the RHS.
 
   @return returns 0 upon success and non-zero otherwise
 
@@ -47,7 +47,6 @@
 */
 int ComputeSYMGS_ref( const SparseMatrix & A, const Vector & r, Vector & x) {
 
-  ZeroVector(x);
 #ifndef HPCG_NOMPI
   ExchangeHalo(A,x);
 #endif

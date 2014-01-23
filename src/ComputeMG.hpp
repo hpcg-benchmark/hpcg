@@ -12,10 +12,11 @@
 // ***************************************************
 //@HEADER
 
-#ifndef COMPUTESYMGS_HPP
-#define COMPUTESYMGS_HPP
+#ifndef COMPUTEMG_HPP
+#define COMPUTEMG_HPP
 #include "SparseMatrix.hpp"
+#include "Vector.hpp"
 
-int ComputeSYMGS( const SparseMatrix  & A, const double * const x, double * const y);
+int ComputeMG(const SparseMatrix  & A, const Vector & r, Vector & x);
 
-#endif // COMPUTESYMGS_HPP
+#endif // COMPUTEMG_HPP

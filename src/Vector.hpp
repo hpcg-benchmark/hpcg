@@ -52,7 +52,7 @@ inline void InitializeVector(Vector & v, local_int_t localLength) {
 /*!
   Fill the input vector with pseudo-random values.
 
-  @param[in] v
+  @param[inout] v - On entrance v is initialized, on exit all its values are zero.
  */
 inline void ZeroVector(Vector & v) {
   local_int_t localLength = v.localLength;

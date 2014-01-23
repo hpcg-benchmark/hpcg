@@ -20,6 +20,9 @@
 
 #include <cassert>
 #include "GenerateCoarseProblem.hpp"
+#include "GenerateGeometry.hpp"
+#include "GenerateProblem.hpp"
+#include "SetupHalo.hpp"
 
 #ifndef HPCG_NOMPI
 #include <mpi.h>
@@ -83,7 +86,7 @@ void GenerateCoarseProblem(const SparseMatrix & Af) {
   Geometry * geomc = new Geometry;
   GenerateGeometry(Af.geom->size, Af.geom->rank, Af.geom->numThreads, nxc, nyc, nzc, geomc);
 
-  SparseMatrix * Ac;
+  SparseMatrix * Ac = new SparseMatrix;
   InitializeSparseMatrix(*Ac, geomc);
   Vector *rc = new Vector;
   Vector *xc = new Vector;

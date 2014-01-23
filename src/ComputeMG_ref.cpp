@@ -52,7 +52,10 @@ int ComputeMG_ref(const SparseMatrix & A, const Vector & r, Vector & x) {
     for (int i=0; i< numberOfPostsmootherSteps; ++i) ierr += ComputeSYMGS_ref(A, r, x);
     if (ierr!=0) return(ierr);
   }
-  ierr = ComputeSYMGS_ref(A, r, x);
-  return(ierr);
+  else {
+    ierr = ComputeSYMGS_ref(A, r, x);
+    if (ierr!=0) return(ierr);
+  }
+  return(0);
 }
 

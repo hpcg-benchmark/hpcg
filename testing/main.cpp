@@ -115,7 +115,7 @@ int main(int argc, char * argv[]) {
   InitializeSparseMatrix(A, geom);
 
   Vector b, x, xexact;
-  GenerateProblem(A, b, x, &xexact);
+  GenerateProblem(A, &b, &x, &xexact);
   SetupHalo(A);
   int nlevels = 2; // Number of levels including first
   SparseMatrix * curLevelMatrix = &A;

@@ -20,6 +20,10 @@
 
 #include "ComputeSPMV_ref.hpp"
 
+#ifndef HPCG_NOMPI
+#include "ExchangeHalo.hpp"
+#endif
+
 #ifndef HPCG_NOOPENMP
 #include <omp.h>
 #endif
@@ -39,8 +43,11 @@
 
   @see ComputeSPMV
 */
-int ComputeSPMV_ref( const SparseMatrix & A, const Vector & x, Vector & y) {
+int ComputeSPMV_ref( const SparseMatrix & A, Vector & x, Vector & y) {
 
+#ifndef HPCG_NOMPI
+    ExchangeHalo(A,x);
+#endif
   const double * const xv = x.values;
   double * const yv = y.values;
   const local_int_t nrow = A.localNumberOfRows;

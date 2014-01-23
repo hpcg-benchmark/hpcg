@@ -41,14 +41,14 @@ using std::endl;
 
   @param[in]  geom   data structure that stores the parallel run parameters and the factoring of total number of processes into three dimensional grid
   @param[in]  A      The known system matrix
-  @param[inout] b      The newly allocated and generated right hand side vector (b is set to zero if xexact is zero on entry)
-  @param[inout] x      The newly allocated solution vector with entries set to 0.0
-  @param[inout] xexact The newly allocated solution vector with entries set to the exact solution (if the xexact pointer is non-zero on entry)
+  @param[inout] b      The newly allocated and generated right hand side vector (if b!=0 on entry)
+  @param[inout] x      The newly allocated solution vector with entries set to 0.0 (if x!=0 on entry)
+  @param[inout] xexact The newly allocated solution vector with entries set to the exact solution (if the xexact!=0 non-zero on entry)
 
   @see GenerateGeometry
 */
 
-void GenerateProblem(SparseMatrix & A, Vector & b, Vector & x, Vector * xexact) {
+void GenerateProblem(SparseMatrix & A, Vector * b, Vector * x, Vector * xexact) {
 
   // Make local copies of geometry information.  Use global_int_t since the RHS products in the calculations
   // below may result in global range values.
@@ -82,12 +82,14 @@ void GenerateProblem(SparseMatrix & A, Vector & b, Vector & x, Vector * xexact) 
   double ** matrixValues = new double*[localNumberOfRows];
   double ** matrixDiagonal = new double*[localNumberOfRows];
 
-  InitializeVector(x, localNumberOfRows);
-  InitializeVector(b, localNumberOfRows);
+  if (b!=0) InitializeVector(*b, localNumberOfRows);
+  if (x!=0) InitializeVector(*x, localNumberOfRows);
   if (xexact!=0) InitializeVector(*xexact, localNumberOfRows);
-  double * xv = x.values;
-  double * bv = b.values;
+  double * bv = 0;
+  double * xv = 0;
   double * xexactv = 0;
+  if (b!=0) bv = b->values; // Only compute exact solution if requested
+  if (x!=0) xv = x->values; // Only compute exact solution if requested
   if (xexact!=0) xexactv = xexact->values; // Only compute exact solution if requested
   A.localToGlobalMap.resize(localNumberOfRows);
 
@@ -163,14 +165,9 @@ void GenerateProblem(SparseMatrix & A, Vector & b, Vector & x, Vector * xexact) 
         #pragma omp critical
 #endif
         localNumberOfNonzeros += numberOfNonzerosInRow; // Protect this with an atomic
-        xv[currentLocalRow] = 0.0;
-        if (xexact!=0) {
-          bv[currentLocalRow] = 26.0 - ((double) (numberOfNonzerosInRow-1));
-          xexactv[currentLocalRow] = 1.0;
-        }
-        else {
-          bv[currentLocalRow] = 0.0; // If xexact not present, then just initialize b to zero
-        }
+        if (b!=0)      bv[currentLocalRow] = 26.0 - ((double) (numberOfNonzerosInRow-1));
+        if (x!=0)      xv[currentLocalRow] = 0.0;
+        if (xexact!=0) xexactv[currentLocalRow] = 1.0;
       } // end ix loop
     } // end iy loop
   } // end iz loop

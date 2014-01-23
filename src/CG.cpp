@@ -31,12 +31,6 @@
 #include "ComputeDotProduct.hpp"
 #include "ComputeWAXPBY.hpp"
 
-#ifndef HPCG_NOMPI
-#include "ExchangeHalo.hpp"
-#endif
-
-using std::endl;
-
 
 // Use TICK and TOCK to time a code section in MATLAB-like fashion
 #define TICK()  t0 = mytimer() //!< record current time in 't0'
@@ -81,7 +75,7 @@ int CG(const SparseMatrix & A, CGData & data, const Vector & b, Vector & x,
   Vector & p = data.p; // Direction vector (in MPI mode ncol>=nrow)
   Vector & Ap = data.Ap;
 
-  if (!doPreconditioning && A.geom->rank==0) HPCG_fout << "WARNING: PERFORMING UNPRECONDITIONED ITERATIONS" << endl;
+  if (!doPreconditioning && A.geom->rank==0) HPCG_fout << "WARNING: PERFORMING UNPRECONDITIONED ITERATIONS" << std::endl;
 
 #ifdef HPCG_DEBUG
   int print_freq = 1;
@@ -90,15 +84,12 @@ int CG(const SparseMatrix & A, CGData & data, const Vector & b, Vector & x,
 #endif
   // p is of length ncols, copy x to p for sparse MV operation
   ComputeWAXPBY(nrow, 1.0, x, 0.0, x, p, A.isWaxpbyOptimized);
-#ifndef HPCG_NOMPI
-  TICK(); ExchangeHalo(A,p); TOCK(t6);
-#endif
   ComputeSPMV(A, p, Ap);
   ComputeWAXPBY(nrow, 1.0, b, -1.0, Ap, r, A.isWaxpbyOptimized); // r = b - Ax (x stored in p)
   ComputeDotProduct(nrow, r, r, normr, t4, A.isDotProductOptimized);
   normr = sqrt(normr);
 #ifdef HPCG_DEBUG
-  if (A.geom->rank==0) HPCG_fout << "Initial Residual = "<< normr << endl;
+  if (A.geom->rank==0) HPCG_fout << "Initial Residual = "<< normr << std::endl;
 #endif
 
   // Record initial residual for convergence testing
@@ -124,9 +115,6 @@ int CG(const SparseMatrix & A, CGData & data, const Vector & b, Vector & x,
       TICK(); ComputeWAXPBY (nrow, 1.0, z, beta, p, p, A.isWaxpbyOptimized);  TOCK(t2); // p = beta*p + z
     }
 
-#ifndef HPCG_NOMPI
-    TICK(); ExchangeHalo(A,p); TOCK(t6);
-#endif
     TICK(); ComputeSPMV(A, p, Ap); TOCK(t3); // Ap = A*p
     TICK(); ComputeDotProduct(nrow, p, Ap, pAp, t4, A.isDotProductOptimized); TOCK(t1); // alpha = p'*Ap
     alpha = rtz/pAp;
@@ -136,7 +124,7 @@ int CG(const SparseMatrix & A, CGData & data, const Vector & b, Vector & x,
     normr = sqrt(normr);
 #ifdef HPCG_DEBUG
     if (A.geom->rank==0 && (k%print_freq == 0 || k == max_iter))
-      HPCG_fout << "Iteration = "<< k << "   Scaled Residual = "<< normr/normr0 << endl;
+      HPCG_fout << "Iteration = "<< k << "   Scaled Residual = "<< normr/normr0 << std::endl;
 #endif
     niters = k;
   }

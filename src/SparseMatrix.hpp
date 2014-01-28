@@ -45,7 +45,7 @@ struct SparseMatrix_STRUCT {
   std::vector< global_int_t > localToGlobalMap; //!< local-to-global mapping
   mutable bool isDotProductOptimized;
   mutable bool isSpmvOptimized;
-  mutable bool isSymgsOptimized;
+  mutable bool isMgOptimized;
   mutable bool isWaxpbyOptimized;
   /*!
    This is for storing optimized data structres created in OptimizeProblem and
@@ -91,7 +91,7 @@ inline void InitializeSparseMatrix(SparseMatrix & A, Geometry * geom) {
   // functions that are meant to be optimized.
   A.isDotProductOptimized = true;
   A.isSpmvOptimized       = true;
-  A.isSymgsOptimized      = true;
+  A.isMgOptimized      = true;
   A.isWaxpbyOptimized     = true;
 
 #ifndef HPCG_NOMPI

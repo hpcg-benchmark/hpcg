@@ -19,7 +19,7 @@
 #include "TestSymmetry.hpp"
 #include "TestNorms.hpp"
 
-void ReportResults(const SparseMatrix & A, int numberOfCgSets, int niters, double times[],
+void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgSets, int niters, double times[],
     const TestCGData & testcg_data, const TestSymmetryData & testsymmetry_data, const TestNormsData & testnorms_data, int global_failure);
 
 #endif // REPORTRESULTS_HPP

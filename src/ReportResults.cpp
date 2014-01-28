@@ -38,6 +38,7 @@ using std::endl;
 
   @param[in] geom The description of the problem's geometry.
   @param[in] A    The known system matrix
+  @param[in] numberOfMgLevels Number of levels in multigrid V cycle
   @param[in] numberOfCgSets Number of CG runs performed
   @param[in] niters Number of preconditioned CG iterations performed to lower the residual below a threshold
   @param[in] times  Vector of cumulative timings for each of the phases of a preconditioned CG iteration
@@ -48,7 +49,7 @@ using std::endl;
 
   @see YAML_Doc
 */
-void ReportResults(const SparseMatrix & A, int numberOfCgSets, int niters, double times[],
+void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgSets, int niters, double times[],
 		const TestCGData & testcg_data, const TestSymmetryData & testsymmetry_data, const TestNormsData & testnorms_data, int global_failure) {
 
 #ifndef HPCG_NOMPI
@@ -75,11 +76,25 @@ void ReportResults(const SparseMatrix & A, int numberOfCgSets, int niters, doubl
     double fnops_ddot = fniters*6.0*fnrow; // 3 ddots with nrow adds and nrow mults
     double fnops_waxpby = fniters*6.0*fnrow; // 3 WAXPBYs with nrow adds and nrow mults
     double fnops_sparsemv = fniters*2.0*fnnz; // 1 SpMV with nnz adds and nnz mults
-    double fnops_precond = fniters*3.0*fnnz; // Two GS sweeps, but only use lower triangle for first sweep
+    // Op counts from the multigrid preconditioners
+    double fnops_precond = 0.0;
+    const SparseMatrix * Af = &A;
+    for (int i=1; i<numberOfMgLevels; ++i) {
+        double fnrow_Af = Af->totalNumberOfRows;
+        double fnnz_Af = Af->totalNumberOfNonzeros;
+        double fnumberOfPresmootherSteps = Af->mgData->numberOfPresmootherSteps;
+        double fnumberOfPostsmootherSteps = Af->mgData->numberOfPostsmootherSteps;
+        fnops_precond += fnumberOfPresmootherSteps*fniters*4.0*fnnz_Af; // number of presmoother flops
+        fnops_precond += fniters*2.0*fnnz_Af; // cost of fine grid residual calculation
+        fnops_precond += fnumberOfPostsmootherSteps*fniters*4.0*fnnz_Af;  // number of postsmoother flops
+    	Af = Af->Ac; // Go to next coarse level
+    }
+
+    fnops_precond += fniters*4.0*((double) Af->totalNumberOfNonzeros); // One symmetric GS sweep at the coarsest level
     double fnops = fnops_ddot+fnops_waxpby+fnops_sparsemv+fnops_precond;
 
-    YAML_Doc doc("HPCG-Benchmark", "1.1");
-    doc.add("HPCG Benchmark","Version 1.1 November 26, 2013");
+    YAML_Doc doc("HPCG-Benchmark", "2.0");
+    doc.add("HPCG Benchmark","Version 2.0 January 28, 2014");
 
     doc.add("Machine Summary","");
     doc.get("Machine Summary")->add("Distributed Processes",A.geom->size);
@@ -100,10 +115,24 @@ void ReportResults(const SparseMatrix & A, int numberOfCgSets, int niters, doubl
     doc.get("Local Domain Dimensions")->add("ny",A.geom->ny);
     doc.get("Local Domain Dimensions")->add("nz",A.geom->nz);
 
+    doc.add("********** Problem Summary  ***********","");
 
     doc.add("Linear System Information","");
     doc.get("Linear System Information")->add("Number of Equations",A.totalNumberOfRows);
     doc.get("Linear System Information")->add("Number of Nonzero Terms",A.totalNumberOfNonzeros);
+
+    doc.add("Multigrid Information","");
+    doc.get("Multigrid Information")->add("Number of coarse grid levels", numberOfMgLevels-1);
+    Af = &A;
+    doc.get("Multigrid Information")->add("Coarse Grids","");
+    for (int i=1; i<numberOfMgLevels; ++i) {
+        doc.get("Multigrid Information")->get("Coarse Grids")->add("Grid Level",i);
+        doc.get("Multigrid Information")->get("Coarse Grids")->add("Number of Equations",Af->Ac->totalNumberOfRows);
+        doc.get("Multigrid Information")->get("Coarse Grids")->add("Number of Nonzero Terms",Af->Ac->totalNumberOfNonzeros);
+        doc.get("Multigrid Information")->get("Coarse Grids")->add("Number of Presmoother Steps",Af->mgData->numberOfPresmootherSteps);
+        doc.get("Multigrid Information")->get("Coarse Grids")->add("Number of Presmoother Steps",Af->mgData->numberOfPostsmootherSteps);
+    	Af = Af->Ac;
+    }
 
     doc.add("********** Validation Testing Summary  ***********","");
     doc.add("Spectral Convergence Tests","");
@@ -187,8 +216,8 @@ void ReportResults(const SparseMatrix & A, int numberOfCgSets, int niters, doubl
     doc.get("Sparse Operations Overheads")->get("DDOT Timing Variations")->add("Max DDOT MPI_Allreduce time",t4max);
     doc.get("Sparse Operations Overheads")->get("DDOT Timing Variations")->add("Avg DDOT MPI_Allreduce time",t4avg);
 
-    doc.get("Sparse Operations Overheads")->add("Halo exchange time (sec)", (times[6]));
-    doc.get("Sparse Operations Overheads")->add("Halo exchange as percentage of SpMV time", (times[6])/totalSparseMVTime*100.0);
+    //doc.get("Sparse Operations Overheads")->add("Halo exchange time (sec)", (times[6]));
+    //doc.get("Sparse Operations Overheads")->add("Halo exchange as percentage of SpMV time", (times[6])/totalSparseMVTime*100.0);
 #endif
     doc.add("********** Final Summary **********","");
     bool isValidRun = (testcg_data.count_fail==0) && (testsymmetry_data.count_fail==0) && (testnorms_data.pass) && (!global_failure);
@@ -200,11 +229,11 @@ void ReportResults(const SparseMatrix & A, int numberOfCgSets, int niters, doubl
       if (!A.isSpmvOptimized) {
         doc.get("********** Final Summary **********")->add("Reference version of ComputeSPMV used","Performance results are most likely suboptimal");
       }
-      if (!A.isSymgsOptimized) {
+      if (!A.isMgOptimized) {
         if (A.geom->numThreads>1)
-          doc.get("********** Final Summary **********")->add("Reference version of ComputeSYMGS used and number of threads greater than 1","Performance results are severely suboptimal");
+          doc.get("********** Final Summary **********")->add("Reference version of ComputeMG used and number of threads greater than 1","Performance results are severely suboptimal");
         else // numThreads ==1
-          doc.get("********** Final Summary **********")->add("Reference version of ComputeSYMGS used","Performance results are most likely suboptimal");
+          doc.get("********** Final Summary **********")->add("Reference version of ComputeMG used","Performance results are most likely suboptimal");
       }
       if (!A.isWaxpbyOptimized) {
         doc.get("********** Final Summary **********")->add("Reference version of ComputeWAXPBY used","Performance results are most likely suboptimal");

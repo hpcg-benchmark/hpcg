@@ -48,6 +48,7 @@ void GenerateCoarseProblem(const SparseMatrix & Af) {
   global_int_t nzf = Af.geom->nz;
 
   local_int_t nxc, nyc, nzc; //Coarse nx, ny, nz
+  assert(nxf%2==0); assert(nyf%2==0); assert(nzf%2==0); // Need fine grid dimensions to be divisible by 2
   nxc = nxf/2; nyc = nyf/2; nzc = nzf/2;
   local_int_t * f2cOperator = new local_int_t[Af.localNumberOfRows];
   local_int_t localNumberOfRows = nxc*nyc*nzc; // This is the size of our subblock

@@ -117,9 +117,9 @@ int main(int argc, char * argv[]) {
   Vector b, x, xexact;
   GenerateProblem(A, &b, &x, &xexact);
   SetupHalo(A);
-  int nlevels = 2; // Number of levels including first
+  int numberOfMgLevels = 3; // Number of levels including first
   SparseMatrix * curLevelMatrix = &A;
-  for (int level = 1; level< nlevels; ++level) {
+  for (int level = 1; level< numberOfMgLevels; ++level) {
 	  GenerateCoarseProblem(*curLevelMatrix);
 	  curLevelMatrix = curLevelMatrix->Ac; // Make the just-constructed coarse grid the next level
   }
@@ -330,7 +330,7 @@ int main(int argc, char * argv[]) {
   ////////////////////
 
   // Report results to YAML file
-  ReportResults(A, numberOfCgSets, totalNiters, &times[0], testcg_data, testsymmetry_data, testnorms_data, global_failure);
+  ReportResults(A, numberOfMgLevels, numberOfCgSets, totalNiters, &times[0], testcg_data, testsymmetry_data, testnorms_data, global_failure);
 
   // Clean up
   DeleteMatrix(A); // This delete will recursively delete all coarse grid data

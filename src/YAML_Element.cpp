@@ -122,9 +122,6 @@ YAML_Element * YAML_Element::add(const std::string & key_arg, const std::string 
 
 /*!
   Returns the pointer to the YAML_Element for the given key.
-  I, cam, believe an exception should be thrown if there is no
-  element in the vector for the specified key
-
   @param[in] key_arg   The key under which the element was stored
 
   @return If found, returns the element, otherwise returns NULL

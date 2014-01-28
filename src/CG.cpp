@@ -83,10 +83,10 @@ int CG(const SparseMatrix & A, CGData & data, const Vector & b, Vector & x,
   if (print_freq<1)  print_freq=1;
 #endif
   // p is of length ncols, copy x to p for sparse MV operation
-  ComputeWAXPBY(nrow, 1.0, x, 0.0, x, p, A.isWaxpbyOptimized);
-  ComputeSPMV(A, p, Ap);
-  ComputeWAXPBY(nrow, 1.0, b, -1.0, Ap, r, A.isWaxpbyOptimized); // r = b - Ax (x stored in p)
-  ComputeDotProduct(nrow, r, r, normr, t4, A.isDotProductOptimized);
+  CopyVector(x, p);
+  TICK(); ComputeSPMV(A, p, Ap); TOCK(t3); // Ap = A*p
+  TICK(); ComputeWAXPBY(nrow, 1.0, b, -1.0, Ap, r, A.isWaxpbyOptimized);  TOCK(t2); // r = b - Ax (x stored in p)
+  TICK(); ComputeDotProduct(nrow, r, r, normr, t4, A.isDotProductOptimized); TOCK(t1);
   normr = sqrt(normr);
 #ifdef HPCG_DEBUG
   if (A.geom->rank==0) HPCG_fout << "Initial Residual = "<< normr << std::endl;
@@ -102,7 +102,7 @@ int CG(const SparseMatrix & A, CGData & data, const Vector & b, Vector & x,
     if (doPreconditioning)
       ComputeMG(A, r, z); // Apply preconditioner
     else
-      ComputeWAXPBY(nrow, 1.0, r, 0.0, r, z, A.isWaxpbyOptimized); // copy r to z (no preconditioning)
+      CopyVector (r, z); // copy r to z (no preconditioning)
     TOCK(t5); // Preconditioner apply time
 
     if (k == 1) {

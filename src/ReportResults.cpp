@@ -202,19 +202,20 @@ void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgS
     double totalGflops = fnops/(times[0]+fNumberOfCgSets*times[7])/1.0E9;
     doc.get("GFLOP/s Summary")->add("Total with Optimization phase overhead",totalGflops);
 
-    double totalSparseMVTime = times[3] + times[6];
-    doc.add("Sparse Operations Overheads","");
-    doc.get("Sparse Operations Overheads")->add("SpMV GFLOP/s with overhead",fnops_sparsemv/(totalSparseMVTime)/1.0E9);
-    doc.get("Sparse Operations Overheads")->add("Overhead time (sec)", (times[7]+times[6]));
-    doc.get("Sparse Operations Overheads")->add("Overhead as percentage of time", (times[7]+times[6])/totalSparseMVTime*100.0);
-    doc.get("Sparse Operations Overheads")->add("Optimization phase time (sec)", (times[7]));
-    doc.get("Sparse Operations Overheads")->add("Optimization phase time vs reference SpMV+MG time", (times[7])/times[8]);
+    //double totalSparseMVTime = times[3] + times[6];
+    //doc.add("Sparse Operations Overheads","");
+    //doc.get("Sparse Operations Overheads")->add("SpMV GFLOP/s with overhead",fnops_sparsemv/(totalSparseMVTime)/1.0E9);
+    //doc.get("Sparse Operations Overheads")->add("Overhead time (sec)", (times[7]+times[6]));
+    //doc.get("Sparse Operations Overheads")->add("Overhead as percentage of time", (times[7]+times[6])/totalSparseMVTime*100.0);
+    doc.add("User Optimization Overheads","");
+    doc.get("User Optimization Overheads")->add("Optimization phase time (sec)", (times[7]));
+    doc.get("User Optimization Overheads")->add("Optimization phase time vs reference SpMV+MG time", times[7]/times[8]);
 
 #ifndef HPCG_NOMPI
-    doc.get("Sparse Operations Overheads")->add("DDOT Timing Variations","");
-    doc.get("Sparse Operations Overheads")->get("DDOT Timing Variations")->add("Min DDOT MPI_Allreduce time",t4min);
-    doc.get("Sparse Operations Overheads")->get("DDOT Timing Variations")->add("Max DDOT MPI_Allreduce time",t4max);
-    doc.get("Sparse Operations Overheads")->get("DDOT Timing Variations")->add("Avg DDOT MPI_Allreduce time",t4avg);
+    doc.add("DDOT Timing Variations","");
+    doc.get("DDOT Timing Variations")->add("Min DDOT MPI_Allreduce time",t4min);
+    doc.get("DDOT Timing Variations")->add("Max DDOT MPI_Allreduce time",t4max);
+    doc.get("DDOT Timing Variations")->add("Avg DDOT MPI_Allreduce time",t4avg);
 
     //doc.get("Sparse Operations Overheads")->add("Halo exchange time (sec)", (times[6]));
     //doc.get("Sparse Operations Overheads")->add("Halo exchange as percentage of SpMV time", (times[6])/totalSparseMVTime*100.0);

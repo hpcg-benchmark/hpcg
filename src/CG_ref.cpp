@@ -84,10 +84,10 @@ int CG_ref(const SparseMatrix & A, CGData & data, const Vector & b, Vector & x,
   if (print_freq<1)  print_freq=1;
 #endif
   // p is of length ncols, copy x to p for sparse MV operation
-  ComputeWAXPBY_ref(nrow, 1.0, x, 0.0, x, p);
-  ComputeSPMV_ref(A, p, Ap);
-  ComputeWAXPBY_ref(nrow, 1.0, b, -1.0, Ap, r); // r = b - Ax (x stored in p)
-  ComputeDotProduct_ref(nrow, r, r, normr, t4);
+  CopyVector(x, p);
+  TICK(); ComputeSPMV_ref(A, p, Ap);  TOCK(t3); // Ap = A*p
+  TICK(); ComputeWAXPBY_ref(nrow, 1.0, b, -1.0, Ap, r); TOCK(t2); // r = b - Ax (x stored in p)
+  TICK(); ComputeDotProduct_ref(nrow, r, r, normr, t4);  TOCK(t1);
   normr = sqrt(normr);
 #ifdef HPCG_DEBUG
   if (A.geom->rank==0) HPCG_fout << "Initial Residual = "<< normr << std::endl;
@@ -107,7 +107,7 @@ int CG_ref(const SparseMatrix & A, CGData & data, const Vector & b, Vector & x,
     TOCK(t5); // Preconditioner apply time
 
     if (k == 1) {
-      TICK(); ComputeWAXPBY_ref(nrow, 1.0, z, 0.0, z, p); TOCK(t2); // Copy Mr to p
+      CopyVector(z, p); TOCK(t2); // Copy Mr to p
       TICK(); ComputeDotProduct_ref(nrow, r, z, rtz, t4); TOCK(t1); // rtz = r'*z
     } else {
       oldrtz = rtz;

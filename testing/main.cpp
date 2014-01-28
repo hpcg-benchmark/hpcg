@@ -84,9 +84,9 @@ int main(int argc, char * argv[]) {
   if (size < 100 && rank==0) HPCG_fout << "Process "<<rank<<" of "<<size<<" is alive with " << params.numThreads << " threads." <<endl;
 
   if (rank==0) {
-    int junk = 0;
-    HPCG_fout << "Press enter to continue"<< endl;
-    cin >> junk;
+    char c;
+    std::cout << "Press key to continue"<< std::endl;
+    std::cin.get(c);
   }
 #ifndef HPCG_NOMPI
   MPI_Barrier(MPI_COMM_WORLD);

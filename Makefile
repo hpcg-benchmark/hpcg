@@ -15,7 +15,7 @@ HPCG_DEPS = src/CG.o src/CG_ref.o src/TestCG.o src/ComputeResidual.o \
          src/ComputeMG_ref.o src/ComputeMG.o ComputeProlongation_ref.o ComputeRestriction_ref.o GenerateCoarseProblem.o
 
 bin/xhpcg: testing/main.o $(HPCG_DEPS)
-	$(LINKER) $(LINKFLAGS) $? -o $@ $(HPCG_LIBS)
+	$(LINKER) $(LINKFLAGS) testing/main.o $(HPCG_DEPS) -o bin/xhpcg $(HPCG_LIBS)
 
 clean:
 	rm -f $(HPCG_DEPS) bin/xhpcg testing/main.o

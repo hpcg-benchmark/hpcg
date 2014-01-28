@@ -166,8 +166,8 @@ void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgS
       doc.get("Iteration Count Information")->add("Result", "FAILED");
     doc.get("Iteration Count Information")->add("Number of CG sets", numberOfCgSets);
     doc.get("Iteration Count Information")->add("Average iterations per set", fniters/fNumberOfCgSets);
-    doc.get("Iteration Count Information")->add("Reference CG iterations per set", refMaxIters);
     doc.get("Iteration Count Information")->add("Total number of iterations", niters);
+    doc.get("Iteration Count Information")->add("Reference CG iterations per set", refMaxIters);
 
     doc.add("********** Reproducibility Summary  ***********","");
     doc.add("Reproducibility Information","");
@@ -246,8 +246,8 @@ void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgS
     	  doc.get("********** Final Summary **********")->add("Please send the YAML file contents to","HPCG-Results@software.sandia.gov");
       }
       else {
-          doc.get("********** Final Summary **********")->add("Results are valid but execution time is",times[0]);
-          doc.get("********** Final Summary **********")->add("Official results execution time must be at least",minOfficialTime);
+          doc.get("********** Final Summary **********")->add("Results are valid but execution time (sec) is",times[0]);
+          doc.get("********** Final Summary **********")->add("Official results execution time (sec) must be at least",minOfficialTime);
 
       }
     } else {

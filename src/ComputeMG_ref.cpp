@@ -24,6 +24,7 @@
 #include "ComputeRestriction_ref.hpp"
 #include "ComputeProlongation_ref.hpp"
 #include <cassert>
+#include <iostream>
 
 /*!
 

@@ -18,6 +18,14 @@
  HPCG routine
  */
 
+#ifndef HPCG_NOMPI
+#include <mpi.h>
+#endif
+
+#ifndef HPCG_NOOPENMP
+#include <omp.h>
+#endif
+
 #if defined(HPCG_DEBUG) || defined(HPCG_DETAILED_DEBUG)
 #include <fstream>
 using std::endl;
@@ -27,13 +35,6 @@ using std::endl;
 
 #include "GenerateProblem.hpp"
 
-#ifndef HPCG_NOMPI
-#include <mpi.h>
-#endif
-
-#ifndef HPCG_NOOPENMP
-#include <omp.h>
-#endif
 
 /*!
   Routine to read a sparse matrix, right hand side, initial guess, and exact

@@ -30,10 +30,6 @@
 #include <iostream>
 using std::endl;
 #include <vector>
-#ifndef HPCG_NOMPI
-#include <mpi.h> // If this routine is not compiled with HPCG_NOMPI
-#endif
-
 #include "hpcg.hpp"
 
 #include "TestCG.hpp"

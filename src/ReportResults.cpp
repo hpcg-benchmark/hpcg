@@ -18,13 +18,13 @@
  HPCG routine
  */
 
-#include "ReportResults.hpp"
-#include "YAML_Element.hpp"
-#include "YAML_Doc.hpp"
-
 #ifndef HPCG_NOMPI
 #include <mpi.h> // If this routine is not compiled with HPCG_NOMPI
 #endif
+
+#include "ReportResults.hpp"
+#include "YAML_Element.hpp"
+#include "YAML_Doc.hpp"
 
 #ifdef HPCG_DEBUG
 #include <fstream>

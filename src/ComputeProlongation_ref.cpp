@@ -18,16 +18,11 @@
  HPCG routine
  */
 
-
-#include "ComputeProlongation_ref.hpp"
-
-#ifndef HPCG_NOMPI
-#include <mpi.h> // If this routine is not compiled with HPCG_NOMPI
-#endif
-
 #ifndef HPCG_NOOPENMP
 #include <omp.h> // If this routine is not compiled with HPCG_NOOPENMP
 #endif
+
+#include "ComputeProlongation_ref.hpp"
 
 /*!
   Routine to compute the coarse residual vector.

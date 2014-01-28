@@ -66,9 +66,9 @@ int CG(const SparseMatrix & A, CGData & data, const Vector & b, Vector & x,
 
 
   double t0 = 0.0, t1 = 0.0, t2 = 0.0, t3 = 0.0, t4 = 0.0, t5 = 0.0;
-#ifndef HPCG_NOMPI
-  double t6 = 0.0;
-#endif
+//#ifndef HPCG_NOMPI
+//  double t6 = 0.0;
+//#endif
   local_int_t nrow = A.localNumberOfRows;
   Vector & r = data.r; // Residual vector
   Vector & z = data.z; // Preconditioned residual vector
@@ -135,9 +135,9 @@ int CG(const SparseMatrix & A, CGData & data, const Vector & b, Vector & x,
   times[3] += t3; // SPMV time
   times[4] += t4; // AllReduce time
   times[5] += t5; // preconditioner apply time
-#ifndef HPCG_NOMPI
-  times[6] += t6; // exchange halo time
-#endif
+//#ifndef HPCG_NOMPI
+//  times[6] += t6; // exchange halo time
+//#endif
   times[0] += mytimer() - t_begin;  // Total time. All done...
   return(0);
 }

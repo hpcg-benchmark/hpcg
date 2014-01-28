@@ -18,16 +18,6 @@
  HPCG routine
  */
 
-#ifdef HPCG_DETAILED_DEBUG
-#include <fstream>
-using std::endl;
-#include "hpcg.hpp"
-#include <cassert>
-#endif
-
-#include "SetupHalo.hpp"
-#include "mytimer.hpp"
-
 #ifndef HPCG_NOMPI
 #include <mpi.h>
 #include <map>
@@ -37,6 +27,16 @@ using std::endl;
 #ifndef HPCG_NOOPENMP
 #include <omp.h>
 #endif
+
+#ifdef HPCG_DETAILED_DEBUG
+#include <fstream>
+using std::endl;
+#include "hpcg.hpp"
+#include <cassert>
+#endif
+
+#include "SetupHalo.hpp"
+#include "mytimer.hpp"
 
 /*!
   Prepares system matrix data structure and creates data necessary necessary

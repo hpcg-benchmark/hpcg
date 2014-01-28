@@ -21,6 +21,10 @@
 // Main routine of a program that calls the HPCG conjugate gradient
 // solver to solve the problem, and then prints results.
 
+#ifndef HPCG_NOMPI
+#include <mpi.h> // If this routine is not compiled with HPCG_NOMPI
+#endif
+
 #include <fstream>
 #include <iostream>
 #include <cstdlib>
@@ -32,10 +36,6 @@ using std::endl;
 #include <vector>
 
 #include "hpcg.hpp"
-
-#ifndef HPCG_NOMPI
-#include <mpi.h> // If this routine is not compiled with HPCG_NOMPI
-#endif
 
 #include "GenerateGeometry.hpp"
 #include "GenerateProblem.hpp"

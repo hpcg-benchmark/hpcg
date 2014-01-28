@@ -17,6 +17,13 @@
 
  HPCG routine
  */
+#ifndef HPCG_NOMPI
+#include <mpi.h> // If this routine is not compiled with HPCG_NOMPI
+#endif
+#ifndef HPCG_NOOPENMP
+#include <omp.h> // If this routine is not compiled with HPCG_NOOPENMP
+#endif
+
 #include "Vector.hpp"
 
 #ifdef HPCG_DETAILED_DEBUG
@@ -28,14 +35,6 @@
 #include "ComputeResidual.hpp"
 #ifdef HPCG_DETAILED_DEBUG
 #include <iostream>
-#endif
-
-#ifndef HPCG_NOMPI
-#include <mpi.h> // If this routine is not compiled with HPCG_NOMPI
-#endif
-
-#ifndef HPCG_NOOPENMP
-#include <omp.h> // If this routine is not compiled with HPCG_NOOPENMP
 #endif
 
 /*!

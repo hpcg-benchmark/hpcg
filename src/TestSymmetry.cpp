@@ -37,9 +37,6 @@ using std::endl;
 #include "Geometry.hpp"
 #include "SparseMatrix.hpp"
 #include "TestSymmetry.hpp"
-#ifndef HPCG_NOMPI
-#include "ExchangeHalo.hpp"
-#endif
 
 /*!
   Tests symmetry-preserving properties of the sparse matrix vector multiply and
@@ -83,9 +80,6 @@ int TestSymmetry(SparseMatrix & A, Vector & b, Vector & xexact, TestSymmetryData
   double ANorm = 2 * 26.0;
 
   // Next, compute x'*A*y
-#ifndef HPCG_NOMPI
-  ExchangeHalo(A,y_overlap);
-#endif
   ComputeDotProduct(nrow, y_overlap, y_overlap, yNorm2, t4, A.isDotProductOptimized);
   int ierr = ComputeSPMV(A, y_overlap, b_computed); // b_computed = A*y_overlap
   if (ierr) HPCG_fout << "Error in call to SpMV: " << ierr << ".\n" << endl;
@@ -94,9 +88,6 @@ int TestSymmetry(SparseMatrix & A, Vector & b, Vector & xexact, TestSymmetryData
   if (ierr) HPCG_fout << "Error in call to dot: " << ierr << ".\n" << endl;
 
   // Next, compute y'*A*x
-#ifndef HPCG_NOMPI
-  ExchangeHalo(A,x_overlap);
-#endif
   ComputeDotProduct(nrow, x_overlap, x_overlap, xNorm2, t4, A.isDotProductOptimized);
   ierr = ComputeSPMV(A, x_overlap, b_computed); // b_computed = A*x_overlap
   if (ierr) HPCG_fout << "Error in call to SpMV: " << ierr << ".\n" << endl;
@@ -131,9 +122,6 @@ int TestSymmetry(SparseMatrix & A, Vector & b, Vector & xexact, TestSymmetryData
   int numberOfCalls = 2;
   double residual = 0.0;
   for (int i=0; i< numberOfCalls; ++i) {
-#ifndef HPCG_NOMPI
-    ExchangeHalo(A,x_overlap);
-#endif
     ierr = ComputeSPMV(A, x_overlap, b_computed); // b_computed = A*x_overlap
     if (ierr) HPCG_fout << "Error in call to SpMV: " << ierr << ".\n" << endl;
     if ((ierr = ComputeResidual(A.localNumberOfRows, b, b_computed, residual)))

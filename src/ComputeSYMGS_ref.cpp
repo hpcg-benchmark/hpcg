@@ -18,8 +18,10 @@
  HPCG routine
  */
 
-#include "ComputeSYMGS_ref.hpp"
+#ifndef HPCG_NOMPI
 #include "ExchangeHalo.hpp"
+#endif
+#include "ComputeSYMGS_ref.hpp"
 
 /*!
   Computes one step of symmetric Gauss-Seidel:

@@ -12,13 +12,6 @@
 // ***************************************************
 //@HEADER
 
-#include <ctime>
-#include <cstdio>
-#include <cstring>
-
-#include <fstream>
-#include <iostream>
-
 #ifndef HPCG_NOMPI
 #include <mpi.h>
 #endif
@@ -26,6 +19,13 @@
 #ifndef HPCG_NOOPENMP
 #include <omp.h>
 #endif
+
+#include <ctime>
+#include <cstdio>
+#include <cstring>
+
+#include <fstream>
+#include <iostream>
 
 #include "hpcg.hpp"
 
@@ -82,12 +82,12 @@ HPCG_Init(int * argc_p, char ** *argv_p, HPCG_Params & params) {
   }
 
   for (i = 0; i < 3; ++i) {
-    if (iparams[i] < 10)
+    if (iparams[i] < 16)
       for (j = 1; j <= 2; ++j)
         if (iparams[(i+j)%3] > iparams[i])
           iparams[i] = iparams[(i+j)%3];
-    if (iparams[i] < 10)
-      iparams[i] = 10;
+    if (iparams[i] < 16)
+      iparams[i] = 16;
   }
 
 #ifndef HPCG_NOMPI

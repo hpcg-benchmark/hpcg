@@ -18,19 +18,15 @@
  HPCG routine
  */
 
+#ifndef HPCG_NOOPENMP
+#include <omp.h>
+#endif
+
 #include <cassert>
 #include "GenerateCoarseProblem.hpp"
 #include "GenerateGeometry.hpp"
 #include "GenerateProblem.hpp"
 #include "SetupHalo.hpp"
-
-#ifndef HPCG_NOMPI
-#include <mpi.h>
-#endif
-
-#ifndef HPCG_NOOPENMP
-#include <omp.h>
-#endif
 
 /*!
   Routine to construct a prolongation/restriction operator for a given fine grid matrix

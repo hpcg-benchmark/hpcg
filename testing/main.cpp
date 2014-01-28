@@ -47,7 +47,7 @@ using std::endl;
 #include "ReportResults.hpp"
 #include "mytimer.hpp"
 #include "ComputeSPMV_ref.hpp"
-#include "ComputeSYMGS_ref.hpp"
+#include "ComputeMG_ref.hpp"
 #include "ComputeResidual.hpp"
 #include "CG.hpp"
 #include "CG_ref.hpp"
@@ -167,10 +167,10 @@ int main(int argc, char * argv[]) {
 #endif
 
   ///////////////////////////////////////
-  // Reference SpMV+SymGS Timing Phase //
+  // Reference SpMV+MG Timing Phase //
   ///////////////////////////////////////
 
-  // Call Reference SpMV and SYMGS. Compute Optimization time as ratio of times in these routines
+  // Call Reference SpMV and MG. Compute Optimization time as ratio of times in these routines
 
   local_int_t nrow = A.localNumberOfRows;
   local_int_t ncol = A.localNumberOfColumns;
@@ -180,7 +180,7 @@ int main(int argc, char * argv[]) {
   InitializeVector(b_computed, nrow); // Computed RHS vector
 
 
-  // Record execution time of reference SpMV and SymGS kernels for reporting times
+  // Record execution time of reference SpMV and MG kernels for reporting times
   // First load vector with random values
   FillRandomVector(x_overlap);
 
@@ -192,13 +192,13 @@ int main(int argc, char * argv[]) {
 #endif
     ierr = ComputeSPMV_ref(A, x_overlap, b_computed); // b_computed = A*x_overlap
     if (ierr) HPCG_fout << "Error in call to SpMV: " << ierr << ".\n" << endl;
-    ierr = ComputeSYMGS_ref(A, x_overlap, b_computed); // b_computed = Minv*y_overlap
-    if (ierr) HPCG_fout << "Error in call to SymGS: " << ierr << ".\n" << endl;
+    ierr = ComputeMG_ref(A, b_computed, x_overlap); // b_computed = Minv*y_overlap
+    if (ierr) HPCG_fout << "Error in call to MG: " << ierr << ".\n" << endl;
   }
   times[8] = (mytimer() - t_begin)/((double) numberOfCalls);  // Total time divided by number of calls.
 
 #ifdef HPCG_DEBUG
-  if (rank==0) HPCG_fout << "Total SpMV+SymGS timing phase execution time in main (sec) = " << mytimer() - t1 << endl;
+  if (rank==0) HPCG_fout << "Total SpMV+MG timing phase execution time in main (sec) = " << mytimer() - t1 << endl;
 #endif
 
   ///////////////////////////////
@@ -214,21 +214,21 @@ int main(int argc, char * argv[]) {
   int totalNiters = 0;
   double normr = 0.0;
   double normr0 = 0.0;
-  int maxIters = 50;
+  int refMaxIters = 50;
   numberOfCalls = 1; // Only need to run the residual reduction analysis once
 
   // Compute the residual reduction for the natural ordering and reference kernels
   std::vector< double > ref_times(9,0.0);
-  double tolerance = 0.0; // Set tolerance to zero to make all runs do max_iter iterations
+  double tolerance = 0.0; // Set tolerance to zero to make all runs do maxIters iterations
   int err_count = 0;
   for (int i=0; i< numberOfCalls; ++i) {
     ZeroVector(x);
-    ierr = CG_ref( A, data, b, x, maxIters, tolerance, niters, normr, normr0, &ref_times[0], true);
+    ierr = CG_ref( A, data, b, x, refMaxIters, tolerance, niters, normr, normr0, &ref_times[0], true);
     if (ierr) ++err_count; // count the number of errors in CG
     totalNiters += niters;
   }
   if (rank == 0 && err_count) HPCG_fout << err_count << " error(s) in call(s) to reference CG." << endl;
-  double ref_tolerance = normr / normr0;
+  double refTolerance = normr / normr0;
 
   //////////////////////////////
   // Optimized CG Setup Phase //
@@ -241,8 +241,8 @@ int main(int argc, char * argv[]) {
   err_count = 0;
   int tolerance_failures = 0;
 
-  int opt_maxIters = 10*maxIters;
-  int opt_iters = 0;
+  int optMaxIters = 10*refMaxIters;
+  int optNiters = 0;
   double opt_worst_time = 0.0;
 
   std::vector< double > opt_times(9,0.0);
@@ -251,12 +251,12 @@ int main(int argc, char * argv[]) {
   for (int i=0; i< numberOfCalls; ++i) {
     ZeroVector(x); // start x at all zeros
     double last_cummulative_time = opt_times[0];
-    ierr = CG( A, data, b, x, opt_maxIters, ref_tolerance, niters, normr, normr0, &opt_times[0], true);
+    ierr = CG( A, data, b, x, optMaxIters, refTolerance, niters, normr, normr0, &opt_times[0], true);
     if (ierr) ++err_count; // count the number of errors in CG
-    if (normr / normr0 > ref_tolerance) ++tolerance_failures; // the number of failures to reduce residual
+    if (normr / normr0 > refTolerance) ++tolerance_failures; // the number of failures to reduce residual
 
     // pick the largest number of iterations to guarantee convergence
-    if (niters > opt_iters) opt_iters = niters;
+    if (niters > optNiters) optNiters = niters;
 
     double current_time = opt_times[0] - last_cummulative_time;
     if (current_time > opt_worst_time) opt_worst_time = current_time;
@@ -300,13 +300,15 @@ int main(int argc, char * argv[]) {
   /* This is the timed run for a specified amount of time. */
 
   totalNiters = 0;
+  optMaxIters = optNiters;
+  double optTolerance = 0.0;  // Force optMaxIters iterations
   TestNormsData testnorms_data;
   testnorms_data.samples = numberOfCgSets;
   testnorms_data.values = new double[numberOfCgSets];
 
   for (int i=0; i< numberOfCgSets; ++i) {
     ZeroVector(x); // Zero out x
-    ierr = CG( A, data, b, x, maxIters, tolerance, niters, normr, normr0, &times[0], true);
+    ierr = CG( A, data, b, x, optMaxIters, optTolerance, niters, normr, normr0, &times[0], true);
     if (ierr) HPCG_fout << "Error in call to CG: " << ierr << ".\n" << endl;
     if (rank==0) HPCG_fout << "Call [" << i << "] Scaled Residual [" << normr/normr0 << "]" << endl;
     testnorms_data.values[i] = normr/normr0; // Record scaled residual from this run
@@ -330,7 +332,7 @@ int main(int argc, char * argv[]) {
   ////////////////////
 
   // Report results to YAML file
-  ReportResults(A, numberOfMgLevels, numberOfCgSets, totalNiters, &times[0], testcg_data, testsymmetry_data, testnorms_data, global_failure);
+  ReportResults(A, numberOfMgLevels, numberOfCgSets, refMaxIters, totalNiters, &times[0], testcg_data, testsymmetry_data, testnorms_data, global_failure);
 
   // Clean up
   DeleteMatrix(A); // This delete will recursively delete all coarse grid data

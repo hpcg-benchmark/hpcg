@@ -22,6 +22,7 @@
 #include "ExchangeHalo.hpp"
 #endif
 #include "ComputeSYMGS_ref.hpp"
+#include <cassert>
 
 /*!
   Computes one step of symmetric Gauss-Seidel:
@@ -43,11 +44,16 @@
   @param[in] r the input vector
   @param[inout] x On entry, x should contain relevant values, on exit x contains the result of one symmetric GS sweep with r as the RHS.
 
+
+  @warning Early versions of this kernel (Version 1.1 and earlier) had the r and x arguments in reverse order, and out of sync with other kernels.
+
   @return returns 0 upon success and non-zero otherwise
 
   @see ComputeSYMGS
 */
 int ComputeSYMGS_ref( const SparseMatrix & A, const Vector & r, Vector & x) {
+
+  assert(x.localLength==A.localNumberOfColumns); // Make sure x contain space for halo values
 
 #ifndef HPCG_NOMPI
   ExchangeHalo(A,x);

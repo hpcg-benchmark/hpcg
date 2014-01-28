@@ -23,7 +23,7 @@
   Optimizes the data structures used for CG iteration to increase the
   performance of the benchmark version of the preconditioned CG algorithm.
 
-  @param[inout] A      The known system matrix
+  @param[inout] A      The known system matrix, also contains the MG hierarchy in attributes Ac and mgData.
   @param[inout] data   The data structure with all necessary CG vectors preallocated
   @param[inout] b      The known right hand side vector
   @param[inout] x      The solution vector to be computed in future CG iteration

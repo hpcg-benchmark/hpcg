@@ -3,12 +3,23 @@ High Performance Conjugate Gradient Benchmark (HPCG)
 ####################################################
 
 :Author: Jack Dongarra and Michael Heroux and Piotr Luszczek
-:Revision: 1.1
-:Date: November 26, 2013
+:Revision: 2.0
+:Date: January 28, 2014
 
 ===============
 History of HPCG
 ===============
+
+-----------
+Version 2.0
+-----------
+
+* Added support for a synthetic multigrid V cycle.  Parameters include
+  the number of levels in the the grid hierarchy, number of pre and
+  post smoother steps.
+* Refactored data classes to support needs for recursion in V cycle.
+* Made simple modifications to make compilation on MS Windows easier.
+  This includes changing the format of output files to remove colons.
 
 -----------
 Version 1.1

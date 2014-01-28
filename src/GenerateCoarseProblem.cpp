@@ -33,6 +33,9 @@
   solution (as computed by a direct solver).
 
   @param[inout]  Af - The known system matrix, on output its coarse operator, fine-to-coarse operator and auxiliary vectors will be defined.
+
+  Note that the matrix Af is considered const because the attributes we are modifying are declared as mutable.
+
 */
 
 void GenerateCoarseProblem(const SparseMatrix & Af) {

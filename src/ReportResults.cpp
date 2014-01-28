@@ -49,8 +49,10 @@ using std::endl;
 
   @see YAML_Doc
 */
-void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgSets, int niters, double times[],
+void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgSets, int refMaxIters, int niters, double times[],
 		const TestCGData & testcg_data, const TestSymmetryData & testsymmetry_data, const TestNormsData & testnorms_data, int global_failure) {
+
+  double minOfficialTime = 3600; // Any official benchmark result much run at least this many seconds
 
 #ifndef HPCG_NOMPI
   double t4 = times[4];
@@ -164,6 +166,7 @@ void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgS
       doc.get("Iteration Count Information")->add("Result", "FAILED");
     doc.get("Iteration Count Information")->add("Number of CG sets", numberOfCgSets);
     doc.get("Iteration Count Information")->add("Average iterations per set", fniters/fNumberOfCgSets);
+    doc.get("Iteration Count Information")->add("Reference CG iterations per set", refMaxIters);
     doc.get("Iteration Count Information")->add("Total number of iterations", niters);
 
     doc.add("********** Reproducibility Summary  ***********","");
@@ -239,7 +242,14 @@ void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgS
       if (!A.isWaxpbyOptimized) {
         doc.get("********** Final Summary **********")->add("Reference version of ComputeWAXPBY used","Performance results are most likely suboptimal");
       }
-      doc.get("********** Final Summary **********")->add("Please send the YAML file contents to","HPCG-Results@software.sandia.gov");
+      if (times[0]>=minOfficialTime) {
+    	  doc.get("********** Final Summary **********")->add("Please send the YAML file contents to","HPCG-Results@software.sandia.gov");
+      }
+      else {
+          doc.get("********** Final Summary **********")->add("Results are valid but execution time is",times[0]);
+          doc.get("********** Final Summary **********")->add("Official results execution time must be at least",minOfficialTime);
+
+      }
     } else {
       doc.get("********** Final Summary **********")->add("HPCG result is","INVALID.");
       doc.get("********** Final Summary **********")->add("Please review the YAML file contents","You may NOT submit these results for consideration.");

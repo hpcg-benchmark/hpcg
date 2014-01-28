@@ -25,7 +25,7 @@
 #ifndef HPCG_NOOPENMP
 #include <omp.h>
 #endif
-
+#include <cassert>
 #include "ComputeDotProduct_ref.hpp"
 
 /*!
@@ -45,6 +45,9 @@
 */
 int ComputeDotProduct_ref(const local_int_t n, const Vector & x, const Vector & y,
     double & result, double & time_allreduce) {
+  assert(x.localLength>=n); // Test vector lengths
+  assert(y.localLength>=n);
+
   double local_result = 0.0;
   double * xv = x.values;
   double * yv = y.values;

@@ -23,6 +23,7 @@
 #include "ComputeSPMV_ref.hpp"
 #include "ComputeRestriction_ref.hpp"
 #include "ComputeProlongation_ref.hpp"
+#include <cassert>
 
 /*!
 
@@ -35,6 +36,7 @@
   @see ComputeMG
 */
 int ComputeMG_ref(const SparseMatrix & A, const Vector & r, Vector & x) {
+  assert(x.localLength==A.localNumberOfColumns); // Make sure x contain space for halo values
 
   ZeroVector(x); // initialize x to zero
 

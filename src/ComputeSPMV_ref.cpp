@@ -27,6 +27,7 @@
 #ifndef HPCG_NOOPENMP
 #include <omp.h>
 #endif
+#include <cassert>
 
 /*!
   Routine to compute matrix vector product y = Ax where:
@@ -44,6 +45,9 @@
   @see ComputeSPMV
 */
 int ComputeSPMV_ref( const SparseMatrix & A, Vector & x, Vector & y) {
+
+  assert(x.localLength>=A.localNumberOfColumns); // Test vector lengths
+  assert(y.localLength>=A.localNumberOfRows);
 
 #ifndef HPCG_NOMPI
     ExchangeHalo(A,x);

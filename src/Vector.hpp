@@ -31,7 +31,7 @@ struct Vector_STRUCT {
    This is for storing optimized data structres created in OptimizeProblem and
    used inside optimized ComputeSPMV().
    */
-  void * optimization_data;
+  void * optimizationData;
 
 };
 typedef struct Vector_STRUCT Vector;
@@ -45,7 +45,7 @@ typedef struct Vector_STRUCT Vector;
 inline void InitializeVector(Vector & v, local_int_t localLength) {
   v.localLength = localLength;
   v.values = new double[localLength];
-  v.optimization_data = 0;
+  v.optimizationData = 0;
   return;
 }
 

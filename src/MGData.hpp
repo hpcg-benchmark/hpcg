@@ -36,7 +36,7 @@ struct MGData_STRUCT {
    This is for storing optimized data structres created in OptimizeProblem and
    used inside optimized ComputeSPMV().
    */
-  void * optimization_data;
+  void * optimizationData;
 };
 typedef struct MGData_STRUCT MGData;
 

@@ -42,4 +42,39 @@
   </p>
 </ol>
 
+<li><b>Is it permitted to use a custom ordering for the matrix?</b>
+  <p>
+  Yes, it is permitted to use a custom ordering of the grid points. This is
+  facilitated with the function <code>OptimizeProblem()</code> and the
+  <code>optimizationData</code> members of various data structures.
+  </p>
+</li>
+
+<li><b>Why doesn't HPCG include variant X of the CG algorithm?</b>
+  <p>
+  We are aware of many variants of the CG algorithm and their benefits for
+  particular matrices. At the same time, we strive for simplicity of the
+  reference implementation and permit only selected optimizations that allow
+  the results to remain representative of a wide range of CG variants.
+  </p>
+</li>
+
+<li><b>Can I change the Gauss-Seidel preconditioner to make it parallel?</b>
+  <p>
+  It is not permitted to change the preconditioner but it is allowed to change
+  the ordering of the matrix to facilitate parallel preconditioning.
+  </p>
+</li>
+
+<li><b>How is HPCG different from NAS PB CG (NAS Parallel Benchmarks, CG component)?</b>
+  <p>
+  NAS PB CG uses random sparsity pattern which naturally leads to
+  two-dimensional distribution of the matrix for optimality. This results in
+  computation and communication patterns that are non-physical. Another
+  difference is the lack of preconditioning, does not allow to show the effects
+  of local triangular solve. The options for introducing such a preconditioning
+  component are limited due to the non-physical sparsity pattern.
+  </p>
+</li>
+
 <?php include 'common/footer.html' ?>

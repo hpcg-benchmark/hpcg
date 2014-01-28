@@ -53,7 +53,7 @@ struct SparseMatrix_STRUCT {
    */
   mutable struct SparseMatrix_STRUCT * Ac; // Coarse grid matrix
   mutable MGData * mgData; // Pointer to the coarse level data for this fine matrix
-  void * optimization_data;  // pointer that can be used to store implementation-specific data
+  void * optimizationData;  // pointer that can be used to store implementation-specific data
 
 #ifndef HPCG_NOMPI
   local_int_t numberOfExternalValues; //!< number of entries that are external to this process

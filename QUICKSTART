@@ -21,12 +21,12 @@ NOTE: The instructions in this file assume you are working with a version
       mkdir My_MPI_OMP_BUILD
 
 3) 'cd' to your build directory, and run the configure command located in the
-   main hpcg directory, defining the arch argument to be the suffix of your
-   setup file defined in step 1.  Then run 'make'.
+   main hpcg directory, defining the path and file argument to be the location
+   of the setup file defined in step 1.  Then run 'make'.
 
    Example commands:
       cd My_MPI_OMP_BUILD
-      ../configure arch=My_MPI_OMP
+      ../configure ../setup/Make.My_MPI_OMP
       make
 
 4) If make is successful, you will have a bin directory containing the files
@@ -46,7 +46,7 @@ NOTE: The instructions in this file assume you are working with a version
    the results are valid, and explain how to report them.
 
    Example commands:
-      less HPCG-Benchmark-0.2_2013:09:25-17:17:52.yaml
-      mail hpcg-results@software.sandia.gov < HPCG-Benchmark-0.2_2013:09:25-17:17:52.yaml 
+      less HPCG-Benchmark-1.1_2014:01:22-22:46:06.yaml
+      mail hpcg-results@software.sandia.gov < HPCG-Benchmark-1.1_2014:01:22-22:46:06.yaml
 
 6) If results are not valid, do not submit them.

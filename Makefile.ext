@@ -1,8 +1,10 @@
 # -*- Makefile -*-
 
-arch = UNKNOWN
+#arch = UNKNOWN
+setup_file = UNKNOWN
 
-include setup/Make.$(arch)
+#include setup/Make.$(arch)
+include $(setup_file)
 
 
 HPCG_DEPS = src/CG.o \

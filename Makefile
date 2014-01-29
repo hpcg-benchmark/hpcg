@@ -1,9 +1,11 @@
 # -*- Makefile -*-
 
 # by default, "arch" is unknown
-arch = UNKNOWN
+#arch = UNKNOWN
+#include setup/Make.$(arch)
 
-include setup/Make.$(arch)
+setup_file = setup/Make.UNKNOWN
+include $(setup_file)
 
 HPCG_DEPS = src/CG.o src/CG_ref.o src/TestCG.o src/ComputeResidual.o \
          src/ExchangeHalo.o src/GenerateGeometry.o src/GenerateProblem.o \

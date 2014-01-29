@@ -3,7 +3,6 @@
  HPCG - 2.0 - January 28, 2014
 ==============================================================
 
-- Add support for TUNING and OFFICIAL execution modes.
 - Add support for derived MPI Communicators (other than MPI_COMM_WORLD)
 
 ==============================================================

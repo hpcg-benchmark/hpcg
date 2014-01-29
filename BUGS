@@ -1,11 +1,9 @@
 ==============================================================
  List of the known problems with the HPCG software
 
- Current as of release HPCG - 0.3 - September 25, 2013
+ Current as of release HPCG - 2.0 - January 28, 2014
 ==============================================================
-- Known failure in MPI_Irecv call in ExchangeHalo.cpp when 
-  local_int_t is 'long long' with 4000 MPI processes on the
-  Sandia system chama.  Bug is being explored.
+- No known bugs
 
 ==============================================================
  

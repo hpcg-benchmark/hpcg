@@ -82,7 +82,6 @@ void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgS
     double fnops_precond = 0.0;
     const SparseMatrix * Af = &A;
     for (int i=1; i<numberOfMgLevels; ++i) {
-        double fnrow_Af = Af->totalNumberOfRows;
         double fnnz_Af = Af->totalNumberOfNonzeros;
         double fnumberOfPresmootherSteps = Af->mgData->numberOfPresmootherSteps;
         double fnumberOfPostsmootherSteps = Af->mgData->numberOfPostsmootherSteps;

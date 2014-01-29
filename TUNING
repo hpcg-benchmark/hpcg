@@ -32,14 +32,16 @@ Sandia National Laboratories; University of Tennessee, Knoxville
 * Line 3: This line specifies the local (to an MPI process) dimensions of the
 problem. By default, this line reads:
 
-100 100 100
+104 104 104
 
 which means that each MPI process will be computing a solution for a cube of
-size 100 points.
+size 104 points.
 
 * Line 4: This line specifies the number of seconds of how long the timed
 portion of the benchmark should run. By default, this line reads:
 
-18000
+60
 
-which means that the timed portion of the benchmark will run 5 hours.
+which means that the timed portion of the benchmark will run 1 minute.
+This length of time is not sufficient for submitting an official run
+but does give sufficient data for tuning the benchmark in most cases.

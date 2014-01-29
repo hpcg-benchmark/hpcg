@@ -40,7 +40,6 @@
   know that performance will be suboptimal when using reference
   kernels.
   </p>
-</ol>
 
 <li><b>Is it permitted to use a custom ordering for the matrix?</b>
   <p>

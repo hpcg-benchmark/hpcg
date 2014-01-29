@@ -27,7 +27,8 @@ capabilities that will have impact on the collective performance of these applic
       <li>Sparse triangular solve.</li>
       <li>Vector updates.</li>
       <li>Global dot products.</li>
-      <li>Driven by an additive Schwarz, symmetric Gauss-Seidel preconditioned conjugate gradient algorithm.</li>
+      <li>Local symmetric Gauss-Seidel smoother.</li>
+      <li>Driven by multigrid preconditioned conjugate gradient algorithm that exercises the key kernels on a nested set of coarse grids.</li>
       <li>Reference implementation is written in C++ with MPI and OpenMP support.</li>
   </ul>
   </p>

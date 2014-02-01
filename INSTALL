@@ -76,14 +76,14 @@ this example, for the results of compilation and linking::
     mkdir build
 
 Next, go this new directory and use the ``configure`` script to create the
-build infrastructure::
+build infrastructure:
 
     cd build
-    /path/to/hpcg/configure arch=<arch>
+    /path/to/hpcg/configure /path/to/setup/file
 
 Notice that you have to give a absolute or relative path to the ``configure``
 shell script so that the location of the source files can be discovered
-automatically.
+automatically. Sample setup files are found in the hpcg/setup directory.
 
 =====
 Build
@@ -91,7 +91,7 @@ Build
 
 For the in-source builds, while in the top-level directory, simply type::
 
-    make arch=<arch>
+    make path/to/setup/file
 
 For the out-of-source builds, go to the ``build`` directory and type ``make``.
 
@@ -105,7 +105,7 @@ Example Build
 As an example, let's use a Linux cluster and create a file called
 ``Make.Linux`` in the ``setup`` directory right under the top-level directory.
 
-For in-source build, we type ``make arch=Linux`` which creates the executable
+For in-source build, we type ``make setup/Make.Linux`` which creates the executable
 file called ``bin/xhpcg``.
 
 For out-of-source build, we create the build directory called ``build_Linux``
@@ -116,7 +116,7 @@ and go to that direcotry::
 
 Then, while in the ``build_Linux`` directory we type::
 
-    /path/to/hpcg/configure arch=Linux
+    /path/to/hpcg/configure ../setup/Make.Linux
     make
 
 This creates the executable file ``bin/xhpcg``.
@@ -131,10 +131,10 @@ follows::
     mpirun -np 8 xhpcg
 
 Note that this will use the default ``hpcg.dat`` file. If you'd like to change
-the size of local dimensions of the problem to NX=17, NY=19, NZ=23 then run the
+the size of local dimensions of the problem to NX=32, NY=24, NZ=16 then run the
 following::
 
-    mpirun -np 8 xhpcg 17 19 23
+    mpirun -np 8 xhpcg 32 24 16
 
 ======
 Tuning

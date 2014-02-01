@@ -1,6 +1,6 @@
 ==============================================================
  High Performance Conjugate Gradient Benchmark (HPCG)
- HPCG - 2.0 - January 28, 2014
+ HPCG - 2.1 - January 31, 2014
 ==============================================================
 
 - Add support for derived MPI Communicators (other than MPI_COMM_WORLD)

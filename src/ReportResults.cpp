@@ -94,8 +94,8 @@ void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgS
     fnops_precond += fniters*4.0*((double) Af->totalNumberOfNonzeros); // One symmetric GS sweep at the coarsest level
     double fnops = fnops_ddot+fnops_waxpby+fnops_sparsemv+fnops_precond;
 
-    YAML_Doc doc("HPCG-Benchmark", "2.0");
-    doc.add("HPCG Benchmark","Version 2.0 January 28, 2014");
+    YAML_Doc doc("HPCG-Benchmark", "2.1");
+    doc.add("HPCG Benchmark","Version 2.1 January 31, 2014");
 
     doc.add("Machine Summary","");
     doc.get("Machine Summary")->add("Distributed Processes",A.geom->size);

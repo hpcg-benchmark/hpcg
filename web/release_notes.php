@@ -16,11 +16,11 @@ END;
 
 <div class="breadcrumb"><a href="download.php">Download</a> - Release Notes</div>
 
-<h3> HPCG Benchmark Release 2.0</h3>
+<h3> HPCG Benchmark Release 2.1</h3>
 
-<p>HPCG 2.0 provides the first implementation of a multigrid preconditioner for the conjugate gradient method.
+<p>HPCG 2.0/2.1 provides the first implementation of a multigrid preconditioner for the conjugate gradient method.
 <ul>
-<li> HPCG 2.0 replaces the additive Schwarz preconditioner with a synthetic multigrid approach. </li>
+<li> HPCG 2.0/2.1replaces the additive Schwarz preconditioner with a synthetic multigrid approach. </li>
 <li> The number of coarse grid levels is parametrized but fixed for production benchmark runs (presently set to 3 levels of coarsening).</li>
 <li> We use injection as the grid transfer operator and symmetric Gauss-Seidel as the pre and post smoother.</li>
 <li> All kernels from HPCG 1.1 remain important and no new kernels were added.

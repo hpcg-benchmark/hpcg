@@ -16,7 +16,7 @@ END;
 
 <div class="breadcrumb"><a href="default.php">Home</a> - News</div>
 
-<strong>Tuesday, January 28th, 2014</strong> - HPCG Benchmark Release 2.0, the
+<strong>Friday, January 31st, 2014</strong> - HPCG Benchmark Release 2.1, the
 first Multigrid preconditioned version of HPCG , is now <a href="download.php">available for download</a>.  See the <a href="release_notes.php">release notes</a> for more information.<br/><br/>
 
 <strong>Tuesday, November 26th, 2013</strong> - HPCG Benchmark Release 1.1, the

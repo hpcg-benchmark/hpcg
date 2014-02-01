@@ -17,6 +17,6 @@ END;
 
 <div class="breadcrumb"><a href="resources.php">Resources</a> - Documentation</div>
 
-<p>Reference Documentation for HPCG sourc files is <a href="html/index.html">here.</a></p>
+<p>Reference Documentation for HPCG source files is <a href="html/index.html">here.</a></p>
 
 <?php include 'common/footer.html' ?>

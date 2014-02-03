@@ -1,9 +1,8 @@
 # -*- Makefile -*-
 
-#arch = UNKNOWN
-setup_file = UNKNOWN
+arch = UNKNOWN
+setup_file = setup/Make.$(arch)
 
-#include setup/Make.$(arch)
 include $(setup_file)
 
 

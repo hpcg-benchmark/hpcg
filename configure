@@ -5,19 +5,18 @@ bld_path=`pwd`
 
 #FIXME: need to check whether src and bld are the same (test f1 -ef f2)
 
-#if test x"$#" != x"1" -o x`echo "$1" | sed -e 's/arch=..*/arch=/'` != x"arch=" -o x`echo "$1" | sed -e 's/arch=//'` = "x" ; then
-#  echo
-#  echo Please specify '"'arch'"' argument, for example:
-#  echo
-#  echo $0 arch=Unix
-#  echo
-#  exit 127
-#fi
+if test x"$#" != x"1" -o x"$1" = "x" ; then
+  echo
+  echo Please specify '"'arch'"' argument, for example:
+  echo
+  echo $0 Unix
+  echo
+  exit 127
+fi
 
-#arg_arch=`echo "$1" | sed -e 's/arch=//'`
+arg_arch="$1"
 
-#setup_file=${src_path}/setup/Make.${arg_arch}
-setup_file="$1"
+setup_file=${src_path}/setup/Make.${arg_arch}
 
 if test ! -f $setup_file ; then
   echo
@@ -32,8 +31,7 @@ if test -d $mkfile -o -f $mkfile ; then
   rm -rf $mkfile
 fi
 
-#sed -e "s:HPCG_ROOT_PATH:${bld_path}:g" ${src_path}/Makefile.ext | sed -e "s:HPCG_SRC_PATH:${src_path}:g" | sed -e "s:UNKNOWN:${arg_arch}:" > $mkfile
-sed -e "s:HPCG_ROOT_PATH:${bld_path}:g" ${src_path}/Makefile.ext | sed -e "s:HPCG_SRC_PATH:${src_path}:g" | sed -e "s:UNKNOWN:${setup_file}:" > $mkfile
+sed -e "s:HPCG_ROOT_PATH:${bld_path}:g" ${src_path}/Makefile.ext | sed -e "s:HPCG_SRC_PATH:${src_path}:g" | sed -e "s:UNKNOWN:${arg_arch}:" > $mkfile
 
 # creating missing directories
 for path in src testing bin setup

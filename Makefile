@@ -1,10 +1,9 @@
 # -*- Makefile -*-
 
-# by default, "arch" is unknown
-#arch = UNKNOWN
-#include setup/Make.$(arch)
+# by default, "arch" is unknown, should be specified in the command line
+arch = UNKNOWN
 
-setup_file = setup/Make.UNKNOWN
+setup_file = setup/Make.$(arch)
 include $(setup_file)
 
 HPCG_DEPS = src/CG.o src/CG_ref.o src/TestCG.o src/ComputeResidual.o \

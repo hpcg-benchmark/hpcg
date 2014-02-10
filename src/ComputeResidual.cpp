@@ -71,7 +71,7 @@ int ComputeResidual(const local_int_t n, const Vector & v1, const Vector & v2, d
     double diff = std::fabs(v1v[i] - v2v[i]);
     if (diff > local_residual) local_residual = diff;
 #ifdef HPCG_DETAILED_DEBUG
-    HPCG_fout << " Computed, exact, diff = " << v1[i] << " " << v2[i] << " " << diff << std::endl;
+    HPCG_fout << " Computed, exact, diff = " << v1v[i] << " " << v2v[i] << " " << diff << std::endl;
 #endif
   }
 #endif

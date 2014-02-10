@@ -51,7 +51,7 @@
   @see GenerateProblem
 */
 int WriteProblem( const Geometry & geom, const SparseMatrix & A,
-    const double * const b, const double * const x, const double * const xexact) {
+    const Vector b, const Vector x, const Vector xexact) {
 
   if (geom.size!=1) return(-1); //TODO Only works on one processor.  Need better error handler
   const global_int_t nrow = A.totalNumberOfRows;
@@ -61,6 +61,14 @@ int WriteProblem( const Geometry & geom, const SparseMatrix & A,
   fx = fopen("x.dat", "w");
   fxexact = fopen("xexact.dat", "w");
   fb = fopen("b.dat", "w");
+
+  if (! fA || ! fx || ! fxexact || ! fb) {
+    if (fb) fclose(fb);
+    if (fxexact) fclose(fxexact);
+    if (fx) fclose(fx);
+    if (fA) fclose(fA);
+    return -1;
+  }
 
   for (global_int_t i=0; i< nrow; i++) {
     const double * const currentRowValues = A.matrixValues[i];
@@ -72,9 +80,9 @@ int WriteProblem( const Geometry & geom, const SparseMatrix & A,
 #else
       fprintf(fA, " %lld %lld %22.16e\n",i+1,(global_int_t)(currentRowIndices[j]+1),currentRowValues[j]);
 #endif
-    fprintf(fx, "%22.16e\n",x[i]);
-    fprintf(fxexact, "%22.16e\n",xexact[i]);
-    fprintf(fb, "%22.16e\n",b[i]);
+    fprintf(fx, "%22.16e\n",x.values[i]);
+    fprintf(fxexact, "%22.16e\n",xexact.values[i]);
+    fprintf(fb, "%22.16e\n",b.values[i]);
   }
 
   fclose(fA);

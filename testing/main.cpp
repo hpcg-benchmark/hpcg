@@ -140,7 +140,7 @@ int main(int argc, char * argv[]) {
 #endif
 
 #ifdef HPCG_DETAILED_DEBUG
-  if (geom.size==1) WriteProblem(A, b, x, xexact);
+  if (geom->size == 1) WriteProblem(*geom, A, b, x, xexact);
 #endif
 
 
@@ -315,7 +315,7 @@ int main(int argc, char * argv[]) {
   // All processors are needed here.
 #ifdef HPCG_DEBUG
   double residual = 0;
-  ierr = ComputeResidual(A.localNumberOfRows, x, xexact, &residual);
+  ierr = ComputeResidual(A.localNumberOfRows, x, xexact, residual);
   if (ierr) HPCG_fout << "Error in call to compute_residual: " << ierr << ".\n" << endl;
   if (rank==0) HPCG_fout << "Difference between computed and exact  = " << residual << ".\n" << endl;
 #endif

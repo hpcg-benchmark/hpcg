@@ -84,7 +84,7 @@ void SetupHalo(SparseMatrix & A) {
       global_int_t curIndex = mtxIndG[i][j];
       int rankIdOfColumnEntry = ComputeRankOfMatrixRow(*(A.geom), curIndex);
 #ifdef HPCG_DETAILED_DEBUG
-      HPCG_fout << "rank, row , col, globalToLocalMap[col] = " << geom.rank << " " << currentGlobalRow << " "
+      HPCG_fout << "rank, row , col, globalToLocalMap[col] = " << A.geom->rank << " " << currentGlobalRow << " "
           << curIndex << " " << A.globalToLocalMap[curIndex] << endl;
 #endif
       if (A.geom->rank!=rankIdOfColumnEntry) {// If column index is not a row index, then it comes from another processor
@@ -167,11 +167,11 @@ void SetupHalo(SparseMatrix & A) {
   A.sendBuffer = sendBuffer;
 
 #ifdef HPCG_DETAILED_DEBUG
-  HPCG_fout << " For rank " << geom.rank << " of " << geom.size << ", number of neighbors = " << A.numberOfSendNeighbors << endl;
+  HPCG_fout << " For rank " << A.geom->rank << " of " << A.geom->size << ", number of neighbors = " << A.numberOfSendNeighbors << endl;
   for (int i = 0; i < A.numberOfSendNeighbors; i++) {
-    HPCG_fout << "     rank " << geom.rank << " neighbor " << neighbors[i] << " send/recv length = " << sendLength[i] << "/" << receiveLength[i] << endl;
+    HPCG_fout << "     rank " << A.geom->rank << " neighbor " << neighbors[i] << " send/recv length = " << sendLength[i] << "/" << receiveLength[i] << endl;
     for (local_int_t j = 0; j<sendLength[i]; ++j)
-      HPCG_fout << "       rank " << geom.rank << " elementsToSend[" << j << "] = " << elementsToSend[j] << endl;
+      HPCG_fout << "       rank " << A.geom->rank << " elementsToSend[" << j << "] = " << elementsToSend[j] << endl;
   }
 #endif
 

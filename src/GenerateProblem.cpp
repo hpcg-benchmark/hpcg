@@ -71,7 +71,7 @@ void GenerateProblem(SparseMatrix & A, Vector * b, Vector * x, Vector * xexact) 
   assert(localNumberOfRows>0); // Throw an exception of the number of rows is less than zero (can happen if int overflow)
   local_int_t numberOfNonzerosPerRow = 27; // We are approximating a 27-point finite element/volume/difference 3D stencil
 
-  global_int_t totalNumberOfRows = localNumberOfRows*A.geom->size; // Total number of grid points in mesh
+  global_int_t totalNumberOfRows = ((global_int_t) localNumberOfRows)*((global_int_t) A.geom->size); // Total number of grid points in mesh
   // If this assert fails, it most likely means that the global_int_t is set to int and should be set to long long
   assert(totalNumberOfRows>0); // Throw an exception of the number of rows is less than zero (can happen if int overflow)
 

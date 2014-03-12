@@ -283,8 +283,7 @@ int main(int argc, char * argv[]) {
   // This value should be set to 60*60*5 (5 hours) for official runs
 
   double total_runtime = params.runningTime;
-  int numberOfCgSets = int(total_runtime / opt_worst_time);
-  if (numberOfCgSets < 1) numberOfCgSets = 1; // run CG at least once
+  int numberOfCgSets = int(total_runtime / opt_worst_time) + 1; // Run at least once, account for rounding
 
 #ifdef HPCG_DEBUG
   if (rank==0) {

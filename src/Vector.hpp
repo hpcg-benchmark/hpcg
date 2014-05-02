@@ -81,7 +81,7 @@ inline void ScaleVectorValue(Vector & v, local_int_t index, double value) {
 inline void FillRandomVector(Vector & v) {
   local_int_t localLength = v.localLength;
   double * vv = v.values;
-  for (int i=0; i<localLength; ++i) vv[i] = rand() / (double)(RAND_MAX) + 1;
+  for (int i=0; i<localLength; ++i) vv[i] = rand() / (double)(RAND_MAX) + 1.0;
   return;
 }
 /*!

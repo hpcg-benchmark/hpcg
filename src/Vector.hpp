@@ -50,7 +50,7 @@ inline void InitializeVector(Vector & v, local_int_t localLength) {
 }
 
 /*!
-  Fill the input vector with pseudo-random values.
+  Fill the input vector with zero values.
 
   @param[inout] v - On entrance v is initialized, on exit all its values are zero.
  */
@@ -61,10 +61,11 @@ inline void ZeroVector(Vector & v) {
   return;
 }
 /*!
-  Replace specific vector entry.
+  Multiply (scale) a specific vector entry by a given value.
 
   @param[inout] v Vector to be modified
-  @param[in] index Local index of value to scale
+  @param[in] index Local index of entry to scale
+  @param[in] value Value to scale by
  */
 inline void ScaleVectorValue(Vector & v, local_int_t index, double value) {
   assert(index>=0 && index < v.localLength);
@@ -73,7 +74,7 @@ inline void ScaleVectorValue(Vector & v, local_int_t index, double value) {
   return;
 }
 /*!
-  Fill the input vector with zero values.
+  Fill the input vector with pseudo-random values.
 
   @param[in] v
  */

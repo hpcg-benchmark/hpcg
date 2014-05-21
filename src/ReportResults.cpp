@@ -200,8 +200,8 @@ void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgS
     doc.get("GFLOP/s Summary")->add("SpMV",fnops_sparsemv/(times[3])/1.0E9);
     doc.get("GFLOP/s Summary")->add("MG",fnops_precond/(times[5])/1.0E9);
     doc.get("GFLOP/s Summary")->add("Total",fnops/times[0]/1.0E9);
-    // This final GFLOP/s rating includes the overhead of optimizing the data structures vs 50 iterations of CG
-    double totalGflops = fnops/(times[0]+fNumberOfCgSets*times[7])/1.0E9;
+    // This final GFLOP/s rating includes the overhead of optimizing the data structures vs ten sets of 50 iterations of CG
+    double totalGflops = fnops/(times[0]+fNumberOfCgSets*times[7]/10.0)/1.0E9;
     doc.get("GFLOP/s Summary")->add("Total with Optimization phase overhead",totalGflops);
 
     //double totalSparseMVTime = times[3] + times[6];

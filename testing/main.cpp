@@ -207,7 +207,7 @@ int main(int argc, char * argv[]) {
   int global_failure = 0; // assume all is well: no failures
 
   int niters = 0;
-  int totalNiters = 0;
+  int totalNiters_ref = 0;
   double normr = 0.0;
   double normr0 = 0.0;
   int refMaxIters = 50;
@@ -221,7 +221,7 @@ int main(int argc, char * argv[]) {
     ZeroVector(x);
     ierr = CG_ref( A, data, b, x, refMaxIters, tolerance, niters, normr, normr0, &ref_times[0], true);
     if (ierr) ++err_count; // count the number of errors in CG
-    totalNiters += niters;
+    totalNiters_ref += niters;
   }
   if (rank == 0 && err_count) HPCG_fout << err_count << " error(s) in call(s) to reference CG." << endl;
   double refTolerance = normr / normr0;
@@ -230,7 +230,7 @@ int main(int argc, char * argv[]) {
   // Optimized CG Setup Phase //
   //////////////////////////////
 
-  totalNiters = 0;
+  int totalNiters = 0;
   niters = 0;
   normr = 0.0;
   normr0 = 0.0;
@@ -280,7 +280,6 @@ int main(int argc, char * argv[]) {
 
   // Here we finally run the benchmark phase
   // The variable total_runtime is the target benchmark execution time in seconds
-  // This value should be set to 60*60*5 (5 hours) for official runs
 
   double total_runtime = params.runningTime;
   int numberOfCgSets = int(total_runtime / opt_worst_time) + 1; // Run at least once, account for rounding
@@ -327,7 +326,7 @@ int main(int argc, char * argv[]) {
   ////////////////////
 
   // Report results to YAML file
-  ReportResults(A, numberOfMgLevels, numberOfCgSets, refMaxIters, totalNiters, &times[0], testcg_data, testsymmetry_data, testnorms_data, global_failure);
+  ReportResults(A, numberOfMgLevels, numberOfCgSets, refMaxIters, totalNiters_ref, &times[0], testcg_data, testsymmetry_data, testnorms_data, global_failure);
 
   // Clean up
   DeleteMatrix(A); // This delete will recursively delete all coarse grid data

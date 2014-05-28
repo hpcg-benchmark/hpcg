@@ -230,7 +230,6 @@ int main(int argc, char * argv[]) {
   // Optimized CG Setup Phase //
   //////////////////////////////
 
-  int totalNiters = 0;
   niters = 0;
   normr = 0.0;
   normr0 = 0.0;
@@ -256,8 +255,6 @@ int main(int argc, char * argv[]) {
 
     double current_time = opt_times[0] - last_cummulative_time;
     if (current_time > opt_worst_time) opt_worst_time = current_time;
-
-    totalNiters += niters;
   }
 
 #ifndef HPCG_NOMPI
@@ -293,7 +290,6 @@ int main(int argc, char * argv[]) {
 
   /* This is the timed run for a specified amount of time. */
 
-  totalNiters = 0;
   optMaxIters = optNiters;
   double optTolerance = 0.0;  // Force optMaxIters iterations
   TestNormsData testnorms_data;
@@ -306,7 +302,6 @@ int main(int argc, char * argv[]) {
     if (ierr) HPCG_fout << "Error in call to CG: " << ierr << ".\n" << endl;
     if (rank==0) HPCG_fout << "Call [" << i << "] Scaled Residual [" << normr/normr0 << "]" << endl;
     testnorms_data.values[i] = normr/normr0; // Record scaled residual from this run
-    totalNiters += niters;
   }
 
   // Compute difference between known exact solution and computed solution
@@ -326,7 +321,7 @@ int main(int argc, char * argv[]) {
   ////////////////////
 
   // Report results to YAML file
-  ReportResults(A, numberOfMgLevels, numberOfCgSets, refMaxIters, totalNiters_ref, &times[0], testcg_data, testsymmetry_data, testnorms_data, global_failure);
+  ReportResults(A, numberOfMgLevels, numberOfCgSets, refMaxIters, optMaxIters, &times[0], testcg_data, testsymmetry_data, testnorms_data, global_failure);
 
   // Clean up
   DeleteMatrix(A); // This delete will recursively delete all coarse grid data

@@ -4,6 +4,16 @@
 # hpcg> tools/updateDoxWeb
 doxygen tools/hpcg.dox
 cd out
-scp -r html maherou@software.sandia.gov:/var/www/html/hpcg/
-ssh maherou@software.sandia.gov chmod a+rx /var/www/html/hpcg/html
-ssh maherou@software.sandia.gov chmod a+r /var/www/html/hpcg/html/*
+rm -f html.tar.gz
+tar cvzf html.tar.gz html
+scp html.tar.gz mheroux@unix.csbsju.edu:
+echo #### Log into software.sandia.gov and execute the following:
+echo cd /var/www/html/hpcg
+echo rm -f html
+echo scp mheroux@unix.csbsju.edu:html.tar.gz .
+echo tar xvzf html.tar.gz
+echo chmod a+rx html
+echo chmod a+r html/\*
+#scp -r html maherou@software.sandia.gov:/var/www/html/hpcg/
+#ssh maherou@software.sandia.gov chmod a+rx /var/www/html/hpcg/html
+#ssh maherou@software.sandia.gov chmod a+r /var/www/html/hpcg/html/*

@@ -3,12 +3,22 @@ High Performance Conjugate Gradient Benchmark (HPCG)
 ####################################################
 
 :Author: Jack Dongarra and Michael Heroux and Piotr Luszczek
-:Revision: 2.1
-:Date: January 31, 2014
+:Revision: 2.2
+:Date: May 27, 2014
 
 ===============
 History of HPCG
 ===============
+
+-----------
+Version 2.2
+-----------
+
+* Reduced the penalty for optimization overhead by a factor of 10 (amortized over 10
+  sets of 50 reference iterations.
+* Fixed a bug that did not account for increased iterations that can occur with
+  multicoloring reorderings.
+* Fixed numerous other small bugs reported by HPCG users.
 
 -----------
 Version 2.1

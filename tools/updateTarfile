@@ -2,8 +2,9 @@
 # Run this script from the main hpcg directory:
 # hpcg> tools/updateTarfile [version_number]
 make VERSION=$1 dist
-ssh maherou@software.sandia.gov mkdir -p /var/www/html/hpcg/downloads
-scp hpcg-$1.tar.gz maherou@software.sandia.gov:/var/www/html/hpcg/downloads/
+scp hpcg-$1.tar.gz mheroux@unix.csbsju.edu:
 
-ssh maherou@software.sandia.gov chmod a+rx /var/www/html/hpcg/downloads
-ssh maherou@software.sandia.gov chmod a+r /var/www/html/hpcg/downloads/*
+echo #### Log into software.sandia.gov and execute the following commands
+echo cd /var/www/html/hpcg/downloads
+echo scp mheroux@unix.csbsju.edu:hpcg-$1.tar.gz .
+echo chmod a+r hpcg-$1.tar.gz

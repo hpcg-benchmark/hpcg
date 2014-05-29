@@ -16,6 +16,10 @@ END;
 
 <div class="breadcrumb"><a href="download.php">Download</a> - Release Notes</div>
 
+<h3> HPCG Benchmark Release 2.2</h3>
+
+<p>Release 2.2 reduces the penalty for optimization overhead costs by a factor of 10.  It also contain several minor bugfixes.</p>
+
 <h3> HPCG Benchmark Release 2.1</h3>
 
 <p>HPCG 2.0/2.1 provides the first implementation of a multigrid preconditioner for the conjugate gradient method.

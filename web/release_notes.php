@@ -16,6 +16,10 @@ END;
 
 <div class="breadcrumb"><a href="download.php">Download</a> - Release Notes</div>
 
+<h3> HPCG Benchmark Release 2.3</h3>
+
+<p>Release 2.3 fixes a flop count error introduced in Release 2.2.</p>
+
 <h3> HPCG Benchmark Release 2.2</h3>
 
 <p>Release 2.2 reduces the penalty for optimization overhead costs by a factor of 10.  It also contain several minor bugfixes.</p>

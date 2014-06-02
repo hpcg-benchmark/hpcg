@@ -16,6 +16,9 @@ END;
 
 <div class="breadcrumb"><a href="default.php">Home</a> - News</div>
 
+<strong>Monday, June 2nd, 2014</strong> - HPCG Benchmark Release 2.3 fixes a floating point operation count issue in Release 2.2.
+ Release 2.3 is <a href="download.php">available for download</a>.  See the <a href="release_notes.php">release notes</a> for more information.<br/><br/>
+
 <strong>Wednesday, May 27th, 2014</strong> - HPCG Benchmark Release 2.2, with 
 reduced penalty for optimization overhead cost, is now <a href="download.php">available for download</a>.  See the <a href="release_notes.php">release notes</a> for more information.<br/><br/>
 

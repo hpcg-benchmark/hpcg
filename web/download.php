@@ -18,16 +18,17 @@ END;
 
 <div class="breadcrumb">Download</div>
 
-<h3>HPCG Benchmark Release Version 2.2</h3>
+<h3>HPCG Benchmark Release Version 2.3</h3>
 
-<p>The current HPCG Suite Release version is 2.2. </p>
+<p>The current HPCG Suite Release version is 2.3. </p>
 
 
-  HPCG: <a href="downloads/hpcg-2.2.tar.gz">Reference Version 2.2 (27-May-2014)</a>
+  HPCG: <a href="downloads/hpcg-2.3.tar.gz">Reference Version 2.3 (2-Jun-2014)</a>
 
     <ul>
         <li><b>Previous versions of HPCG:</b></li>
     <ul>
+     <li><b>Reference:</b> <a href="downloads/hpcg-2.2.tar.gz">HPCG 2.2 Reference code (May 27, 2014)</a>
      <li><b>Reference:</b> <a href="downloads/hpcg-2.1.tar.gz">HPCG 2.1 Reference code (January 31, 2014)</a>
      <li><b>Reference:</b> <a href="downloads/hpcg-2.0.tar.gz">HPCG 2.0 Reference code (January 29, 2013)</a>
      <li><b>Reference:</b> <a href="downloads/hpcg-1.1.tar.gz">HPCG 1.1 Reference code (November 26, 2013)</a>

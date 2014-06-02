@@ -75,8 +75,8 @@ void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgS
     double fnnz = A.totalNumberOfNonzeros;
 
     // Op counts come from implementation of CG in CG.cpp (include 1 extra for the CG preamble ops)
-    double fnops_ddot = (fniters+1.0)*6.0*fnrow; // 3 ddots with nrow adds and nrow mults
-    double fnops_waxpby = (fniters+1.0)*6.0*fnrow; // 3 WAXPBYs with nrow adds and nrow mults
+    double fnops_ddot = (3.0*fniters+1.0)*2.0*fnrow; // 3 ddots with nrow adds and nrow mults
+    double fnops_waxpby = (3.0*fniters+1.0)*2.0*fnrow; // 3 WAXPBYs with nrow adds and nrow mults
     double fnops_sparsemv = (fniters+1.0)*2.0*fnnz; // 1 SpMV with nnz adds and nnz mults
     // Op counts from the multigrid preconditioners
     double fnops_precond = 0.0;
@@ -95,8 +95,8 @@ void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgS
     double fnops = fnops_ddot+fnops_waxpby+fnops_sparsemv+fnops_precond;
     double reffnops = fnops * ((double) refMaxIters)/((double) optMaxIters);
 
-    YAML_Doc doc("HPCG-Benchmark", "2.2");
-    doc.add("HPCG Benchmark","Version 2.2 May 22, 2014");
+    YAML_Doc doc("HPCG-Benchmark", "2.3");
+    doc.add("HPCG Benchmark","Version 2.3 June 2, 2014");
 
     doc.add("Machine Summary","");
     doc.get("Machine Summary")->add("Distributed Processes",A.geom->size);

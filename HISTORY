@@ -3,18 +3,26 @@ High Performance Conjugate Gradient Benchmark (HPCG)
 ####################################################
 
 :Author: Jack Dongarra and Michael Heroux and Piotr Luszczek
-:Revision: 2.3
-:Date: June 2, 2014
+:Revision: 2.4
+:Date: June 3, 2014
 
 ===============
 History of HPCG
 ===============
 
 -----------
+Version 2.4
+-----------
+
+* Fixed (again) the FLOP count for DDOT and WAXPBY.  We forgot that the 
+  preamble is called many times.
+
+-----------
 Version 2.3
 -----------
 
-* Fixed the FLOP count for DDOT and WAXPBY.
+* Fixed the FLOP count for DDOT and WAXPBY.  The operations in the preamble were
+  not being accounted for.
 
 -----------
 Version 2.2

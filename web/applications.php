@@ -20,7 +20,7 @@ END;
 
     <p><b>Current activities:</b>
 
-We have released HPCG Version 2.3 for general availability.
+We have released HPCG Version 2.4 for general availability.
 	
   </p><br/><br/>
 

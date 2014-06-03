@@ -95,8 +95,8 @@ void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgS
     double fnops = fnops_ddot+fnops_waxpby+fnops_sparsemv+fnops_precond;
     double reffnops = fnops * ((double) refMaxIters)/((double) optMaxIters);
 
-    YAML_Doc doc("HPCG-Benchmark", "2.3");
-    doc.add("HPCG Benchmark","Version 2.3 June 2, 2014");
+    YAML_Doc doc("HPCG-Benchmark", "2.4");
+    doc.add("HPCG Benchmark","Version 2.4 June 3, 2014");
 
     doc.add("Machine Summary","");
     doc.get("Machine Summary")->add("Distributed Processes",A.geom->size);

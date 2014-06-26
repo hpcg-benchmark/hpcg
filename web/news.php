@@ -16,6 +16,9 @@ END;
 
 <div class="breadcrumb"><a href="default.php">Home</a> - News</div>
 
+<strong>Thursday, June 26th, 2014</strong> - First list of HPCG ranking results <a href=results.php">released</a>.
+<br/><br/>
+
 <strong>Monday, June 3nd, 2014</strong> - HPCG Benchmark Release 2.4 fixes a floating point operation count issue that persisted from Release 2.2.
  Release 2.3 is <a href="download.php">available for download</a>.  See the <a href="release_notes.php">release notes</a> for more information.<br/><br/>
 

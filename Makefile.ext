@@ -13,6 +13,7 @@ HPCG_DEPS = src/CG.o \
 	    src/ExchangeHalo.o \
 	    src/GenerateGeometry.o \
 	    src/GenerateProblem.o \
+	    src/MixedBaseCounter.o \
 	    src/OptimizeProblem.o \
 	    src/ReadHpcgDat.o \
 	    src/ReportResults.o \
@@ -25,6 +26,7 @@ HPCG_DEPS = src/CG.o \
 	    src/ComputeDotProduct.o \
 	    src/ComputeDotProduct_ref.o \
 	    src/mytimer.o \
+	    src/ComputeOptimalShapeXYZ.o \
 	    src/ComputeSPMV.o \
 	    src/ComputeSPMV_ref.o \
 	    src/ComputeSYMGS.o \
@@ -73,6 +75,9 @@ src/GenerateGeometry.o: HPCG_SRC_PATH/src/GenerateGeometry.cpp
 src/GenerateProblem.o: HPCG_SRC_PATH/src/GenerateProblem.cpp
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
+src/MixedBaseCounter.o: HPCG_SRC_PATH/src/MixedBaseCounter.cpp
+	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
+
 src/OptimizeProblem.o: HPCG_SRC_PATH/src/OptimizeProblem.cpp
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
@@ -113,6 +118,9 @@ src/init.o: HPCG_SRC_PATH/src/init.cpp
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
 src/mytimer.o: HPCG_SRC_PATH/src/mytimer.cpp
+	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
+
+src/ComputeOptimalShapeXYZ.o: HPCG_SRC_PATH/src/ComputeOptimalShapeXYZ.cpp
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
 src/ComputeSPMV.o: HPCG_SRC_PATH/src/ComputeSPMV.cpp

@@ -25,6 +25,7 @@
 #include <mpi.h> // If this routine is not compiled with HPCG_NOMPI
 #endif
 
+#include <algorithm>
 #include <fstream>
 #include <iostream>
 #include <cstdlib>
@@ -98,6 +99,20 @@ int main(int argc, char * argv[]) {
   ny = (local_int_t)params.ny;
   nz = (local_int_t)params.nz;
   int ierr = 0;  // Used to check return codes on function calls
+
+  double domain_ratio = std::min(std::min(nx, ny), nz) / double(std::max(std::max(nx, ny), nz));
+  if (domain_ratio < 0.125) { // ratio of the smallest to the largest
+    if (0 == rank) {
+      HPCG_fout << "The local problem sizes (" << nx << "," << ny << "," << nz <<
+        ") are invalid because the ratio min(x,y,z)/max(x,y,z) is too small (" <<
+        domain_ratio << ")." << std::endl;
+      HPCG_fout << "The shape of the local domain should resemble a 3D cube." << std::endl;
+    }
+#ifndef HPCG_NOMPI
+    MPI_Abort(MPI_COMM_WORLD, 127);
+#endif
+    return 127;
+  }
 
   // //////////////////////
   // Problem setup Phase //
@@ -341,5 +356,5 @@ int main(int argc, char * argv[]) {
 #ifndef HPCG_NOMPI
   MPI_Finalize();
 #endif
-  return 0 ;
+  return 0;
 }

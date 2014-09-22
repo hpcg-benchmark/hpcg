@@ -25,7 +25,6 @@
 #include <mpi.h> // If this routine is not compiled with HPCG_NOMPI
 #endif
 
-#include <algorithm>
 #include <fstream>
 #include <iostream>
 #include <cstdlib>
@@ -38,6 +37,7 @@ using std::endl;
 
 #include "hpcg.hpp"
 
+#include "CheckAspectRatio.hpp"
 #include "GenerateGeometry.hpp"
 #include "GenerateProblem.hpp"
 #include "GenerateCoarseProblem.hpp"
@@ -100,19 +100,9 @@ int main(int argc, char * argv[]) {
   nz = (local_int_t)params.nz;
   int ierr = 0;  // Used to check return codes on function calls
 
-  double domain_ratio = std::min(std::min(nx, ny), nz) / double(std::max(std::max(nx, ny), nz));
-  if (domain_ratio < 0.125) { // ratio of the smallest to the largest
-    if (0 == rank) {
-      HPCG_fout << "The local problem sizes (" << nx << "," << ny << "," << nz <<
-        ") are invalid because the ratio min(x,y,z)/max(x,y,z) is too small (" <<
-        domain_ratio << ")." << std::endl;
-      HPCG_fout << "The shape of the local domain should resemble a 3D cube." << std::endl;
-    }
-#ifndef HPCG_NOMPI
-    MPI_Abort(MPI_COMM_WORLD, 127);
-#endif
-    return 127;
-  }
+  ierr = CheckAspectRatio(0.125, nx, ny, nz, "local problem", rank==0);
+  if (ierr)
+    return ierr;
 
   // //////////////////////
   // Problem setup Phase //
@@ -125,6 +115,10 @@ int main(int argc, char * argv[]) {
   // Construct the geometry and linear system
   Geometry * geom = new Geometry;
   GenerateGeometry(size, rank, params.numThreads, nx, ny, nz, geom);
+
+  ierr = CheckAspectRatio(0.125, geom->npx, geom->npy, geom->npz, "process grid", rank==0);
+  if (ierr)
+    return ierr;
 
   SparseMatrix A;
   InitializeSparseMatrix(A, geom);

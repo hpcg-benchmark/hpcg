@@ -44,15 +44,15 @@ HPCG_DEPS = src/CG.o \
 
 all: bin/xhpcg
 
-bin/xhpcg: testing/main.o $(HPCG_DEPS)
-	$(LINKER) $(LINKFLAGS) testing/main.o $(HPCG_DEPS) $(HPCG_LIBS) -o bin/xhpcg
+bin/xhpcg: src/main.o $(HPCG_DEPS)
+	$(LINKER) $(LINKFLAGS) src/main.o $(HPCG_DEPS) $(HPCG_LIBS) -o bin/xhpcg
 
 clean:
-	rm -f src/*.o testing/*.o bin/xhpcg
+	rm -f src/*.o bin/xhpcg
 
 .PHONY: all clean
 
-testing/main.o: HPCG_SRC_PATH/testing/main.cpp
+src/main.o: HPCG_SRC_PATH/src/main.cpp
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
 src/CG.o: HPCG_SRC_PATH/src/CG.cpp

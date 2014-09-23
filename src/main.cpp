@@ -37,7 +37,6 @@ using std::endl;
 
 #include "hpcg.hpp"
 
-#include "CheckAspectRatio.hpp"
 #include "GenerateGeometry.hpp"
 #include "GenerateProblem.hpp"
 #include "GenerateCoarseProblem.hpp"
@@ -100,10 +99,6 @@ int main(int argc, char * argv[]) {
   nz = (local_int_t)params.nz;
   int ierr = 0;  // Used to check return codes on function calls
 
-  ierr = CheckAspectRatio(0.125, nx, ny, nz, "local problem", rank==0);
-  if (ierr)
-    return ierr;
-
   // //////////////////////
   // Problem setup Phase //
   /////////////////////////
@@ -115,10 +110,6 @@ int main(int argc, char * argv[]) {
   // Construct the geometry and linear system
   Geometry * geom = new Geometry;
   GenerateGeometry(size, rank, params.numThreads, nx, ny, nz, geom);
-
-  ierr = CheckAspectRatio(0.125, geom->npx, geom->npy, geom->npz, "process grid", rank==0);
-  if (ierr)
-    return ierr;
 
   SparseMatrix A;
   InitializeSparseMatrix(A, geom);
@@ -140,40 +131,6 @@ int main(int argc, char * argv[]) {
 
   // Use this array for collecting timing information
   std::vector< double > times(9,0.0);
-
-  // Call user-tunable set up function.
-  double t7 = mytimer(); OptimizeProblem(A, data, b, x, xexact); t7 = mytimer() - t7;
-  times[7] = t7;
-#ifdef HPCG_DEBUG
-  if (rank==0) HPCG_fout << "Total problem setup time in main (sec) = " << mytimer() - t1 << endl;
-#endif
-
-#ifdef HPCG_DETAILED_DEBUG
-  if (geom->size == 1) WriteProblem(*geom, A, b, x, xexact);
-#endif
-
-
-  //////////////////////////////
-  // Validation Testing Phase //
-  //////////////////////////////
-
-#ifdef HPCG_DEBUG
-  t1 = mytimer();
-#endif
-  TestCGData testcg_data;
-  testcg_data.count_pass = testcg_data.count_fail = 0;
-  TestCG(A, data, b, x, testcg_data);
-
-  TestSymmetryData testsymmetry_data;
-  TestSymmetry(A, b, xexact, testsymmetry_data);
-
-#ifdef HPCG_DEBUG
-  if (rank==0) HPCG_fout << "Total validation (TestCG and TestSymmetry) execution time in main (sec) = " << mytimer() - t1 << endl;
-#endif
-
-#ifdef HPCG_DEBUG
-  t1 = mytimer();
-#endif
 
   ///////////////////////////////////////
   // Reference SpMV+MG Timing Phase //
@@ -234,6 +191,40 @@ int main(int argc, char * argv[]) {
   }
   if (rank == 0 && err_count) HPCG_fout << err_count << " error(s) in call(s) to reference CG." << endl;
   double refTolerance = normr / normr0;
+
+  // Call user-tunable set up function.
+  double t7 = mytimer(); OptimizeProblem(A, data, b, x, xexact); t7 = mytimer() - t7;
+  times[7] = t7;
+#ifdef HPCG_DEBUG
+  if (rank==0) HPCG_fout << "Total problem setup time in main (sec) = " << mytimer() - t1 << endl;
+#endif
+
+#ifdef HPCG_DETAILED_DEBUG
+  if (geom->size == 1) WriteProblem(*geom, A, b, x, xexact);
+#endif
+
+
+  //////////////////////////////
+  // Validation Testing Phase //
+  //////////////////////////////
+
+#ifdef HPCG_DEBUG
+  t1 = mytimer();
+#endif
+  TestCGData testcg_data;
+  testcg_data.count_pass = testcg_data.count_fail = 0;
+  TestCG(A, data, b, x, testcg_data);
+
+  TestSymmetryData testsymmetry_data;
+  TestSymmetry(A, b, xexact, testsymmetry_data);
+
+#ifdef HPCG_DEBUG
+  if (rank==0) HPCG_fout << "Total validation (TestCG and TestSymmetry) execution time in main (sec) = " << mytimer() - t1 << endl;
+#endif
+
+#ifdef HPCG_DEBUG
+  t1 = mytimer();
+#endif
 
   //////////////////////////////
   // Optimized CG Setup Phase //
@@ -350,5 +341,5 @@ int main(int argc, char * argv[]) {
 #ifndef HPCG_NOMPI
   MPI_Finalize();
 #endif
-  return 0;
+  return 0 ;
 }

@@ -75,9 +75,9 @@ void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgS
     double fnnz = A.totalNumberOfNonzeros;
 
     // Op counts come from implementation of CG in CG.cpp (include 1 extra for the CG preamble ops)
-    double fnops_ddot = (3.0*fniters+1.0)*2.0*fnrow; // 3 ddots with nrow adds and nrow mults
-    double fnops_waxpby = (3.0*fniters+1.0)*2.0*fnrow; // 3 WAXPBYs with nrow adds and nrow mults
-    double fnops_sparsemv = (fniters+1.0)*2.0*fnnz; // 1 SpMV with nnz adds and nnz mults
+    double fnops_ddot = (3.0*fniters+fNumberOfCgSets)*2.0*fnrow; // 3 ddots with nrow adds and nrow mults
+    double fnops_waxpby = (3.0*fniters+fNumberOfCgSets)*2.0*fnrow; // 3 WAXPBYs with nrow adds and nrow mults
+    double fnops_sparsemv = (fniters+fNumberOfCgSets)*2.0*fnnz; // 1 SpMV with nnz adds and nnz mults
     // Op counts from the multigrid preconditioners
     double fnops_precond = 0.0;
     const SparseMatrix * Af = &A;

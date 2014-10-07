@@ -37,6 +37,7 @@ using std::endl;
 
 #include "hpcg.hpp"
 
+#include "CheckAspectRatio.hpp"
 #include "GenerateGeometry.hpp"
 #include "GenerateProblem.hpp"
 #include "GenerateCoarseProblem.hpp"
@@ -99,6 +100,10 @@ int main(int argc, char * argv[]) {
   nz = (local_int_t)params.nz;
   int ierr = 0;  // Used to check return codes on function calls
 
+  ierr = CheckAspectRatio(0.125, nx, ny, nz, "local problem", rank==0);
+  if (ierr)
+    return ierr;
+
   // //////////////////////
   // Problem setup Phase //
   /////////////////////////
@@ -110,6 +115,10 @@ int main(int argc, char * argv[]) {
   // Construct the geometry and linear system
   Geometry * geom = new Geometry;
   GenerateGeometry(size, rank, params.numThreads, nx, ny, nz, geom);
+
+  ierr = CheckAspectRatio(0.125, geom->npx, geom->npy, geom->npz, "process grid", rank==0);
+  if (ierr)
+    return ierr;
 
   SparseMatrix A;
   InitializeSparseMatrix(A, geom);
@@ -341,5 +350,5 @@ int main(int argc, char * argv[]) {
 #ifndef HPCG_NOMPI
   MPI_Finalize();
 #endif
-  return 0 ;
+  return 0;
 }

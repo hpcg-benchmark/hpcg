@@ -52,7 +52,7 @@ using std::endl;
 void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgSets, int refMaxIters,int optMaxIters, double times[],
 		const TestCGData & testcg_data, const TestSymmetryData & testsymmetry_data, const TestNormsData & testnorms_data, int global_failure) {
 
-  double minOfficialTime = 3600; // Any official benchmark result much run at least this many seconds
+  double minOfficialTime = 1800; // Any official benchmark result much run at least this many seconds
 
 #ifndef HPCG_NOMPI
   double t4 = times[4];

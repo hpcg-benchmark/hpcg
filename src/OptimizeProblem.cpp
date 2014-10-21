@@ -36,8 +36,46 @@
 */
 int OptimizeProblem(SparseMatrix & A, CGData & data, Vector & b, Vector & x, Vector & xexact) {
 
-// This function can be used to completely transform any part of the data structures.
-// Right now it does nothing, so compiling with a check for unused variables results in complaints
+  // This function can be used to completely transform any part of the data structures.
+  // Right now it does nothing, so compiling with a check for unused variables results in complaints
 
-  return(0);
+#if defined(HPCG_USE_MULTICOLORING)
+  const local_int_t nrow = A.localNumberOfRows;
+  std::vector<local_int_t> colors(nrow, nrow); // value `nrow' means `uninitialized'; initialized colors go from 0 to nrow-1
+  int totalColors = 1;
+  colors[0] = 0; // first point gets color 0
+
+  // Finds colors in a greedy (a likely non-optimal) fashion.
+
+  for (local_int_t i=1; i < nrow; ++i) {
+    if (colors[i] == nrow) { // if color not assigned
+      std::vector<int> assigned(totalColors, 0);
+      int currentlyAssigned = 0;
+      const local_int_t * const currentColIndices = A.mtxIndL[i];
+      const int currentNumberOfNonzeros = A.nonzerosInRow[i];
+
+      for (int j=0; j< currentNumberOfNonzeros; j++) { // scan neighbors
+        local_int_t curCol = currentColIndices[j];
+        if (colors[curCol] < totalColors) { // if this is an assigned color
+          assigned[colors[curCol]] = 1; // this color has been used before by `curCol' point
+          currentlyAssigned += 1;
+        }
+      }
+      
+      if (currentlyAssigned < totalColors) { // if there is at least one color left to use
+        for (int j=0; j < totalColors; ++j)  // try all current colors
+          if (assigned[j] == 0) { // if no neighbor with this color
+            colors[i] = j;
+          }
+      } else {
+        if (colors[i] == nrow) {
+          colors[i] = totalColors;
+          totalColors += 1;
+        }
+      }
+    }
+  }
+#endif
+
+  return 0;
 }

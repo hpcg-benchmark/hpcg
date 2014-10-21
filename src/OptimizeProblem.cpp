@@ -56,16 +56,18 @@ int OptimizeProblem(SparseMatrix & A, CGData & data, Vector & b, Vector & x, Vec
 
       for (int j=0; j< currentNumberOfNonzeros; j++) { // scan neighbors
         local_int_t curCol = currentColIndices[j];
-        if (colors[curCol] < totalColors) { // if this is an assigned color
+        if (curCol < i) { // if this point has an assigned color (points beyond `i' are unassigned)
+          if (assigned[colors[curCol]] == 0)
+            currentlyAssigned += 1;
           assigned[colors[curCol]] = 1; // this color has been used before by `curCol' point
-          currentlyAssigned += 1;
-        }
+        } // else // could take advantage of indices being sorted
       }
-      
+
       if (currentlyAssigned < totalColors) { // if there is at least one color left to use
         for (int j=0; j < totalColors; ++j)  // try all current colors
           if (assigned[j] == 0) { // if no neighbor with this color
             colors[i] = j;
+            break;
           }
       } else {
         if (colors[i] == nrow) {

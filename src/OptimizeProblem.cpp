@@ -77,6 +77,22 @@ int OptimizeProblem(SparseMatrix & A, CGData & data, Vector & b, Vector & x, Vec
       }
     }
   }
+
+  std::vector<local_int_t> counters(totalColors);
+  for (local_int_t i=0; i<nrow; ++i)
+    counters[colors[i]]++;
+
+  local_int_t old, old0;
+  for (int i=1; i < totalColors; ++i) {
+    old0 = counters[i];
+    counters[i] = counters[i-1] + old;
+    old = old0;
+  }
+  counters[0] = 0;
+
+  // translate `colors' into a permutation
+  for (local_int_t i=0; i<nrow; ++i) // for each color `c'
+    colors[i] = counters[colors[i]]++;
 #endif
 
   return 0;

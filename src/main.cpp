@@ -104,7 +104,7 @@ int main(int argc, char * argv[]) {
   if (ierr)
     return ierr;
 
-  // //////////////////////
+  /////////////////////////
   // Problem setup Phase //
   /////////////////////////
 
@@ -141,9 +141,9 @@ int main(int argc, char * argv[]) {
   // Use this array for collecting timing information
   std::vector< double > times(9,0.0);
 
-  ///////////////////////////////////////
+  ////////////////////////////////////
   // Reference SpMV+MG Timing Phase //
-  ///////////////////////////////////////
+  ////////////////////////////////////
 
   // Call Reference SpMV and MG. Compute Optimization time as ratio of times in these routines
 
@@ -202,7 +202,9 @@ int main(int argc, char * argv[]) {
   double refTolerance = normr / normr0;
 
   // Call user-tunable set up function.
-  double t7 = mytimer(); OptimizeProblem(A, data, b, x, xexact); t7 = mytimer() - t7;
+  double t7 = mytimer();
+  OptimizeProblem(A, data, b, x, xexact);
+  t7 = mytimer() - t7;
   times[7] = t7;
 #ifdef HPCG_DEBUG
   if (rank==0) HPCG_fout << "Total problem setup time in main (sec) = " << mytimer() - t1 << endl;

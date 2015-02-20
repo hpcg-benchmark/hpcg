@@ -4,7 +4,7 @@ Performance tuning and setting up the input data file hpcg.dat
  
 Current as of release HPCG - 2.4 - June 3, 2014
 
-Check  the  website  http://software.sandia.gov/hpcg  for  the latest
+Check  the  website  http://www.hpcg-benchmark.org/ for  the latest
 information.
 
 After  building  the executable hpcg/bin/xhpcg, one  may want  to  modify the

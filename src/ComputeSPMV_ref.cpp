@@ -53,6 +53,10 @@ int ComputeSPMV_ref( const SparseMatrix & A, Vector & x, Vector & y) {
   assert(y.localLength>=A.localNumberOfRows);
 
   double * const xv_halo = x.values; // Stores the xvalues for the halo
+
+	//
+	// Halo Exchange
+	//
 #ifndef HPCG_NOMPI
     //ExchangeHalo(A,x);
 
@@ -77,7 +81,7 @@ int ComputeSPMV_ref( const SparseMatrix & A, Vector & x, Vector & y) {
 
   int MPI_MY_TAG = 99;
 
-  MPI_Request * request = new MPI_Request[num_neighbors];
+  MPI_Request * request = new MPI_Request[2*num_neighbors];	//handles send and recv requests
 
   //
   // Externals are at end of locals
@@ -98,16 +102,18 @@ int ComputeSPMV_ref( const SparseMatrix & A, Vector & x, Vector & y) {
   //
 
   // TODO: Thread this loop
-  for (local_int_t i=0; i<totalToBeSent; i++) sendBuffer[i] = xv_halo[elementsToSend[i]];
+  for (local_int_t i=num_neighbors; i<totalToBeSent+num_neighbors; i++) sendBuffer[i] = xv_halo[elementsToSend[i]];
 
   //
   // Send to each neighbor
   //
 
   // TODO: Thread this loop
+	// Send is non-blocking so the multiplication calculations can continue immediately
+	request += num_neighbors;
   for (int i = 0; i < num_neighbors; i++) {
     local_int_t n_send = sendLength[i];
-    MPI_Send(sendBuffer, n_send, MPI_DOUBLE, neighbors[i], MPI_MY_TAG, MPI_COMM_WORLD);
+    MPI_Isend(sendBuffer, n_send, MPI_DOUBLE, neighbors[i], MPI_MY_TAG, MPI_COMM_WORLD, request+i);
     sendBuffer += n_send;
   }
 
@@ -119,6 +125,9 @@ int ComputeSPMV_ref( const SparseMatrix & A, Vector & x, Vector & y) {
 #ifndef HPCG_NOOPENMP
   #pragma omp parallel for
 #endif
+
+	// perform the row multiplication on values in x that are local
+	// and unaffected by the halo exchange
   for (local_int_t i=0; i< nrow; i++)  {
     double sum = 0.0;
     const double * const cur_vals = A.matrixValues[i];
@@ -135,16 +144,18 @@ int ComputeSPMV_ref( const SparseMatrix & A, Vector & x, Vector & y) {
 #ifndef HPCG_NOMPI
 //
 // Complete the reads issued in ExchangeHalo.cpp
-//
- MPI_Status status;
-  // TODO: Thread this loop
-  for (int i = 0; i < num_neighbors; i++) {
+// 
+ MPI_Status *status = new MPI_Status[2*num_neighbors];
+
+ MPI_Waitall(2*num_neighbors, request, status);
+  /*for (int i = 0; i < num_neighbors; i++) {
     if ( MPI_Wait(request+i, &status) ) {
       std::exit(-1); // TODO: have better error exit
     }
-  }
+  }*/
 #endif
-
+	// finish the row multiplications with the values in x that are external
+  // and modified by the halo exchange
   for (local_int_t i=0; i< nrow; i++)  {
     double sum = 0.0;
     const double * const cur_vals = A.matrixValues[i];
@@ -157,7 +168,8 @@ int ComputeSPMV_ref( const SparseMatrix & A, Vector & x, Vector & y) {
 			}
 		}
 	}
-
-
+	//deallocate memory
+	delete[] request;
+	delete[] status;
   return(0);
 }

@@ -119,6 +119,9 @@ void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgS
 
     doc.add("########## Problem Summary  ##########","");
 
+    doc.add("Setup Information","");
+    doc.get("Setup Information")->add("Setup Time",times[9]);
+
     doc.add("Linear System Information","");
     doc.get("Linear System Information")->add("Number of Equations",A.totalNumberOfRows);
     doc.get("Linear System Information")->add("Number of Nonzero Terms",A.totalNumberOfNonzeros);

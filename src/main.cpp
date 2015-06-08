@@ -120,6 +120,11 @@ int main(int argc, char * argv[]) {
   if (ierr)
     return ierr;
 
+  // Use this array for collecting timing information
+  std::vector< double > times(10,0.0);
+
+  double setup_time = mytimer();
+
   SparseMatrix A;
   InitializeSparseMatrix(A, geom);
 
@@ -133,13 +138,13 @@ int main(int argc, char * argv[]) {
 	  curLevelMatrix = curLevelMatrix->Ac; // Make the just-constructed coarse grid the next level
   }
 
+  setup_time = mytimer() - setup_time; // Capture total time of setup
+  times[9] = setup_time; // Save it for reporting
 
   CGData data;
   InitializeSparseCGData(A, data);
 
 
-  // Use this array for collecting timing information
-  std::vector< double > times(9,0.0);
 
   ////////////////////////////////////
   // Reference SpMV+MG Timing Phase //
@@ -185,7 +190,7 @@ int main(int argc, char * argv[]) {
   int totalNiters_ref = 0;
   double normr = 0.0;
   double normr0 = 0.0;
-  int refMaxIters = 50;
+  int refMaxIters = 20;
   numberOfCalls = 1; // Only need to run the residual reduction analysis once
 
   // Compute the residual reduction for the natural ordering and reference kernels

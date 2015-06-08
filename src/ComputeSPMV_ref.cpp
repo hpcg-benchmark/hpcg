@@ -20,7 +20,7 @@
 
 #include "ComputeSPMV_ref.hpp"
 
-#ifndef HPCG_NOMPI
+#ifndef HPCG_NO_MPI
 #include "ExchangeHalo.hpp"
 #endif
 
@@ -49,7 +49,7 @@ int ComputeSPMV_ref( const SparseMatrix & A, Vector & x, Vector & y) {
   assert(x.localLength>=A.localNumberOfColumns); // Test vector lengths
   assert(y.localLength>=A.localNumberOfRows);
 
-#ifndef HPCG_NOMPI
+#ifndef HPCG_NO_MPI
     ExchangeHalo(A,x);
 #endif
   const double * const xv = x.values;

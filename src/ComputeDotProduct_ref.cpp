@@ -18,7 +18,7 @@
  HPCG routine
  */
 
-#ifndef HPCG_NOMPI
+#ifndef HPCG_NO_MPI
 #include <mpi.h>
 #include "mytimer.hpp"
 #endif
@@ -63,7 +63,7 @@ int ComputeDotProduct_ref(const local_int_t n, const Vector & x, const Vector & 
     for (local_int_t i=0; i<n; i++) local_result += xv[i]*yv[i];
   }
 
-#ifndef HPCG_NOMPI
+#ifndef HPCG_NO_MPI
   // Use MPI's reduce function to collect all partial sums
   double t0 = mytimer();
   double global_result = 0.0;

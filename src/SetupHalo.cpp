@@ -18,7 +18,7 @@
  HPCG routine
  */
 
-#ifndef HPCG_NOMPI
+#ifndef HPCG_NO_MPI
 #include <mpi.h>
 #include <map>
 #include <set>
@@ -56,7 +56,7 @@ void SetupHalo(SparseMatrix & A) {
   global_int_t ** mtxIndG = A.mtxIndG;
   local_int_t ** mtxIndL = A.mtxIndL;
 
-#ifdef HPCG_NOMPI  // In the non-MPI case we simply copy global indices to local index storage
+#ifdef HPCG_NO_MPI  // In the non-MPI case we simply copy global indices to local index storage
 #ifndef HPCG_NOOPENMP
   #pragma omp parallel for
 #endif
@@ -175,7 +175,8 @@ void SetupHalo(SparseMatrix & A) {
   }
 #endif
 
-#endif // ifndef HPCG_NOMPI
+#endif
+// ifdef HPCG_NO_MPI
 
   return;
 }

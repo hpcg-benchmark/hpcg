@@ -12,7 +12,7 @@
 // ***************************************************
 //@HEADER
 
-#ifndef HPCG_NOMPI
+#ifndef HPCG_NO_MPI
 #include <mpi.h>
 #endif
 
@@ -90,7 +90,7 @@ HPCG_Init(int * argc_p, char ** *argv_p, HPCG_Params & params) {
       iparams[i] = 16;
   }
 
-#ifndef HPCG_NOMPI
+#ifndef HPCG_NO_MPI
   MPI_Bcast( iparams, 4, MPI_INT, 0, MPI_COMM_WORLD );
 #endif
 
@@ -100,12 +100,12 @@ HPCG_Init(int * argc_p, char ** *argv_p, HPCG_Params & params) {
 
   params.runningTime = iparams[3];
 
-#ifdef HPCG_NOMPI
-  params.comm_rank = 0;
-  params.comm_size = 1;
-#else
+#ifndef HPCG_NO_MPI
   MPI_Comm_rank( MPI_COMM_WORLD, &params.comm_rank );
   MPI_Comm_size( MPI_COMM_WORLD, &params.comm_size );
+#else
+  params.comm_rank = 0;
+  params.comm_size = 1;
 #endif
 
 #ifdef HPCG_NOOPENMP

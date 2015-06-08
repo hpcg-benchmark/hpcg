@@ -160,9 +160,9 @@ options and their meaning are:
 
     -DHPCG_DETAILED_DEBUG
 
-* Compile without MPI enabled::
+* Compile with MPI disabled::
 
-    -DHPCG_NOMPI
+    -DHPCG_NO_MPI
 
 * Compile without OpenMP enabled::
 

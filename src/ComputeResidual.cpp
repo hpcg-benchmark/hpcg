@@ -17,8 +17,8 @@
 
  HPCG routine
  */
-#ifndef HPCG_NOMPI
-#include <mpi.h> // If this routine is not compiled with HPCG_NOMPI
+#ifndef HPCG_NO_MPI
+#include <mpi.h>
 #endif
 #ifndef HPCG_NOOPENMP
 #include <omp.h> // If this routine is not compiled with HPCG_NOOPENMP
@@ -76,7 +76,7 @@ int ComputeResidual(const local_int_t n, const Vector & v1, const Vector & v2, d
   }
 #endif
 
-#ifndef HPCG_NOMPI
+#ifndef HPCG_NO_MPI
   // Use MPI's reduce function to collect all partial sums
   double global_residual = 0;
   MPI_Allreduce(&local_residual, &global_residual, 1, MPI_DOUBLE, MPI_MAX, MPI_COMM_WORLD);

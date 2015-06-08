@@ -19,8 +19,8 @@
 
 #include <algorithm>
 
-#ifndef HPCG_NOMPI
-#include <mpi.h> // If this routine is not compiled with HPCG_NOMPI
+#ifndef HPCG_NO_MPI
+#include <mpi.h>
 #endif
 
 #include "hpcg.hpp"
@@ -40,7 +40,7 @@ CheckAspectRatio(double smallest_ratio, int x, int y, int z, const char *what, b
       HPCG_fout.flush();
     }
 
-#ifndef HPCG_NOMPI
+#ifndef HPCG_NO_MPI
     MPI_Abort(MPI_COMM_WORLD, 127);
 #endif
 

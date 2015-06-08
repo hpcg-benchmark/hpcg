@@ -21,8 +21,8 @@
 // Main routine of a program that calls the HPCG conjugate gradient
 // solver to solve the problem, and then prints results.
 
-#ifndef HPCG_NOMPI
-#include <mpi.h> // If this routine is not compiled with HPCG_NOMPI
+#ifndef HPCG_NO_MPI
+#include <mpi.h>
 #endif
 
 #include <fstream>
@@ -71,7 +71,7 @@ using std::endl;
 */
 int main(int argc, char * argv[]) {
 
-#ifndef HPCG_NOMPI
+#ifndef HPCG_NO_MPI
   MPI_Init(&argc, &argv);
 #endif
 
@@ -89,7 +89,7 @@ int main(int argc, char * argv[]) {
     std::cout << "Press key to continue"<< std::endl;
     std::cin.get(c);
   }
-#ifndef HPCG_NOMPI
+#ifndef HPCG_NO_MPI
   MPI_Barrier(MPI_COMM_WORLD);
 #endif
 #endif
@@ -268,7 +268,7 @@ int main(int argc, char * argv[]) {
     if (current_time > opt_worst_time) opt_worst_time = current_time;
   }
 
-#ifndef HPCG_NOMPI
+#ifndef HPCG_NO_MPI
 // Get the absolute worst time across all MPI ranks (time in CG can be different)
   double local_opt_worst_time = opt_worst_time;
   MPI_Allreduce(&local_opt_worst_time, &opt_worst_time, 1, MPI_DOUBLE, MPI_MAX, MPI_COMM_WORLD);
@@ -349,7 +349,7 @@ int main(int argc, char * argv[]) {
   HPCG_Finalize();
 
   // Finish up
-#ifndef HPCG_NOMPI
+#ifndef HPCG_NO_MPI
   MPI_Finalize();
 #endif
   return 0;

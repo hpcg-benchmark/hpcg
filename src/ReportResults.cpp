@@ -18,8 +18,8 @@
  HPCG routine
  */
 
-#ifndef HPCG_NOMPI
-#include <mpi.h> // If this routine is not compiled with HPCG_NOMPI
+#ifndef HPCG_NO_MPI
+#include <mpi.h>
 #endif
 
 #include "ReportResults.hpp"
@@ -54,7 +54,7 @@ void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgS
 
   double minOfficialTime = 1800; // Any official benchmark result much run at least this many seconds
 
-#ifndef HPCG_NOMPI
+#ifndef HPCG_NO_MPI
   double t4 = times[4];
   double t4min = 0.0;
   double t4max = 0.0;
@@ -216,7 +216,7 @@ void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgS
     doc.get("User Optimization Overheads")->add("Optimization phase time (sec)", (times[7]));
     doc.get("User Optimization Overheads")->add("Optimization phase time vs reference SpMV+MG time", times[7]/times[8]);
 
-#ifndef HPCG_NOMPI
+#ifndef HPCG_NO_MPI
     doc.add("DDOT Timing Variations","");
     doc.get("DDOT Timing Variations")->add("Min DDOT MPI_Allreduce time",t4min);
     doc.get("DDOT Timing Variations")->add("Max DDOT MPI_Allreduce time",t4max);

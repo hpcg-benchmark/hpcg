@@ -24,8 +24,8 @@
 using std::endl;
 #include <vector>
 #include <cmath>
-#ifndef HPCG_NOMPI
-#include <mpi.h> // If this routine is not compiled with -DHPCG_NOMPI then include mpi.h
+#ifndef HPCG_NO_MPI
+#include <mpi.h>
 #endif
 
 #include "hpcg.hpp"

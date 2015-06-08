@@ -20,8 +20,8 @@
 
 /////////////////////////////////////////////////////////////////////////
 
-#ifndef HPCG_NOMPI
-#include <mpi.h> // If this routine is not compiled with HPCG_NOMPI then use MPI
+#ifndef HPCG_NO_MPI
+#include <mpi.h>
 
 double mytimer(void) {
   return(MPI_Wtime());
@@ -29,7 +29,8 @@ double mytimer(void) {
 
 #elif !defined(HPCG_NOOPENMP)
 
-#include <omp.h> // If this routine is compiled with HPCG_NOMPI and not compiled with HPCG_NOOPENMP then use OpenMP timer
+// If this routine is compiled with HPCG_NO_MPI defined and not compiled with HPCG_NOOPENMP then use the OpenMP timer
+#include <omp.h>
 double mytimer(void) {
   return(omp_get_wtime());
 }

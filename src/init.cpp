@@ -16,7 +16,7 @@
 #include <mpi.h>
 #endif
 
-#ifndef HPCG_NOOPENMP
+#ifndef HPCG_NO_OPENMP
 #include <omp.h>
 #endif
 
@@ -108,7 +108,7 @@ HPCG_Init(int * argc_p, char ** *argv_p, HPCG_Params & params) {
   params.comm_size = 1;
 #endif
 
-#ifdef HPCG_NOOPENMP
+#ifdef HPCG_NO_OPENMP
   params.numThreads = 1;
 #else
   #pragma omp parallel

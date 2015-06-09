@@ -18,8 +18,8 @@
  HPCG routine
  */
 
-#ifndef HPCG_NOOPENMP
-#include <omp.h> // If this routine is not compiled with HPCG_NOOPENMP
+#ifndef HPCG_NO_OPENMP
+#include <omp.h>
 #endif
 
 #include "ComputeProlongation_ref.hpp"
@@ -42,7 +42,7 @@ int ComputeProlongation_ref(const SparseMatrix & Af, Vector & xf) {
   local_int_t * f2c = Af.mgData->f2cOperator;
   local_int_t nc = Af.mgData->rc->localLength;
 
-#ifndef HPCG_NOOPENMP
+#ifndef HPCG_NO_OPENMP
 #pragma omp parallel for
 #endif
 // TODO: Somehow note that this loop can be safely vectorized since f2c has no repeated indices

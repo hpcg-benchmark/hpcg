@@ -24,7 +24,7 @@
 #include "ExchangeHalo.hpp"
 #endif
 
-#ifndef HPCG_NOOPENMP
+#ifndef HPCG_NO_OPENMP
 #include <omp.h>
 #endif
 #include <cassert>
@@ -55,7 +55,7 @@ int ComputeSPMV_ref( const SparseMatrix & A, Vector & x, Vector & y) {
   const double * const xv = x.values;
   double * const yv = y.values;
   const local_int_t nrow = A.localNumberOfRows;
-#ifndef HPCG_NOOPENMP
+#ifndef HPCG_NO_OPENMP
   #pragma omp parallel for
 #endif
   for (local_int_t i=0; i< nrow; i++)  {

@@ -24,7 +24,7 @@
 #include <set>
 #endif
 
-#ifndef HPCG_NOOPENMP
+#ifndef HPCG_NO_OPENMP
 #include <omp.h>
 #endif
 
@@ -57,7 +57,7 @@ void SetupHalo(SparseMatrix & A) {
   local_int_t ** mtxIndL = A.mtxIndL;
 
 #ifdef HPCG_NO_MPI  // In the non-MPI case we simply copy global indices to local index storage
-#ifndef HPCG_NOOPENMP
+#ifndef HPCG_NO_OPENMP
   #pragma omp parallel for
 #endif
   for (local_int_t i=0; i< localNumberOfRows; i++) {
@@ -140,7 +140,7 @@ void SetupHalo(SparseMatrix & A) {
   }
 
   // Convert matrix indices to local IDs
-#ifndef HPCG_NOOPENMP
+#ifndef HPCG_NO_OPENMP
   #pragma omp parallel for
 #endif
   for (local_int_t i=0; i< localNumberOfRows; i++) {

@@ -20,8 +20,8 @@
 #ifndef HPCG_NO_MPI
 #include <mpi.h>
 #endif
-#ifndef HPCG_NOOPENMP
-#include <omp.h> // If this routine is not compiled with HPCG_NOOPENMP
+#ifndef HPCG_NO_OPENMP
+#include <omp.h>
 #endif
 
 #include "Vector.hpp"
@@ -52,7 +52,7 @@ int ComputeResidual(const local_int_t n, const Vector & v1, const Vector & v2, d
   double * v2v = v2.values;
   double local_residual = 0.0;
 
-#ifndef HPCG_NOOPENMP
+#ifndef HPCG_NO_OPENMP
   #pragma omp parallel default(none) shared(local_residual, v1v, v2v)
   {
     double threadlocal_residual = 0.0;

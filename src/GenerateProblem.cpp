@@ -22,7 +22,7 @@
 #include <mpi.h>
 #endif
 
-#ifndef HPCG_NOOPENMP
+#ifndef HPCG_NO_OPENMP
 #include <omp.h>
 #endif
 
@@ -96,7 +96,7 @@ void GenerateProblem(SparseMatrix & A, Vector * b, Vector * x, Vector * xexact) 
 
   // Use a parallel loop to do initial assignment:
   // distributes the physical placement of arrays of pointers across the memory system
-#ifndef HPCG_NOOPENMP
+#ifndef HPCG_NO_OPENMP
   #pragma omp parallel for
 #endif
   for (local_int_t i=0; i< localNumberOfRows; ++i) {
@@ -116,7 +116,7 @@ void GenerateProblem(SparseMatrix & A, Vector * b, Vector * x, Vector * xexact) 
 
   local_int_t localNumberOfNonzeros = 0;
   // TODO:  This triply nested loop could be flattened or use nested parallelism
-#ifndef HPCG_NOOPENMP
+#ifndef HPCG_NO_OPENMP
   #pragma omp parallel for
 #endif
   for (local_int_t iz=0; iz<nz; iz++) {
@@ -127,7 +127,7 @@ void GenerateProblem(SparseMatrix & A, Vector * b, Vector * x, Vector * xexact) 
         global_int_t gix = ipx*nx+ix;
         local_int_t currentLocalRow = iz*nx*ny+iy*nx+ix;
         global_int_t currentGlobalRow = giz*gnx*gny+giy*gnx+gix;
-#ifndef HPCG_NOOPENMP
+#ifndef HPCG_NO_OPENMP
 // C++ std::map is not threadsafe for writing
         #pragma omp critical
 #endif
@@ -162,7 +162,7 @@ void GenerateProblem(SparseMatrix & A, Vector * b, Vector * x, Vector * xexact) 
           } // end z bounds test
         } // end sz loop
         nonzerosInRow[currentLocalRow] = numberOfNonzerosInRow;
-#ifndef HPCG_NOOPENMP
+#ifndef HPCG_NO_OPENMP
         #pragma omp critical
 #endif
         localNumberOfNonzeros += numberOfNonzerosInRow; // Protect this with an atomic

@@ -166,7 +166,7 @@ options and their meaning are:
 
 * Compile without OpenMP enabled::
 
-    -DHPCG_NOOPENMP
+    -DHPCG_NO_OPENMP
 
 * Enable detail timers::
 

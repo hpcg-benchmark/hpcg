@@ -75,5 +75,5 @@ int ComputeDotProduct_ref(const local_int_t n, const Vector & x, const Vector & 
   result = local_result;
 #endif
 
-  return(0);
+  return 0;
 }

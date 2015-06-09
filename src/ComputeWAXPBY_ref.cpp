@@ -65,5 +65,5 @@ int ComputeWAXPBY_ref(const local_int_t n, const double alpha, const Vector & x,
     for (local_int_t i=0; i<n; i++) wv[i] = alpha * xv[i] + beta * yv[i];
   }
 
-  return(0);
+  return 0;
 }

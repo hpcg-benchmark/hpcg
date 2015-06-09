@@ -85,5 +85,5 @@ int ComputeResidual(const local_int_t n, const Vector & v1, const Vector & v2, d
   residual = local_residual;
 #endif
 
-  return(0);
+  return 0;
 }

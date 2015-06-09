@@ -140,6 +140,6 @@ int CG_ref(const SparseMatrix & A, CGData & data, const Vector & b, Vector & x,
 //  times[6] += t6; // exchange halo time
 //#endif
   times[0] += mytimer() - t_begin;  // Total time. All done...
-  return(0);
+  return 0;
 }
 

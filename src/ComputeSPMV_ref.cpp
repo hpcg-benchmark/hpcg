@@ -68,5 +68,5 @@ int ComputeSPMV_ref( const SparseMatrix & A, Vector & x, Vector & y) {
       sum += cur_vals[j]*xv[cur_inds[j]];
     yv[i] = sum;
   }
-  return(0);
+  return 0;
 }

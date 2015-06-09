@@ -50,5 +50,5 @@ int ComputeRestriction_ref(const SparseMatrix & A, const Vector & rf) {
 #endif
   for (local_int_t i=0; i<nc; ++i) rcv[i] = rfv[f2c[i]] - Axfv[f2c[i]];
 
-  return(0);
+  return 0;
 }

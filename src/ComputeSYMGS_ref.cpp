@@ -99,6 +99,6 @@ int ComputeSYMGS_ref( const SparseMatrix & A, const Vector & r, Vector & x) {
     xv[i] = sum/currentDiagonal;
   }
 
-  return(0);
+  return 0;
 }
 

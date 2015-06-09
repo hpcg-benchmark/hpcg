@@ -48,6 +48,6 @@
 int ComputeSYMGS( const SparseMatrix & A, const Vector & x, Vector & y) {
 
   // This line and the next two lines should be removed and your version of ComputeSYMGS should be used.
-  return(ComputeSYMGS_ref(A, x, y));
+  return ComputeSYMGS_ref(A, x, y);
 
 }

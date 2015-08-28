@@ -210,7 +210,6 @@ void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgS
     double totalGflops = reffnops/(times[0]+fNumberOfCgSets*(times[7]/10.0+times[9]))/1.0E9;
     doc.get("GFLOP/s Summary")->add("Total with convergence and optimization phase overhead",totalGflops);
 
-    doc.add("Problem Setup Time (sec)",times[9]);
     doc.add("User Optimization Overheads","");
     doc.get("User Optimization Overheads")->add("Optimization phase time vs reference SpMV+MG time", times[7]/times[8]);
     doc.get("User Optimization Overheads")->add("Optimization phase time (sec)", (times[7]));

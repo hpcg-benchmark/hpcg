@@ -148,7 +148,6 @@ void CheckProblem(const SparseMatrix & A, Vector * b, Vector * x, Vector * xexac
   assert(A.totalNumberOfRows == totalNumberOfRows);
   assert(A.totalNumberOfNonzeros == totalNumberOfNonzeros);
   assert(A.localNumberOfRows == localNumberOfRows);
-  assert(A.localNumberOfColumns == localNumberOfRows);
   assert(A.localNumberOfNonzeros == localNumberOfNonzeros);
 
   return;

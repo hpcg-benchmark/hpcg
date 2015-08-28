@@ -13,11 +13,14 @@ HPCG_DEPS = src/CG.o \
 	    src/ExchangeHalo.o \
 	    src/GenerateGeometry.o \
 	    src/GenerateProblem.o \
+	    src/GenerateProblem_ref.o \
+	    src/CheckProblem.o \
 	    src/MixedBaseCounter.o \
 	    src/OptimizeProblem.o \
 	    src/ReadHpcgDat.o \
 	    src/ReportResults.o \
 	    src/SetupHalo.o \
+	    src/SetupHalo_ref.o \
 	    src/TestSymmetry.o \
 	    src/TestNorms.o \
 	    src/WriteProblem.o \
@@ -76,6 +79,12 @@ src/GenerateGeometry.o: HPCG_SRC_PATH/src/GenerateGeometry.cpp
 src/GenerateProblem.o: HPCG_SRC_PATH/src/GenerateProblem.cpp
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
+src/GenerateProblem_ref.o: HPCG_SRC_PATH/src/GenerateProblem_ref.cpp
+	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
+
+src/CheckProblem.o: HPCG_SRC_PATH/src/CheckProblem.cpp
+	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
+
 src/MixedBaseCounter.o: HPCG_SRC_PATH/src/MixedBaseCounter.cpp
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
@@ -89,6 +98,9 @@ src/ReportResults.o: HPCG_SRC_PATH/src/ReportResults.cpp
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
 src/SetupHalo.o: HPCG_SRC_PATH/src/SetupHalo.cpp
+	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
+
+src/SetupHalo_ref.o: HPCG_SRC_PATH/src/SetupHalo_ref.cpp
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
 src/TestSymmetry.o: HPCG_SRC_PATH/src/TestSymmetry.cpp

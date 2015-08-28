@@ -72,6 +72,7 @@ int ComputeDotProduct_ref(const local_int_t n, const Vector & x, const Vector & 
   result = global_result;
   time_allreduce += mytimer() - t0;
 #else
+  time_allreduce += 0.0;
   result = local_result;
 #endif
 

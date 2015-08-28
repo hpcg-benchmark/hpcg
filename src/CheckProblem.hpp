@@ -12,10 +12,10 @@
 // ***************************************************
 //@HEADER
 
-#ifndef GENERATEPROBLEM_HPP
-#define GENERATEPROBLEM_HPP
+#ifndef CHECKPROBLEM_HPP
+#define CHECKPROBLEM_HPP
 #include "SparseMatrix.hpp"
 #include "Vector.hpp"
 
-void GenerateProblem(SparseMatrix & A, Vector * b, Vector * x, Vector * xexact);
-#endif // GENERATEPROBLEM_HPP
+void CheckProblem(const SparseMatrix & A, Vector * b, Vector * x, Vector * xexact);
+#endif // CHECKPROBLEM_HPP

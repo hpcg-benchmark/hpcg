@@ -13,7 +13,7 @@
 //@HEADER
 
 /*!
- @file SetupHalo.cpp
+ @file SetupHalo_ref.cpp
 
  HPCG routine
  */
@@ -35,19 +35,18 @@ using std::endl;
 #include <cassert>
 #endif
 
-#include "SetupHalo.hpp"
+#include "SetupHalo_ref.hpp"
 #include "mytimer.hpp"
 
 /*!
-  Prepares system matrix data structure and creates data necessary necessary
+  Reference version of SetupHalo that prepares system matrix data structure and creates data necessary
   for communication of boundary values of this process.
 
-  @param[in]    geom The description of the problem's geometry.
   @param[inout] A    The known system matrix
 
   @see ExchangeHalo
 */
-void SetupHalo(SparseMatrix & A) {
+void SetupHalo_ref(SparseMatrix & A) {
 
   // Extract Matrix pieces
 

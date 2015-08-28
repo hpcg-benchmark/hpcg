@@ -42,6 +42,7 @@ using std::endl;
 #include "GenerateProblem.hpp"
 #include "GenerateCoarseProblem.hpp"
 #include "SetupHalo.hpp"
+#include "CheckProblem.hpp"
 #include "ExchangeHalo.hpp"
 #include "OptimizeProblem.hpp"
 #include "WriteProblem.hpp"
@@ -141,6 +142,19 @@ int main(int argc, char * argv[]) {
   setup_time = mytimer() - setup_time; // Capture total time of setup
   times[9] = setup_time; // Save it for reporting
 
+  curLevelMatrix = &A;
+  Vector * curb = &b;
+  Vector * curx = &x;
+  Vector * curxexact = &xexact;
+  for (int level = 0; level< numberOfMgLevels; ++level) {
+     CheckProblem(*curLevelMatrix, curb, curx, curxexact);
+     curLevelMatrix = curLevelMatrix->Ac; // Make the nextcoarse grid the next level
+     curb = 0; // No vectors after the top level
+     curx = 0;
+     curxexact = 0;
+  }
+
+
   CGData data;
   InitializeSparseCGData(A, data);
 
@@ -190,7 +204,7 @@ int main(int argc, char * argv[]) {
   int totalNiters_ref = 0;
   double normr = 0.0;
   double normr0 = 0.0;
-  int refMaxIters = 20;
+  int refMaxIters = 50;
   numberOfCalls = 1; // Only need to run the residual reduction analysis once
 
   // Compute the residual reduction for the natural ordering and reference kernels
@@ -253,7 +267,7 @@ int main(int argc, char * argv[]) {
   int tolerance_failures = 0;
 
   int optMaxIters = 10*refMaxIters;
-  int optNiters = 0;
+  int optNiters = refMaxIters;
   double opt_worst_time = 0.0;
 
   std::vector< double > opt_times(9,0.0);

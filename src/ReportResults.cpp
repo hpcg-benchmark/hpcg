@@ -206,16 +206,13 @@ void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgS
     doc.get("GFLOP/s Summary")->add("Raw MG",fnops_precond/(times[5])/1.0E9);
     doc.get("GFLOP/s Summary")->add("Raw Total",fnops/times[0]/1.0E9);
     doc.get("GFLOP/s Summary")->add("Total with convergence overhead",reffnops/times[0]/1.0E9);
-    // This final GFLOP/s rating includes the overhead of optimizing the data structures vs ten sets of 50 iterations of CG
-    double totalGflops = reffnops/(times[0]+fNumberOfCgSets*times[7]/10.0)/1.0E9;
+    // This final GFLOP/s rating includes the overhead of problem setup and optimizing the data structures vs ten sets of 50 iterations of CG
+    double totalGflops = reffnops/(times[0]+fNumberOfCgSets*(times[7]/10.0+times[9]))/1.0E9;
     doc.get("GFLOP/s Summary")->add("Total with convergence and optimization phase overhead",totalGflops);
 
-    //double totalSparseMVTime = times[3] + times[6];
-    //doc.add("Sparse Operations Overheads","");
-    //doc.get("Sparse Operations Overheads")->add("SpMV GFLOP/s with overhead",fnops_sparsemv/(totalSparseMVTime)/1.0E9);
-    //doc.get("Sparse Operations Overheads")->add("Overhead time (sec)", (times[7]+times[6]));
-    //doc.get("Sparse Operations Overheads")->add("Overhead as percentage of time", (times[7]+times[6])/totalSparseMVTime*100.0);
+    doc.add("Problem Setup Time (sec)",times[9]);
     doc.add("User Optimization Overheads","");
+    doc.get("User Optimization Overheads")->add("Optimization phase time vs reference SpMV+MG time", times[7]/times[8]);
     doc.get("User Optimization Overheads")->add("Optimization phase time (sec)", (times[7]));
     doc.get("User Optimization Overheads")->add("Optimization phase time vs reference SpMV+MG time", times[7]/times[8]);
 

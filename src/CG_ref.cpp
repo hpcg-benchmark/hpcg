@@ -120,7 +120,7 @@ int CG_ref(const SparseMatrix & A, CGData & data, const Vector & b, Vector & x,
     TICK(); ComputeDotProduct_ref(nrow, p, Ap, pAp, t4); TOCK(t1); // alpha = p'*Ap
     alpha = rtz/pAp;
     TICK(); ComputeWAXPBY_ref(nrow, 1.0, x, alpha, p, x);// x = x + alpha*p
-    ComputeWAXPBY_ref(nrow, 1.0, r, -alpha, Ap, r);  TOCK(t2);// r = r - alpha*Ap
+            ComputeWAXPBY_ref(nrow, 1.0, r, -alpha, Ap, r);  TOCK(t2);// r = r - alpha*Ap
     TICK(); ComputeDotProduct_ref(nrow, r, r, normr, t4); TOCK(t1);
     normr = sqrt(normr);
 #ifdef HPCG_DEBUG

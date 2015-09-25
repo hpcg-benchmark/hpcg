@@ -93,10 +93,47 @@ void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgS
 
     fnops_precond += fniters*4.0*((double) Af->totalNumberOfNonzeros); // One symmetric GS sweep at the coarsest level
     double fnops = fnops_ddot+fnops_waxpby+fnops_sparsemv+fnops_precond;
-    double reffnops = fnops * ((double) refMaxIters)/((double) optMaxIters);
+    double frefnops = fnops * ((double) refMaxIters)/((double) optMaxIters);
 
-    YAML_Doc doc("HPCG-Benchmark", "2.4");
-    doc.add("Release date", "June 3, 2014");
+
+    // Read/Write counts come from implementation of CG in CG.cpp (include 1 extra for the CG preamble ops)
+    double fnreads_ddot = (3.0*fniters+fNumberOfCgSets)*2.0*fnrow*sizeof(double); // 3 ddots with 2 nrow reads
+    double fnwrites_ddot = (3.0*fniters+fNumberOfCgSets)*sizeof(double); // 3 ddots with 1 write
+    double fnreads_waxpby = (3.0*fniters+fNumberOfCgSets)*2.0*fnrow*sizeof(double); // 3 WAXPBYs with nrow adds and nrow mults
+    double fnwrites_waxpby = (3.0*fniters+fNumberOfCgSets)*fnrow*sizeof(double); // 3 WAXPBYs with nrow adds and nrow mults
+    double fnreads_sparsemv = (fniters+fNumberOfCgSets)*(fnnz*(sizeof(double)+sizeof(local_int_t)) + fnrow*sizeof(double));// 1 SpMV with nnz reads of values, nnz reads indices,
+                                                                                                                           // plus nrow reads of x
+    double fnwrites_sparsemv = (fniters+fNumberOfCgSets)*fnrow*sizeof(double); // 1 SpMV nrow writes
+    // Op counts from the multigrid preconditioners
+    double fnreads_precond = 0.0;
+    double fnwrites_precond = 0.0;
+    Af = &A;
+    for (int i=1; i<numberOfMgLevels; ++i) {
+        double fnnz_Af = Af->totalNumberOfNonzeros;
+        double fnrow_Af = Af->totalNumberOfRows;
+        double fnumberOfPresmootherSteps = Af->mgData->numberOfPresmootherSteps;
+        double fnumberOfPostsmootherSteps = Af->mgData->numberOfPostsmootherSteps;
+        fnreads_precond += fnumberOfPresmootherSteps*fniters*(2.0*fnnz_Af*(sizeof(double)+sizeof(local_int_t)) + fnrow_Af*sizeof(double)); // number of presmoother reads
+        fnwrites_precond += fnumberOfPresmootherSteps*fniters*fnrow_Af*sizeof(double); // number of presmoother writes
+        fnreads_precond += fniters*(fnnz_Af*(sizeof(double)+sizeof(local_int_t)) + fnrow_Af*sizeof(double)); // Number of reads for fine grid residual calculation
+        fnwrites_precond += fniters*fnnz_Af*sizeof(double); // Number of writes for fine grid residual calculation
+        fnreads_precond += fnumberOfPostsmootherSteps*fniters*(2.0*fnnz_Af*(sizeof(double)+sizeof(local_int_t)) + fnrow_Af*sizeof(double));  // number of postsmoother reads
+        fnwrites_precond += fnumberOfPostsmootherSteps*fniters*fnnz_Af*sizeof(double);  // number of postsmoother writes
+    	Af = Af->Ac; // Go to next coarse level
+    }
+
+    double fnnz_Af = Af->totalNumberOfNonzeros;
+    double fnrow_Af = Af->totalNumberOfRows;
+    fnreads_precond += fniters*(2.0*fnnz_Af*(sizeof(double)+sizeof(local_int_t)) + fnrow_Af*sizeof(double));; // One symmetric GS sweep at the coarsest level
+    fnwrites_precond += fniters*fnrow_Af*sizeof(double); // One symmetric GS sweep at the coarsest level
+    double fnreads = fnreads_ddot+fnreads_waxpby+fnreads_sparsemv+fnreads_precond;
+    double fnwrites = fnwrites_ddot+fnwrites_waxpby+fnwrites_sparsemv+fnwrites_precond;
+    double frefnreads = fnreads * ((double) refMaxIters)/((double) optMaxIters);
+    double frefnwrites = fnwrites * ((double) refMaxIters)/((double) optMaxIters);
+
+    // Instantiate YAML document
+    YAML_Doc doc("HPCG-Benchmark", "3.0");
+    doc.add("Release date", "October 1, 2015");
 
     doc.add("Machine Summary","");
     doc.get("Machine Summary")->add("Distributed Processes",A.geom->size);
@@ -197,7 +234,13 @@ void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgS
     doc.get("Floating Point Operations Summary")->add("Raw SpMV",fnops_sparsemv);
     doc.get("Floating Point Operations Summary")->add("Raw MG",fnops_precond);
     doc.get("Floating Point Operations Summary")->add("Total",fnops);
-    doc.get("Floating Point Operations Summary")->add("Total with convergence overhead",reffnops);
+    doc.get("Floating Point Operations Summary")->add("Total with convergence overhead",frefnops);
+
+    doc.add("GB/s Summary","");
+    doc.get("GB/s Summary")->add("Raw Read B/W",frefnreads/times[0]/1.0E9);
+    doc.get("GB/s Summary")->add("Raw Write B/W",frefnwrites/times[0]/1.0E9);
+    doc.get("GB/s Summary")->add("Raw Total B/W",(frefnreads+frefnwrites)/(times[0])/1.0E9);
+    doc.get("GB/s Summary")->add("Total with convergence and optimization phase overhead",(fnreads+fnwrites)/(times[0])/1.0E9);
 
     doc.add("GFLOP/s Summary","");
     doc.get("GFLOP/s Summary")->add("Raw DDOT",fnops_ddot/times[1]/1.0E9);
@@ -205,9 +248,9 @@ void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgS
     doc.get("GFLOP/s Summary")->add("Raw SpMV",fnops_sparsemv/(times[3])/1.0E9);
     doc.get("GFLOP/s Summary")->add("Raw MG",fnops_precond/(times[5])/1.0E9);
     doc.get("GFLOP/s Summary")->add("Raw Total",fnops/times[0]/1.0E9);
-    doc.get("GFLOP/s Summary")->add("Total with convergence overhead",reffnops/times[0]/1.0E9);
+    doc.get("GFLOP/s Summary")->add("Total with convergence overhead",frefnops/times[0]/1.0E9);
     // This final GFLOP/s rating includes the overhead of problem setup and optimizing the data structures vs ten sets of 50 iterations of CG
-    double totalGflops = reffnops/(times[0]+fNumberOfCgSets*(times[7]/10.0+times[9]))/1.0E9;
+    double totalGflops = frefnops/(times[0]+fNumberOfCgSets*(times[7]/10.0+times[9]))/1.0E9;
     doc.get("GFLOP/s Summary")->add("Total with convergence and optimization phase overhead",totalGflops);
 
     doc.add("User Optimization Overheads","");

@@ -22,9 +22,11 @@
 #include <mpi.h>
 #endif
 
+#include <vector>
 #include "ReportResults.hpp"
 #include "YAML_Element.hpp"
 #include "YAML_Doc.hpp"
+#include "OptimizeProblem.hpp"
 
 #ifdef HPCG_DEBUG
 #include <fstream>
@@ -32,6 +34,7 @@ using std::endl;
 
 #include "hpcg.hpp"
 #endif
+
 
 /*!
  Creates a YAML file and writes the information about the HPCG run, its results, and validity.
@@ -69,7 +72,11 @@ void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgS
 
   if (A.geom->rank==0) { // Only PE 0 needs to compute and report timing results
 
-    double fNumberOfCgSets = numberOfCgSets;
+// TODO: Put the FLOP count, Memory BW and Memory Usage models into separate functions
+
+	  // ======================== FLOP count model =======================================
+
+	double fNumberOfCgSets = numberOfCgSets;
     double fniters = fNumberOfCgSets * (double) optMaxIters;
     double fnrow = A.totalNumberOfRows;
     double fnnz = A.totalNumberOfNonzeros;
@@ -95,6 +102,7 @@ void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgS
     double fnops = fnops_ddot+fnops_waxpby+fnops_sparsemv+fnops_precond;
     double frefnops = fnops * ((double) refMaxIters)/((double) optMaxIters);
 
+    // ======================== Memory bandwidth model =======================================
 
     // Read/Write counts come from implementation of CG in CG.cpp (include 1 extra for the CG preamble ops)
     double fnreads_ddot = (3.0*fniters+fNumberOfCgSets)*2.0*fnrow*sizeof(double); // 3 ddots with 2 nrow reads
@@ -130,6 +138,79 @@ void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgS
     double fnwrites = fnwrites_ddot+fnwrites_waxpby+fnwrites_sparsemv+fnwrites_precond;
     double frefnreads = fnreads * ((double) refMaxIters)/((double) optMaxIters);
     double frefnwrites = fnwrites * ((double) refMaxIters)/((double) optMaxIters);
+
+
+    // ======================== Memory usage model =======================================
+
+    // Data in GenerateProblem_ref
+
+    double numberOfNonzerosPerRow = 27.0; // We are approximating a 27-point finite element/volume/difference 3D stencil
+    double size = ((double) A.geom->size); // Needed for estimating size of halo
+
+    double fnbytes = ((double) sizeof(Geometry));      // Geometry struct in main.cpp
+    fnbytes += ((double) sizeof(double)*fNumberOfCgSets); // testnorms_data in main.cpp
+
+    // Model for GenerateProblem_ref.cpp
+    fnbytes += fnrow*sizeof(char);      // array nonzerosInRow
+    fnbytes += fnrow*((double) sizeof(global_int_t*)); // mtxIndG
+    fnbytes += fnrow*((double) sizeof(local_int_t*));  // mtxIndL
+    fnbytes += fnrow*((double) sizeof(double*));      // matrixValues
+    fnbytes += fnrow*((double) sizeof(double*));      // matrixDiagonal
+    fnbytes += fnrow*numberOfNonzerosPerRow*((double) sizeof(local_int_t));  // mtxIndL[1..nrows]
+    fnbytes += fnrow*numberOfNonzerosPerRow*((double) sizeof(double));       // matrixValues[1..nrows]
+    fnbytes += fnrow*numberOfNonzerosPerRow*((double) sizeof(global_int_t)); // mtxIndG[1..nrows]
+    fnbytes += fnrow*((double) 3*sizeof(double)); // x, b, xexact
+
+    // Model for CGData.hpp
+    double fncol = ((global_int_t) A.localNumberOfColumns) * size; // Estimate of the global number of columns using the value from rank 0
+    fnbytes += fnrow*((double) 2*sizeof(double)); // r, Ap
+    fnbytes += fncol*((double) 2*sizeof(double)); // z, p
+
+    std::vector<double> fnbytesPerLevel(numberOfMgLevels); // Count byte usage per level (level 0 is main CG level)
+    fnbytesPerLevel[0] = fnbytes;
+
+    // Benchmarker-provided model for OptimizeProblem.cpp
+    double fnbytes_OptimizedProblem = OptimizeProblemMemoryUse(A);
+    fnbytes += fnbytes_OptimizedProblem;
+
+    Af = A.Ac;
+    for (int i=1; i<numberOfMgLevels; ++i) {
+        double fnrow_Af = Af->totalNumberOfRows;
+        double fncol_Af = ((global_int_t) Af->localNumberOfColumns) * size; // Estimate of the global number of columns using the value from rank 0
+        double fnbytes_Af = 0.0;
+        // Model for GenerateCoarseProblem.cpp
+        fnbytes_Af += fnrow_Af*((double) sizeof(local_int_t)); // f2cOperator
+        fnbytes_Af += fnrow_Af*((double) sizeof(double)); // rc
+        fnbytes_Af += 2.0*fncol_Af*((double) sizeof(double)); // xc, Axf are estimated based on the size of these arrays on rank 0
+        fnbytes_Af += ((double) (sizeof(Geometry)+sizeof(SparseMatrix)+3*sizeof(Vector)+sizeof(MGData))); // Account for structs geomc, Ac, rc, xc, Axf - (minor)
+
+        // Model for GenerateProblem.cpp (called within GenerateCoarseProblem.cpp)
+        fnbytes_Af += fnrow_Af*sizeof(char);      // array nonzerosInRow
+        fnbytes_Af += fnrow_Af*((double) sizeof(global_int_t*)); // mtxIndG
+        fnbytes_Af += fnrow_Af*((double) sizeof(local_int_t*));  // mtxIndL
+        fnbytes_Af += fnrow_Af*((double) sizeof(double*));      // matrixValues
+        fnbytes_Af += fnrow_Af*((double) sizeof(double*));      // matrixDiagonal
+        fnbytes_Af += fnrow_Af*numberOfNonzerosPerRow*((double) sizeof(local_int_t));  // mtxIndL[1..nrows]
+        fnbytes_Af += fnrow_Af*numberOfNonzerosPerRow*((double) sizeof(double));       // matrixValues[1..nrows]
+        fnbytes_Af += fnrow_Af*numberOfNonzerosPerRow*((double) sizeof(global_int_t)); // mtxIndG[1..nrows]
+
+        // Model for SetupHalo_ref.cpp
+#ifndef HPCG_NO_MPI
+        fnbytes_Af += ((double) sizeof(double)*Af->totalToBeSent); //sendBuffer
+        fnbytes_Af += ((double) sizeof(local_int_t)*Af->totalToBeSent); // elementsToSend
+        fnbytes_Af += ((double) sizeof(int)*Af->numberOfSendNeighbors); // neighbors
+        fnbytes_Af += ((double) sizeof(local_int_t)*Af->numberOfSendNeighbors); // receiveLength, sendLength
+#endif
+        fnbytesPerLevel[i] = fnbytes_Af;
+        fnbytes += fnbytes_Af; // Running sum
+    	Af = Af->Ac; // Go to next coarse level
+    }
+
+    assert(Af==0); // Make sure we got to the lowest grid level
+
+    // Count number of bytes used per equation
+    double fnbytesPerEquation = fnbytes/fnrow;
+
 
     // Instantiate YAML document
     YAML_Doc doc("HPCG-Benchmark", "3.0");
@@ -174,6 +255,21 @@ void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgS
         doc.get("Multigrid Information")->get("Coarse Grids")->add("Number of Presmoother Steps",Af->mgData->numberOfPresmootherSteps);
         doc.get("Multigrid Information")->get("Coarse Grids")->add("Number of Postsmoother Steps",Af->mgData->numberOfPostsmootherSteps);
     	Af = Af->Ac;
+    }
+
+    doc.add("########## Memory Use Summary  ##########","");
+
+    doc.add("Memory Use Information","");
+    doc.get("Memory Use Information")->add("Total memory used for data (Gbytes)",fnbytes/1000000000.0);
+    doc.get("Memory Use Information")->add("Memory used for OptimizeProblem data (Gbytes)",fnbytes_OptimizedProblem/1000000000.0);
+    doc.get("Memory Use Information")->add("Bytes per equation (Total memory / Number of Equations)",fnbytesPerEquation);
+
+    doc.get("Memory Use Information")->add("Memory used for linear system and CG (Gbytes)",fnbytesPerLevel[0]/1000000000.0);
+
+    doc.get("Memory Use Information")->add("Coarse Grids","");
+    for (int i=1; i<numberOfMgLevels; ++i) {
+        doc.get("Memory Use Information")->get("Coarse Grids")->add("Grid Level",i);
+        doc.get("Memory Use Information")->get("Coarse Grids")->add("Memory used",fnbytesPerLevel[i]/1000000000.0);
     }
 
     doc.add("########## Validation Testing Summary  ##########","");

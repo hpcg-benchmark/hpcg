@@ -97,3 +97,10 @@ int OptimizeProblem(SparseMatrix & A, CGData & data, Vector & b, Vector & x, Vec
 
   return 0;
 }
+
+// Helper function (see OptimizeProblem.hpp for details)
+double OptimizeProblemMemoryUse(const SparseMatrix & A) {
+
+  return 0.0;
+
+}

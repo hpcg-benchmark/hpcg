@@ -346,7 +346,7 @@ void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgS
     doc.get("GFLOP/s Summary")->add("Raw Total",fnops/times[0]/1.0E9);
     doc.get("GFLOP/s Summary")->add("Total with convergence overhead",frefnops/times[0]/1.0E9);
     // This final GFLOP/s rating includes the overhead of problem setup and optimizing the data structures vs ten sets of 50 iterations of CG
-    double totalGflops = frefnops/(times[0]+fNumberOfCgSets*(times[7]/10.0+times[9]))/1.0E9;
+    double totalGflops = frefnops/(times[0]+fNumberOfCgSets*(times[7]/10.0+times[9]/10.0))/1.0E9;
     doc.get("GFLOP/s Summary")->add("Total with convergence and optimization phase overhead",totalGflops);
 
     doc.add("User Optimization Overheads","");

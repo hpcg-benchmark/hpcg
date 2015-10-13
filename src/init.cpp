@@ -73,6 +73,9 @@ HPCG_Init(int * argc_p, char ** *argv_p, HPCG_Params & params) {
   time_t rawtime;
   tm * ptm;
 
+  // Initialize iparams
+  for (i = 0; i < 4; ++i) iparams[i] = 0;
+
   /* for sequential and some MPI implementations it's OK to read first three args */
   for (i = 0; i < 3; ++i)
     if (argc <= i+1 || sscanf(argv[i+1], "%d", iparams+i) != 1 || iparams[i] < 10) iparams[i] = 0;

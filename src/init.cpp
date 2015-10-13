@@ -20,6 +20,12 @@
 #include <omp.h>
 #endif
 
+#ifdef _WIN32
+const char* NULLDEVICE="nul";
+#else
+const char* NULLDEVICE="/dev/null";
+#endif
+
 #include <ctime>
 #include <cstdio>
 #include <cstring>
@@ -130,7 +136,7 @@ HPCG_Init(int * argc_p, char ** *argv_p, HPCG_Params & params) {
         1900 + ptm->tm_year, ptm->tm_mon+1, ptm->tm_mday, ptm->tm_hour, ptm->tm_min, ptm->tm_sec );
     HPCG_fout.open(fname);
 #else
-    HPCG_fout.open("/dev/null");
+    HPCG_fout.open(NULLDEVICE);
 #endif
   }
 

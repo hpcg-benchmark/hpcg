@@ -272,7 +272,7 @@ void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgS
         doc.get("Memory Use Information")->get("Coarse Grids")->add("Memory used",fnbytesPerLevel[i]/1000000000.0);
     }
 
-    doc.add("########## Validation Testing Summary  ##########","");
+    doc.add("########## V&V Testing Summary  ##########","");
     doc.add("Spectral Convergence Tests","");
     if (testcg_data.count_fail==0)
       doc.get("Spectral Convergence Tests")->add("Result", "PASSED");

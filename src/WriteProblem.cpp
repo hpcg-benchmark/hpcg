@@ -20,7 +20,6 @@
 
 #include <cstdio>
 #include "WriteProblem.hpp"
-#include "Geometry.hpp"
 
 
 /*!

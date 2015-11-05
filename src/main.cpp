@@ -80,6 +80,10 @@ int main(int argc, char * argv[]) {
 
   HPCG_Init(&argc, &argv, params);
 
+  // Check if QuickPath option is enabled.
+  // If the running time is set to zero, we minimize all paths through the program
+  bool quickPath = (params.runningTime==0);
+
   int size = params.comm_size, rank = params.comm_rank; // Number of MPI processes, My process ID
 
 #ifdef HPCG_DETAILED_DEBUG
@@ -179,6 +183,7 @@ int main(int argc, char * argv[]) {
   FillRandomVector(x_overlap);
 
   int numberOfCalls = 10;
+  if (quickPath) numberOfCalls = 1; //QuickPath means we do on one call of each block of repetitive code
   double t_begin = mytimer();
   for (int i=0; i< numberOfCalls; ++i) {
     ierr = ComputeSPMV_ref(A, x_overlap, b_computed); // b_computed = A*x_overlap
@@ -351,7 +356,7 @@ int main(int argc, char * argv[]) {
   ////////////////////
 
   // Report results to YAML file
-  ReportResults(A, numberOfMgLevels, numberOfCgSets, refMaxIters, optMaxIters, &times[0], testcg_data, testsymmetry_data, testnorms_data, global_failure);
+  ReportResults(A, numberOfMgLevels, numberOfCgSets, refMaxIters, optMaxIters, &times[0], testcg_data, testsymmetry_data, testnorms_data, global_failure, quickPath);
 
   // Clean up
   DeleteMatrix(A); // This delete will recursively delete all coarse grid data

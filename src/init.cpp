@@ -48,9 +48,9 @@ startswith(const char * s, const char * prefix) {
 }
 
 /*!
-  Initializes an HPCG run by obtaining problem parameters (from a file on
+  Initializes an HPCG run by obtaining problem parameters (from a file or
   command line) and then broadcasts them to all nodes. It also initializes
-  loggin I/O streams that are used throughout the HPCG run. Only MPI rank 0
+  login I/O streams that are used throughout the HPCG run. Only MPI rank 0
   performs I/O operations.
 
   The function assumes that MPI has already been initialized for MPI runs.
@@ -69,7 +69,7 @@ HPCG_Init(int * argc_p, char ** *argv_p, HPCG_Params & params) {
   char ** argv = *argv_p;
   char fname[80];
   int i, j, iparams[4];
-  char cparams[3][6] = {"--nx=", "--ny=", "--nz="};
+  char cparams[4][6] = {"--nx=", "--ny=", "--nz=", "--rt="};
   time_t rawtime;
   tm * ptm;
 
@@ -77,19 +77,24 @@ HPCG_Init(int * argc_p, char ** *argv_p, HPCG_Params & params) {
   for (i = 0; i < 4; ++i) iparams[i] = 0;
 
   /* for sequential and some MPI implementations it's OK to read first three args */
-  for (i = 0; i < 3; ++i)
+  for (i = 0; i < 4; ++i)
     if (argc <= i+1 || sscanf(argv[i+1], "%d", iparams+i) != 1 || iparams[i] < 10) iparams[i] = 0;
 
   /* for some MPI environments, command line arguments may get complicated so we need a prefix */
   for (i = 1; i <= argc && argv[i]; ++i)
-    for (j = 0; j < 3; ++j)
+    for (j = 0; j < 4; ++j)
       if (startswith(argv[i], cparams[j]))
         if (sscanf(argv[i]+strlen(cparams[j]), "%d", iparams+j) != 1 || iparams[j] < 10) iparams[j] = 0;
 
+  // Check if --rt was specified on the command line
+  int * rt  = iparams+3;  // Assume runtime was not specified and will be read from the hpcg.dat file
+  if (! iparams[3]) rt = 0; // If --rt was specified, we already have the runtime, so don't read it from file
   if (! iparams[0] && ! iparams[1] && ! iparams[2]) { /* no geometry arguments on the command line */
-    ReadHpcgDat(iparams, iparams+3);
+    ReadHpcgDat(iparams, rt);
   }
 
+  // Check for small or unspecified nx, ny, nz values
+  // If any dimension is less than 16, make it the max over the other two dimensions, or 16, whichever is largest
   for (i = 0; i < 3; ++i) {
     if (iparams[i] < 16)
       for (j = 1; j <= 2; ++j)
@@ -99,6 +104,7 @@ HPCG_Init(int * argc_p, char ** *argv_p, HPCG_Params & params) {
       iparams[i] = 16;
   }
 
+// Broadcast values of iparams to all MPI processes
 #ifndef HPCG_NO_MPI
   MPI_Bcast( iparams, 4, MPI_INT, 0, MPI_COMM_WORLD );
 #endif

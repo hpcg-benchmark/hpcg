@@ -53,7 +53,7 @@ using std::endl;
   @see YAML_Doc
 */
 void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgSets, int refMaxIters,int optMaxIters, double times[],
-		const TestCGData & testcg_data, const TestSymmetryData & testsymmetry_data, const TestNormsData & testnorms_data, int global_failure) {
+		const TestCGData & testcg_data, const TestSymmetryData & testsymmetry_data, const TestNormsData & testnorms_data, int global_failure, bool quickPath) {
 
   double minOfficialTime = 1800; // Any official benchmark result much run at least this many seconds
 
@@ -214,7 +214,7 @@ void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgS
 
     // Instantiate YAML document
     YAML_Doc doc("HPCG-Benchmark", "3.0");
-    doc.add("Release date", "October 1, 2015");
+    doc.add("Release date", "November 11, 2015");
 
     doc.add("Machine Summary","");
     doc.get("Machine Summary")->add("Distributed Processes",A.geom->size);
@@ -382,12 +382,18 @@ void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgS
         doc.get("__________ Final Summary __________")->add("Reference version of ComputeWAXPBY used","Performance results are most likely suboptimal");
       }
       if (times[0]>=minOfficialTime) {
-        doc.get("__________ Final Summary __________")->add("Please send the YAML file contents to","HPCG-Results@software.sandia.gov");
+        doc.get("__________ Final Summary __________")->add("Please upload results from the YAML file contents to","http://hpcg-benchmark.org");
       }
       else {
           doc.get("__________ Final Summary __________")->add("Results are valid but execution time (sec) is",times[0]);
-          doc.get("__________ Final Summary __________")->add("Official results execution time (sec) must be at least",minOfficialTime);
+          if (quickPath) {
+        	  doc.get("__________ Final Summary __________")->add("     You have selected the QuickPath option", "Results are official for legacy installed systems with confirmation from the HPCG Benchmark leaders.");
+              doc.get("__________ Final Summary __________")->add("     After confirmation please upload results from the YAML file contents to","http://hpcg-benchmark.org");
 
+          }
+          else {
+        	  doc.get("__________ Final Summary __________")->add("     Official results execution time (sec) must be at least",minOfficialTime);
+          }
       }
     } else {
       doc.get("__________ Final Summary __________")->add("HPCG result is","INVALID.");

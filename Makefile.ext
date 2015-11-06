@@ -62,117 +62,117 @@ clean:
 src/main.o: HPCG_SRC_PATH/src/main.cpp $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
-src/CG.o: HPCG_SRC_PATH/src/CG.?pp $(PRIMARY_HEADERS)
+src/CG.o: HPCG_SRC_PATH/src/CG.cpp HPCG_SRC_PATH/src/CG.hpp $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
-src/CG_ref.o: HPCG_SRC_PATH/src/CG_ref.?pp $(PRIMARY_HEADERS)
+src/CG_ref.o: HPCG_SRC_PATH/src/CG_ref.cpp HPCG_SRC_PATH/src/CG_ref.hpp $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
-src/TestCG.o: HPCG_SRC_PATH/src/TestCG.?pp $(PRIMARY_HEADERS)
+src/TestCG.o: HPCG_SRC_PATH/src/TestCG.cpp HPCG_SRC_PATH/src/TestCG.hpp $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
-src/ComputeResidual.o: HPCG_SRC_PATH/src/ComputeResidual.?pp $(PRIMARY_HEADERS)
+src/ComputeResidual.o: HPCG_SRC_PATH/src/ComputeResidual.cpp HPCG_SRC_PATH/src/ComputeResidual.hpp $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
-src/ExchangeHalo.o: HPCG_SRC_PATH/src/ExchangeHalo.?pp $(PRIMARY_HEADERS)
+src/ExchangeHalo.o: HPCG_SRC_PATH/src/ExchangeHalo.cpp HPCG_SRC_PATH/src/ExchangeHalo.hpp $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
-src/GenerateGeometry.o: HPCG_SRC_PATH/src/GenerateGeometry.?pp $(PRIMARY_HEADERS)
+src/GenerateGeometry.o: HPCG_SRC_PATH/src/GenerateGeometry.cpp HPCG_SRC_PATH/src/GenerateGeometry.hpp $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
-src/GenerateProblem.o: HPCG_SRC_PATH/src/GenerateProblem.?pp $(PRIMARY_HEADERS)
+src/GenerateProblem.o: HPCG_SRC_PATH/src/GenerateProblem.cpp HPCG_SRC_PATH/src/GenerateProblem.hpp $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
-src/GenerateProblem_ref.o: HPCG_SRC_PATH/src/GenerateProblem_ref.?pp $(PRIMARY_HEADERS)
+src/GenerateProblem_ref.o: HPCG_SRC_PATH/src/GenerateProblem_ref.cpp HPCG_SRC_PATH/src/GenerateProblem_ref.hpp $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
-src/CheckProblem.o: HPCG_SRC_PATH/src/CheckProblem.?pp $(PRIMARY_HEADERS)
+src/CheckProblem.o: HPCG_SRC_PATH/src/CheckProblem.cpp HPCG_SRC_PATH/src/CheckProblem.hpp $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
-src/MixedBaseCounter.o: HPCG_SRC_PATH/src/MixedBaseCounter.?pp $(PRIMARY_HEADERS)
+src/MixedBaseCounter.o: HPCG_SRC_PATH/src/MixedBaseCounter.cpp HPCG_SRC_PATH/src/MixedBaseCounter.hpp $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
-src/OptimizeProblem.o: HPCG_SRC_PATH/src/OptimizeProblem.?pp $(PRIMARY_HEADERS)
+src/OptimizeProblem.o: HPCG_SRC_PATH/src/OptimizeProblem.cpp HPCG_SRC_PATH/src/OptimizeProblem.hpp $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
-src/ReadHpcgDat.o: HPCG_SRC_PATH/src/ReadHpcgDat.?pp $(PRIMARY_HEADERS)
+src/ReadHpcgDat.o: HPCG_SRC_PATH/src/ReadHpcgDat.cpp HPCG_SRC_PATH/src/ReadHpcgDat.hpp $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
-src/ReportResults.o: HPCG_SRC_PATH/src/ReportResults.?pp $(PRIMARY_HEADERS)
+src/ReportResults.o: HPCG_SRC_PATH/src/ReportResults.cpp HPCG_SRC_PATH/src/ReportResults.hpp $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
-src/SetupHalo.o: HPCG_SRC_PATH/src/SetupHalo.?pp $(PRIMARY_HEADERS)
+src/SetupHalo.o: HPCG_SRC_PATH/src/SetupHalo.cpp HPCG_SRC_PATH/src/SetupHalo.hpp $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
-src/SetupHalo_ref.o: HPCG_SRC_PATH/src/SetupHalo_ref.?pp $(PRIMARY_HEADERS)
+src/SetupHalo_ref.o: HPCG_SRC_PATH/src/SetupHalo_ref.cpp HPCG_SRC_PATH/src/SetupHalo_ref.hpp $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
-src/TestSymmetry.o: HPCG_SRC_PATH/src/TestSymmetry.?pp  $(PRIMARY_HEADERS)
+src/TestSymmetry.o: HPCG_SRC_PATH/src/TestSymmetry.cpp HPCG_SRC_PATH/src/TestSymmetry.hpp $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
-src/TestNorms.o: HPCG_SRC_PATH/src/TestNorms.?pp $(PRIMARY_HEADERS)
+src/TestNorms.o: HPCG_SRC_PATH/src/TestNorms.cpp HPCG_SRC_PATH/src/TestNorms.hpp $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
-src/WriteProblem.o: HPCG_SRC_PATH/src/WriteProblem.?pp $(PRIMARY_HEADERS)
+src/WriteProblem.o: HPCG_SRC_PATH/src/WriteProblem.cpp HPCG_SRC_PATH/src/WriteProblem.hpp $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
-src/YAML_Doc.o: HPCG_SRC_PATH/src/YAML_Doc.?pp $(PRIMARY_HEADERS)
+src/YAML_Doc.o: HPCG_SRC_PATH/src/YAML_Doc.cpp HPCG_SRC_PATH/src/YAML_Doc.hpp $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
-src/YAML_Element.o: HPCG_SRC_PATH/src/YAML_Element.?pp $(PRIMARY_HEADERS)
+src/YAML_Element.o: HPCG_SRC_PATH/src/YAML_Element.cpp HPCG_SRC_PATH/src/YAML_Element.hpp $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
-src/ComputeDotProduct.o: HPCG_SRC_PATH/src/ComputeDotProduct.?pp $(PRIMARY_HEADERS)
+src/ComputeDotProduct.o: HPCG_SRC_PATH/src/ComputeDotProduct.cpp HPCG_SRC_PATH/src/ComputeDotProduct.hpp $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
-src/ComputeDotProduct_ref.o: HPCG_SRC_PATH/src/ComputeDotProduct_ref.?pp $(PRIMARY_HEADERS)
+src/ComputeDotProduct_ref.o: HPCG_SRC_PATH/src/ComputeDotProduct_ref.cpp HPCG_SRC_PATH/src/ComputeDotProduct_ref.hpp $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
-src/finalize.o: HPCG_SRC_PATH/src/finalize.?pp $(PRIMARY_HEADERS)
+src/finalize.o: HPCG_SRC_PATH/src/finalize.cpp $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
-src/init.o: HPCG_SRC_PATH/src/init.?pp $(PRIMARY_HEADERS)
+src/init.o: HPCG_SRC_PATH/src/init.cpp $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
-src/mytimer.o: HPCG_SRC_PATH/src/mytimer.?pp $(PRIMARY_HEADERS)
+src/mytimer.o: HPCG_SRC_PATH/src/mytimer.cpp HPCG_SRC_PATH/src/mytimer.hpp $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
-src/ComputeOptimalShapeXYZ.o: HPCG_SRC_PATH/src/ComputeOptimalShapeXYZ.?pp $(PRIMARY_HEADERS)
+src/ComputeOptimalShapeXYZ.o: HPCG_SRC_PATH/src/ComputeOptimalShapeXYZ.cpp HPCG_SRC_PATH/src/ComputeOptimalShapeXYZ.hpp $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
-src/ComputeSPMV.o: HPCG_SRC_PATH/src/ComputeSPMV.?pp $(PRIMARY_HEADERS)
+src/ComputeSPMV.o: HPCG_SRC_PATH/src/ComputeSPMV.cpp HPCG_SRC_PATH/src/ComputeSPMV.hpp $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
-src/ComputeSPMV_ref.o: HPCG_SRC_PATH/src/ComputeSPMV_ref.?pp $(PRIMARY_HEADERS)
+src/ComputeSPMV_ref.o: HPCG_SRC_PATH/src/ComputeSPMV_ref.cpp HPCG_SRC_PATH/src/ComputeSPMV_ref.hpp $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
-src/ComputeSYMGS.o: HPCG_SRC_PATH/src/ComputeSYMGS.?pp $(PRIMARY_HEADERS)
+src/ComputeSYMGS.o: HPCG_SRC_PATH/src/ComputeSYMGS.cpp HPCG_SRC_PATH/src/ComputeSYMGS.hpp $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
-src/ComputeSYMGS_ref.o: HPCG_SRC_PATH/src/ComputeSYMGS_ref.?pp $(PRIMARY_HEADERS)
+src/ComputeSYMGS_ref.o: HPCG_SRC_PATH/src/ComputeSYMGS_ref.cpp HPCG_SRC_PATH/src/ComputeSYMGS_ref.hpp $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
-src/ComputeWAXPBY.o: HPCG_SRC_PATH/src/ComputeWAXPBY.?pp $(PRIMARY_HEADERS)
+src/ComputeWAXPBY.o: HPCG_SRC_PATH/src/ComputeWAXPBY.cpp HPCG_SRC_PATH/src/ComputeWAXPBY.hpp $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
-src/ComputeWAXPBY_ref.o: HPCG_SRC_PATH/src/ComputeWAXPBY_ref.?pp $(PRIMARY_HEADERS)
+src/ComputeWAXPBY_ref.o: HPCG_SRC_PATH/src/ComputeWAXPBY_ref.cpp HPCG_SRC_PATH/src/ComputeWAXPBY_ref.hpp $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
-src/ComputeMG_ref.o: HPCG_SRC_PATH/src/ComputeMG_ref.?pp $(PRIMARY_HEADERS)
+src/ComputeMG_ref.o: HPCG_SRC_PATH/src/ComputeMG_ref.cpp HPCG_SRC_PATH/src/ComputeMG_ref.hpp $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
-src/ComputeMG.o: HPCG_SRC_PATH/src/ComputeMG.?pp $(PRIMARY_HEADERS)
+src/ComputeMG.o: HPCG_SRC_PATH/src/ComputeMG.cpp HPCG_SRC_PATH/src/ComputeMG.hpp $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
-src/ComputeProlongation_ref.o: HPCG_SRC_PATH/src/ComputeProlongation_ref.?pp $(PRIMARY_HEADERS)
+src/ComputeProlongation_ref.o: HPCG_SRC_PATH/src/ComputeProlongation_ref.cpp HPCG_SRC_PATH/src/ComputeProlongation_ref.hpp $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
-src/ComputeRestriction_ref.o: HPCG_SRC_PATH/src/ComputeRestriction_ref.?pp $(PRIMARY_HEADERS)
+src/ComputeRestriction_ref.o: HPCG_SRC_PATH/src/ComputeRestriction_ref.cpp HPCG_SRC_PATH/src/ComputeRestriction_ref.hpp $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
-src/GenerateCoarseProblem.o: HPCG_SRC_PATH/src/GenerateCoarseProblem.?pp $(PRIMARY_HEADERS)
+src/GenerateCoarseProblem.o: HPCG_SRC_PATH/src/GenerateCoarseProblem.cpp HPCG_SRC_PATH/src/GenerateCoarseProblem.hpp $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
-src/CheckAspectRatio.o: HPCG_SRC_PATH/src/CheckAspectRatio.?pp $(PRIMARY_HEADERS)
+src/CheckAspectRatio.o: HPCG_SRC_PATH/src/CheckAspectRatio.cpp HPCG_SRC_PATH/src/CheckAspectRatio.hpp $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 

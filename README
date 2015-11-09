@@ -3,16 +3,23 @@ High Performance Conjugate Gradient Benchmark (HPCG)
 ####################################################
 
 :Author: Jack Dongarra and Michael Heroux and Piotr Luszczek
-:Revision: 2.4
-:Date: June 3, 2014
+:Revision: 3.0
+:Date: November 11, 2015
 
 ============
 Introduction
 ============
 
-HPCG is a software package that performs a fixed number of symmetric
-Gauss-Seidel preconditioned conjugate gradient iterations using double
-precision (64 bit) floating point values.  Integer arrays have global and local
+HPCG is a software package that performs a fixed number of multigrid preconditioned
+(using a symmetric Gauss-Seidel smoother) conjugate gradient (PCG) iterations using double
+precision (64 bit) floating point values.  
+
+The HPCG rating is is a weighted GFLOP/s (billion floating operations per second) value
+that is composed of the operations performed in the PCG iteration phase over
+the time taken.  The overhead time of problem construction and any modifications to improve
+performance are divided by 500 iterations (the amortization weight) and added to the runtime.
+
+Integer arrays have global and local
 scope (global indices are unique across the entire distributed memory system,
 local indices are unique within a memory image).  Integer data for global/local
 indices have three modes:
@@ -26,7 +33,8 @@ if the range of indexing goes above 2^31 (roughly 2.1B), or to conserve storage
 costs if the range of indexing is less than 2^31.
 
 The  HPCG  software  package requires the availibility on your system of an
-implementation of the  Message Passing Interface (MPI). An implementation
+implementation of the  Message Passing Interface (MPI) if enabling the MPI
+build of HPCG, and a compiler that supports OpenMP syntax. An implementation
 compliant with MPI version 1.1 is sufficient.
 
 ============
@@ -40,7 +48,7 @@ Documentation
 =============
 
 The source code documentation can be generated with a Doxygen (version 1.8 or
-newer). In this directory type::
+newer). In this directory type:
 
     doxygen tools/hpcg.dox
 

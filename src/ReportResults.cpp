@@ -333,10 +333,11 @@ void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgS
     doc.get("Floating Point Operations Summary")->add("Total with convergence overhead",frefnops);
 
     doc.add("GB/s Summary","");
-    doc.get("GB/s Summary")->add("Raw Read B/W",frefnreads/times[0]/1.0E9);
-    doc.get("GB/s Summary")->add("Raw Write B/W",frefnwrites/times[0]/1.0E9);
-    doc.get("GB/s Summary")->add("Raw Total B/W",(frefnreads+frefnwrites)/(times[0])/1.0E9);
-    doc.get("GB/s Summary")->add("Total with convergence and optimization phase overhead",(fnreads+fnwrites)/(times[0])/1.0E9);
+    doc.get("GB/s Summary")->add("Raw Read B/W",fnreads/times[0]/1.0E9);
+    doc.get("GB/s Summary")->add("Raw Write B/W",fnwrites/times[0]/1.0E9);
+    doc.get("GB/s Summary")->add("Raw Total B/W",(fnreads+fnwrites)/(times[0])/1.0E9);
+    doc.get("GB/s Summary")->add("Total with convergence and optimization phase overhead",(frefnreads+frefnwrites)/(times[0]+fNumberOfCgSets*(times[7]/10.0+times[9]/10.0))/1.0E9);
+
 
     doc.add("GFLOP/s Summary","");
     doc.get("GFLOP/s Summary")->add("Raw DDOT",fnops_ddot/times[1]/1.0E9);

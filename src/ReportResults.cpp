@@ -347,6 +347,7 @@ void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgS
     doc.get("GFLOP/s Summary")->add("Total with convergence overhead",frefnops/times[0]/1.0E9);
     // This final GFLOP/s rating includes the overhead of problem setup and optimizing the data structures vs ten sets of 50 iterations of CG
     double totalGflops = frefnops/(times[0]+fNumberOfCgSets*(times[7]/10.0+times[9]/10.0))/1.0E9;
+    double totalGflops24 = frefnops/(times[0]+fNumberOfCgSets*times[7]/10.0)/1.0E9;
     doc.get("GFLOP/s Summary")->add("Total with convergence and optimization phase overhead",totalGflops);
 
     doc.add("User Optimization Overheads","");
@@ -365,7 +366,8 @@ void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgS
     doc.add("__________ Final Summary __________","");
     bool isValidRun = (testcg_data.count_fail==0) && (testsymmetry_data.count_fail==0) && (testnorms_data.pass) && (!global_failure);
     if (isValidRun) {
-      doc.get("__________ Final Summary __________")->add("HPCG result is VALID with a GFLOP/s rating of", totalGflops);
+        doc.get("__________ Final Summary __________")->add("HPCG result is VALID with a GFLOP/s rating of", totalGflops);
+        doc.get("__________ Final Summary __________")->add("    HPCG 2.4 Rating (for historical value) is", totalGflops24);
       if (!A.isDotProductOptimized) {
         doc.get("__________ Final Summary __________")->add("Reference version of ComputeDotProduct used","Performance results are most likely suboptimal");
       }

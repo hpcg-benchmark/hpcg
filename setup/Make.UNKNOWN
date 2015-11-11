@@ -11,7 +11,8 @@ UNKNOWN:
 	@echo 2. Type: "'"make arch=Unix"'"
 	@echo
 
-GNUTAR = gnutar # or "gtar" on Linux
+#GNUTAR = gnutar # or "gtar" on Linux
+GNUTAR = gtar
 
 dist:
 	@echo Packaging for version $(VERSION)

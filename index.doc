@@ -1,4 +1,4 @@
-/*! \mainpage HPCG: High Performance Conjugate Gradient Benchmark
+/*! \mainpage HPCG: High Performance Conjugate Gradients Benchmark
 
 \section HPCG_outline Outline
 
@@ -22,7 +22,7 @@
 
 \section HPCG_intro Introduction
 HPCG is a self-contained benchmark that generates and solves a synthetic 3D sparse linear system
-using a local symmetric Gauss-Seidel preconditioned conjugate gradient method.
+using a multigrid preconditioned (with local symmetric Gauss-Seidel smoother)  conjugate gradients method.
 
 \section HPCG_startup Getting started
 

@@ -37,9 +37,9 @@
   - We then perform one back sweep.
        - For simplicity we include the diagonal contribution in the for-j loop, then correct the sum after
 
-  @param[in]  A the known system matrix
-  @param[in]  x the input vector
-  @param[out] y On exit contains the result of one symmetric GS sweep with x as the RHS.
+  @param[in] A the known system matrix
+  @param[in] r the input vector
+  @param[inout] x On entry, x should contain relevant values, on exit x contains the result of one symmetric GS sweep with r as the RHS.
 
   @return returns 0 upon success and non-zero otherwise
 

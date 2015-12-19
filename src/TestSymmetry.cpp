@@ -40,8 +40,7 @@ using std::endl;
 #include "TestSymmetry.hpp"
 
 /*!
-  Tests symmetry-preserving properties of the sparse matrix vector multiply and
-  symmetric Gauss-Siedel routines.
+  Tests symmetry-preserving properties of the sparse matrix vector multiply and multi-grid routines.
 
   @param[in]    geom   The description of the problem's geometry.
   @param[in]    A      The known system matrix
@@ -100,7 +99,7 @@ int TestSymmetry(SparseMatrix & A, Vector & b, Vector & xexact, TestSymmetryData
  if (testsymmetry_data.depsym_spmv > 1.0) ++testsymmetry_data.count_fail;  // If the difference is > 1, count it wrong
  if (A.geom->rank==0) HPCG_fout << "Departure from symmetry (scaled) for SpMV abs(x'*A*y - y'*A*x) = " << testsymmetry_data.depsym_spmv << endl;
 
- // Test symmetry of symmetric Gauss-Seidel
+ // Test symmetry of multi-grid
 
  // Compute x'*Minv*y
  ierr = ComputeMG(A, y_ncol, z_ncol); // z_ncol = Minv*y_ncol

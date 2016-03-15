@@ -6,12 +6,12 @@
   $page->setNavIdentifier('resources');
 
   $x = <<< END
-    table.lists th { text-align: left; padding: .5em 2em .5em 0; 
+    table.lists th { text-align: left; padding: .5em 2em .5em 0;
       border-bottom: 1px solid #999; }
     table.lists td { padding: .5em 2em .5em 0; border-bottom: 1px solid #999; }
 END;
-  $page->setInlineStyles($x); 
-  
+  $page->setInlineStyles($x);
+
 ?>
 
 <?php include 'common/header.html' ?>

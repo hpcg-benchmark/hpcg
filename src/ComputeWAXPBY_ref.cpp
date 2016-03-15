@@ -42,12 +42,13 @@
 int ComputeWAXPBY_ref(const local_int_t n, const double alpha, const Vector & x,
     const double beta, const Vector & y, Vector & w) {
 
-	assert(x.localLength>=n); // Test vector lengths
-	assert(y.localLength>=n);
+  assert(x.localLength>=n); // Test vector lengths
+  assert(y.localLength>=n);
 
-	const double * const xv = x.values;
-	const double * const yv = y.values;
-	double * const wv = w.values;
+  const double * const xv = x.values;
+  const double * const yv = y.values;
+  double * const wv = w.values;
+
   if (alpha==1.0) {
 #ifndef HPCG_NO_OPENMP
     #pragma omp parallel for

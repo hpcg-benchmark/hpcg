@@ -8,8 +8,8 @@
   $x = <<< END
     img.app { float: right; padding: 10px 10px 20px 20px; }
 END;
-  $page->setInlineStyles($x); 
-  
+  $page->setInlineStyles($x);
+
 ?>
 
 <?php include 'common/header.html' ?>
@@ -21,7 +21,7 @@ END;
     <p><b>Current activities:</b>
 
 We have released HPCG Version 2.4 for general availability.
-	
+
   </p><br/><br/>
 
 <?php include 'common/footer.html' ?>

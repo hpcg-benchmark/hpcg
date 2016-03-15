@@ -35,17 +35,17 @@ Version 3.0
 * Changed the way the residual variance is computed to make sure it is zero if all
   residual values are identical.
 
-* Changed the order of array allocation in the reference code in order to improve 
+* Changed the order of array allocation in the reference code in order to improve
   performance.
 
-* Set the minimum iteration count for the optimized run to be the same as what is 
+* Set the minimum iteration count for the optimized run to be the same as what is
   used in the reference run.
 
 -----------
 Version 2.4
 -----------
 
-* Fixed (again) the FLOP count for DDOT and WAXPBY.  We forgot that the 
+* Fixed (again) the FLOP count for DDOT and WAXPBY.  We forgot that the
   preamble is called many times.
 
 -----------

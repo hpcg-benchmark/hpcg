@@ -56,8 +56,8 @@ ReadHpcgDat(int *localDimensions, int *secondsPerRun) {
   SkipUntilEol( hpcgStream ); // skip the rest of the second line
 
   if (secondsPerRun!=0) { // Only read number of seconds if the pointer is non-zero
-	  if (fscanf(hpcgStream, "%d", secondsPerRun) != 1 || secondsPerRun[0] < 0)
-		  secondsPerRun[0] = 30 * 60; // 30 minutes
+    if (fscanf(hpcgStream, "%d", secondsPerRun) != 1 || secondsPerRun[0] < 0)
+      secondsPerRun[0] = 30 * 60; // 30 minutes
   }
 
   fclose(hpcgStream);

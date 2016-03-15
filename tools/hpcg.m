@@ -10,7 +10,7 @@ disp(os);
 while norm(r) > 1e-16 && iter < maxiters
 iter=iter+1;
 z = symgs(A,r);
-if iter==1 
+if iter==1
     p = z;
     rtz = r'*z;
 else

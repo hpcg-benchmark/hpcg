@@ -139,8 +139,8 @@ int main(int argc, char * argv[]) {
   int numberOfMgLevels = 4; // Number of levels including first
   SparseMatrix * curLevelMatrix = &A;
   for (int level = 1; level< numberOfMgLevels; ++level) {
-	  GenerateCoarseProblem(*curLevelMatrix);
-	  curLevelMatrix = curLevelMatrix->Ac; // Make the just-constructed coarse grid the next level
+    GenerateCoarseProblem(*curLevelMatrix);
+    curLevelMatrix = curLevelMatrix->Ac; // Make the just-constructed coarse grid the next level
   }
 
   setup_time = mytimer() - setup_time; // Capture total time of setup

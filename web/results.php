@@ -15,7 +15,7 @@
 
 <p><a href=2014-06-hpcg-list.pdf> HPCG Performance Rankings, ISC'14, Leipzig, Germany, 26 June 2014</a></p>
 
-      
+
 <br/>
 
 

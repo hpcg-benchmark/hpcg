@@ -4,14 +4,14 @@
   $page->setPathToWebRoot('');
   $page->setPageTitle('HPCG - Download');
   $page->setNavIdentifier('download');
- 
+
   $y = <<< END
-    th { text-align: left; padding-right: 1em; vertical-align: top; 
+    th { text-align: left; padding-right: 1em; vertical-align: top;
       padding-bottom: 1em; }
     td { vertical-align: top; padding-bottom: 1em; }
 END;
   $page->setInlineStyles($y);
-  
+
 ?>
 
 <?php include 'common/header.html' ?>

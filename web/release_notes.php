@@ -4,12 +4,12 @@
   $page->setPathToWebRoot('');
   $page->setPageTitle('HPCG - Release Notes');
   $page->setNavIdentifier('download');
- 
+
   $y = <<< END
     h2 { padding-top: 2em; }
 END;
   $page->setInlineStyles($y);
-  
+
 ?>
 
 <?php include 'common/header.html' ?>

@@ -1,14 +1,14 @@
-/* html.css 
+/* html.css
 
   Describes the default behavior for all html tags.
   Derived from Appendix D of the W3C CSS 2.1 specification:
     http://www.w3.org/TR/CSS21/sample.html
-  
+
 */
 
 html, body      { margin: 0; padding 0; }
-html, address, blockquote, body, dd, div, dl, dt, fieldset, form, frame, 
-frameset, h1, h2, h3, h4, h5, h6, noframes, ol, p, ul, center, dir, hr, 
+html, address, blockquote, body, dd, div, dl, dt, fieldset, form, frame,
+frameset, h1, h2, h3, h4, h5, h6, noframes, ol, p, ul, center, dir, hr,
 menu, pre       { display: block; }
 li              { display: list-item; }
 head            { display: none; }
@@ -45,7 +45,7 @@ pre, tt, code,
 kbd, samp       { font-family: monospace; }
 pre             { white-space: pre; }
 button, textarea,
-input, object, 
+input, object,
 select          { display:inline-block; }
 big             { font-size: 1.17em; }
 small, sub, sup { font-size: .83em; }

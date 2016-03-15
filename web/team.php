@@ -4,12 +4,12 @@
   $page->setPathToWebRoot('');
   $page->setPageTitle('HPCG - Team');
   $page->setNavIdentifier('about');
- 
+
   $y = <<< END
     th { text-align: left; padding-right: 1em; }
 END;
   $page->setInlineStyles($y);
-  
+
 ?>
 
 <?php include 'common/header.html' ?>

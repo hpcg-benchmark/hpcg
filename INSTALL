@@ -92,7 +92,7 @@ build infrastructure:
 
 Notice that you have to give a absolute or relative path to the ``configure``
 shell script so that the location of the source files can be discovered
-automatically. 
+automatically.
 
 <arch> is the suffix of the setup file you created in the directory hpcg/setup.
 Sample setup files are found in the hpcg/setup directory.
@@ -201,5 +201,5 @@ By default HPCG will:
 ===================
 Further information
 ===================
- 
+
 Check out  the website  http://hpcg-benchmark.org/ for the latest information.

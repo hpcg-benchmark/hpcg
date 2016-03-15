@@ -8,7 +8,7 @@ class MixedBaseCounter {
 
   public:
     MixedBaseCounter(int *counts, int length);
-    MixedBaseCounter(MixedBaseCounter & left, MixedBaseCounter & right); 
+    MixedBaseCounter(MixedBaseCounter & left, MixedBaseCounter & right);
     void next();
     int is_zero();
     int product(int * multipliers);

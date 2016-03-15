@@ -12,7 +12,7 @@ Introduction
 
 HPCG is a software package that performs a fixed number of multigrid preconditioned
 (using a symmetric Gauss-Seidel smoother) conjugate gradient (PCG) iterations using double
-precision (64 bit) floating point values.  
+precision (64 bit) floating point values.
 
 The HPCG rating is is a weighted GFLOP/s (billion floating operations per second) value
 that is composed of the operations performed in the PCG iteration phase over

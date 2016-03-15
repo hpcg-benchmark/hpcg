@@ -1,7 +1,7 @@
 /* main.css */
 
-body { background-color: #fff; font-family: verdana, arial, halvetica, 
-  sans-serif; font-size: 12px; text-align: center;/*IE*/ 
+body { background-color: #fff; font-family: verdana, arial, halvetica,
+  sans-serif; font-size: 12px; text-align: center;/*IE*/
   min-width: 760px;/*NS*/ }
 
 h1 { color: #0E3D8B; size: 2em; line-height: .8em; margin: 0; padding: .4em; }
@@ -10,7 +10,7 @@ h3 { font-size: 1.2em; }
 h5 { font-size: 1.0em; margin-bottom: .4em; }
 
 /* links */
-a:link, a:visited, a:hover, a:active { text-decoration: none; color: #1c4493; 
+a:link, a:visited, a:hover, a:active { text-decoration: none; color: #1c4493;
   border-bottom: 1px dotted #1c4493; font-weight: normal; }
 a:link, a:visited {}
 a:hover { border-bottom: 1px solid #1c4493; }
@@ -41,21 +41,21 @@ a:active {}
   padding: 4px 8px 4px 8px; color: #666; text-decoration: none;
   border: 1px solid #666; border-right: 2px solid #666; border-bottom: none;
   background: #cacaca url(bg_nav.png) repeat-x top left; }
-#mainNav a:hover, 
+#mainNav a:hover,
 body.home #tabHome a,
 body.about #tabAbout a,
 body.resources #tabResources a,
 body.FAQ #tabFAQ a,
 body.download #tabDownload a
-  { color: #000; border-color: #727377; background: #fff; 
+  { color: #000; border-color: #727377; background: #fff;
   border-bottom: 1px solid #fff; }
 
 /* content */
 #content { width: 760px; margin: -1px auto 0 auto; padding: 0 0 2em 0;
   line-height: 1.6em; clear: right; background-color: #fff;
-  border: 1px solid #666; border-right: 2px solid #666; 
+  border: 1px solid #666; border-right: 2px solid #666;
   border-bottom: 2px solid #666; }
-#contentMain { width: 560px; float: right; text-align: left; 
+#contentMain { width: 560px; float: right; text-align: left;
   margin: 10px 20px 20px 0; }
 #contentMain img { border: none; }
 
@@ -65,12 +65,12 @@ body.download #tabDownload a
 #nav ul, #nav li { margin: 0; padding: 0; list-style-type: none; }
 #nav ul { display: block; text-align: left; }
 #nav li { display: inline; text-align: left; }
-#nav li a { display: block; text-decoration: none; margin: 0; 
-  padding: .2em .2em .2em .2em; border-bottom: 1px solid #1c4493; 
+#nav li a { display: block; text-decoration: none; margin: 0;
+  padding: .2em .2em .2em .2em; border-bottom: 1px solid #1c4493;
   font-weight: normal; }
 #nav li a:link, #nav li a:visited { color: #1c4493; font-weight: normal; }
 #nav li a:hover { border-bottom: 1px solid #1c4493; color: #1c4493;
-  font-weight: normal; text-decoration: none; background: #fff 
+  font-weight: normal; text-decoration: none; background: #fff
   url(bg_subnav.png) repeat-x bottom left; }
 #nav li a:active { color: #1c4493; }
 #nav li.current a:link, #nav li.current a:visited, #nav li.current a:hover
@@ -81,7 +81,7 @@ body.download #tabDownload a
 #navLogos img { border: none; margin: 25px 0; }
 #navLogos a { border: none; }
 
-#nav h5 { font-weight: normal; border-bottom: 1px solid #666; 
+#nav h5 { font-weight: normal; border-bottom: 1px solid #666;
   text-align: left; color: #666; font-size: .9em; }
 #nav ul.navPackages li { font-size: .9em; }
 #nav ul.navPackages a { border: none; padding: 0; margin: 0; }
@@ -90,15 +90,15 @@ body.download #tabDownload a
 
 /* breadcrumb */
 div.breadcrumb { border-bottom: 1px solid #d7d7d7; padding: .2em 0; margin: 0 0 2em 0; }
-div.breadcrumb a:link, div.breadcrumb a:visited, div.breadcrumb a:hover, 
-  div.breadcrumb a:active { text-decoration: none; color: #1c4493; 
+div.breadcrumb a:link, div.breadcrumb a:visited, div.breadcrumb a:hover,
+  div.breadcrumb a:active { text-decoration: none; color: #1c4493;
   border-bottom: none; font-weight: normal; }
 
 /* releaseBox */
-div.releaseBoxContainer { width: 300px; float: right; margin: 0; 
+div.releaseBoxContainer { width: 300px; float: right; margin: 0;
   padding: 0 0 0 20px; }
-div.releaseBox { width: 280px; float: right; margin: 10px 0 10px 0; 
-  padding: 0 1em 1em 1em; background: #fff url(bg_box.png) repeat-x top left; 
+div.releaseBox { width: 280px; float: right; margin: 10px 0 10px 0;
+  padding: 0 1em 1em 1em; background: #fff url(bg_box.png) repeat-x top left;
   border-top: 1px solid #666; border-left: 1px solid #666;
   border-right: 2px solid #666; border-bottom: 2px solid #666; }
 div.releaseBox p { margin: .5em 0; }
@@ -109,11 +109,11 @@ body#home div#content h2 { border: none; }
   background-repeat: repeat-x; background-color: #eee5d3; }
 
 /* footer */
-#footer { width: 760px; clear: both; padding: 10px; margin: 0 auto; 
+#footer { width: 760px; clear: both; padding: 10px; margin: 0 auto;
   text-align: center; font-size: .9em; }
-  
-#footer h5 a:link, #footer h5 a:visited, #footer h5 a:hover, 
-  #footer h5 a:active { font-weight: normal; font-size: 1.2em; 
+
+#footer h5 a:link, #footer h5 a:visited, #footer h5 a:hover,
+  #footer h5 a:active { font-weight: normal; font-size: 1.2em;
   border-bottom: 1px solid #000; display: block; }
 #footer h5 a:hover, #footer h5 a:active { text-decoration: none; color: #000; }
 #footer a:link, #footer a:visited, #footer a:hover, #footer a:active {
@@ -136,8 +136,8 @@ table#smallPrint td.right { text-align: right; }
   repeat-x top left; }
 
 /* logos */
-#logos { width: 760px; clear: both; padding: 25px; margin: 0 auto; 
+#logos { width: 760px; clear: both; padding: 25px; margin: 0 auto;
   text-align: center; }
 #logos img { border: none; padding: 10px 25px; }
 #logos a { border: none; }
-  
+

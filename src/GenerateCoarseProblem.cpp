@@ -69,16 +69,16 @@ void GenerateCoarseProblem(const SparseMatrix & Af) {
   #pragma omp parallel for
 #endif
   for (local_int_t izc=0; izc<nzc; ++izc) {
-	  local_int_t izf = 2*izc;
-	  for (local_int_t iyc=0; iyc<nyc; ++iyc) {
-		  local_int_t iyf = 2*iyc;
-		  for (local_int_t ixc=0; ixc<nxc; ++ixc) {
-			  local_int_t ixf = 2*ixc;
-			  local_int_t currentCoarseRow = izc*nxc*nyc+iyc*nxc+ixc;
-			  local_int_t currentFineRow = izf*nxf*nyf+iyf*nxf+ixf;
-			  f2cOperator[currentCoarseRow] = currentFineRow;
-		  } // end iy loop
-	  } // end even iz if statement
+    local_int_t izf = 2*izc;
+    for (local_int_t iyc=0; iyc<nyc; ++iyc) {
+      local_int_t iyf = 2*iyc;
+      for (local_int_t ixc=0; ixc<nxc; ++ixc) {
+        local_int_t ixf = 2*ixc;
+        local_int_t currentCoarseRow = izc*nxc*nyc+iyc*nxc+ixc;
+        local_int_t currentFineRow = izf*nxf*nyf+iyf*nxf+ixf;
+        f2cOperator[currentCoarseRow] = currentFineRow;
+      } // end iy loop
+    } // end even iz if statement
   } // end iz loop
 
   // Construct the geometry and linear system

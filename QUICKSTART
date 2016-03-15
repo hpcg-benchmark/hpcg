@@ -1,6 +1,6 @@
 NOTE: The instructions in this file assume you are working with a version
       of the software from the HPCG repository, or have already unpacked
-      the hpcg distribution tar file. We assume you are in the main hpcg 
+      the hpcg distribution tar file. We assume you are in the main hpcg
       directory.
 
 1) Review the collection of setup files in 'hpcg/setup'.  Determine which of
@@ -9,7 +9,7 @@ NOTE: The instructions in this file assume you are working with a version
    Note the suffix of the file Make.suffix (e.g., Make.MPI_GCC_OpenMP has the
    suffix MPI_GCC_OpenMP).
 
-   Example commands: 
+   Example commands:
       ls setup
       cp setup/Make.MPI_GCC_OMP setup/Make.My_MPI_OMP
       vi setup/Make.My_MPI_OMP
@@ -41,7 +41,7 @@ NOTE: The instructions in this file assume you are working with a version
    when running in evaluation mode, and take about 30 minutes in official
    benchmark mode. If you are running on a production system, you may be able
    to submit results using the Quick Path option, which executes in minimum time.
-   When the run is complete, you will see a file called 
+   When the run is complete, you will see a file called
    'HPCG-Benchmark[version]_[timestamp].yaml'.  You will also see a log file
    called 'hpcg_log_[timestamp].txt.  The official results from your run are
    in the .yaml file.  The final two lines of the file declare whether or not

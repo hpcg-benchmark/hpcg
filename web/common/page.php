@@ -13,28 +13,28 @@ class Page {
   var $bodyAttributes = "";
 
   # set functions
-  function setPathToWebRoot($pathToWebRoot) { 
+  function setPathToWebRoot($pathToWebRoot) {
     $this->pathToWebRoot = $pathToWebRoot; }
 
-  function setPageTitle($pageTitle) { 
+  function setPageTitle($pageTitle) {
     $this->pageTitle = $pageTitle; }
 
-  function setPageIdentifier($pageIdentifier) { 
+  function setPageIdentifier($pageIdentifier) {
     $this->pageIdentifier = $pageIdentifier; }
 
-  function setNavIdentifier($navIdentifier) { 
+  function setNavIdentifier($navIdentifier) {
     $this->navIdentifier = $navIdentifier; }
 
-  function setStyleSheet($styleSheet) { 
+  function setStyleSheet($styleSheet) {
     $this->styleSheet= $styleSheet; }
-    
-  function setInlineStyles($inlineStyles) { 
+
+  function setInlineStyles($inlineStyles) {
     $this->inlineStyles = $inlineStyles; }
-    
-  function setInlineScripts($inlineScripts) { 
+
+  function setInlineScripts($inlineScripts) {
     $this->inlineScripts = $inlineScripts; }
 
-  function setBodyAttributes($bodyAttributes) { 
+  function setBodyAttributes($bodyAttributes) {
     $this->bodyAttributes = $bodyAttributes; }
 
   # get functions

@@ -1,4 +1,4 @@
-<?php 
+<?php
   include 'common/page.php';
   $page = new Page();
   $page->setPathToWebRoot('');
@@ -6,7 +6,7 @@
       $page->setNavIdentifier('home');
       $page->setPageIdentifier('home');
       ?>
-      
+
 <?php include 'common/header.html' ?>
 
 <!--Stat tracking-->
@@ -23,7 +23,7 @@
   })();
 
 </script>
-      
+
 <!--
 <div class="releaseBoxContainer">
 <div class="releaseBox">

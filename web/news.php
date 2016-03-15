@@ -4,12 +4,12 @@
   $page->setPathToWebRoot('');
   $page->setPageTitle('HPCG - News');
   $page->setNavIdentifier('home');
- 
+
   $y = <<< END
     div#contentMain li { padding-bottom: 1em; }
 END;
   $page->setInlineStyles($y);
-  
+
 ?>
 
 <?php include 'common/header.html' ?>
@@ -25,7 +25,7 @@ END;
 <strong>Monday, June 2nd, 2014</strong> - HPCG Benchmark Release 2.3 fixes a floating point operation count issue in Release 2.2.
  Release 2.3 is <a href="download.php">available for download</a>.  See the <a href="release_notes.php">release notes</a> for more information.<br/><br/>
 
-<strong>Wednesday, May 27th, 2014</strong> - HPCG Benchmark Release 2.2, with 
+<strong>Wednesday, May 27th, 2014</strong> - HPCG Benchmark Release 2.2, with
 reduced penalty for optimization overhead cost, is now <a href="download.php">available for download</a>.  See the <a href="release_notes.php">release notes</a> for more information.<br/><br/>
 
 <strong>Friday, January 31st, 2014</strong> - HPCG Benchmark Release 2.1, the

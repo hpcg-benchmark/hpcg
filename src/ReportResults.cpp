@@ -53,7 +53,7 @@ using std::endl;
   @see YAML_Doc
 */
 void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgSets, int refMaxIters,int optMaxIters, double times[],
-		const TestCGData & testcg_data, const TestSymmetryData & testsymmetry_data, const TestNormsData & testnorms_data, int global_failure, bool quickPath) {
+    const TestCGData & testcg_data, const TestSymmetryData & testsymmetry_data, const TestNormsData & testnorms_data, int global_failure, bool quickPath) {
 
   double minOfficialTime = 1800; // Any official benchmark result much run at least this many seconds
 
@@ -74,9 +74,9 @@ void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgS
 
 // TODO: Put the FLOP count, Memory BW and Memory Usage models into separate functions
 
-	  // ======================== FLOP count model =======================================
+    // ======================== FLOP count model =======================================
 
-	double fNumberOfCgSets = numberOfCgSets;
+  double fNumberOfCgSets = numberOfCgSets;
     double fniters = fNumberOfCgSets * (double) optMaxIters;
     double fnrow = A.totalNumberOfRows;
     double fnnz = A.totalNumberOfNonzeros;
@@ -89,13 +89,13 @@ void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgS
     double fnops_precond = 0.0;
     const SparseMatrix * Af = &A;
     for (int i=1; i<numberOfMgLevels; ++i) {
-        double fnnz_Af = Af->totalNumberOfNonzeros;
-        double fnumberOfPresmootherSteps = Af->mgData->numberOfPresmootherSteps;
-        double fnumberOfPostsmootherSteps = Af->mgData->numberOfPostsmootherSteps;
-        fnops_precond += fnumberOfPresmootherSteps*fniters*4.0*fnnz_Af; // number of presmoother flops
-        fnops_precond += fniters*2.0*fnnz_Af; // cost of fine grid residual calculation
-        fnops_precond += fnumberOfPostsmootherSteps*fniters*4.0*fnnz_Af;  // number of postsmoother flops
-    	Af = Af->Ac; // Go to next coarse level
+      double fnnz_Af = Af->totalNumberOfNonzeros;
+      double fnumberOfPresmootherSteps = Af->mgData->numberOfPresmootherSteps;
+      double fnumberOfPostsmootherSteps = Af->mgData->numberOfPostsmootherSteps;
+      fnops_precond += fnumberOfPresmootherSteps*fniters*4.0*fnnz_Af; // number of presmoother flops
+      fnops_precond += fniters*2.0*fnnz_Af; // cost of fine grid residual calculation
+      fnops_precond += fnumberOfPostsmootherSteps*fniters*4.0*fnnz_Af;  // number of postsmoother flops
+      Af = Af->Ac; // Go to next coarse level
     }
 
     fnops_precond += fniters*4.0*((double) Af->totalNumberOfNonzeros); // One symmetric GS sweep at the coarsest level
@@ -117,17 +117,17 @@ void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgS
     double fnwrites_precond = 0.0;
     Af = &A;
     for (int i=1; i<numberOfMgLevels; ++i) {
-        double fnnz_Af = Af->totalNumberOfNonzeros;
-        double fnrow_Af = Af->totalNumberOfRows;
-        double fnumberOfPresmootherSteps = Af->mgData->numberOfPresmootherSteps;
-        double fnumberOfPostsmootherSteps = Af->mgData->numberOfPostsmootherSteps;
-        fnreads_precond += fnumberOfPresmootherSteps*fniters*(2.0*fnnz_Af*(sizeof(double)+sizeof(local_int_t)) + fnrow_Af*sizeof(double)); // number of presmoother reads
-        fnwrites_precond += fnumberOfPresmootherSteps*fniters*fnrow_Af*sizeof(double); // number of presmoother writes
-        fnreads_precond += fniters*(fnnz_Af*(sizeof(double)+sizeof(local_int_t)) + fnrow_Af*sizeof(double)); // Number of reads for fine grid residual calculation
-        fnwrites_precond += fniters*fnnz_Af*sizeof(double); // Number of writes for fine grid residual calculation
-        fnreads_precond += fnumberOfPostsmootherSteps*fniters*(2.0*fnnz_Af*(sizeof(double)+sizeof(local_int_t)) + fnrow_Af*sizeof(double));  // number of postsmoother reads
-        fnwrites_precond += fnumberOfPostsmootherSteps*fniters*fnnz_Af*sizeof(double);  // number of postsmoother writes
-    	Af = Af->Ac; // Go to next coarse level
+      double fnnz_Af = Af->totalNumberOfNonzeros;
+      double fnrow_Af = Af->totalNumberOfRows;
+      double fnumberOfPresmootherSteps = Af->mgData->numberOfPresmootherSteps;
+      double fnumberOfPostsmootherSteps = Af->mgData->numberOfPostsmootherSteps;
+      fnreads_precond += fnumberOfPresmootherSteps*fniters*(2.0*fnnz_Af*(sizeof(double)+sizeof(local_int_t)) + fnrow_Af*sizeof(double)); // number of presmoother reads
+      fnwrites_precond += fnumberOfPresmootherSteps*fniters*fnrow_Af*sizeof(double); // number of presmoother writes
+      fnreads_precond += fniters*(fnnz_Af*(sizeof(double)+sizeof(local_int_t)) + fnrow_Af*sizeof(double)); // Number of reads for fine grid residual calculation
+      fnwrites_precond += fniters*fnnz_Af*sizeof(double); // Number of writes for fine grid residual calculation
+      fnreads_precond += fnumberOfPostsmootherSteps*fniters*(2.0*fnnz_Af*(sizeof(double)+sizeof(local_int_t)) + fnrow_Af*sizeof(double));  // number of postsmoother reads
+      fnwrites_precond += fnumberOfPostsmootherSteps*fniters*fnnz_Af*sizeof(double);  // number of postsmoother writes
+      Af = Af->Ac; // Go to next coarse level
     }
 
     double fnnz_Af = Af->totalNumberOfNonzeros;
@@ -175,35 +175,35 @@ void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgS
 
     Af = A.Ac;
     for (int i=1; i<numberOfMgLevels; ++i) {
-        double fnrow_Af = Af->totalNumberOfRows;
-        double fncol_Af = ((global_int_t) Af->localNumberOfColumns) * size; // Estimate of the global number of columns using the value from rank 0
-        double fnbytes_Af = 0.0;
-        // Model for GenerateCoarseProblem.cpp
-        fnbytes_Af += fnrow_Af*((double) sizeof(local_int_t)); // f2cOperator
-        fnbytes_Af += fnrow_Af*((double) sizeof(double)); // rc
-        fnbytes_Af += 2.0*fncol_Af*((double) sizeof(double)); // xc, Axf are estimated based on the size of these arrays on rank 0
-        fnbytes_Af += ((double) (sizeof(Geometry)+sizeof(SparseMatrix)+3*sizeof(Vector)+sizeof(MGData))); // Account for structs geomc, Ac, rc, xc, Axf - (minor)
+      double fnrow_Af = Af->totalNumberOfRows;
+      double fncol_Af = ((global_int_t) Af->localNumberOfColumns) * size; // Estimate of the global number of columns using the value from rank 0
+      double fnbytes_Af = 0.0;
+      // Model for GenerateCoarseProblem.cpp
+      fnbytes_Af += fnrow_Af*((double) sizeof(local_int_t)); // f2cOperator
+      fnbytes_Af += fnrow_Af*((double) sizeof(double)); // rc
+      fnbytes_Af += 2.0*fncol_Af*((double) sizeof(double)); // xc, Axf are estimated based on the size of these arrays on rank 0
+      fnbytes_Af += ((double) (sizeof(Geometry)+sizeof(SparseMatrix)+3*sizeof(Vector)+sizeof(MGData))); // Account for structs geomc, Ac, rc, xc, Axf - (minor)
 
-        // Model for GenerateProblem.cpp (called within GenerateCoarseProblem.cpp)
-        fnbytes_Af += fnrow_Af*sizeof(char);      // array nonzerosInRow
-        fnbytes_Af += fnrow_Af*((double) sizeof(global_int_t*)); // mtxIndG
-        fnbytes_Af += fnrow_Af*((double) sizeof(local_int_t*));  // mtxIndL
-        fnbytes_Af += fnrow_Af*((double) sizeof(double*));      // matrixValues
-        fnbytes_Af += fnrow_Af*((double) sizeof(double*));      // matrixDiagonal
-        fnbytes_Af += fnrow_Af*numberOfNonzerosPerRow*((double) sizeof(local_int_t));  // mtxIndL[1..nrows]
-        fnbytes_Af += fnrow_Af*numberOfNonzerosPerRow*((double) sizeof(double));       // matrixValues[1..nrows]
-        fnbytes_Af += fnrow_Af*numberOfNonzerosPerRow*((double) sizeof(global_int_t)); // mtxIndG[1..nrows]
+      // Model for GenerateProblem.cpp (called within GenerateCoarseProblem.cpp)
+      fnbytes_Af += fnrow_Af*sizeof(char);      // array nonzerosInRow
+      fnbytes_Af += fnrow_Af*((double) sizeof(global_int_t*)); // mtxIndG
+      fnbytes_Af += fnrow_Af*((double) sizeof(local_int_t*));  // mtxIndL
+      fnbytes_Af += fnrow_Af*((double) sizeof(double*));      // matrixValues
+      fnbytes_Af += fnrow_Af*((double) sizeof(double*));      // matrixDiagonal
+      fnbytes_Af += fnrow_Af*numberOfNonzerosPerRow*((double) sizeof(local_int_t));  // mtxIndL[1..nrows]
+      fnbytes_Af += fnrow_Af*numberOfNonzerosPerRow*((double) sizeof(double));       // matrixValues[1..nrows]
+      fnbytes_Af += fnrow_Af*numberOfNonzerosPerRow*((double) sizeof(global_int_t)); // mtxIndG[1..nrows]
 
-        // Model for SetupHalo_ref.cpp
+      // Model for SetupHalo_ref.cpp
 #ifndef HPCG_NO_MPI
-        fnbytes_Af += ((double) sizeof(double)*Af->totalToBeSent); //sendBuffer
-        fnbytes_Af += ((double) sizeof(local_int_t)*Af->totalToBeSent); // elementsToSend
-        fnbytes_Af += ((double) sizeof(int)*Af->numberOfSendNeighbors); // neighbors
-        fnbytes_Af += ((double) sizeof(local_int_t)*Af->numberOfSendNeighbors); // receiveLength, sendLength
+      fnbytes_Af += ((double) sizeof(double)*Af->totalToBeSent); //sendBuffer
+      fnbytes_Af += ((double) sizeof(local_int_t)*Af->totalToBeSent); // elementsToSend
+      fnbytes_Af += ((double) sizeof(int)*Af->numberOfSendNeighbors); // neighbors
+      fnbytes_Af += ((double) sizeof(local_int_t)*Af->numberOfSendNeighbors); // receiveLength, sendLength
 #endif
-        fnbytesPerLevel[i] = fnbytes_Af;
-        fnbytes += fnbytes_Af; // Running sum
-    	Af = Af->Ac; // Go to next coarse level
+      fnbytesPerLevel[i] = fnbytes_Af;
+      fnbytes += fnbytes_Af; // Running sum
+      Af = Af->Ac; // Go to next coarse level
     }
 
     assert(Af==0); // Make sure we got to the lowest grid level
@@ -249,12 +249,12 @@ void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgS
     Af = &A;
     doc.get("Multigrid Information")->add("Coarse Grids","");
     for (int i=1; i<numberOfMgLevels; ++i) {
-        doc.get("Multigrid Information")->get("Coarse Grids")->add("Grid Level",i);
-        doc.get("Multigrid Information")->get("Coarse Grids")->add("Number of Equations",Af->Ac->totalNumberOfRows);
-        doc.get("Multigrid Information")->get("Coarse Grids")->add("Number of Nonzero Terms",Af->Ac->totalNumberOfNonzeros);
-        doc.get("Multigrid Information")->get("Coarse Grids")->add("Number of Presmoother Steps",Af->mgData->numberOfPresmootherSteps);
-        doc.get("Multigrid Information")->get("Coarse Grids")->add("Number of Postsmoother Steps",Af->mgData->numberOfPostsmootherSteps);
-    	Af = Af->Ac;
+      doc.get("Multigrid Information")->get("Coarse Grids")->add("Grid Level",i);
+      doc.get("Multigrid Information")->get("Coarse Grids")->add("Number of Equations",Af->Ac->totalNumberOfRows);
+      doc.get("Multigrid Information")->get("Coarse Grids")->add("Number of Nonzero Terms",Af->Ac->totalNumberOfNonzeros);
+      doc.get("Multigrid Information")->get("Coarse Grids")->add("Number of Presmoother Steps",Af->mgData->numberOfPresmootherSteps);
+      doc.get("Multigrid Information")->get("Coarse Grids")->add("Number of Postsmoother Steps",Af->mgData->numberOfPostsmootherSteps);
+      Af = Af->Ac;
     }
 
     doc.add("########## Memory Use Summary  ##########","");
@@ -390,12 +390,12 @@ void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgS
       else {
           doc.get("__________ Final Summary __________")->add("Results are valid but execution time (sec) is",times[0]);
           if (quickPath) {
-        	  doc.get("__________ Final Summary __________")->add("     You have selected the QuickPath option", "Results are official for legacy installed systems with confirmation from the HPCG Benchmark leaders.");
-              doc.get("__________ Final Summary __________")->add("     After confirmation please upload results from the YAML file contents to","http://hpcg-benchmark.org");
+            doc.get("__________ Final Summary __________")->add("     You have selected the QuickPath option", "Results are official for legacy installed systems with confirmation from the HPCG Benchmark leaders.");
+            doc.get("__________ Final Summary __________")->add("     After confirmation please upload results from the YAML file contents to","http://hpcg-benchmark.org");
 
           }
           else {
-        	  doc.get("__________ Final Summary __________")->add("     Official results execution time (sec) must be at least",minOfficialTime);
+            doc.get("__________ Final Summary __________")->add("     Official results execution time (sec) must be at least",minOfficialTime);
           }
       }
     } else {

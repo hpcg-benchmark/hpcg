@@ -9,8 +9,8 @@
     table.docs td { padding: .5em 2em .5em 0; border-bottom: 1px solid #999; }
     ul.docs li { padding-bottom: 1em; }
 END;
-  $page->setInlineStyles($x); 
-  
+  $page->setInlineStyles($x);
+
 ?>
 
 <?php include 'common/header.html' ?>

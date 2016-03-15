@@ -11,7 +11,7 @@
 <div class="breadcrumb">Packages</div>
 
     <ul>
-	<li><b>Versions of HPCG:</b></li>
+     <li><b>Versions of HPCG:</b></li>
     <ul>
      <li><b>Reference:</b> <a href="downloads/hpcg-2.4.tar.gz">HPCG 2.4 Reference code (June 3, 2014)</a>
      <li><b>Reference:</b> <a href="downloads/hpcg-2.3.tar.gz">HPCG 2.3 Reference code (June 2, 2014)</a>
@@ -23,7 +23,7 @@
      <li><b>Reference:</b> <a href="downloads/hpcg-0.5.tar.gz">HPCG 0.5 Reference code (October 25, 2013)</a>
      <li><b>Reference:</b> <a href="downloads/hpcg-0.4.tar.gz">HPCG 0.4 Reference code (October 21, 2013)</a>
      <li><b>Reference:</b> <a href="downloads/hpcg-0.3.tar.gz">HPCG 0.3 Reference code (September 25, 2013)</a>
-      </ul>
+    </ul>
     </ul>
 
 <?php include 'common/footer.html' ?>

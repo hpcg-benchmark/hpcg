@@ -114,7 +114,7 @@ int TestCG(SparseMatrix & A, CGData & data, Vector & b, Vector & x, TestCGData &
   ReplaceMatrixDiagonal(A, origDiagA);
   CopyVector(origB, b);
   // Delete vectors
-  DeleteVector(origDiagA); 
+  DeleteVector(origDiagA);
   DeleteVector(exaggeratedDiagA);
   DeleteVector(origB);
   testcg_data.normr = normr;

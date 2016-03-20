@@ -72,9 +72,9 @@ void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgS
 
   if (A.geom->rank==0) { // Only PE 0 needs to compute and report timing results
 
-// TODO: Put the FLOP count, Memory BW and Memory Usage models into separate functions
+  // TODO: Put the FLOP count, Memory BW and Memory Usage models into separate functions
 
-    // ======================== FLOP count model =======================================
+  // ======================== FLOP count model =======================================
 
   double fNumberOfCgSets = numberOfCgSets;
   double fniters = fNumberOfCgSets * (double) optMaxIters;

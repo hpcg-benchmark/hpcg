@@ -28,6 +28,7 @@ const char* NULLDEVICE="/dev/null";
 
 #include <ctime>
 #include <cstdio>
+#include <cstdlib>
 #include <cstring>
 
 #include <fstream>
@@ -68,21 +69,24 @@ HPCG_Init(int * argc_p, char ** *argv_p, HPCG_Params & params) {
   int argc = *argc_p;
   char ** argv = *argv_p;
   char fname[80];
-  int i, j, iparams[4];
-  char cparams[4][6] = {"--nx=", "--ny=", "--nz=", "--rt="};
+  int i, j, *iparams;
+  char cparams[][6] = {"--nx=", "--ny=", "--nz=", "--rt="};
   time_t rawtime;
   tm * ptm;
+  const int nparams = (sizeof cparams) / (sizeof cparams[0]);
+
+  iparams = (int *)malloc(sizeof(int) * nparams);
 
   // Initialize iparams
-  for (i = 0; i < 4; ++i) iparams[i] = 0;
+  for (i = 0; i < nparams; ++i) iparams[i] = 0;
 
   /* for sequential and some MPI implementations it's OK to read first three args */
-  for (i = 0; i < 4; ++i)
+  for (i = 0; i < nparams; ++i)
     if (argc <= i+1 || sscanf(argv[i+1], "%d", iparams+i) != 1 || iparams[i] < 10) iparams[i] = 0;
 
   /* for some MPI environments, command line arguments may get complicated so we need a prefix */
   for (i = 1; i <= argc && argv[i]; ++i)
-    for (j = 0; j < 4; ++j)
+    for (j = 0; j < nparams; ++j)
       if (startswith(argv[i], cparams[j]))
         if (sscanf(argv[i]+strlen(cparams[j]), "%d", iparams+j) != 1 || iparams[j] < 10) iparams[j] = 0;
 
@@ -106,7 +110,7 @@ HPCG_Init(int * argc_p, char ** *argv_p, HPCG_Params & params) {
 
 // Broadcast values of iparams to all MPI processes
 #ifndef HPCG_NO_MPI
-  MPI_Bcast( iparams, 4, MPI_INT, 0, MPI_COMM_WORLD );
+  MPI_Bcast( iparams, nparams, MPI_INT, 0, MPI_COMM_WORLD );
 #endif
 
   params.nx = iparams[0];
@@ -135,9 +139,9 @@ HPCG_Init(int * argc_p, char ** *argv_p, HPCG_Params & params) {
   sprintf( fname, "hpcg_log_%04d.%02d.%02d.%02d.%02d.%02d.txt",
       1900 + ptm->tm_year, ptm->tm_mon+1, ptm->tm_mday, ptm->tm_hour, ptm->tm_min, ptm->tm_sec );
 
-  if (0 == params.comm_rank)
+  if (0 == params.comm_rank) {
     HPCG_fout.open(fname);
-  else {
+  } else {
 #if defined(HPCG_DEBUG) || defined(HPCG_DETAILED_DEBUG)
     char local[15];
     sprintf( local, "%d_", params.comm_rank );
@@ -148,6 +152,8 @@ HPCG_Init(int * argc_p, char ** *argv_p, HPCG_Params & params) {
     HPCG_fout.open(NULLDEVICE);
 #endif
   }
+
+  free( iparams );
 
   return 0;
 }

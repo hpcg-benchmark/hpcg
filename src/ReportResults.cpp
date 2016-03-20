@@ -48,7 +48,7 @@ using std::endl;
   @param[in] testcg_data    the data structure with the results of the CG-correctness test including pass/fail information
   @param[in] testsymmetry_data the data structure with the results of the CG symmetry test including pass/fail information
   @param[in] testnorms_data the data structure with the results of the CG norm test including pass/fail information
-  @param[in] global_failure indicates whether a failure occured during the correctness tests of CG
+  @param[in] global_failure indicates whether a failure occurred during the correctness tests of CG
 
   @see YAML_Doc
 */

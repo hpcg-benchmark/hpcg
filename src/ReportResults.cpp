@@ -359,41 +359,41 @@ void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgS
     //doc.get("Sparse Operations Overheads")->add("Halo exchange time (sec)", (times[6]));
     //doc.get("Sparse Operations Overheads")->add("Halo exchange as percentage of SpMV time", (times[6])/totalSparseMVTime*100.0);
 #endif
-    doc.add("__________ Final Summary __________","");
+    doc.add("Final Summary","");
     bool isValidRun = (testcg_data.count_fail==0) && (testsymmetry_data.count_fail==0) && (testnorms_data.pass) && (!global_failure);
     if (isValidRun) {
-      doc.get("__________ Final Summary __________")->add("HPCG result is VALID with a GFLOP/s rating of", totalGflops);
-      doc.get("__________ Final Summary __________")->add("    HPCG 2.4 Rating (for historical value) is", totalGflops24);
+      doc.get("Final Summary")->add("HPCG result is VALID with a GFLOP/s rating of", totalGflops);
+      doc.get("Final Summary")->add("HPCG 2.4 rating for historical reasons is", totalGflops24);
       if (!A.isDotProductOptimized) {
-        doc.get("__________ Final Summary __________")->add("Reference version of ComputeDotProduct used","Performance results are most likely suboptimal");
+        doc.get("Final Summary")->add("Reference version of ComputeDotProduct used","Performance results are most likely suboptimal");
       }
       if (!A.isSpmvOptimized) {
-        doc.get("__________ Final Summary __________")->add("Reference version of ComputeSPMV used","Performance results are most likely suboptimal");
+        doc.get("Final Summary")->add("Reference version of ComputeSPMV used","Performance results are most likely suboptimal");
       }
       if (!A.isMgOptimized) {
         if (A.geom->numThreads>1)
-          doc.get("__________ Final Summary __________")->add("Reference version of ComputeMG used and number of threads greater than 1","Performance results are severely suboptimal");
+          doc.get("Final Summary")->add("Reference version of ComputeMG used and number of threads greater than 1","Performance results are severely suboptimal");
         else // numThreads ==1
-          doc.get("__________ Final Summary __________")->add("Reference version of ComputeMG used","Performance results are most likely suboptimal");
+          doc.get("Final Summary")->add("Reference version of ComputeMG used","Performance results are most likely suboptimal");
       }
       if (!A.isWaxpbyOptimized) {
-        doc.get("__________ Final Summary __________")->add("Reference version of ComputeWAXPBY used","Performance results are most likely suboptimal");
+        doc.get("Final Summary")->add("Reference version of ComputeWAXPBY used","Performance results are most likely suboptimal");
       }
       if (times[0]>=minOfficialTime) {
-        doc.get("__________ Final Summary __________")->add("Please upload results from the YAML file contents to","http://hpcg-benchmark.org");
+        doc.get("Final Summary")->add("Please upload results from the YAML file contents to","http://hpcg-benchmark.org");
       }
       else {
-        doc.get("__________ Final Summary __________")->add("Results are valid but execution time (sec) is",times[0]);
+        doc.get("Final Summary")->add("Results are valid but execution time (sec) is",times[0]);
         if (quickPath) {
-          doc.get("__________ Final Summary __________")->add("     You have selected the QuickPath option", "Results are official for legacy installed systems with confirmation from the HPCG Benchmark leaders.");
-          doc.get("__________ Final Summary __________")->add("     After confirmation please upload results from the YAML file contents to","http://hpcg-benchmark.org");
+          doc.get("Final Summary")->add("You have selected the QuickPath option", "Results are official for legacy installed systems with confirmation from the HPCG Benchmark leaders.");
+          doc.get("Final Summary")->add("After confirmation please upload results from the YAML file contents to","http://hpcg-benchmark.org");
         } else {
-          doc.get("__________ Final Summary __________")->add("     Official results execution time (sec) must be at least",minOfficialTime);
+          doc.get("Final Summary")->add("Official results execution time (sec) must be at least",minOfficialTime);
         }
       }
     } else {
-      doc.get("__________ Final Summary __________")->add("HPCG result is","INVALID.");
-      doc.get("__________ Final Summary __________")->add("Please review the YAML file contents","You may NOT submit these results for consideration.");
+      doc.get("Final Summary")->add("HPCG result is","INVALID.");
+      doc.get("Final Summary")->add("Please review the YAML file contents","You may NOT submit these results for consideration.");
     }
 
     std::string yaml = doc.generate();

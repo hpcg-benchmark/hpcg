@@ -41,6 +41,7 @@ HPCG_DEPS = src/CG.o \
 	    src/ComputeProlongation_ref.o \
 	    src/ComputeRestriction_ref.o \
 	    src/CheckAspectRatio.o \
+	    src/OutputFile.o \
 	    src/GenerateCoarseProblem.o \
 	    src/init.o \
 	    src/finalize.o
@@ -174,5 +175,8 @@ src/GenerateCoarseProblem.o: HPCG_SRC_PATH/src/GenerateCoarseProblem.cpp HPCG_SR
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
 src/CheckAspectRatio.o: HPCG_SRC_PATH/src/CheckAspectRatio.cpp HPCG_SRC_PATH/src/CheckAspectRatio.hpp $(PRIMARY_HEADERS)
+	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
+
+src/OutputFile.o: HPCG_SRC_PATH/src/OutputFile.cpp HPCG_SRC_PATH/src/OutputFile.hpp $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 

@@ -150,12 +150,17 @@ inline void ReplaceMatrixDiagonal(SparseMatrix & A, Vector & diagonal) {
  */
 inline void DeleteMatrix(SparseMatrix & A) {
 
+#ifndef HPCG_CONTIGUOUS_ARRAYS
   for (local_int_t i = 0; i< A.localNumberOfRows; ++i) {
     delete [] A.matrixValues[i];
     delete [] A.mtxIndG[i];
     delete [] A.mtxIndL[i];
   }
-
+#else
+  delete [] A.matrixValues[0];
+  delete [] A.mtxIndG[0];
+  delete [] A.mtxIndL[0];
+#endif
   if (A.title)                  delete [] A.title;
   if (A.nonzerosInRow)             delete [] A.nonzerosInRow;
   if (A.mtxIndG) delete [] A.mtxIndG;

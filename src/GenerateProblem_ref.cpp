@@ -103,14 +103,28 @@ void GenerateProblem_ref(SparseMatrix & A, Vector * b, Vector * x, Vector * xexa
     mtxIndG[i] = 0;
     mtxIndL[i] = 0;
   }
+
+#ifndef HPCG_CONTIGUOUS_ARRAYS
   // Now allocate the arrays pointed to
-  for (local_int_t i=0; i< localNumberOfRows; ++i) {
+  for (local_int_t i=0; i< localNumberOfRows; ++i)
     mtxIndL[i] = new local_int_t[numberOfNonzerosPerRow];
+  for (local_int_t i=0; i< localNumberOfRows; ++i)
     matrixValues[i] = new double[numberOfNonzerosPerRow];
-    mtxIndG[i] = new global_int_t[numberOfNonzerosPerRow];
+  for (local_int_t i=0; i< localNumberOfRows; ++i)
+   mtxIndG[i] = new global_int_t[numberOfNonzerosPerRow];
+
+#else
+  // Now allocate the arrays pointed to
+  mtxIndL[0] = new local_int_t[localNumberOfRows * numberOfNonzerosPerRow];
+  matrixValues[0] = new double[localNumberOfRows * numberOfNonzerosPerRow];
+  mtxIndG[0] = new global_int_t[localNumberOfRows * numberOfNonzerosPerRow];
+
+  for (local_int_t i=1; i< localNumberOfRows; ++i) {
+  mtxIndL[i] = mtxIndL[0] + i * numberOfNonzerosPerRow;
+  matrixValues[i] = matrixValues[0] + i * numberOfNonzerosPerRow;
+  mtxIndG[i] = mtxIndG[0] + i * numberOfNonzerosPerRow;
   }
-
-
+#endif
 
   local_int_t localNumberOfNonzeros = 0;
   // TODO:  This triply nested loop could be flattened or use nested parallelism

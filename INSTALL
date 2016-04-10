@@ -175,6 +175,11 @@ options and their meaning are:
 
     -DHPCG_DEBUG
 
+* Compile with sparse matrix arrays allocated contiguously. This option
+* may be helpful on systems with pre-fetch::
+
+    -DHPCG_CONTIGUOUS_ARRAYS
+
 * Compile with voluminous debugging information turned on::
 
     -DHPCG_DETAILED_DEBUG

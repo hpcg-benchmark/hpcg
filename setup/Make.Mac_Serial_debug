@@ -98,6 +98,7 @@ HPCG_LIBS     =
 #
 # -DHPCG_NO_MPI		Define to disable MPI
 # -DHPCG_NO_OPENMP	Define to disable OPENMP
+# -DHPCG_CONTIGUOUS_ARRAYS Define to have sparse matrix arrays long and contiguous
 # -DHPCG_DEBUG       	Define to enable debugging output
 # -DHPCG_DETAILED_DEBUG Define to enable very detailed debugging output
 #

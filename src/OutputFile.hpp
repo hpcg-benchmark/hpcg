@@ -56,9 +56,9 @@ protected:
   std::string key; //!< the key under which the element is stored
   std::string value; //!< the value of the stored element
   std::string eol = "\n"; //!< end-of-line character sequence in the output file
-  std::string keySeparator = "::"; //!< character sequence to seperate keys in the output file
+  std::string keySeparator = "::"; //!< character sequence to separate keys in the output file
 
-  //! Recursively generate output string from descendent list, and their descendendents and so on
+  //! Recursively generate output string from descendant list, and their descendants and so on
   std::string generateRecursive(std::string prefix);
 
 public:
@@ -76,10 +76,13 @@ public:
 
   //! Default constructor: no-arguments accepted, should be used for descendant nodes
   /*!
-    This no-argument constructor can be used for leaf nodes to provide
-    key1::key2::key3=val output.
+    This no-argument constructor can be used for descendant nodes to provide
+    key1::key2::key3=val output. Unlike the root node, descendant nodes do not
+    have name and version but only store key-value pairs.
   */
   OutputFile(void);
+
+  ~OutputFile();
 
   //! Create and add a descendant element with value of type "string"
   /*!

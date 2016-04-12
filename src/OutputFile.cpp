@@ -30,6 +30,12 @@ OutputFile::OutputFile(const string & name_arg, const string & version_arg)
 
 OutputFile::OutputFile(void) {}
 
+OutputFile::~OutputFile() {
+  for (list<OutputFile*>::iterator it = descendants.begin(); it != descendants.end(); ++it) {
+    delete *it;
+  }
+}
+
 void
 OutputFile::add(const string & key_arg, const string & value_arg) {
   descendants.push_back(allocKeyVal(key_arg, value_arg));

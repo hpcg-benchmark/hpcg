@@ -21,12 +21,20 @@
 #ifndef SPARSEMATRIX_HPP
 #define SPARSEMATRIX_HPP
 
-#include <map>
 #include <vector>
 #include <cassert>
 #include "Geometry.hpp"
 #include "Vector.hpp"
 #include "MGData.hpp"
+#if __cplusplus <= 201103L
+// for C++03
+#include <map>
+typedef std::map< global_int_t, local_int_t > GlobalToLocalMap;
+#else
+// for C++11 or greater
+#include <unordered_map>
+using GlobalToLocalMap = std::unorderd_map< global_int_t, local_int_t >;
+#endif
 
 struct SparseMatrix_STRUCT {
   char  * title; //!< name of the sparse matrix
@@ -41,7 +49,7 @@ struct SparseMatrix_STRUCT {
   local_int_t ** mtxIndL; //!< matrix indices as local values
   double ** matrixValues; //!< values of matrix entries
   double ** matrixDiagonal; //!< values of matrix diagonal entries
-  std::map< global_int_t, local_int_t > globalToLocalMap; //!< global-to-local mapping
+  GlobalToLocalMap globalToLocalMap; //!< global-to-local mapping
   std::vector< global_int_t > localToGlobalMap; //!< local-to-global mapping
   mutable bool isDotProductOptimized;
   mutable bool isSpmvOptimized;

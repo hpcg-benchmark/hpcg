@@ -26,7 +26,7 @@
 #include "Geometry.hpp"
 #include "Vector.hpp"
 #include "MGData.hpp"
-#if __cplusplus <= 201103L
+#if __cplusplus < 201103L
 // for C++03
 #include <map>
 typedef std::map< global_int_t, local_int_t > GlobalToLocalMap;

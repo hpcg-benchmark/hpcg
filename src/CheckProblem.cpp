@@ -86,7 +86,7 @@ void CheckProblem(SparseMatrix & A, Vector * b, Vector * x, Vector * xexact) {
         global_int_t currentGlobalRow = giz*gnx*gny+giy*gnx+gix;
         assert(A.localToGlobalMap[currentLocalRow] == currentGlobalRow);
 #ifdef HPCG_DETAILED_DEBUG
-        HPCG_fout << " rank, globalRow, localRow = " << A.geom->rank << " " << currentGlobalRow << " " << A.globalToLocalMap[currentGlobalRow] << endl;
+        HPCG_fout << " rank, globalRow, localRow = " << A.geom->rank << " " << currentGlobalRow << " " << A.globalToLocalMap.find(currentGlobalRow)->second << endl;
 #endif
         char numberOfNonzerosInRow = 0;
         double * currentValuePointer = A.matrixValues[currentLocalRow]; // Pointer to current value in current row

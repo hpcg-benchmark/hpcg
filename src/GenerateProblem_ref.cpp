@@ -54,22 +54,19 @@ void GenerateProblem_ref(SparseMatrix & A, Vector * b, Vector * x, Vector * xexa
   global_int_t nx = A.geom->nx;
   global_int_t ny = A.geom->ny;
   global_int_t nz = A.geom->nz;
-  global_int_t npx = A.geom->npx;
-  global_int_t npy = A.geom->npy;
-  global_int_t npz = A.geom->npz;
-  global_int_t ipx = A.geom->ipx;
-  global_int_t ipy = A.geom->ipy;
-  global_int_t ipz = A.geom->ipz;
-  global_int_t gnx = nx*npx;
-  global_int_t gny = ny*npy;
-  global_int_t gnz = nz*npz;
+  global_int_t gnx = A.geom->gnx;
+  global_int_t gny = A.geom->gny;
+  global_int_t gnz = A.geom->gnz;
+  global_int_t gix0 = A.geom->gix0;
+  global_int_t giy0 = A.geom->giy0;
+  global_int_t giz0 = A.geom->giz0;
 
   local_int_t localNumberOfRows = nx*ny*nz; // This is the size of our subblock
   // If this assert fails, it most likely means that the local_int_t is set to int and should be set to long long
   assert(localNumberOfRows>0); // Throw an exception of the number of rows is less than zero (can happen if int overflow)
   local_int_t numberOfNonzerosPerRow = 27; // We are approximating a 27-point finite element/volume/difference 3D stencil
 
-  global_int_t totalNumberOfRows = ((global_int_t) localNumberOfRows)*((global_int_t) A.geom->size); // Total number of grid points in mesh
+  global_int_t totalNumberOfRows = gnx*gny*gnz; // Total number of grid points in mesh
   // If this assert fails, it most likely means that the global_int_t is set to int and should be set to long long
   assert(totalNumberOfRows>0); // Throw an exception of the number of rows is less than zero (can happen if int overflow)
 
@@ -132,11 +129,11 @@ void GenerateProblem_ref(SparseMatrix & A, Vector * b, Vector * x, Vector * xexa
   #pragma omp parallel for
 #endif
   for (local_int_t iz=0; iz<nz; iz++) {
-    global_int_t giz = ipz*nz+iz;
+    global_int_t giz = giz0+iz;
     for (local_int_t iy=0; iy<ny; iy++) {
-      global_int_t giy = ipy*ny+iy;
+      global_int_t giy = giy0+iy;
       for (local_int_t ix=0; ix<nx; ix++) {
-        global_int_t gix = ipx*nx+ix;
+        global_int_t gix = gix0+ix;
         local_int_t currentLocalRow = iz*nx*ny+iy*nx+ix;
         global_int_t currentGlobalRow = giz*gnx*gny+giy*gnx+gix;
 #ifndef HPCG_NO_OPENMP

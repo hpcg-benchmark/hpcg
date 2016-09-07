@@ -216,9 +216,9 @@ void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgS
     doc.get("Machine Summary")->add("Threads per processes",A.geom->numThreads);
 
     doc.add("Global Problem Dimensions","");
-    doc.get("Global Problem Dimensions")->add("Global nx",A.geom->npx*A.geom->nx);
-    doc.get("Global Problem Dimensions")->add("Global ny",A.geom->npy*A.geom->ny);
-    doc.get("Global Problem Dimensions")->add("Global nz",A.geom->npz*A.geom->nz);
+    doc.get("Global Problem Dimensions")->add("Global nx",A.geom->gnx);
+    doc.get("Global Problem Dimensions")->add("Global ny",A.geom->gny);
+    doc.get("Global Problem Dimensions")->add("Global nz",A.geom->gnz);
 
     doc.add("Processor Dimensions","");
     doc.get("Processor Dimensions")->add("npx",A.geom->npx);

@@ -85,5 +85,23 @@ void GenerateGeometry(int size, int rank, int numThreads, int nx, int ny, int nz
   geom->ipx = ipx;
   geom->ipy = ipy;
   geom->ipz = ipz;
+
+// These values should be defined to take into account changes in nx, ny, nz values
+// due to variable local grid sizes
+  global_int_t gnx = npx*nx;
+  global_int_t gny = npy*ny;
+  global_int_t gnz = npz*nz;
+  global_int_t gix0 = ipx*nx;
+  global_int_t giy0 = ipy*ny;
+  global_int_t giz0 = ipz*nz;
+
+// Keep these values for later
+  geom->gnx = gnx;
+  geom->gny = gny;
+  geom->gnz = gnz;
+  geom->gix0 = gix0;
+  geom->giy0 = giy0;
+  geom->giz0 = giz0;
+
   return;
 }

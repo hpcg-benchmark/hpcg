@@ -57,6 +57,12 @@ struct Geometry_STRUCT {
   int ipx;  //!< Current rank's x location in the npx by npy by npz processor grid
   int ipy;  //!< Current rank's y location in the npx by npy by npz processor grid
   int ipz;  //!< Current rank's z location in the npx by npy by npz processor grid
+  global_int_t gnx;  //!< Global number of x-direction grid points
+  global_int_t gny;  //!< Global number of y-direction grid points
+  global_int_t gnz;  //!< Global number of z-direction grid points
+  global_int_t gix0;  //!< Base global x index for this rank in the npx by npy by npz processor grid
+  global_int_t giy0;  //!< Base global y index for this rank in the npx by npy by npz processor grid
+  global_int_t giz0;  //!< Base global z index for this rank in the npx by npy by npz processor grid
 
 };
 typedef struct Geometry_STRUCT Geometry;
@@ -71,8 +77,8 @@ typedef struct Geometry_STRUCT Geometry;
   @return Returns the MPI rank of the process assigned the row
 */
 inline int ComputeRankOfMatrixRow(const Geometry & geom, global_int_t index) {
-  global_int_t gnx = geom.nx*geom.npx;
-  global_int_t gny = geom.ny*geom.npy;
+  global_int_t gnx = geom.gnx;
+  global_int_t gny = geom.gny;
 
   global_int_t iz = index/(gny*gnx);
   global_int_t iy = (index-iz*gny*gnx)/gnx;

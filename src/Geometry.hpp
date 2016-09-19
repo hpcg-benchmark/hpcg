@@ -48,12 +48,15 @@ struct Geometry_STRUCT {
   int size; //!< Number of MPI processes
   int rank; //!< This process' rank in the range [0 to size - 1]
   int numThreads; //!< This process' number of threads
-  int nx;   //!< Number of x-direction grid points for each local subdomain
+  int nx;   //!< Number of x-direction grid points for each local subdomain TODO: The type for nx, ny and nz should be local_int_t
   int ny;   //!< Number of y-direction grid points for each local subdomain
   int nz;   //!< Number of z-direction grid points for each local subdomain
   int npx;  //!< Number of processors in x-direction
   int npy;  //!< Number of processors in y-direction
   int npz;  //!< Number of processors in z-direction
+  global_int_t npartz; //!< Number of partitions with varying nz values
+  global_int_t * partz_ids; //!< Array of partition ids of processor in z-direction where new value of nz starts (valid values are 0 to npz-1)
+  global_int_t * partz_nz; //!< Array of nz values for each partition
   int ipx;  //!< Current rank's x location in the npx by npy by npz processor grid
   int ipy;  //!< Current rank's y location in the npx by npy by npz processor grid
   int ipz;  //!< Current rank's z location in the npx by npy by npz processor grid
@@ -83,6 +86,11 @@ inline int ComputeRankOfMatrixRow(const Geometry & geom, global_int_t index) {
   global_int_t iz = index/(gny*gnx);
   global_int_t iy = (index-iz*gny*gnx)/gnx;
   global_int_t ix = index%gnx;
+  global_int_t ipartz = 0;
+  int inz = geom.partz_nz[0];
+  for (int i=0; i< geom.npartz; ++i) {
+
+  }
   global_int_t ipz = iz/geom.nz;
   global_int_t ipy = iy/geom.ny;
   global_int_t ipx = ix/geom.nx;

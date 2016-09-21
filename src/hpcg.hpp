@@ -22,6 +22,7 @@
 #define HPCG_HPP
 
 #include <fstream>
+#include "Geometry.hpp"
 
 extern std::ofstream HPCG_fout;
 
@@ -29,10 +30,13 @@ struct HPCG_Params_STRUCT {
   int comm_size; //!< Number of MPI processes in MPI_COMM_WORLD
   int comm_rank; //!< This process' MPI rank in the range [0 to comm_size - 1]
   int numThreads; //!< This process' number of threads
-  int nx; //!< Number of x-direction grid points for each local subdomain
-  int ny; //!< Number of y-direction grid points for each local subdomain
-  int nz; //!< Number of z-direction grid points for each local subdomain
+  local_int_t nx; //!< Number of x-direction grid points for each local subdomain
+  local_int_t ny; //!< Number of y-direction grid points for each local subdomain
+  local_int_t nz; //!< Number of z-direction grid points for each local subdomain
   int runningTime; //!< Number of seconds to run the timed portion of the benchmark
+  int pz; //!< Partition in the z processor dimension, default is npz
+  local_int_t zl; //!< nz for processors in the z dimension with value less than pz
+  local_int_t zu; //!< nz for processors in the z dimension with value greater than pz
 };
 /*!
   HPCG_Params is a shorthand for HPCG_Params_STRUCT

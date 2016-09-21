@@ -48,15 +48,16 @@ struct Geometry_STRUCT {
   int size; //!< Number of MPI processes
   int rank; //!< This process' rank in the range [0 to size - 1]
   int numThreads; //!< This process' number of threads
-  int nx;   //!< Number of x-direction grid points for each local subdomain TODO: The type for nx, ny and nz should be local_int_t
-  int ny;   //!< Number of y-direction grid points for each local subdomain
-  int nz;   //!< Number of z-direction grid points for each local subdomain
+  local_int_t nx;   //!< Number of x-direction grid points for each local subdomain
+  local_int_t ny;   //!< Number of y-direction grid points for each local subdomain
+  local_int_t nz;   //!< Number of z-direction grid points for each local subdomain
   int npx;  //!< Number of processors in x-direction
   int npy;  //!< Number of processors in y-direction
   int npz;  //!< Number of processors in z-direction
-  global_int_t npartz; //!< Number of partitions with varying nz values
-  global_int_t * partz_ids; //!< Array of partition ids of processor in z-direction where new value of nz starts (valid values are 0 to npz-1)
-  global_int_t * partz_nz; //!< Array of nz values for each partition
+  int pz; //!< partition ID of z-dimension process that starts the second region of nz values
+  int npartz; //!< Number of partitions with varying nz values
+  int * partz_ids; //!< Array of partition ids of processor in z-direction where new value of nz starts (valid values are 0 to npz-1)
+  local_int_t * partz_nz; //!< Array of length npartz containing the nz values for each partition
   int ipx;  //!< Current rank's x location in the npx by npy by npz processor grid
   int ipy;  //!< Current rank's y location in the npx by npy by npz processor grid
   int ipz;  //!< Current rank's z location in the npx by npy by npz processor grid
@@ -86,17 +87,48 @@ inline int ComputeRankOfMatrixRow(const Geometry & geom, global_int_t index) {
   global_int_t iz = index/(gny*gnx);
   global_int_t iy = (index-iz*gny*gnx)/gnx;
   global_int_t ix = index%gnx;
-  global_int_t ipartz = 0;
-  int inz = geom.partz_nz[0];
+  // We now permit varying values for nz for any nx-by-ny plane of MPI processes.
+  // npartz is the number of different groups of nx-by-ny groups of processes.
+  // partz_ids is an array of length npartz where each value indicates the z process of the last process in the ith nx-by-ny group.
+  // partz_nz is an array of length npartz containing the value of nz for the ith group.
+
+  //        With no variation, npartz = 1, partz_ids[0] = npz-1, partz_nz[0] = nz
+
+  int ipz = 0;
+  int ipartz_ids = 0;
   for (int i=0; i< geom.npartz; ++i) {
+	  int ipart_nz = geom.partz_nz[i];
+	  ipartz_ids = geom.partz_ids[i] - ipartz_ids;
+	  if (iz<= ipart_nz*ipartz_ids) {
+		  ipz += iz/ipart_nz;
+		  break;
+	  } else {
+		  ipz += ipartz_ids;
+		  iz -= ipart_nz*ipartz_ids;
+	  }
 
   }
-  global_int_t ipz = iz/geom.nz;
-  global_int_t ipy = iy/geom.ny;
-  global_int_t ipx = ix/geom.nx;
+//  global_int_t ipz = iz/geom.nz;
+  int ipy = iy/geom.ny;
+  int ipx = ix/geom.nx;
   int rank = ipx+ipy*geom.npx+ipz*geom.npy*geom.npx;
   return rank;
 }
+
+
+/*!
+ Destructor for geometry data.
+
+ @param[inout] data the geometry data structure whose storage is deallocated
+ */
+inline void DeleteGeometry(Geometry & geom) {
+
+	delete [] geom.partz_nz;
+	delete [] geom.partz_ids;
+
+	return;
+}
+
 
 
 #endif // GEOMETRY_HPP

@@ -70,10 +70,11 @@ HPCG_Init(int * argc_p, char ** *argv_p, HPCG_Params & params) {
   char ** argv = *argv_p;
   char fname[80];
   int i, j, *iparams;
-  char cparams[][6] = {"--nx=", "--ny=", "--nz=", "--rt="};
+  char cparams[][6] = {"--nx=", "--ny=", "--nz=", "--rt=", "--pz=", "--zl=", "--zu="};
   time_t rawtime;
   tm * ptm;
   const int nparams = (sizeof cparams) / (sizeof cparams[0]);
+  bool broadcastParams = false; // Make true if parameters read from file.
 
   iparams = (int *)malloc(sizeof(int) * nparams);
 
@@ -95,6 +96,7 @@ HPCG_Init(int * argc_p, char ** *argv_p, HPCG_Params & params) {
   if (! iparams[3]) rt = 0; // If --rt was specified, we already have the runtime, so don't read it from file
   if (! iparams[0] && ! iparams[1] && ! iparams[2]) { /* no geometry arguments on the command line */
     ReadHpcgDat(iparams, rt);
+    broadcastParams = true;
   }
 
   // Check for small or unspecified nx, ny, nz values
@@ -110,7 +112,9 @@ HPCG_Init(int * argc_p, char ** *argv_p, HPCG_Params & params) {
 
 // Broadcast values of iparams to all MPI processes
 #ifndef HPCG_NO_MPI
-  MPI_Bcast( iparams, nparams, MPI_INT, 0, MPI_COMM_WORLD );
+  if (broadcastParams) {
+	  MPI_Bcast( iparams, nparams, MPI_INT, 0, MPI_COMM_WORLD );
+  }
 #endif
 
   params.nx = iparams[0];
@@ -118,6 +122,9 @@ HPCG_Init(int * argc_p, char ** *argv_p, HPCG_Params & params) {
   params.nz = iparams[2];
 
   params.runningTime = iparams[3];
+  params.pz = iparams[4];
+  params.zl = iparams[5];
+  params.zu = iparams[6];
 
 #ifndef HPCG_NO_MPI
   MPI_Comm_rank( MPI_COMM_WORLD, &params.comm_rank );

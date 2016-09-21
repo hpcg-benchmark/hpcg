@@ -83,7 +83,14 @@ void GenerateCoarseProblem(const SparseMatrix & Af) {
 
   // Construct the geometry and linear system
   Geometry * geomc = new Geometry;
-  GenerateGeometry(Af.geom->size, Af.geom->rank, Af.geom->numThreads, nxc, nyc, nzc, geomc);
+  local_int_t zlc = 0; // Coarsen nz for the lower block in the z processor dimension
+  local_int_t zuc = 0; // Coarsen nz for the upper block in the z processor dimension
+  int pz = Af.geom->pz;
+  if (pz>0) {
+	  zlc = Af.geom->partz_nz[0]/2; // Coarsen nz for the lower block in the z processor dimension
+	  zuc = Af.geom->partz_nz[1]/2; // Coarsen nz for the upper block in the z processor dimension
+  }
+  GenerateGeometry(Af.geom->size, Af.geom->rank, Af.geom->numThreads, Af.geom->pz, zlc, zuc, nxc, nyc, nzc, geomc);
 
   SparseMatrix * Ac = new SparseMatrix;
   InitializeSparseMatrix(*Ac, geomc);

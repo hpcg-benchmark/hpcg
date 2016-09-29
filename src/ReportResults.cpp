@@ -228,7 +228,15 @@ void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgS
     doc.add("Local Domain Dimensions","");
     doc.get("Local Domain Dimensions")->add("nx",A.geom->nx);
     doc.get("Local Domain Dimensions")->add("ny",A.geom->ny);
-    doc.get("Local Domain Dimensions")->add("nz",A.geom->nz);
+
+    int ipartz_ids = 0;
+    for (int i=0; i< A.geom->npartz; ++i) {
+  	  doc.get("Local Domain Dimensions")->add("Lower ipz", ipartz_ids);
+   	  doc.get("Local Domain Dimensions")->add("Upper ipz", A.geom->partz_ids[i]-1);
+      doc.get("Local Domain Dimensions")->add("nz",A.geom->partz_nz[i]);
+  	  ipartz_ids = A.geom->partz_ids[i];
+    }
+
 
     doc.add("########## Problem Summary  ##########","");
 

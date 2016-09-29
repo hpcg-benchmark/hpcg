@@ -70,7 +70,7 @@ void GenerateGeometry(int size, int rank, int numThreads, int pz, local_int_t zl
 	  partz_nz[0] = zl;
 	  partz_nz[1] = zu;
   }
-  partz_ids[npartz-1] = npz; // The last element of this array is always npz
+//  partz_ids[npartz-1] = npz; // The last element of this array is always npz
   int ipartz_ids = 0;
   for (int i=0; i< npartz; ++i) {
 	  assert(ipartz_ids<partz_ids[i]);  // Make sure that z partitioning is consistent with computed npz value
@@ -144,9 +144,9 @@ void GenerateGeometry(int size, int rank, int numThreads, int pz, local_int_t zl
 		  giz0 += (ipz-ipartz_ids)*ipart_nz;
 		  break;
 	  } else {
+		  ipartz_ids = partz_ids[i];
 		  giz0 += ipartz_ids*ipart_nz;
 	  }
-	  ipartz_ids = partz_ids[i] - ipartz_ids;
 
   }
   global_int_t gix0 = ipx*nx;

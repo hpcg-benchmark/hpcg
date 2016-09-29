@@ -56,7 +56,7 @@ struct Geometry_STRUCT {
   int npz;  //!< Number of processors in z-direction
   int pz; //!< partition ID of z-dimension process that starts the second region of nz values
   int npartz; //!< Number of partitions with varying nz values
-  int * partz_ids; //!< Array of partition ids of processor in z-direction where new value of nz starts (valid values are 0 to npz-1)
+  int * partz_ids; //!< Array of partition ids of processor in z-direction where new value of nz starts (valid values are 1 to npz)
   local_int_t * partz_nz; //!< Array of length npartz containing the nz values for each partition
   int ipx;  //!< Current rank's x location in the npx by npy by npz processor grid
   int ipy;  //!< Current rank's y location in the npx by npy by npz processor grid
@@ -92,7 +92,7 @@ inline int ComputeRankOfMatrixRow(const Geometry & geom, global_int_t index) {
   // partz_ids is an array of length npartz where each value indicates the z process of the last process in the ith nx-by-ny group.
   // partz_nz is an array of length npartz containing the value of nz for the ith group.
 
-  //        With no variation, npartz = 1, partz_ids[0] = npz-1, partz_nz[0] = nz
+  //        With no variation, npartz = 1, partz_ids[0] = npz, partz_nz[0] = nz
 
   int ipz = 0;
   int ipartz_ids = 0;

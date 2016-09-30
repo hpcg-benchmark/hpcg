@@ -89,7 +89,7 @@ HPCG_Init(int * argc_p, char ** *argv_p, HPCG_Params & params) {
   for (i = 1; i <= argc && argv[i]; ++i)
     for (j = 0; j < nparams; ++j)
       if (startswith(argv[i], cparams[j]))
-        if (sscanf(argv[i]+strlen(cparams[j]), "%d", iparams+j) != 1 || iparams[j] < 10) iparams[j] = 0;
+        if (sscanf(argv[i]+strlen(cparams[j]), "%d", iparams+j) != 1 /*|| iparams[j] < 10*/) iparams[j] = 0;
 
   // Check if --rt was specified on the command line
   int * rt  = iparams+3;  // Assume runtime was not specified and will be read from the hpcg.dat file
@@ -140,6 +140,7 @@ HPCG_Init(int * argc_p, char ** *argv_p, HPCG_Params & params) {
   #pragma omp parallel
   params.numThreads = omp_get_num_threads();
 #endif
+//  for (i = 0; i < nparams; ++i) std::cout << "rank = "<< params.comm_rank << " iparam["<<i<<"] = " << iparams[i] << "\n";
 
   time ( &rawtime );
   ptm = localtime(&rawtime);

@@ -31,7 +31,7 @@
   The OutputFile class facilitates easy collecting and reporting of
   key-value-formatted data that can be then registered with the HPCG results
   collection website. The keys may have hierarchy key1::key2::key3=val with
-  double colon :: as a seperator. A sample output may look like this (note how
+  double colon :: as a separator. A sample output may look like this (note how
   "major" and "micro" keys repeat with different ancestor keys):
 
 \code

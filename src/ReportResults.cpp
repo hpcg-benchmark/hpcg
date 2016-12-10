@@ -231,10 +231,10 @@ void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgS
 
     int ipartz_ids = 0;
     for (int i=0; i< A.geom->npartz; ++i) {
-  	  doc.get("Local Domain Dimensions")->add("Lower ipz", ipartz_ids);
-   	  doc.get("Local Domain Dimensions")->add("Upper ipz", A.geom->partz_ids[i]-1);
+      doc.get("Local Domain Dimensions")->add("Lower ipz", ipartz_ids);
+      doc.get("Local Domain Dimensions")->add("Upper ipz", A.geom->partz_ids[i]-1);
       doc.get("Local Domain Dimensions")->add("nz",A.geom->partz_nz[i]);
-  	  ipartz_ids = A.geom->partz_ids[i];
+      ipartz_ids = A.geom->partz_ids[i];
     }
 
 

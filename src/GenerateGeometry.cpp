@@ -55,26 +55,26 @@ void GenerateGeometry(int size, int rank, int numThreads, int pz, local_int_t zl
   local_int_t * partz_nz = 0;
   int npartz = 0;
   if (pz==0) { // No variation in nz sizes
-	  npartz = 1;
-	  partz_ids = new int[1];
-	  partz_nz = new local_int_t[1];
-	  partz_ids[0] = npz;
-	  partz_nz[0] = nz;
+    npartz = 1;
+    partz_ids = new int[1];
+    partz_nz = new local_int_t[1];
+    partz_ids[0] = npz;
+    partz_nz[0] = nz;
   }
   else {
-	  npartz = 2;
-	  partz_ids = new int[2];
-	  partz_ids[0] = pz;
-	  partz_ids[1] = npz;
-	  partz_nz = new local_int_t[2];
-	  partz_nz[0] = zl;
-	  partz_nz[1] = zu;
+    npartz = 2;
+    partz_ids = new int[2];
+    partz_ids[0] = pz;
+    partz_ids[1] = npz;
+    partz_nz = new local_int_t[2];
+    partz_nz[0] = zl;
+    partz_nz[1] = zu;
   }
 //  partz_ids[npartz-1] = npz; // The last element of this array is always npz
   int ipartz_ids = 0;
   for (int i=0; i< npartz; ++i) {
-	  assert(ipartz_ids<partz_ids[i]);  // Make sure that z partitioning is consistent with computed npz value
-	  ipartz_ids = partz_ids[i];
+    assert(ipartz_ids<partz_ids[i]);  // Make sure that z partitioning is consistent with computed npz value
+    ipartz_ids = partz_ids[i];
   }
 
   // Now compute this process's indices in the 3D cube
@@ -132,21 +132,21 @@ void GenerateGeometry(int size, int rank, int numThreads, int pz, local_int_t zl
   ipartz_ids = 0;
 
   for (int i=0; i< npartz; ++i) {
-	  ipartz_ids = partz_ids[i] - ipartz_ids;
-	  gnz += partz_nz[i]*ipartz_ids;
+    ipartz_ids = partz_ids[i] - ipartz_ids;
+    gnz += partz_nz[i]*ipartz_ids;
   }
   //global_int_t giz0 = ipz*nz;
   global_int_t giz0 = 0;
   ipartz_ids = 0;
   for (int i=0; i< npartz; ++i) {
-	  int ipart_nz = partz_nz[i];
-	  if (ipz < partz_ids[i]) {
-		  giz0 += (ipz-ipartz_ids)*ipart_nz;
-		  break;
-	  } else {
-		  ipartz_ids = partz_ids[i];
-		  giz0 += ipartz_ids*ipart_nz;
-	  }
+    int ipart_nz = partz_nz[i];
+    if (ipz < partz_ids[i]) {
+      giz0 += (ipz-ipartz_ids)*ipart_nz;
+      break;
+    } else {
+      ipartz_ids = partz_ids[i];
+      giz0 += ipartz_ids*ipart_nz;
+    }
 
   }
   global_int_t gix0 = ipx*nx;

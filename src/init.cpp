@@ -113,7 +113,7 @@ HPCG_Init(int * argc_p, char ** *argv_p, HPCG_Params & params) {
 // Broadcast values of iparams to all MPI processes
 #ifndef HPCG_NO_MPI
   if (broadcastParams) {
-	  MPI_Bcast( iparams, nparams, MPI_INT, 0, MPI_COMM_WORLD );
+    MPI_Bcast( iparams, nparams, MPI_INT, 0, MPI_COMM_WORLD );
   }
 #endif
 

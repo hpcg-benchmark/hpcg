@@ -97,15 +97,15 @@ inline int ComputeRankOfMatrixRow(const Geometry & geom, global_int_t index) {
   int ipz = 0;
   int ipartz_ids = 0;
   for (int i=0; i< geom.npartz; ++i) {
-	  int ipart_nz = geom.partz_nz[i];
-	  ipartz_ids = geom.partz_ids[i] - ipartz_ids;
-	  if (iz<= ipart_nz*ipartz_ids) {
-		  ipz += iz/ipart_nz;
-		  break;
-	  } else {
-		  ipz += ipartz_ids;
-		  iz -= ipart_nz*ipartz_ids;
-	  }
+    int ipart_nz = geom.partz_nz[i];
+    ipartz_ids = geom.partz_ids[i] - ipartz_ids;
+    if (iz<= ipart_nz*ipartz_ids) {
+      ipz += iz/ipart_nz;
+      break;
+    } else {
+      ipz += ipartz_ids;
+      iz -= ipart_nz*ipartz_ids;
+    }
 
   }
 //  global_int_t ipz = iz/geom.nz;
@@ -123,10 +123,10 @@ inline int ComputeRankOfMatrixRow(const Geometry & geom, global_int_t index) {
  */
 inline void DeleteGeometry(Geometry & geom) {
 
-	delete [] geom.partz_nz;
-	delete [] geom.partz_ids;
+  delete [] geom.partz_nz;
+  delete [] geom.partz_ids;
 
-	return;
+  return;
 }
 
 

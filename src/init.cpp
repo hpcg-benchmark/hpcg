@@ -70,7 +70,7 @@ HPCG_Init(int * argc_p, char ** *argv_p, HPCG_Params & params) {
   char ** argv = *argv_p;
   char fname[80];
   int i, j, *iparams;
-  char cparams[][6] = {"--nx=", "--ny=", "--nz=", "--rt=", "--pz=", "--zl=", "--zu="};
+  char cparams[][7] = {"--nx=", "--ny=", "--nz=", "--rt=", "--pz=", "--zl=", "--zu="};
   time_t rawtime;
   tm * ptm;
   const int nparams = (sizeof cparams) / (sizeof cparams[0]);

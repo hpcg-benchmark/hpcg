@@ -15,6 +15,6 @@
 #ifndef READHPCGDAT_HPP
 #define READHPCGDAT_HPP
 
-int ReadHpcgDat(int *localDimensions, int *secondsPerRun);
+int ReadHpcgDat(int *localDimensions, int *secondsPerRun, int *localProcDimensions);
 
 #endif // READHPCGDAT_HPP

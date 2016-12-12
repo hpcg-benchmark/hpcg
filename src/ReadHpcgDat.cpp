@@ -39,7 +39,7 @@ SkipUntilEol(FILE *stream) {
 }
 
 int
-ReadHpcgDat(int *localDimensions, int *secondsPerRun) {
+ReadHpcgDat(int *localDimensions, int *secondsPerRun, int *localProcDimensions) {
   FILE * hpcgStream = fopen("hpcg.dat", "r");
 
   if (! hpcgStream)
@@ -59,6 +59,12 @@ ReadHpcgDat(int *localDimensions, int *secondsPerRun) {
     if (fscanf(hpcgStream, "%d", secondsPerRun) != 1 || secondsPerRun[0] < 0)
       secondsPerRun[0] = 30 * 60; // 30 minutes
   }
+
+  SkipUntilEol( hpcgStream ); // skip the rest of the third line
+
+  for (int i = 0; i < 3; ++i)
+    if (fscanf(hpcgStream, "%d", localProcDimensions+i) != 1 || localProcDimensions[i] < 1)
+      localProcDimensions[i] = 1;
 
   fclose(hpcgStream);
 

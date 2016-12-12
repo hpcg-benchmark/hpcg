@@ -127,6 +127,10 @@ HPCG_Init(int * argc_p, char ** *argv_p, HPCG_Params & params) {
   params.zl = iparams[5];
   params.zu = iparams[6];
 
+  params.npx = iparams[7];
+  params.npy = iparams[8];
+  params.npz = iparams[9];
+
 #ifndef HPCG_NO_MPI
   MPI_Comm_rank( MPI_COMM_WORLD, &params.comm_rank );
   MPI_Comm_size( MPI_COMM_WORLD, &params.comm_size );

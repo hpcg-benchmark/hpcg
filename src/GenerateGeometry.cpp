@@ -46,11 +46,16 @@ using std::endl;
   @param[in]  nx, ny, nz number of grid points for each local block in the x, y, and z dimensions, respectively
   @param[out] geom data structure that will store the above parameters and the factoring of total number of processes into three dimensions
 */
-void GenerateGeometry(int size, int rank, int numThreads, int pz, local_int_t zl, local_int_t zu, local_int_t nx, local_int_t ny, local_int_t nz, Geometry * geom) {
+void GenerateGeometry(int size, int rank, int numThreads,
+  int pz, local_int_t zl, local_int_t zu,
+  local_int_t nx, local_int_t ny, local_int_t nz,
+  int npx, int npy, int npz,
+  Geometry * geom)
+{
 
-  int npx, npy, npz;
+  if (npx * npy * npz <= 0 || npx * npy * npz > size)
+    ComputeOptimalShapeXYZ( size, npx, npy, npz );
 
-  ComputeOptimalShapeXYZ( size, npx, npy, npz );
   int * partz_ids = 0;
   local_int_t * partz_nz = 0;
   int npartz = 0;

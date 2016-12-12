@@ -90,7 +90,7 @@ void GenerateCoarseProblem(const SparseMatrix & Af) {
     zlc = Af.geom->partz_nz[0]/2; // Coarsen nz for the lower block in the z processor dimension
     zuc = Af.geom->partz_nz[1]/2; // Coarsen nz for the upper block in the z processor dimension
   }
-  GenerateGeometry(Af.geom->size, Af.geom->rank, Af.geom->numThreads, Af.geom->pz, zlc, zuc, nxc, nyc, nzc, geomc);
+  GenerateGeometry(Af.geom->size, Af.geom->rank, Af.geom->numThreads, Af.geom->pz, zlc, zuc, nxc, nyc, nzc, Af.geom->npx, Af.geom->npy, Af.geom->npz, geomc);
 
   SparseMatrix * Ac = new SparseMatrix;
   InitializeSparseMatrix(*Ac, geomc);

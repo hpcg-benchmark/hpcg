@@ -102,7 +102,7 @@ void GenerateGeometry(int size, int rank, int numThreads,
       << "ipy = " << ipy << endl
       << "ipz = " << ipz << endl;
 
-  assert(size==npx*npy*npz);
+  assert(size>=npx*npy*npz);
 #endif
   geom->size = size;
   geom->rank = rank;

@@ -55,8 +55,8 @@ protected:
   std::string version; //!< version of the benchmark
   std::string key; //!< the key under which the element is stored
   std::string value; //!< the value of the stored element
-  std::string eol = "\n"; //!< end-of-line character sequence in the output file
-  std::string keySeparator = "::"; //!< character sequence to separate keys in the output file
+  std::string eol; //!< end-of-line character sequence in the output file
+  std::string keySeparator; //!< character sequence to separate keys in the output file
 
   //! Recursively generate output string from descendant list, and their descendants and so on
   std::string generateRecursive(std::string prefix);

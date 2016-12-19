@@ -26,9 +26,9 @@ using std::list;
 using std::ofstream;
 
 OutputFile::OutputFile(const string & name_arg, const string & version_arg)
-  : name(name_arg), version(version_arg) {}
+  : name(name_arg), version(version_arg), eol("\n"), keySeparator("::") {}
 
-OutputFile::OutputFile(void) {}
+OutputFile::OutputFile(void) : eol("\n"), keySeparator("::") {}
 
 OutputFile::~OutputFile() {
   for (list<OutputFile*>::iterator it = descendants.begin(); it != descendants.end(); ++it) {

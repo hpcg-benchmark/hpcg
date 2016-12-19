@@ -17,5 +17,5 @@
 #include "SparseMatrix.hpp"
 #include "Vector.hpp"
 
-void CheckProblem(const SparseMatrix & A, Vector * b, Vector * x, Vector * xexact);
+void CheckProblem(SparseMatrix & A, Vector * b, Vector * x, Vector * xexact);
 #endif // CHECKPROBLEM_HPP

@@ -90,9 +90,9 @@ void GenerateGeometry(int size, int rank, int numThreads,
 #ifdef HPCG_DEBUG
   if (rank==0)
     HPCG_fout   << "size = "<< size << endl
-        << "nx  = " << params.nx << endl
-        << "ny  = " << params.ny << endl
-        << "nz  = " << params.nz << endl
+        << "nx  = " << nx << endl
+        << "ny  = " << ny << endl
+        << "nz  = " << nz << endl
         << "npx = " << npx << endl
         << "npy = " << npy << endl
         << "npz = " << npz << endl;

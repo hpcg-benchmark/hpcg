@@ -1,14 +1,14 @@
-####################################################
-High Performance Conjugate Gradient Benchmark (HPCG)
-####################################################
+########################################################
+# High Performance Conjugate Gradient Benchmark (HPCG) #
+########################################################
 
-:Author: Jack Dongarra and Michael Heroux and Piotr Luszczek
-:Revision: 3.0
-:Date: November 11, 2015
+Jack Dongarra and Michael Heroux and Piotr Luszczek
 
-============
-Introduction
-============
+Revision: 3.0
+
+Date: November 11, 2015
+
+## Introduction ##
 
 HPCG is a software package that performs a fixed number of multigrid preconditioned
 (using a symmetric Gauss-Seidel smoother) conjugate gradient (PCG) iterations using double
@@ -37,15 +37,11 @@ implementation of the  Message Passing Interface (MPI) if enabling the MPI
 build of HPCG, and a compiler that supports OpenMP syntax. An implementation
 compliant with MPI version 1.1 is sufficient.
 
-============
-Installation
-============
+## Installation ##
 
-See the file ``INSTALL`` in this directory.
+See the file `INSTALL` in this directory.
 
-==========
-Valid Runs
-==========
+## Valid Runs ##
 
 HPCG can be run in just a few minutes from start to finish.  However, official
 runs must be at least 1800 seconds (30 minutes) as reported in the output file.
@@ -59,40 +55,31 @@ A valid run must also execute a problem size that is large enough so that data
 arrays accessed in the CG iteration loop do not fit in the cache of the device
 in a way that would be unrealistic in a real application setting.  Presently this
 restriction means that the problem size should be large enough to occupy a
-significant fraction of "main memory", at least 1/4 of the total.
+significant fraction of *main memory*, at least 1/4 of the total.
 
 Future memory system architectures may require restatement of the specific memory
 size requirements.  But the guiding principle will always be that the problem
 size should reflect what would be reasonable for a real sparse iterative solver.
 
-
-=============
-Documentation
-=============
+## Documentation ##
 
 The source code documentation can be generated with a Doxygen (version 1.8 or
 newer). In this directory type:
 
     doxygen tools/hpcg.dox
 
-Doxygen will then generate various output formats in the ``out`` directory.
+Doxygen will then generate various output formats in the `out` directory.
 
-======
-Tuning
-======
+## Tuning ##
 
-See the file ``TUNING`` in this directory.
+See the file `TUNING` in this directory.
 
-====
-Bugs
-====
+## Bugs ##
 
 Known problems and bugs with this release are documented in the file
-``BUGS``.
+`BUGS`.
 
-===================
-Further information
-===================
+## Further information ##
 
 Check out  the website  http://www.hpcg-benchmark.org/ for the latest
-information.
+information and performance results.

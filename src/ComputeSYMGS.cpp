@@ -22,7 +22,7 @@
 #include "ComputeSYMGS_ref.hpp"
 
 /*!
-  Routine to one step of symmetrix Gauss-Seidel:
+  Routine to compute one step of symmetric Gauss-Seidel:
 
   Assumption about the structure of matrix A:
   - Each row 'i' of the matrix has nonzero diagonal value whose address is matrixDiagonal[i]

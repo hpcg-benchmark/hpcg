@@ -40,15 +40,15 @@ NOTE: The instructions in this file assume you are working with a version
 5) The benchmark has completed execution. This should take a few minutes
    when running in evaluation mode, and take about 30 minutes in official
    benchmark mode. If you are running on a production system, you may be able
-   to submit results using the Quick Path option, which executes in minimum time.
-   When the run is complete, you will see a file called
-   'HPCG-Benchmark[version]_[timestamp].yaml'.  You will also see a log file
+   to submit results using the Quick Path option, which executes in minimum
+   time.  When the run is complete, you will see a file called
+   'HPCG-Benchmark[version]_[timestamp].txt'.  You will also see a log file
    called 'hpcg_log_[timestamp].txt.  The official results from your run are
-   in the .yaml file.  The final two lines of the file declare whether or not
-   the results are valid, and explain how to report them.
+   in the first .txt file.  The final two lines of the file declare whether or
+   not the results are valid, and explain how to report them.
 
    Example commands:
-      less HPCG-Benchmark-1.1_2014:01:22-22:46:06.yaml
+      less HPCG-Benchmark-1.1_2014:01:22-22:46:06.txt
 
 6) If results are valid, you may upload them to http://hpcg-benchmark.org.
    If results are not valid, do not submit them.

@@ -74,7 +74,7 @@ void SetupHalo_ref(SparseMatrix & A) {
   std::map< int, std::set< global_int_t> > sendList, receiveList;
   typedef std::map< int, std::set< global_int_t> >::iterator map_iter;
   typedef std::set<global_int_t>::iterator set_iter;
-  std::map< local_int_t, local_int_t > externalToLocalMap;
+  std::map< global_int_t, local_int_t > externalToLocalMap;
 
   // TODO: With proper critical and atomic regions, this loop could be threaded, but not attempting it at this time
   for (local_int_t i=0; i< localNumberOfRows; i++) {

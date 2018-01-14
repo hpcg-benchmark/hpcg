@@ -33,7 +33,7 @@ typedef std::map< global_int_t, local_int_t > GlobalToLocalMap;
 #else
 // for C++11 or greater
 #include <unordered_map>
-using GlobalToLocalMap = std::unorderd_map< global_int_t, local_int_t >;
+using GlobalToLocalMap = std::unordered_map< global_int_t, local_int_t >;
 #endif
 
 struct SparseMatrix_STRUCT {

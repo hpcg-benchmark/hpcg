@@ -94,7 +94,7 @@ HPCG_Init(int * argc_p, char ** *argv_p, HPCG_Params & params) {
 
   // Check if --rt was specified on the command line
   int * rt  = iparams+3;  // Assume runtime was not specified and will be read from the hpcg.dat file
-  if (! iparams[3]) rt = 0; // If --rt was specified, we already have the runtime, so don't read it from file
+  if (iparams[3]) rt = 0; // If --rt was specified, we already have the runtime, so don't read it from file
   if (! iparams[0] && ! iparams[1] && ! iparams[2]) { /* no geometry arguments on the command line */
     ReadHpcgDat(iparams, rt, iparams+7);
     broadcastParams = true;

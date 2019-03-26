@@ -48,9 +48,9 @@ The most important variables that need to be set in ``Make.<arch>`` are:
   sufficient and it is not required specified any MPI installation paths. This
   variable can be used to setup the ``MPinc`` and ``MPlib`` variables.
 
-* ``MPinc`` specifies the path to include directories with MPI header files. A
-  common setting here would be ``MPinc = $(MPdir)/include``, provided that the
-  ``MPdir`` variable was set properly.
+* ``MPinc`` specifies the paths to include directories with MPI header files. A
+  common setting here would be ``MPinc = -I$(MPdir)/include``, provided that
+  the ``MPdir`` variable was set properly.
 
 * ``MPlib`` specifies the path to directories with MPI library files. A common
   setting here would be ``MPlib = $(MPdir)/lib``, provided that the ``MPdir``

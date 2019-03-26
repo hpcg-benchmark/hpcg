@@ -82,8 +82,9 @@ int OptimizeProblem(SparseMatrix & A, CGData & data, Vector & b, Vector & x, Vec
   for (local_int_t i=0; i<nrow; ++i)
     counters[colors[i]]++;
 
-  local_int_t old, old0;
-  for (int i=1; i < totalColors; ++i) {
+  // form in-place prefix scan
+  local_int_t old=counters[0], old0;
+  for (local_int_t i=1; i < totalColors; ++i) {
     old0 = counters[i];
     counters[i] = counters[i-1] + old;
     old = old0;

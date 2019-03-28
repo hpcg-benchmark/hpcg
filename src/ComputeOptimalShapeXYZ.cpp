@@ -2,10 +2,47 @@
 #include <cmath>
 #include <cstdlib>
 
+#ifdef HPCG_CUBIC_RADICAL_SEARCH
+#include <algorithm>
+#endif
 #include <map>
 
 #include "ComputeOptimalShapeXYZ.hpp"
 #include "MixedBaseCounter.hpp"
+
+#ifdef HPCG_CUBIC_RADICAL_SEARCH
+static int
+min3(int a, int b, int c) {
+  return std::min(a, std::min(b, c));
+}
+
+static int
+max3(int a, int b, int c) {
+  return std::max(a, std::max(b, c));
+}
+
+static void
+cubic_radical_search(int n, int & x, int & y, int & z) {
+  double best = 0.0;
+
+  for (int f1 = (int)(pow(n,1.0/3.0)+0.5); f1 > 0; --f1)
+    if (n % f1 == 0) {
+      int n1 = n/f1;
+      for (int f2 = (int)(pow(n1,0.5)+0.5); f2 > 0; --f2)
+        if (n1 % f2 == 0) {
+          int f3 = n1 / f2;
+          double current = (double)min3(f1, f2, f3)/max3(f1, f2, f3);
+          if (current > best) {
+            best = current;
+            x = f1;
+            y = f2;
+            z = f3;
+          }
+        }
+    }
+}
+
+#else
 
 static void
 ComputePrimeFactors(int n, std::map<int, int> & factors) {
@@ -51,8 +88,13 @@ pow_i(int x, int p) {
   return v;
 }
 
+#endif
+
 void
 ComputeOptimalShapeXYZ(int xyz, int & x, int & y, int & z) {
+#ifdef HPCG_CUBIC_RADICAL_SEARCH
+  cubic_radical_search( xyz, x, y, z);
+#else
   std::map<int, int> factors;
 
   ComputePrimeFactors( xyz, factors ); // factors are sorted: ascending order
@@ -111,4 +153,5 @@ ComputeOptimalShapeXYZ(int xyz, int & x, int & y, int & z) {
       }
     }
   }
+#endif
 }

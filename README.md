@@ -4,9 +4,9 @@
 
 Jack Dongarra and Michael Heroux and Piotr Luszczek
 
-Revision: 3.0
+Revision: 3.1
 
-Date: November 11, 2015
+Date: March 28, 2019
 
 ## Introduction ##
 

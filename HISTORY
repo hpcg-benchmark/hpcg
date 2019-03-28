@@ -3,12 +3,26 @@ High Performance Conjugate Gradient Benchmark (HPCG)
 ####################################################
 
 :Author: Jack Dongarra and Michael Heroux and Piotr Luszczek
-:Revision: 3.0
-:Date: November 11, 2015
+:Revision: 3.1
+:Date: March 28, 2019
 
 ===============
 History of HPCG
 ===============
+
+-----------
+Version 3.1
+-----------
+
+* Switched the output format for reporting the results from YAML to a basic
+  line-oriented key-value format with nested naming scheme for the keys.
+
+* Added faster search for optimal 3D grid partitioning of a given integer that
+  does not require combinatorial search through the all 3-set partitioning of
+  the prime factors.
+
+* Closed the outstanding bugs reported as issues on HPCG's Github project page
+  and incorporated the fixes in the source code.
 
 -----------
 Version 3.0
@@ -76,7 +90,7 @@ Version 2.0
 -----------
 
 * Added support for a synthetic multigrid V cycle.  Parameters include
-  the number of levels in the the grid hierarchy, number of pre and
+  the number of levels in the grid hierarchy, number of pre and
   post smoother steps.
 * Refactored data classes to support needs for recursion in V cycle.
 * Made simple modifications to make compilation on MS Windows easier.

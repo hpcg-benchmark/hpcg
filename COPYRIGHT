@@ -1,6 +1,6 @@
 ======================================================================
  -- High Performance Conjugate Gradients (HPCG) Benchmark
-    HPCG - 3.0 - November 11, 2015
+    HPCG - 3.1 - March 28, 2019
 
     Michael A. Heroux
     Scalable Algorithms Group, Center for Computing Research
@@ -10,7 +10,7 @@
     Jack Dongarra
     University of Tennessee, Knoxville
     Innovative Computing Laboratory
-    (C) Copyright 2013 All Rights Reserved
+    (C) Copyright 2013-2019 All Rights Reserved
 
  -- Copyright notice and Licensing terms:
 

@@ -208,8 +208,8 @@ void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgS
     double fnbytesPerEquation = fnbytes/fnrow;
 
     // Instantiate YAML document
-    OutputFile doc("HPCG-Benchmark", "3.0");
-    doc.add("Release date", "November 11, 2015");
+    OutputFile doc("HPCG-Benchmark", "3.1");
+    doc.add("Release date", "March 28, 2019");
 
     doc.add("Machine Summary","");
     doc.get("Machine Summary")->add("Distributed Processes",A.geom->size);

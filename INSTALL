@@ -32,8 +32,13 @@ directory in the text below.
 Configuration
 =============
 
-HPCG providess two methods of configuration: one based on make(1) and
-the other on CMake.
+HPCG provides three methods of configuration: one based on make(1),
+one based on CMake, and one based on Autoconf. They are discussed in
+more details below.
+
+---------------------------
+Configuration based on Make
+---------------------------
 
 HPCG configuration with a make-compatible file for configuring the
 compilers, linkers, and their command line flags starts with creating a
@@ -107,6 +112,10 @@ be discovered automatically.
 <arch> is the suffix of the setup file you created in the directory
 hpcg/setup.  Sample setup files are found in the hpcg/setup directory.
 
+----------------------------
+Configuration based on CMake
+----------------------------
+
 For configuration based on CMake, the compiler and linker are specified
 with the CMake-specific flags. Additionally, HPCG-specific options of
 interest include::
@@ -132,6 +141,20 @@ and the ``option()`` commands therein.
 These options may be changed with ``ccmake`` command or given directly
 to the ``cmake`` invocation with the ``-D`` prefix.
 
+-------------------------------
+Configuration based on Autoconf
+-------------------------------
+
+It is possible to configure HPCG using Autoconf and Automake (part of
+the GNU Autotools collection). In order to generate the configuration
+script, use the following command::
+
+    autoreconf -ivf
+
+this will overwrite the `configure` script that ships with HPCG. The new
+script can then be used through a standard invocation process and
+command line options that correspond to the ones available to the CMake
+configuration.
 
 =====
 Build

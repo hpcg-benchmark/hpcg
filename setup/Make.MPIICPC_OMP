@@ -118,7 +118,7 @@ HPCG_DEFS     = $(HPCG_OPTS) $(HPCG_INCLUDES) -DMPICH_IGNORE_CXX_SEEK
 # ----------------------------------------------------------------------
 #
 CXX          = mpiicpc
-CXXFLAGS     = $(HPCG_DEFS) -O3 -openmp
+CXXFLAGS     = $(HPCG_DEFS) -O3 -qopenmp -mavx -std=c++11
 #
 LINKER       = $(CXX)
 LINKFLAGS    = $(CXXFLAGS)

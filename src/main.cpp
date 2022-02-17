@@ -223,7 +223,6 @@ int main(int argc, char * argv[]) {
     totalNiters_ref += niters;
   }
   if (rank == 0 && err_count) HPCG_fout << err_count << " error(s) in call(s) to reference CG." << endl;
-  double normr_ref = normr;
   double refTolerance = normr / normr0;
 
   // Call user-tunable set up function.
@@ -284,7 +283,7 @@ int main(int argc, char * argv[]) {
     double last_cummulative_time = opt_times[0];
     ierr = CG( A, data, b, x, optMaxIters, refTolerance, niters, normr, normr0, &opt_times[0], true);
     if (ierr) ++err_count; // count the number of errors in CG
-    if (1e6 * (normr - normr_ref > normr0)) ++tolerance_failures; // the number of failures to reduce residual
+    if (normr / normr0 > refTolerance) ++tolerance_failures; // the number of failures to reduce residual
 
     // pick the largest number of iterations to guarantee convergence
     if (niters > optNiters) optNiters = niters;

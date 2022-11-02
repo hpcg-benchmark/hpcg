@@ -1,0 +1,45 @@
+
+CXXFLAGS = -I../src -DHPCG_NO_MPI=1 -DHPCG_NO_OPENMP=1
+
+LINK.o := $(LINK.cc)
+
+mtxdmp: \
+../src/CG.o \
+../src/CG_ref.o \
+../src/CheckAspectRatio.o \
+../src/CheckProblem.o \
+../src/ComputeDotProduct.o \
+../src/ComputeDotProduct_ref.o \
+../src/ComputeMG.o \
+../src/ComputeMG_ref.o \
+../src/ComputeOptimalShapeXYZ.o \
+../src/ComputeProlongation_ref.o \
+../src/ComputeResidual.o \
+../src/ComputeRestriction_ref.o \
+../src/ComputeSPMV.o \
+../src/ComputeSPMV_ref.o \
+../src/ComputeSYMGS.o \
+../src/ComputeSYMGS_ref.o \
+../src/ComputeWAXPBY.o \
+../src/ComputeWAXPBY_ref.o \
+../src/ExchangeHalo.o \
+../src/finalize.o \
+../src/GenerateCoarseProblem.o \
+../src/GenerateGeometry.o \
+../src/GenerateProblem.o \
+../src/GenerateProblem_ref.o \
+../src/init.o \
+../src/main.o \
+../src/MixedBaseCounter.o \
+../src/mytimer.o \
+../src/OptimizeProblem.o \
+../src/OutputFile.o \
+../src/ReadHpcgDat.o \
+../src/ReportResults.o \
+../src/TestCG.o \
+../src/TestNorms.o \
+../src/TestSymmetry.o \
+../src/WriteProblem.o \
+../src/YAML_Doc.o \
+../src/YAML_Element.o \
+mtxdmp.o

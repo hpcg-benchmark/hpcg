@@ -35,7 +35,7 @@ using std::endl;
 #endif
 
 /*!
- Creates a YAML file and writes the information about the HPCG run, its results, and validity.
+ Creates a text file and writes the information about the HPCG run, its results, and validity.
 
   @param[in] geom The description of the problem's geometry.
   @param[in] A    The known system matrix
@@ -207,7 +207,7 @@ void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgS
     // Count number of bytes used per equation
     double fnbytesPerEquation = fnbytes/fnrow;
 
-    // Instantiate YAML document
+    // Instantiate text document
     OutputFile doc("HPCG-Benchmark", "3.1");
     doc.add("Release date", "March 28, 2019");
 
@@ -388,25 +388,25 @@ void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgS
         doc.get("Final Summary")->add("Reference version of ComputeWAXPBY used","Performance results are most likely suboptimal");
       }
       if (times[0]>=minOfficialTime) {
-        doc.get("Final Summary")->add("Please upload results from the YAML file contents to","http://hpcg-benchmark.org");
+        doc.get("Final Summary")->add("Please upload results from the text file contents to","http://hpcg-benchmark.org");
       }
       else {
         doc.get("Final Summary")->add("Results are valid but execution time (sec) is",times[0]);
         if (quickPath) {
           doc.get("Final Summary")->add("You have selected the QuickPath option", "Results are official for legacy installed systems with confirmation from the HPCG Benchmark leaders.");
-          doc.get("Final Summary")->add("After confirmation please upload results from the YAML file contents to","http://hpcg-benchmark.org");
+          doc.get("Final Summary")->add("After confirmation please upload results from the text file contents to","http://hpcg-benchmark.org");
         } else {
           doc.get("Final Summary")->add("Official results execution time (sec) must be at least",minOfficialTime);
         }
       }
     } else {
       doc.get("Final Summary")->add("HPCG result is","INVALID.");
-      doc.get("Final Summary")->add("Please review the YAML file contents","You may NOT submit these results for consideration.");
+      doc.get("Final Summary")->add("Please review the text file contents","You may NOT submit these results for consideration.");
     }
 
-    std::string yaml = doc.generate();
+    std::string text = doc.generate();
 #ifdef HPCG_DEBUG
-    HPCG_fout << yaml;
+    HPCG_fout << text;
 #endif
   }
   return;

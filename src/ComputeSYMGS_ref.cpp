@@ -65,7 +65,7 @@ int ComputeSYMGS_ref( const SparseMatrix & A, const Vector & r, Vector & x) {
   ExchangeHalo(A,x);
 #endif
 
-  const local_int_t nrow = A.localNumberOfRows;
+  //const local_int_t nrow = A.localNumberOfRows;
   //double ** matrixDiagonal = A.matrixDiagonal;  // An array of pointers to the diagonal entries A.matrixValues
   const double * const rv = r.values;
   double * const xv = x.values;
@@ -86,7 +86,7 @@ int ComputeSYMGS_ref( const SparseMatrix & A, const Vector & r, Vector & x) {
     }
   }
 
-  const double  currentDiagonal = 26.0; // Current diagonal value CHANGEME when changing stencil
+  const double currentDiagonal = 26.0; // Current diagonal value CHANGEME when changing stencil
 
 #ifndef HPCG_NO_OPENMP
   #pragma omp parallel for
@@ -104,7 +104,7 @@ int ComputeSYMGS_ref( const SparseMatrix & A, const Vector & r, Vector & x) {
         }
         sum += -1.*xg[idx(ix+0, iy+0, iz+0, nx, ny, nz, ng)]; // Remove diagnoal component entirely
 
-        xg[idx(ix,iy,iz,nx,ny,nz)] = sum/currentDiagonal;
+        xg[idx(ix,iy,iz,nx,ny,nz,ng)] = sum/currentDiagonal;
       }
     }
   }
@@ -116,9 +116,9 @@ int ComputeSYMGS_ref( const SparseMatrix & A, const Vector & r, Vector & x) {
     for (local_int_t iy=ny-1; iy>=0; --iy) {
       for (local_int_t iz=nz-1; iz>=0; --iz) {
         double sum = rv[idx(ix,iy,iz,nx,ny,nz)]; // RHS value
-        for(int sx=1; sx>=-1; --sx) {
-          for(int sy=1; sy>=-1; --sy) {
-            for(int sz=1; sz>=-1; --sz) {
+        for(int sx=-1; sx<=1; ++sx) {
+          for(int sy=-1; sy<=1; ++sy) {
+            for(int sz=-1; sz<=1; ++sz) {
               sum -= -1.*xg[idx(ix+sx, iy+sy, iz+sz, nx, ny, nz, ng)];
             }
           }

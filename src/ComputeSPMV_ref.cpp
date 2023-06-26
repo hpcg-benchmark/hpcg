@@ -29,6 +29,7 @@
 #endif
 #include <cassert>
 
+// FIXME put me somewhere sensible
 inline int idx(const int ix, const int iy, const int iz, const int nx, const int ny, const int nz, const int ng=0) {
   // input index of (0, 0, 0) corresponds to first *interior* point. Ghost points are accessed with (-1, -1, -1).
   return (iz+ng)*(nx+2*ng)*(ny+2*ng)+(iy+ng)*(nx+2*ng)+(ix+ng);
@@ -68,7 +69,7 @@ int ComputeSPMV_ref( const SparseMatrix & A, Vector & x, Vector & y) {
   const local_int_t nrow_ghost = (nx+2*ng)*(ny+2*ng)*(nz+2*ng); // local number of rows *including* ghost points
   double* xg = new double[nrow_ghost]; // Copy of x with ghost points
 
-  // Copy xv to xg
+  // Copy xv to xg TODO HACK fix this
   for (local_int_t ix=0; ix<nx; ++ix) {
     for (local_int_t iy=0; iy<ny; ++iy) {
       for (local_int_t iz=0; iz<nz; ++iz) {
@@ -97,6 +98,8 @@ int ComputeSPMV_ref( const SparseMatrix & A, Vector & x, Vector & y) {
       }
     }
   }
+
+  delete[] xg;
 
   return 0;
 }

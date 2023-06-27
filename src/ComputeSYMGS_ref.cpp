@@ -27,7 +27,8 @@
 // FIXME put me somewhere sensible
 inline int idx(const int ix, const int iy, const int iz, const int nx, const int ny, const int nz, const int ng=0) {
   // input index of (0, 0, 0) corresponds to first *interior* point. Ghost points are accessed with (-1, -1, -1).
-  return (iz+ng)*(nx+2*ng)*(ny+2*ng)+(iy+ng)*(nx+2*ng)+(ix+ng);
+  //return (iz+ng)*(nx+2*ng)*(ny+2*ng)+(iy+ng)*(nx+2*ng)+(ix+ng);
+  return (ix+ng)*(nz+2*ng)*(ny+2*ng)+(iy+ng)*(nz+2*ng)+(iz+ng);
 }
 
 /*!
@@ -65,17 +66,15 @@ int ComputeSYMGS_ref( const SparseMatrix & A, const Vector & r, Vector & x) {
   ExchangeHalo(A,x);
 #endif
 
-  //const local_int_t nrow = A.localNumberOfRows;
-  //double ** matrixDiagonal = A.matrixDiagonal;  // An array of pointers to the diagonal entries A.matrixValues
   const double * const rv = r.values;
   double * const xv = x.values;
 
   global_int_t nx = A.geom->nx;
   global_int_t ny = A.geom->ny;
   global_int_t nz = A.geom->nz;
-  global_int_t ng = 1; // number of ghost points
+  global_int_t ng = 1; // number of ghost points FIXME should be declared "more globally"
   const local_int_t nrow_ghost = (nx+2*ng)*(ny+2*ng)*(nz+2*ng); // local number of rows *including* ghost points
-  double* xg = new double[nrow_ghost]; // Copy of x with ghost points
+  double* xg = new double[nrow_ghost]{0.0}; // Copy of x with ghost points
 
   // copy xv to xg TODO HACK fix this
   for (local_int_t ix=0; ix<nx; ++ix) {

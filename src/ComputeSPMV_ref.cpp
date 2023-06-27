@@ -32,7 +32,8 @@
 // FIXME put me somewhere sensible
 inline int idx(const int ix, const int iy, const int iz, const int nx, const int ny, const int nz, const int ng=0) {
   // input index of (0, 0, 0) corresponds to first *interior* point. Ghost points are accessed with (-1, -1, -1).
-  return (iz+ng)*(nx+2*ng)*(ny+2*ng)+(iy+ng)*(nx+2*ng)+(ix+ng);
+  //return (iz+ng)*(nx+2*ng)*(ny+2*ng)+(iy+ng)*(nx+2*ng)+(ix+ng);
+  return (ix+ng)*(nz+2*ng)*(ny+2*ng)+(iy+ng)*(nz+2*ng)+(iz+ng);
 }
 
 /*!
@@ -56,6 +57,7 @@ int ComputeSPMV_ref( const SparseMatrix & A, Vector & x, Vector & y) {
   assert(y.localLength>=A.localNumberOfRows);
 
 #ifndef HPCG_NO_MPI
+    // TODO MPI is not implemented yet
     ExchangeHalo(A,x);
 #endif
   const double * const xv = x.values;
@@ -67,9 +69,9 @@ int ComputeSPMV_ref( const SparseMatrix & A, Vector & x, Vector & y) {
   global_int_t nz = A.geom->nz;
   global_int_t ng = 1; // number of ghost points
   const local_int_t nrow_ghost = (nx+2*ng)*(ny+2*ng)*(nz+2*ng); // local number of rows *including* ghost points
-  double* xg = new double[nrow_ghost]; // Copy of x with ghost points
+  double* xg = new double[nrow_ghost]{0.0}; // Copy of x with ghost points
 
-  // Copy xv to xg TODO HACK fix this
+  // Copy xv to xg TODO HACK find better way to do this
   for (local_int_t ix=0; ix<nx; ++ix) {
     for (local_int_t iy=0; iy<ny; ++iy) {
       for (local_int_t iz=0; iz<nz; ++iz) {

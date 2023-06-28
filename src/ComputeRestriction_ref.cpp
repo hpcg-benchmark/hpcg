@@ -22,7 +22,8 @@
 #ifndef HPCG_NO_OPENMP
 #include <omp.h>
 #endif
-
+#include <iostream>
+#include "idx.hpp"
 #include "ComputeRestriction_ref.hpp"
 
 /*!
@@ -44,11 +45,22 @@ int ComputeRestriction_ref(const SparseMatrix & A, const Vector & rf) {
   double * rcv = A.mgData->rc->values;
   local_int_t * f2c = A.mgData->f2cOperator;
   local_int_t nc = A.mgData->rc->localLength;
-
+  local_int_t ix = 0;
+  local_int_t iy = 0;
+  local_int_t iz = 0;
+  local_int_t nx = A.geom->nx;
+  local_int_t ny = A.geom->ny;
+  local_int_t nz = A.geom->nz;
+  local_int_t nlocal = nx*ny*nz;
 #ifndef HPCG_NO_OPENMP
 #pragma omp parallel for
 #endif
-  for (local_int_t i=0; i<nc; ++i) rcv[i] = rfv[f2c[i]] - Axfv[f2c[i]];
-
+for (ix=0; ix < nx; ix +=2){
+    for( iy=0; iy< ny; iy +=2){
+        for( iz=0; iz< nz; iz +=2){
+            rcv[idx(ix/2,iy/2,iz/2,nx/2,ny/2,nz/2)] = rfv[idx(ix,iy,iz,nx,ny,nz)] - Axfv[idx(ix,iy,iz,nx,ny,nz)];
+        }
+    }
+}
   return 0;
 }

@@ -18,6 +18,7 @@
  HPCG routine
  */
 
+#include "idx.hpp"
 #include "ComputeSPMV_ref.hpp"
 
 #ifndef HPCG_NO_MPI
@@ -28,13 +29,6 @@
 #include <omp.h>
 #endif
 #include <cassert>
-
-// FIXME put me somewhere sensible
-inline int idx(const int ix, const int iy, const int iz, const int nx, const int ny, const int nz, const int ng=0) {
-  // input index of (0, 0, 0) corresponds to first *interior* point. Ghost points are accessed with (-1, -1, -1).
-  //return (iz+ng)*(nx+2*ng)*(ny+2*ng)+(iy+ng)*(nx+2*ng)+(ix+ng);
-  return (ix+ng)*(nz+2*ng)*(ny+2*ng)+(iy+ng)*(nz+2*ng)+(iz+ng);
-}
 
 /*!
   Routine to compute matrix vector product y = Ax where:

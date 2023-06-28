@@ -29,6 +29,108 @@
 #include <omp.h>
 #endif
 #include <cassert>
+#include <iostream>
+#include <cmath>
+
+int ComputeSPMV_mf( const SparseMatrix & A, Vector & x, Vector & y) {
+  const double * const xv = x.values;
+  double * const yv = y.values;
+
+  global_int_t nx = A.geom->nx;
+  global_int_t ny = A.geom->ny;
+  global_int_t nz = A.geom->nz;
+  const int ng = 1;
+  const local_int_t nrow_ghost = (nx+2*ng)*(ny+2*ng)*(nz+2*ng); // local number of rows *including* ghost points
+  double* xg = new double[nrow_ghost]{0.0}; // Copy of x with ghost points
+
+  // FIXME THIS IS EXTREMELY HACKY!!
+  const double off_diagonal = A.matrixValues[1][0];
+  const double diagonal = *A.matrixDiagonal[0];
+
+  // Copy xv to xg TODO HACK find better way to do this
+  for (local_int_t iz=0; iz<nz; ++iz) {
+    for (local_int_t iy=0; iy<ny; ++iy) {
+      for (local_int_t ix=0; ix<nx; ++ix) {
+        xg[idx(ix,iy,iz,nx,ny,nz,ng)] = xv[idx(ix,iy,iz,nx,ny,nz)];
+      }
+    }
+  }
+
+#ifndef HPCG_NO_OPENMP
+  #pragma omp parallel for
+#endif
+  for (local_int_t ix=0; ix<nx; ++ix) {
+    for (local_int_t iy=0; iy<ny; ++iy) {
+      for (local_int_t iz=0; iz<nz; ++iz) {
+        double sum = 0.0;
+        for(int sx=-1; sx<=1; ++sx) {
+          for(int sy=-1; sy<=1; ++sy) {
+            for(int sz=-1; sz<=1; ++sz) {
+              sum += off_diagonal*xg[idx(ix+sx, iy+sy, iz+sz, nx, ny, nz, ng)];
+            }
+          }
+        }
+        sum -= off_diagonal*xg[idx(ix+0, iy+0, iz+0, nx, ny, nz, ng)];
+        sum += diagonal*xg[idx(ix+0, iy+0, iz+0, nx, ny, nz, ng)];
+        yv[idx(ix,iy,iz,nx,ny,nz)] = sum;
+      }
+    }
+  }
+
+  delete[] xg;
+
+  return 0;
+}
+
+int ComputeSPMV_ma( const SparseMatrix & A, Vector & x, Vector & y) {
+  const double * const xv = x.values;
+  double * const yv = y.values;
+  const local_int_t nrow = A.localNumberOfRows;
+
+#ifndef HPCG_NO_OPENMP
+#pragma omp parallel for
+#endif
+  for (local_int_t i=0; i< nrow; i++)  {
+    double sum = 0.0;
+    const double * const cur_vals = A.matrixValues[i];
+    const local_int_t * const cur_inds = A.mtxIndL[i];
+    const int cur_nnz = A.nonzerosInRow[i];
+
+    for (int j=0; j< cur_nnz; j++)
+      sum += cur_vals[j]*xv[cur_inds[j]];
+    yv[i] = sum;
+  }
+
+  return 0;
+}
+
+void CompareComputeSPMV( const SparseMatrix & A, Vector & x, Vector & y) {
+
+  const local_int_t nrow = A.localNumberOfRows;
+  double * const yv = y.values;
+
+  ComputeSPMV_ma(A,x,y);
+  double * ma_result = new double[nrow];
+  for(int i=0; i<nrow; ++i) {
+    ma_result[i] = yv[i];
+  }
+
+  ComputeSPMV_mf(A,x,y);
+  double * mf_result = new double[nrow];
+  for(int i=0; i<nrow; ++i) {
+    mf_result[i] = yv[i];
+  }
+
+  for(int i=0; i<nrow; ++i) {
+    if(fabs(ma_result[i] - mf_result[i]) > 1e-8) {
+      printf("ERROR: %d, ma = %.10f, mf = %.10f\n", i, ma_result[i], mf_result[i]);
+    }
+    mf_result[i] = yv[i];
+  }
+
+  delete [] mf_result;
+  delete [] ma_result;
+}
 
 /*!
   Routine to compute matrix vector product y = Ax where:
@@ -54,48 +156,16 @@ int ComputeSPMV_ref( const SparseMatrix & A, Vector & x, Vector & y) {
     // TODO MPI is not implemented yet
     ExchangeHalo(A,x);
 #endif
-  const double * const xv = x.values;
-  double * const yv = y.values;
-  const local_int_t nrow = A.localNumberOfRows;
 
-  global_int_t nx = A.geom->nx;
-  global_int_t ny = A.geom->ny;
-  global_int_t nz = A.geom->nz;
-  global_int_t ng = 1; // number of ghost points
-  const local_int_t nrow_ghost = (nx+2*ng)*(ny+2*ng)*(nz+2*ng); // local number of rows *including* ghost points
-  double* xg = new double[nrow_ghost]{0.0}; // Copy of x with ghost points
+  CompareComputeSPMV(A, x, y);
 
-  // Copy xv to xg TODO HACK find better way to do this
-  for (local_int_t ix=0; ix<nx; ++ix) {
-    for (local_int_t iy=0; iy<ny; ++iy) {
-      for (local_int_t iz=0; iz<nz; ++iz) {
-        xg[idx(ix,iy,iz,nx,ny,nz,ng)] = xv[idx(ix,iy,iz,nx,ny,nz)];
-      }
-    }
+  const bool MATRIX_FREE = true;
+
+  if(MATRIX_FREE) {
+    ComputeSPMV_mf(A, x, y);
+  } else {
+    ComputeSPMV_ma(A, x, y);
   }
-
-#ifndef HPCG_NO_OPENMP
-  #pragma omp parallel for
-#endif
-  for (local_int_t ix=0; ix<nx; ++ix) {
-    for (local_int_t iy=0; iy<ny; ++iy) {
-      for (local_int_t iz=0; iz<nz; ++iz) {
-        double sum = 0.0;
-        for(int sx=-1; sx<=1; ++sx) {
-          for(int sy=-1; sy<=1; ++sy) {
-            for(int sz=-1; sz<=1; ++sz) {
-              sum += -1.*xg[idx(ix+sx, iy+sy, iz+sz, nx, ny, nz, ng)];
-            }
-          }
-        }
-        sum -= -1.*xg[idx(ix+0, iy+0, iz+0, nx, ny, nz, ng)];
-        sum += 26.*xg[idx(ix+0, iy+0, iz+0, nx, ny, nz, ng)];
-        yv[idx(ix,iy,iz,nx,ny,nz)] = sum;
-      }
-    }
-  }
-
-  delete[] xg;
 
   return 0;
 }

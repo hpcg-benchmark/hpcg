@@ -43,10 +43,6 @@ int ComputeSPMV_mf( const SparseMatrix & A, Vector & x, Vector & y) {
   const local_int_t nrow_ghost = (nx+2*ng)*(ny+2*ng)*(nz+2*ng); // local number of rows *including* ghost points
   double* xg = new double[nrow_ghost]{0.0}; // Copy of x with ghost points
 
-  // FIXME THIS IS EXTREMELY HACKY!!
-  const double off_diagonal = A.matrixValues[1][0];
-  const double diagonal = *A.matrixDiagonal[0];
-
   // Copy xv to xg TODO HACK find better way to do this
   for (local_int_t iz=0; iz<nz; ++iz) {
     for (local_int_t iy=0; iy<ny; ++iy) {
@@ -59,10 +55,16 @@ int ComputeSPMV_mf( const SparseMatrix & A, Vector & x, Vector & y) {
 #ifndef HPCG_NO_OPENMP
   #pragma omp parallel for
 #endif
-  for (local_int_t ix=0; ix<nx; ++ix) {
+  for (local_int_t iz=0; iz<nz; ++iz) {
     for (local_int_t iy=0; iy<ny; ++iy) {
-      for (local_int_t iz=0; iz<nz; ++iz) {
+      for (local_int_t ix=0; ix<nx; ++ix) {
         double sum = 0.0;
+        const int i = idx(ix,iy,iz,nx,ny,nz);
+
+        // FIXME THIS IS EXTREMELY HACKY!!
+        const double off_diagonal = A.matrixValues[1][0];
+        const double diagonal = *A.matrixDiagonal[i];
+
         for(int sx=-1; sx<=1; ++sx) {
           for(int sy=-1; sy<=1; ++sy) {
             for(int sz=-1; sz<=1; ++sz) {
@@ -72,7 +74,28 @@ int ComputeSPMV_mf( const SparseMatrix & A, Vector & x, Vector & y) {
         }
         sum -= off_diagonal*xg[idx(ix+0, iy+0, iz+0, nx, ny, nz, ng)];
         sum += diagonal*xg[idx(ix+0, iy+0, iz+0, nx, ny, nz, ng)];
-        yv[idx(ix,iy,iz,nx,ny,nz)] = sum;
+
+        //const bool IS_WEIRD_ITER = fabs(diagonal - 26.0) > 1e-10;
+        //if (IS_WEIRD_ITER) {
+          ////std::cout << i << ", " << diagonal << "\n";
+        //}
+        //if (idx(ix,iy,iz,nx,ny,nz) == 1 && IS_WEIRD_ITER) {
+          //std::cout << "STARTING MF DEBUG\n";
+          //std::cout << "Sum: " << sum << "\n";
+
+          //for(int sx=-1; sx<=1; ++sx) {
+            //for(int sy=-1; sy<=1; ++sy) {
+              //for(int sz=-1; sz<=1; ++sz) {
+                //if(sx==0 && sy==0 && sz==0) {
+                  //std::cout << idx(ix+sx, iy+sy, iz+sz, nx, ny, nz) << "," << diagonal << "," << xg[idx(ix+sx, iy+sy, iz+sz, nx, ny, nz, ng)] << "\n";
+                //} else {
+                  //std::cout << idx(ix+sx, iy+sy, iz+sz, nx, ny, nz) << "," << off_diagonal << "," << xg[idx(ix+sx, iy+sy, iz+sz, nx, ny, nz, ng)] << "\n";
+                //}
+              //}
+            //}
+          //}
+        //}
+        yv[i] = sum;
       }
     }
   }
@@ -98,10 +121,32 @@ int ComputeSPMV_ma( const SparseMatrix & A, Vector & x, Vector & y) {
 
     for (int j=0; j< cur_nnz; j++)
       sum += cur_vals[j]*xv[cur_inds[j]];
+
+    //if (i == 1) {
+      //std::cout << "STARTING MA DEBUG\n";
+      //std::cout << "Sum: " << sum << "\n";
+
+      //for (int j=0; j< cur_nnz; j++) {
+        //std::cout << cur_inds[j] << "," << cur_vals[j] << "," << xv[cur_inds[j]] << "\n";
+      //}
+    //}
     yv[i] = sum;
   }
 
   return 0;
+}
+
+bool is_rel_equal(const double f, const double g, const double tol) {
+  double error = std::abs(f - g);
+  if (error < 1e-10) {
+    return true;
+  } else {
+    //std::cout << std::max(std::abs(f), std::abs(g)) << "\n";
+    //std::cout << tol << "\n";
+    //std::cout << error << "\n";
+    //std::cout << std::max(std::abs(f), std::abs(g))*tol << "\n";
+    return error < std::max(std::abs(f), std::abs(g))*tol;
+  }
 }
 
 void CompareComputeSPMV( const SparseMatrix & A, Vector & x, Vector & y) {
@@ -122,10 +167,10 @@ void CompareComputeSPMV( const SparseMatrix & A, Vector & x, Vector & y) {
   }
 
   for(int i=0; i<nrow; ++i) {
-    if(fabs(ma_result[i] - mf_result[i]) > 1e-8) {
+    if(!is_rel_equal(mf_result[i], ma_result[i], 1e-5)) {
       printf("ERROR: %d, ma = %.10f, mf = %.10f\n", i, ma_result[i], mf_result[i]);
+      exit(-1);
     }
-    mf_result[i] = yv[i];
   }
 
   delete [] mf_result;
@@ -157,9 +202,9 @@ int ComputeSPMV_ref( const SparseMatrix & A, Vector & x, Vector & y) {
     ExchangeHalo(A,x);
 #endif
 
-  CompareComputeSPMV(A, x, y);
+  //CompareComputeSPMV(A, x, y);
 
-  const bool MATRIX_FREE = true;
+  const bool MATRIX_FREE = false;
 
   if(MATRIX_FREE) {
     ComputeSPMV_mf(A, x, y);

@@ -55,6 +55,7 @@ int ComputeSPMV_mf( const SparseMatrix & A, Vector & x, Vector & y) {
     }
   }
 
+
 #ifndef HPCG_NO_OPENMP
   #pragma omp parallel for collapse(3)
 #endif
@@ -64,40 +65,23 @@ int ComputeSPMV_mf( const SparseMatrix & A, Vector & x, Vector & y) {
         double sum = 0.0;
         const int i = idx(ix,iy,iz,nx,ny,nz);
 
-        // FIXME THIS IS EXTREMELY HACKY!!
+        // FIXME THIS IS EXTREMELY HACKY!! We need a better way to get the stencil from A
         const double off_diagonal = A.matrixValues[1][0];
-        const double diagonal = *A.matrixDiagonal[i];
+        const double diagonal = *A.matrixDiagonal[0];
 
         for(int sx=-1; sx<=1; ++sx) {
           for(int sy=-1; sy<=1; ++sy) {
             for(int sz=-1; sz<=1; ++sz) {
-              sum += off_diagonal*xg[idx(ix+sx, iy+sy, iz+sz, nx, ny, nz, ng)];
+              bool is_diagonal = (sx==0 && sy==0 && sz==0);
+              if(is_diagonal) {
+                sum += diagonal*xg[idx(ix, iy, iz, nx, ny, nz, ng)];
+              } else {
+                sum += off_diagonal*xg[idx(ix+sx, iy+sy, iz+sz, nx, ny, nz, ng)];
+              }
             }
           }
         }
-        sum -= off_diagonal*xg[idx(ix+0, iy+0, iz+0, nx, ny, nz, ng)];
-        sum += diagonal*xg[idx(ix+0, iy+0, iz+0, nx, ny, nz, ng)];
 
-        //const bool IS_WEIRD_ITER = fabs(diagonal - 26.0) > 1e-10;
-        //if (IS_WEIRD_ITER) {
-          ////std::cout << i << ", " << diagonal << "\n";
-        //}
-        //if (idx(ix,iy,iz,nx,ny,nz) == 1 && IS_WEIRD_ITER) {
-          //std::cout << "STARTING MF DEBUG\n";
-          //std::cout << "Sum: " << sum << "\n";
-
-          //for(int sx=-1; sx<=1; ++sx) {
-            //for(int sy=-1; sy<=1; ++sy) {
-              //for(int sz=-1; sz<=1; ++sz) {
-                //if(sx==0 && sy==0 && sz==0) {
-                  //std::cout << idx(ix+sx, iy+sy, iz+sz, nx, ny, nz) << "," << diagonal << "," << xg[idx(ix+sx, iy+sy, iz+sz, nx, ny, nz, ng)] << "\n";
-                //} else {
-                  //std::cout << idx(ix+sx, iy+sy, iz+sz, nx, ny, nz) << "," << off_diagonal << "," << xg[idx(ix+sx, iy+sy, iz+sz, nx, ny, nz, ng)] << "\n";
-                //}
-              //}
-            //}
-          //}
-        //}
         yv[i] = sum;
       }
     }
@@ -125,14 +109,6 @@ int ComputeSPMV_ma( const SparseMatrix & A, Vector & x, Vector & y) {
     for (int j=0; j< cur_nnz; j++)
       sum += cur_vals[j]*xv[cur_inds[j]];
 
-    //if (i == 1) {
-      //std::cout << "STARTING MA DEBUG\n";
-      //std::cout << "Sum: " << sum << "\n";
-
-      //for (int j=0; j< cur_nnz; j++) {
-        //std::cout << cur_inds[j] << "," << cur_vals[j] << "," << xv[cur_inds[j]] << "\n";
-      //}
-    //}
     yv[i] = sum;
   }
 

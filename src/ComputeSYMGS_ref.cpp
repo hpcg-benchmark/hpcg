@@ -32,16 +32,15 @@ int ComputeSYMGS_mf( const SparseMatrix & A, const Vector & r, Vector & x) {
   const double * const rv = r.values;
   double * const xv = x.values;
 
-  global_int_t nx = A.geom->nx;
-  global_int_t ny = A.geom->ny;
-  global_int_t nz = A.geom->nz;
-  global_int_t ng = 1; // number of ghost points FIXME should be declared "more globally"
+  const global_int_t nx = A.geom->nx;
+  const global_int_t ny = A.geom->ny;
+  const global_int_t nz = A.geom->nz;
+  const global_int_t ng = 1; // number of ghost points FIXME should be declared "more globally"
   const local_int_t nrow_ghost = (nx+2*ng)*(ny+2*ng)*(nz+2*ng); // local number of rows *including* ghost points
   double* xg = new double[nrow_ghost]{0.0}; // Copy of x with ghost points
 
   // FIXME THIS IS EXTREMELY HACKY!!
   const double off_diagonal = A.matrixValues[1][0];
-  //std::cout << off_diagonal << ", " << currentDiagonal << "\n";
 
   //copy xv to xg TODO HACK fix this
 #ifndef HPCG_NO_OPENMP
@@ -62,8 +61,8 @@ int ComputeSYMGS_mf( const SparseMatrix & A, const Vector & r, Vector & x) {
     for (local_int_t iy=0; iy<ny; ++iy) {
       for (local_int_t ix=0; ix<nx; ++ix) {
         const int i = idx(ix,iy,iz,nx,ny,nz);
+        const double currentDiagonal = *A.matrixDiagonal[0];
         double sum = rv[i]; // RHS value
-        const double currentDiagonal = *A.matrixDiagonal[i];
         for(int sz=-1; sz<=1; ++sz) {
           for(int sy=-1; sy<=1; ++sy) {
             for(int sx=-1; sx<=1; ++sx) {
@@ -72,19 +71,6 @@ int ComputeSYMGS_mf( const SparseMatrix & A, const Vector & r, Vector & x) {
           }
         }
         sum += off_diagonal*xg[idx(ix+0, iy+0, iz+0, nx, ny, nz, ng)]; // Remove diagnoal component entirely
-
-        //if(i==32767) {
-          //std::cout << "DEBUGGING MF FORWARD PASS\n";
-          //std::cout << "Sum: " << sum << ", " << currentDiagonal << std::endl;
-          //for(int sz=-1; sz<=1; ++sz) {
-            //for(int sy=-1; sy<=1; ++sy) {
-              //for(int sx=-1; sx<=1; ++sx) {
-                //int j = idx(ix+sx, iy+sy, iz+sz, nx, ny, nz);
-                //std::cout << j << ", " << off_diagonal << ", " << xg[idx(ix+sx, iy+sy, iz+sz, nx, ny, nz, ng)] << "\n";
-              //}
-            //}
-          //}
-        //}
 
         xg[idx(ix,iy,iz,nx,ny,nz,ng)] = sum/currentDiagonal;
       }
@@ -98,8 +84,8 @@ int ComputeSYMGS_mf( const SparseMatrix & A, const Vector & r, Vector & x) {
     for (local_int_t iy=ny-1; iy>=0; --iy) {
       for (local_int_t ix=nx-1; ix>=0; --ix) {
         const int i = idx(ix,iy,iz,nx,ny,nz);
+        const double currentDiagonal = *A.matrixDiagonal[0];
         double sum = rv[i]; // RHS value
-        const double currentDiagonal = *A.matrixDiagonal[i];
         for(int sz=-1; sz<=1; ++sz) {
           for(int sy=-1; sy<=1; ++sy) {
             for(int sx=-1; sx<=1; ++sx) {
@@ -108,19 +94,6 @@ int ComputeSYMGS_mf( const SparseMatrix & A, const Vector & r, Vector & x) {
           }
         }
         sum += off_diagonal*xg[idx(ix+0, iy+0, iz+0, nx, ny, nz, ng)]; // Remove diagnoal component entirely
-
-        //if(i==32765) {
-          //std::cout << "DEBUGGING MF BACKWARD PASS\n";
-          //std::cout << "Sum: " << sum << ", " << currentDiagonal << std::endl;
-          //for(int sz=-1; sz<=1; ++sz) {
-            //for(int sy=-1; sy<=1; ++sy) {
-              //for(int sx=-1; sx<=1; ++sx) {
-                //int j = idx(ix+sx, iy+sy, iz+sz, nx, ny, nz);
-                //std::cout << j << ", " << off_diagonal << ", " << xg[idx(ix+sx, iy+sy, iz+sz, nx, ny, nz, ng)] << "\n";
-              //}
-            //}
-          //}
-        //}
 
         xg[idx(ix,iy,iz,nx,ny,nz,ng)] = sum/currentDiagonal;
         xv[idx(ix,iy,iz,nx,ny,nz)] = sum/currentDiagonal;
@@ -155,15 +128,6 @@ int ComputeSYMGS_ma( const SparseMatrix & A, const Vector & r, Vector & x) {
     }
     sum += xv[i]*currentDiagonal; // Remove diagonal contribution from previous loop
 
-    //if(i==32767) {
-      //std::cout << "DEBUGGING MA FORWARD PASS\n";
-      //std::cout << "Sum: " << sum << ", " << currentDiagonal << std::endl;
-      //for (int j=0; j< currentNumberOfNonzeros; j++) {
-        //local_int_t curCol = currentColIndices[j];
-        //std::cout << curCol << ", " << currentValues[j] << ", " << xv[curCol] << "\n";
-      //}
-    //}
-
     xv[i] = sum/currentDiagonal;
   }
 
@@ -186,15 +150,6 @@ int ComputeSYMGS_ma( const SparseMatrix & A, const Vector & r, Vector & x) {
     sum += xv[i]*currentDiagonal; // Remove diagonal contribution from previous loop
 
     xv[i] = sum/currentDiagonal;
-
-    //if(i==32765) {
-      //std::cout << "DEBUGGING MA BACKWARD PASS\n";
-      //std::cout << "Sum: " << sum << ", " << currentDiagonal << std::endl;
-      //for (int j=0; j< currentNumberOfNonzeros; j++) {
-        //int curCol = currentColIndices[j];
-        //std::cout << curCol << ", " << currentValues[j] << ", " << xv[curCol] << "\n";
-      //}
-    //}
   }
 
   return 0;

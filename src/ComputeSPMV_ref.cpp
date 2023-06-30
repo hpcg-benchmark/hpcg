@@ -44,6 +44,9 @@ int ComputeSPMV_mf( const SparseMatrix & A, Vector & x, Vector & y) {
   double* xg = new double[nrow_ghost]{0.0}; // Copy of x with ghost points
 
   // Copy xv to xg TODO HACK find better way to do this
+#ifndef HPCG_NO_OPENMP
+  #pragma omp parallel for collapse(3)
+#endif
   for (local_int_t iz=0; iz<nz; ++iz) {
     for (local_int_t iy=0; iy<ny; ++iy) {
       for (local_int_t ix=0; ix<nx; ++ix) {
@@ -53,7 +56,7 @@ int ComputeSPMV_mf( const SparseMatrix & A, Vector & x, Vector & y) {
   }
 
 #ifndef HPCG_NO_OPENMP
-  #pragma omp parallel for
+  #pragma omp parallel for collapse(3)
 #endif
   for (local_int_t iz=0; iz<nz; ++iz) {
     for (local_int_t iy=0; iy<ny; ++iy) {
@@ -136,16 +139,14 @@ int ComputeSPMV_ma( const SparseMatrix & A, Vector & x, Vector & y) {
   return 0;
 }
 
-bool is_rel_equal(const double f, const double g, const double tol) {
+namespace {
+
+bool is_equal(const double f, const double g, const double abs_tol, const double rel_tol) {
   double error = std::abs(f - g);
-  if (error < 1e-10) {
+  if (error < abs_tol) {
     return true;
   } else {
-    //std::cout << std::max(std::abs(f), std::abs(g)) << "\n";
-    //std::cout << tol << "\n";
-    //std::cout << error << "\n";
-    //std::cout << std::max(std::abs(f), std::abs(g))*tol << "\n";
-    return error < std::max(std::abs(f), std::abs(g))*tol;
+    return error < std::max(std::abs(f), std::abs(g))*rel_tol;
   }
 }
 
@@ -167,7 +168,7 @@ void CompareComputeSPMV( const SparseMatrix & A, Vector & x, Vector & y) {
   }
 
   for(int i=0; i<nrow; ++i) {
-    if(!is_rel_equal(mf_result[i], ma_result[i], 1e-5)) {
+    if(!is_equal(mf_result[i], ma_result[i], 1e-10, 1e-8)) {
       printf("ERROR: %d, ma = %.10f, mf = %.10f\n", i, ma_result[i], mf_result[i]);
       exit(-1);
     }
@@ -175,6 +176,8 @@ void CompareComputeSPMV( const SparseMatrix & A, Vector & x, Vector & y) {
 
   delete [] mf_result;
   delete [] ma_result;
+}
+
 }
 
 /*!
@@ -204,7 +207,7 @@ int ComputeSPMV_ref( const SparseMatrix & A, Vector & x, Vector & y) {
 
   //CompareComputeSPMV(A, x, y);
 
-  const bool MATRIX_FREE = false;
+  const bool MATRIX_FREE = true;
 
   if(MATRIX_FREE) {
     ComputeSPMV_mf(A, x, y);

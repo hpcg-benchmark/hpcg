@@ -47,13 +47,13 @@ int ComputeRestriction_ref(const SparseMatrix & A, const Vector & rf) {
   const bool MATRIX_FREE = false;
 
   if(MATRIX_FREE) {
-#ifndef HPCG_NO_OPENMP
-#pragma omp parallel for
-#endif
     local_int_t nxc = A.geom->nx/2;
     local_int_t nyc = A.geom->ny/2;
     local_int_t nzc = A.geom->nz/2;
 
+#ifndef HPCG_NO_OPENMP
+#pragma omp parallel for collapse(3)
+#endif
     for(local_int_t izc=0; izc < nzc; ++izc){
       for(local_int_t iyc=0; iyc < nyc; ++iyc){
         for(local_int_t ixc=0; ixc < nxc; ++ixc){

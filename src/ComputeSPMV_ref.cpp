@@ -41,6 +41,7 @@ int ComputeSPMV_mf( const SparseMatrix & A, Vector & x, Vector & y) {
   global_int_t nz = A.geom->nz;
   const int ng = 1;
   const local_int_t nrow_ghost = (nx+2*ng)*(ny+2*ng)*(nz+2*ng); // local number of rows *including* ghost points
+  // TODO test performance of unique_ptr to replace this scary new
   double* xg = new double[nrow_ghost]{0.0}; // Copy of x with ghost points
 
   // Copy xv to xg TODO HACK find better way to do this

@@ -1,6 +1,8 @@
 out
 *.swp
-src/*.o
+*.o
+*.txt
+xhpcg
 bin/HPCG-Benchmark_3*.txt
 bin/xhpcg
 bin/hpcg20*.txt

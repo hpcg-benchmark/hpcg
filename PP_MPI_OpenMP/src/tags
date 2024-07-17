@@ -1,0 +1,286 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+Ac	SparseMatrix.hpp	/^  mutable struct SparseMatrix_STRUCT * Ac; \/\/ Coarse grid matrix$/;"	m	struct:SparseMatrix_STRUCT	typeref:struct:SparseMatrix_STRUCT::SparseMatrix_STRUCT
+Ap	CGData.hpp	/^  Vector Ap; \/\/!< pointer to Krylov vector$/;"	m	struct:CGData_STRUCT
+Axf	MGData.hpp	/^  Vector * Axf; \/\/ fine grid residual vector$/;"	m	struct:MGData_STRUCT
+CG	CG.cpp	/^int CG(const SparseMatrix & A, CGData & data, const Vector & b, Vector & x,$/;"	f
+CGDATA_HPP	CGData.hpp	22;"	d
+CGData	CGData.hpp	/^typedef struct CGData_STRUCT CGData;$/;"	t	typeref:struct:CGData_STRUCT
+CGData_STRUCT	CGData.hpp	/^struct CGData_STRUCT {$/;"	s
+CG_HPP	CG.hpp	16;"	d
+CG_REF_HPP	CG_ref.hpp	16;"	d
+CG_ref	CG_ref.cpp	/^int CG_ref(const SparseMatrix & A, CGData & data, const Vector & b, Vector & x,$/;"	f
+CHECKASPECTRATIO_HPP	CheckAspectRatio.hpp	16;"	d
+CHECKPROBLEM_HPP	CheckProblem.hpp	16;"	d
+COMPUTEDOTPRODUCT_HPP	ComputeDotProduct.hpp	16;"	d
+COMPUTEDOTPRODUCT_REF_HPP	ComputeDotProduct_ref.hpp	16;"	d
+COMPUTEMG_HPP	ComputeMG.hpp	16;"	d
+COMPUTEMG_REF_HPP	ComputeMG_ref.hpp	16;"	d
+COMPUTEPROLONGATION_REF_HPP	ComputeProlongation_ref.hpp	16;"	d
+COMPUTERESIDUAL_HPP	ComputeResidual.hpp	16;"	d
+COMPUTERESTRICTION_REF_HPP	ComputeRestriction_ref.hpp	16;"	d
+COMPUTESPMV_HPP	ComputeSPMV.hpp	16;"	d
+COMPUTESPMV_REF_HPP	ComputeSPMV_ref.hpp	16;"	d
+COMPUTESYMGS_HPP	ComputeSYMGS.hpp	16;"	d
+COMPUTESYMGS_REF_HPP	ComputeSYMGS_ref.hpp	16;"	d
+COMPUTEWAXPBY_HPP	ComputeWAXPBY.hpp	16;"	d
+COMPUTEWAXPBY_REF_HPP	ComputeWAXPBY_ref.hpp	16;"	d
+CheckAspectRatio	CheckAspectRatio.cpp	/^CheckAspectRatio(double smallest_ratio, int x, int y, int z, const char *what, bool DoIo) {$/;"	f
+CheckProblem	CheckProblem.cpp	/^void CheckProblem(SparseMatrix & A, Vector * b, Vector * x, Vector * xexact) {$/;"	f
+ComputeDotProduct	ComputeDotProduct.cpp	/^int ComputeDotProduct(const local_int_t n, const Vector & x, const Vector & y,$/;"	f
+ComputeDotProduct_ref	ComputeDotProduct_ref.cpp	/^int ComputeDotProduct_ref(const local_int_t n, const Vector & x, const Vector & y,$/;"	f
+ComputeMG	ComputeMG.cpp	/^int ComputeMG(const SparseMatrix  & A, const Vector & r, Vector & x) {$/;"	f
+ComputeMG_ref	ComputeMG_ref.cpp	/^int ComputeMG_ref(const SparseMatrix & A, const Vector & r, Vector & x) {$/;"	f
+ComputeOptimalShapeXYZ	ComputeOptimalShapeXYZ.cpp	/^ComputeOptimalShapeXYZ(int xyz, int & x, int & y, int & z) {$/;"	f
+ComputePrimeFactors	ComputeOptimalShapeXYZ.cpp	/^ComputePrimeFactors(int n, std::map<int, int> & factors) {$/;"	f	file:
+ComputeProlongation_ref	ComputeProlongation_ref.cpp	/^int ComputeProlongation_ref(const SparseMatrix & Af, Vector & xf) {$/;"	f
+ComputeRankOfMatrixRow	Geometry.hpp	/^inline int ComputeRankOfMatrixRow(const Geometry & geom, global_int_t index) {$/;"	f
+ComputeResidual	ComputeResidual.cpp	/^int ComputeResidual(const local_int_t n, const Vector & v1, const Vector & v2, double & residual) {$/;"	f
+ComputeRestriction_ref	ComputeRestriction_ref.cpp	/^int ComputeRestriction_ref(const SparseMatrix & A, const Vector & rf) {$/;"	f
+ComputeSPMV	ComputeSPMV.cpp	/^int ComputeSPMV( const SparseMatrix & A, Vector & x, Vector & y) {$/;"	f
+ComputeSPMV_ref	ComputeSPMV_ref.cpp	/^int ComputeSPMV_ref( const SparseMatrix & A, Vector & x, Vector & y) {$/;"	f
+ComputeSYMGS	ComputeSYMGS.cpp	/^int ComputeSYMGS( const SparseMatrix & A, const Vector & r, Vector & x) {$/;"	f
+ComputeSYMGS_ref	ComputeSYMGS_ref.cpp	/^int ComputeSYMGS_ref( const SparseMatrix & A, const Vector & r, Vector & x) {$/;"	f
+ComputeWAXPBY	ComputeWAXPBY.cpp	/^int ComputeWAXPBY(const local_int_t n, const double alpha, const Vector & x,$/;"	f
+ComputeWAXPBY_ref	ComputeWAXPBY_ref.cpp	/^int ComputeWAXPBY_ref(const local_int_t n, const double alpha, const Vector & x,$/;"	f
+CopyMatrixDiagonal	SparseMatrix.hpp	/^inline void CopyMatrixDiagonal(SparseMatrix & A, Vector & diagonal) {$/;"	f
+CopyVector	Vector.hpp	/^inline void CopyVector(const Vector & v, Vector & w) {$/;"	f
+DeleteCGData	CGData.hpp	/^inline void DeleteCGData(CGData & data) {$/;"	f
+DeleteGeometry	Geometry.hpp	/^inline void DeleteGeometry(Geometry & geom) {$/;"	f
+DeleteMGData	MGData.hpp	/^inline void DeleteMGData(MGData & data) {$/;"	f
+DeleteMatrix	SparseMatrix.hpp	/^inline void DeleteMatrix(SparseMatrix & A) {$/;"	f
+DeleteVector	Vector.hpp	/^inline void DeleteVector(Vector & v) {$/;"	f
+EXCHANGEHALO_HPP	ExchangeHalo.hpp	16;"	d
+ExchangeHalo	ExchangeHalo.cpp	/^void ExchangeHalo(const SparseMatrix & A, Vector & x) {$/;"	f
+FillRandomVector	Vector.hpp	/^inline void FillRandomVector(Vector & v) {$/;"	f
+GENERATECOARSEPROBLEM_HPP	GenerateCoarseProblem.hpp	16;"	d
+GENERATEGEOMETRY_HPP	GenerateGeometry.hpp	16;"	d
+GENERATEPROBLEM_HPP	GenerateProblem.hpp	16;"	d
+GENERATEPROBLEM_REF_HPP	GenerateProblem_ref.hpp	16;"	d
+GEOMETRY_HPP	Geometry.hpp	22;"	d
+GenerateCoarseProblem	GenerateCoarseProblem.cpp	/^void GenerateCoarseProblem(const SparseMatrix & Af) {$/;"	f
+GenerateGeometry	GenerateGeometry.cpp	/^void GenerateGeometry(int size, int rank, int numThreads,$/;"	f
+GenerateProblem	GenerateProblem.cpp	/^void GenerateProblem(SparseMatrix & A, Vector * b, Vector * x, Vector * xexact) {$/;"	f
+GenerateProblem_ref	GenerateProblem_ref.cpp	/^void GenerateProblem_ref(SparseMatrix & A, Vector * b, Vector * x, Vector * xexact) {$/;"	f
+Geometry	Geometry.hpp	/^typedef struct Geometry_STRUCT Geometry;$/;"	t	typeref:struct:Geometry_STRUCT
+Geometry_STRUCT	Geometry.hpp	/^struct Geometry_STRUCT {$/;"	s
+GlobalToLocalMap	SparseMatrix.hpp	/^typedef std::map< global_int_t, local_int_t > GlobalToLocalMap;$/;"	t
+HPCG_Finalize	finalize.cpp	/^HPCG_Finalize(void) {$/;"	f
+HPCG_HPP	hpcg.hpp	22;"	d
+HPCG_Init	init.cpp	/^HPCG_Init(int * argc_p, char ** *argv_p, HPCG_Params & params) {$/;"	f
+HPCG_Params	hpcg.hpp	/^typedef HPCG_Params_STRUCT HPCG_Params;$/;"	t
+HPCG_Params_STRUCT	hpcg.hpp	/^struct HPCG_Params_STRUCT {$/;"	s
+HPCG_fout	init.cpp	/^std::ofstream HPCG_fout; \/\/!< output file stream for logging activities during HPCG run$/;"	v
+InitializeMGData	MGData.hpp	/^inline void InitializeMGData(local_int_t * f2cOperator, Vector * rc, Vector * xc, Vector * Axf, MGData & data) {$/;"	f
+InitializeSparseCGData	CGData.hpp	/^inline void InitializeSparseCGData(SparseMatrix & A, CGData & data) {$/;"	f
+InitializeSparseMatrix	SparseMatrix.hpp	/^inline void InitializeSparseMatrix(SparseMatrix & A, Geometry * geom) {$/;"	f
+InitializeVector	Vector.hpp	/^inline void InitializeVector(Vector & v, local_int_t localLength) {$/;"	f
+MGDATA_HPP	MGData.hpp	22;"	d
+MGData	MGData.hpp	/^typedef struct MGData_STRUCT MGData;$/;"	t	typeref:struct:MGData_STRUCT
+MGData_STRUCT	MGData.hpp	/^struct MGData_STRUCT {$/;"	s
+MYTIMER_HPP	mytimer.hpp	16;"	d
+MixedBaseCounter	MixedBaseCounter.cpp	/^MixedBaseCounter::MixedBaseCounter(MixedBaseCounter & left, MixedBaseCounter & right) {$/;"	f	class:MixedBaseCounter
+MixedBaseCounter	MixedBaseCounter.cpp	/^MixedBaseCounter::MixedBaseCounter(int *counts, int length) {$/;"	f	class:MixedBaseCounter
+MixedBaseCounter	MixedBaseCounter.hpp	/^class MixedBaseCounter {$/;"	c
+NULLDEVICE	init.cpp	/^const char* NULLDEVICE="\/dev\/null";$/;"	v
+NULLDEVICE	init.cpp	/^const char* NULLDEVICE="nul";$/;"	v
+OPTIMIZEPROBLEM_HPP	OptimizeProblem.hpp	16;"	d
+OUTPUTFILE_HPP	OutputFile.hpp	22;"	d
+OptimizeProblem	OptimizeProblem.cpp	/^int OptimizeProblem(SparseMatrix & A, CGData & data, Vector & b, Vector & x, Vector & xexact) {$/;"	f
+OptimizeProblemMemoryUse	OptimizeProblem.cpp	/^double OptimizeProblemMemoryUse(const SparseMatrix & A) {$/;"	f
+OutputFile	OutputFile.cpp	/^OutputFile::OutputFile(const string & name_arg, const string & version_arg)$/;"	f	class:OutputFile
+OutputFile	OutputFile.cpp	/^OutputFile::OutputFile(void) : eol("\\n"), keySeparator("::") {}$/;"	f	class:OutputFile
+OutputFile	OutputFile.hpp	/^class OutputFile {$/;"	c
+READHPCGDAT_HPP	ReadHpcgDat.hpp	16;"	d
+REPORTRESULTS_HPP	ReportResults.hpp	16;"	d
+ReadHpcgDat	ReadHpcgDat.cpp	/^ReadHpcgDat(int *localDimensions, int *secondsPerRun, int *localProcDimensions) {$/;"	f
+ReplaceMatrixDiagonal	SparseMatrix.hpp	/^inline void ReplaceMatrixDiagonal(SparseMatrix & A, Vector & diagonal) {$/;"	f
+ReportResults	ReportResults.cpp	/^void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgSets, int refMaxIters,int optMaxIters, double times[],$/;"	f
+SETUPHALO_HPP	SetupHalo.hpp	16;"	d
+SETUPHALO_REF_HPP	SetupHalo_ref.hpp	16;"	d
+SPARSEMATRIX_HPP	SparseMatrix.hpp	22;"	d
+ScaleVectorValue	Vector.hpp	/^inline void ScaleVectorValue(Vector & v, local_int_t index, double value) {$/;"	f
+SetupHalo	SetupHalo.cpp	/^void SetupHalo(SparseMatrix & A) {$/;"	f
+SetupHalo_ref	SetupHalo_ref.cpp	/^void SetupHalo_ref(SparseMatrix & A) {$/;"	f
+SkipUntilEol	ReadHpcgDat.cpp	/^SkipUntilEol(FILE *stream) {$/;"	f	file:
+SparseMatrix	SparseMatrix.hpp	/^typedef struct SparseMatrix_STRUCT SparseMatrix;$/;"	t	typeref:struct:SparseMatrix_STRUCT
+SparseMatrix_STRUCT	SparseMatrix.hpp	/^struct SparseMatrix_STRUCT {$/;"	s
+TESTCG_HPP	TestCG.hpp	22;"	d
+TESTNORMS_HPP	TestNorms.hpp	22;"	d
+TESTSYMMETRY_HPP	TestSymmetry.hpp	22;"	d
+TICK	CG.cpp	36;"	d	file:
+TICK	CG_ref.cpp	36;"	d	file:
+TOCK	CG.cpp	37;"	d	file:
+TOCK	CG_ref.cpp	37;"	d	file:
+TestCG	TestCG.cpp	/^int TestCG(SparseMatrix & A, CGData & data, Vector & b, Vector & x, TestCGData & testcg_data) {$/;"	f
+TestCGData	TestCG.hpp	/^typedef struct TestCGData_STRUCT TestCGData;$/;"	t	typeref:struct:TestCGData_STRUCT
+TestCGData_STRUCT	TestCG.hpp	/^struct TestCGData_STRUCT {$/;"	s
+TestNorms	TestNorms.cpp	/^int TestNorms(TestNormsData & testnorms_data) {$/;"	f
+TestNormsData	TestNorms.hpp	/^typedef struct TestNormsData_STRUCT TestNormsData;$/;"	t	typeref:struct:TestNormsData_STRUCT
+TestNormsData_STRUCT	TestNorms.hpp	/^struct TestNormsData_STRUCT {$/;"	s
+TestSymmetry	TestSymmetry.cpp	/^int TestSymmetry(SparseMatrix & A, Vector & b, Vector & xexact, TestSymmetryData & testsymmetry_data) {$/;"	f
+TestSymmetryData	TestSymmetry.hpp	/^typedef struct TestSymmetryData_STRUCT TestSymmetryData;$/;"	t	typeref:struct:TestSymmetryData_STRUCT
+TestSymmetryData_STRUCT	TestSymmetry.hpp	/^struct TestSymmetryData_STRUCT {$/;"	s
+VECTOR_HPP	Vector.hpp	22;"	d
+Vector	Vector.hpp	/^typedef struct Vector_STRUCT Vector;$/;"	t	typeref:struct:Vector_STRUCT
+Vector_STRUCT	Vector.hpp	/^struct Vector_STRUCT {$/;"	s
+WRITEPROBLEM_HPP	WriteProblem.hpp	16;"	d
+WriteProblem	WriteProblem.cpp	/^int WriteProblem( const Geometry & geom, const SparseMatrix & A,$/;"	f
+YAML_DOC_HPP	YAML_Doc.hpp	29;"	d
+YAML_Doc	YAML_Doc.cpp	/^YAML_Doc::YAML_Doc(const std::string & miniApp_Name, const std::string & miniApp_Version, const std::string & destination_Directory, const std::string & destination_FileName) {$/;"	f	class:YAML_Doc
+YAML_Doc	YAML_Doc.hpp	/^class YAML_Doc: public YAML_Element {$/;"	c
+YAML_ELEMENT_HPP	YAML_Element.hpp	29;"	d
+YAML_Element	YAML_Element.cpp	/^YAML_Element::YAML_Element(const std::string & key_arg, const std::string & value_arg) {$/;"	f	class:YAML_Element
+YAML_Element	YAML_Element.hpp	/^  YAML_Element () {key=""; value="";}$/;"	f	class:YAML_Element
+YAML_Element	YAML_Element.hpp	/^class YAML_Element {$/;"	c
+ZeroVector	Vector.hpp	/^inline void ZeroVector(Vector & v) {$/;"	f
+add	OutputFile.cpp	/^OutputFile::add(const string & key_arg, const string & value_arg) {$/;"	f	class:OutputFile
+add	OutputFile.cpp	/^OutputFile::add(const string & key_arg, double value_arg) {$/;"	f	class:OutputFile
+add	OutputFile.cpp	/^OutputFile::add(const string & key_arg, int value_arg) {$/;"	f	class:OutputFile
+add	OutputFile.cpp	/^OutputFile::add(const string & key_arg, long long value_arg) {$/;"	f	class:OutputFile
+add	OutputFile.cpp	/^OutputFile::add(const string & key_arg, size_t value_arg) {$/;"	f	class:OutputFile
+add	YAML_Element.cpp	/^YAML_Element * YAML_Element::add(const std::string & key_arg, const std::string & value_arg) {$/;"	f	class:YAML_Element
+add	YAML_Element.cpp	/^YAML_Element * YAML_Element::add(const std::string & key_arg, double value_arg) {$/;"	f	class:YAML_Element
+add	YAML_Element.cpp	/^YAML_Element * YAML_Element::add(const std::string & key_arg, int value_arg) {$/;"	f	class:YAML_Element
+add	YAML_Element.cpp	/^YAML_Element * YAML_Element::add(const std::string & key_arg, long long value_arg) {$/;"	f	class:YAML_Element
+add	YAML_Element.cpp	/^YAML_Element * YAML_Element::add(const std::string & key_arg, size_t value_arg) {$/;"	f	class:YAML_Element
+allocKeyVal	OutputFile.cpp	/^OutputFile * OutputFile::allocKeyVal(const std::string & key_arg, const std::string & value_arg) {$/;"	f	class:OutputFile
+children	YAML_Element.hpp	/^  std::vector<YAML_Element *> children; \/\/!< children elements of this element$/;"	m	class:YAML_Element
+comm_rank	hpcg.hpp	/^  int comm_rank; \/\/!< This process' MPI rank in the range [0 to comm_size - 1]$/;"	m	struct:HPCG_Params_STRUCT
+comm_size	hpcg.hpp	/^  int comm_size; \/\/!< Number of MPI processes in MPI_COMM_WORLD$/;"	m	struct:HPCG_Params_STRUCT
+convert_double_to_string	YAML_Element.cpp	/^string YAML_Element::convert_double_to_string(double value_arg) {$/;"	f	class:YAML_Element
+convert_int_to_string	YAML_Element.cpp	/^string YAML_Element::convert_int_to_string(int value_arg) {$/;"	f	class:YAML_Element
+convert_long_long_to_string	YAML_Element.cpp	/^string YAML_Element::convert_long_long_to_string(long long value_arg) {$/;"	f	class:YAML_Element
+convert_size_t_to_string	YAML_Element.cpp	/^string YAML_Element::convert_size_t_to_string(size_t value_arg) {$/;"	f	class:YAML_Element
+count_fail	TestCG.hpp	/^  int count_fail;  \/\/!< number of succesful tests$/;"	m	struct:TestCGData_STRUCT
+count_fail	TestSymmetry.hpp	/^  int    count_fail;   \/\/!< number of failures in the symmetry tests$/;"	m	struct:TestSymmetryData_STRUCT
+count_pass	TestCG.hpp	/^  int count_pass; \/\/!< number of succesful tests$/;"	m	struct:TestCGData_STRUCT
+cubic_radical_search	ComputeOptimalShapeXYZ.cpp	/^cubic_radical_search(int n, int & x, int & y, int & z) {$/;"	f	file:
+cur_counts	MixedBaseCounter.hpp	/^    int cur_counts[32+1]; \/\/!< current prime factor counts$/;"	m	class:MixedBaseCounter
+depsym_mg	TestSymmetry.hpp	/^  double depsym_mg; \/\/!< departure from symmetry for the MG kernel$/;"	m	struct:TestSymmetryData_STRUCT
+depsym_spmv	TestSymmetry.hpp	/^  double depsym_spmv;  \/\/!< departure from symmetry for the SPMV kernel$/;"	m	struct:TestSymmetryData_STRUCT
+descendants	OutputFile.hpp	/^  std::list<OutputFile *> descendants; \/\/!< descendant elements$/;"	m	class:OutputFile
+destinationDirectory	YAML_Doc.hpp	/^  std::string destinationDirectory; \/\/!< the destination directory for the generated the YAML output$/;"	m	class:YAML_Doc
+destinationFileName	YAML_Doc.hpp	/^  std::string destinationFileName; \/\/!< the filename for the generated the YAML output$/;"	m	class:YAML_Doc
+elementsToSend	SparseMatrix.hpp	/^  local_int_t * elementsToSend; \/\/!< elements to send to neighboring processes$/;"	m	struct:SparseMatrix_STRUCT
+eol	OutputFile.hpp	/^  std::string eol; \/\/!< end-of-line character sequence in the output file$/;"	m	class:OutputFile
+expected_niters_no_prec	TestCG.hpp	/^  int expected_niters_no_prec; \/\/!< expected number of test CG iterations without preconditioning with diagonally dominant matrix (~12)$/;"	m	struct:TestCGData_STRUCT
+expected_niters_prec	TestCG.hpp	/^  int expected_niters_prec; \/\/!< expected number of test CG iterations with preconditioning and with diagonally dominant matrix (~1-2)$/;"	m	struct:TestCGData_STRUCT
+f2cOperator	MGData.hpp	/^  local_int_t * f2cOperator; \/\/!< 1D array containing the fine operator local IDs that will be injected into coarse space.$/;"	m	struct:MGData_STRUCT
+generate	OutputFile.cpp	/^OutputFile::generate(void) {$/;"	f	class:OutputFile
+generateRecursive	OutputFile.cpp	/^OutputFile::generateRecursive(string prefix) {$/;"	f	class:OutputFile
+generateYAML	YAML_Doc.cpp	/^string YAML_Doc::generateYAML() {$/;"	f	class:YAML_Doc
+geom	SparseMatrix.hpp	/^  Geometry * geom; \/\/!< geometry associated with this matrix$/;"	m	struct:SparseMatrix_STRUCT
+get	OutputFile.cpp	/^OutputFile::get(const string & key_arg) {$/;"	f	class:OutputFile
+get	YAML_Element.cpp	/^YAML_Element * YAML_Element::get(const std::string & key_arg) {$/;"	f	class:YAML_Element
+getKey	YAML_Element.hpp	/^  std::string getKey() {return key;}$/;"	f	class:YAML_Element
+gix0	Geometry.hpp	/^  global_int_t gix0;  \/\/!< Base global x index for this rank in the npx by npy by npz processor grid$/;"	m	struct:Geometry_STRUCT
+giy0	Geometry.hpp	/^  global_int_t giy0;  \/\/!< Base global y index for this rank in the npx by npy by npz processor grid$/;"	m	struct:Geometry_STRUCT
+giz0	Geometry.hpp	/^  global_int_t giz0;  \/\/!< Base global z index for this rank in the npx by npy by npz processor grid$/;"	m	struct:Geometry_STRUCT
+globalToLocalMap	SparseMatrix.hpp	/^  GlobalToLocalMap globalToLocalMap; \/\/!< global-to-local mapping$/;"	m	struct:SparseMatrix_STRUCT
+global_int_t	Geometry.hpp	/^typedef int global_int_t;$/;"	t
+global_int_t	Geometry.hpp	/^typedef long long global_int_t;$/;"	t
+gnx	Geometry.hpp	/^  global_int_t gnx;  \/\/!< Global number of x-direction grid points$/;"	m	struct:Geometry_STRUCT
+gny	Geometry.hpp	/^  global_int_t gny;  \/\/!< Global number of y-direction grid points$/;"	m	struct:Geometry_STRUCT
+gnz	Geometry.hpp	/^  global_int_t gnz;  \/\/!< Global number of z-direction grid points$/;"	m	struct:Geometry_STRUCT
+ipx	Geometry.hpp	/^  int ipx;  \/\/!< Current rank's x location in the npx by npy by npz processor grid$/;"	m	struct:Geometry_STRUCT
+ipy	Geometry.hpp	/^  int ipy;  \/\/!< Current rank's y location in the npx by npy by npz processor grid$/;"	m	struct:Geometry_STRUCT
+ipz	Geometry.hpp	/^  int ipz;  \/\/!< Current rank's z location in the npx by npy by npz processor grid$/;"	m	struct:Geometry_STRUCT
+isDotProductOptimized	SparseMatrix.hpp	/^  mutable bool isDotProductOptimized;$/;"	m	struct:SparseMatrix_STRUCT
+isMgOptimized	SparseMatrix.hpp	/^  mutable bool isMgOptimized;$/;"	m	struct:SparseMatrix_STRUCT
+isSpmvOptimized	SparseMatrix.hpp	/^  mutable bool isSpmvOptimized;$/;"	m	struct:SparseMatrix_STRUCT
+isWaxpbyOptimized	SparseMatrix.hpp	/^  mutable bool isWaxpbyOptimized;$/;"	m	struct:SparseMatrix_STRUCT
+is_zero	MixedBaseCounter.cpp	/^MixedBaseCounter::is_zero() {$/;"	f	class:MixedBaseCounter
+key	OutputFile.hpp	/^  std::string key; \/\/!< the key under which the element is stored$/;"	m	class:OutputFile
+key	YAML_Element.hpp	/^  std::string key; \/\/!< the key under which the element is stored$/;"	m	class:YAML_Element
+keySeparator	OutputFile.hpp	/^  std::string keySeparator; \/\/!< character sequence to separate keys in the output file$/;"	m	class:OutputFile
+length	MixedBaseCounter.hpp	/^    int length; \/\/!< number of prime factor counts (cannot exceed 32 for a 32-bit integer)$/;"	m	class:MixedBaseCounter
+localLength	Vector.hpp	/^  local_int_t localLength;  \/\/!< length of local portion of the vector$/;"	m	struct:Vector_STRUCT
+localNumberOfColumns	SparseMatrix.hpp	/^  local_int_t localNumberOfColumns;  \/\/!< number of columns local to this process$/;"	m	struct:SparseMatrix_STRUCT
+localNumberOfNonzeros	SparseMatrix.hpp	/^  local_int_t localNumberOfNonzeros;  \/\/!< number of nonzeros local to this process$/;"	m	struct:SparseMatrix_STRUCT
+localNumberOfRows	SparseMatrix.hpp	/^  local_int_t localNumberOfRows; \/\/!< number of rows local to this process$/;"	m	struct:SparseMatrix_STRUCT
+localToGlobalMap	SparseMatrix.hpp	/^  std::vector< global_int_t > localToGlobalMap; \/\/!< local-to-global mapping$/;"	m	struct:SparseMatrix_STRUCT
+local_int_t	Geometry.hpp	/^typedef int local_int_t;$/;"	t
+main	main.cpp	/^int main(int argc, char * argv[]) {$/;"	f
+matrixDiagonal	SparseMatrix.hpp	/^  double ** matrixDiagonal; \/\/!< values of matrix diagonal entries$/;"	m	struct:SparseMatrix_STRUCT
+matrixValues	SparseMatrix.hpp	/^  double ** matrixValues; \/\/!< values of matrix entries$/;"	m	struct:SparseMatrix_STRUCT
+max3	ComputeOptimalShapeXYZ.cpp	/^max3(int a, int b, int c) {$/;"	f	file:
+max_counts	MixedBaseCounter.hpp	/^    int max_counts[32+1]; \/\/!< maximum value for prime factor counts$/;"	m	class:MixedBaseCounter
+mean	TestNorms.hpp	/^  double   mean;   \/\/!< mean of all sampes$/;"	m	struct:TestNormsData_STRUCT
+mgData	SparseMatrix.hpp	/^  mutable MGData * mgData; \/\/ Pointer to the coarse level data for this fine matrix$/;"	m	struct:SparseMatrix_STRUCT
+min3	ComputeOptimalShapeXYZ.cpp	/^min3(int a, int b, int c) {$/;"	f	file:
+miniAppName	YAML_Doc.hpp	/^  std::string miniAppName; \/\/!< the name of the application that generated the YAML output$/;"	m	class:YAML_Doc
+miniAppVersion	YAML_Doc.hpp	/^  std::string miniAppVersion; \/\/!< the version of the application that generated the YAML output$/;"	m	class:YAML_Doc
+mtxIndG	SparseMatrix.hpp	/^  global_int_t ** mtxIndG; \/\/!< matrix indices as global values$/;"	m	struct:SparseMatrix_STRUCT
+mtxIndL	SparseMatrix.hpp	/^  local_int_t ** mtxIndL; \/\/!< matrix indices as local values$/;"	m	struct:SparseMatrix_STRUCT
+mytimer	mytimer.cpp	/^double mytimer(void) {$/;"	f
+name	OutputFile.hpp	/^  std::string name; \/\/!< name of the benchmark$/;"	m	class:OutputFile
+neighbors	SparseMatrix.hpp	/^  int * neighbors; \/\/!< neighboring processes$/;"	m	struct:SparseMatrix_STRUCT
+next	MixedBaseCounter.cpp	/^MixedBaseCounter::next() {$/;"	f	class:MixedBaseCounter
+niters_max_no_prec	TestCG.hpp	/^  int niters_max_no_prec; \/\/!< maximum number of test CG iterations without predictitioner$/;"	m	struct:TestCGData_STRUCT
+niters_max_prec	TestCG.hpp	/^  int niters_max_prec; \/\/!< maximum number of test CG iterations without predictitioner$/;"	m	struct:TestCGData_STRUCT
+nonzerosInRow	SparseMatrix.hpp	/^  char  * nonzerosInRow;  \/\/!< The number of nonzeros in a row will always be 27 or fewer$/;"	m	struct:SparseMatrix_STRUCT
+normr	TestCG.hpp	/^  double normr; \/\/!< residual norm achieved during test CG iterations$/;"	m	struct:TestCGData_STRUCT
+npartz	Geometry.hpp	/^  int npartz; \/\/!< Number of partitions with varying nz values$/;"	m	struct:Geometry_STRUCT
+npx	Geometry.hpp	/^  int npx;  \/\/!< Number of processors in x-direction$/;"	m	struct:Geometry_STRUCT
+npx	hpcg.hpp	/^  int npx; \/\/!< Number of x-direction grid points for each local subdomain$/;"	m	struct:HPCG_Params_STRUCT
+npy	Geometry.hpp	/^  int npy;  \/\/!< Number of processors in y-direction$/;"	m	struct:Geometry_STRUCT
+npy	hpcg.hpp	/^  int npy; \/\/!< Number of y-direction grid points for each local subdomain$/;"	m	struct:HPCG_Params_STRUCT
+npz	Geometry.hpp	/^  int npz;  \/\/!< Number of processors in z-direction$/;"	m	struct:Geometry_STRUCT
+npz	hpcg.hpp	/^  int npz; \/\/!< Number of z-direction grid points for each local subdomain$/;"	m	struct:HPCG_Params_STRUCT
+numThreads	Geometry.hpp	/^  int numThreads; \/\/!< This process' number of threads$/;"	m	struct:Geometry_STRUCT
+numThreads	hpcg.hpp	/^  int numThreads; \/\/!< This process' number of threads$/;"	m	struct:HPCG_Params_STRUCT
+numberOfExternalValues	SparseMatrix.hpp	/^  local_int_t numberOfExternalValues; \/\/!< number of entries that are external to this process$/;"	m	struct:SparseMatrix_STRUCT
+numberOfPostsmootherSteps	MGData.hpp	/^  int numberOfPostsmootherSteps; \/\/ Call ComputeSYMGS this many times after coarsening$/;"	m	struct:MGData_STRUCT
+numberOfPresmootherSteps	MGData.hpp	/^  int numberOfPresmootherSteps; \/\/ Call ComputeSYMGS this many times prior to coarsening$/;"	m	struct:MGData_STRUCT
+numberOfSendNeighbors	SparseMatrix.hpp	/^  int numberOfSendNeighbors; \/\/!< number of neighboring processes that will be send local data$/;"	m	struct:SparseMatrix_STRUCT
+nx	Geometry.hpp	/^  local_int_t nx;   \/\/!< Number of x-direction grid points for each local subdomain$/;"	m	struct:Geometry_STRUCT
+nx	hpcg.hpp	/^  local_int_t nx; \/\/!< Number of processes in x-direction of 3D process grid$/;"	m	struct:HPCG_Params_STRUCT
+ny	Geometry.hpp	/^  local_int_t ny;   \/\/!< Number of y-direction grid points for each local subdomain$/;"	m	struct:Geometry_STRUCT
+ny	hpcg.hpp	/^  local_int_t ny; \/\/!< Number of processes in y-direction of 3D process grid$/;"	m	struct:HPCG_Params_STRUCT
+nz	Geometry.hpp	/^  local_int_t nz;   \/\/!< Number of z-direction grid points for each local subdomain$/;"	m	struct:Geometry_STRUCT
+nz	hpcg.hpp	/^  local_int_t nz; \/\/!< Number of processes in z-direction of 3D process grid$/;"	m	struct:HPCG_Params_STRUCT
+optimizationData	MGData.hpp	/^  void * optimizationData;$/;"	m	struct:MGData_STRUCT
+optimizationData	SparseMatrix.hpp	/^  void * optimizationData;  \/\/ pointer that can be used to store implementation-specific data$/;"	m	struct:SparseMatrix_STRUCT
+optimizationData	Vector.hpp	/^  void * optimizationData;$/;"	m	struct:Vector_STRUCT
+p	CGData.hpp	/^  Vector p; \/\/!< pointer to direction vector$/;"	m	struct:CGData_STRUCT
+partz_ids	Geometry.hpp	/^  int * partz_ids; \/\/!< Array of partition ids of processor in z-direction where new value of nz starts (valid values are 1 to npz)$/;"	m	struct:Geometry_STRUCT
+partz_nz	Geometry.hpp	/^  local_int_t * partz_nz; \/\/!< Array of length npartz containing the nz values for each partition$/;"	m	struct:Geometry_STRUCT
+pass	TestNorms.hpp	/^  bool   pass;     \/\/!< pass\/fail indicator$/;"	m	struct:TestNormsData_STRUCT
+pow_i	ComputeOptimalShapeXYZ.cpp	/^pow_i(int x, int p) {$/;"	f	file:
+printYAML	YAML_Element.cpp	/^string YAML_Element::printYAML(std::string space) {$/;"	f	class:YAML_Element
+product	MixedBaseCounter.cpp	/^MixedBaseCounter::product(int * multipliers) {$/;"	f	class:MixedBaseCounter
+pz	Geometry.hpp	/^  int pz; \/\/!< partition ID of z-dimension process that starts the second region of nz values$/;"	m	struct:Geometry_STRUCT
+pz	hpcg.hpp	/^  int pz; \/\/!< Partition in the z processor dimension, default is npz$/;"	m	struct:HPCG_Params_STRUCT
+r	CGData.hpp	/^  Vector r; \/\/!< pointer to residual vector$/;"	m	struct:CGData_STRUCT
+rank	Geometry.hpp	/^  int rank; \/\/!< This process' rank in the range [0 to size - 1]$/;"	m	struct:Geometry_STRUCT
+rc	MGData.hpp	/^  Vector * rc; \/\/ coarse grid residual vector$/;"	m	struct:MGData_STRUCT
+receiveLength	SparseMatrix.hpp	/^  local_int_t * receiveLength; \/\/!< lenghts of messages received from neighboring processes$/;"	m	struct:SparseMatrix_STRUCT
+runningTime	hpcg.hpp	/^  int runningTime; \/\/!< Number of seconds to run the timed portion of the benchmark$/;"	m	struct:HPCG_Params_STRUCT
+samples	TestNorms.hpp	/^  int    samples;  \/\/!< number of samples$/;"	m	struct:TestNormsData_STRUCT
+sendBuffer	SparseMatrix.hpp	/^  double * sendBuffer; \/\/!< send buffer for non-blocking sends$/;"	m	struct:SparseMatrix_STRUCT
+sendLength	SparseMatrix.hpp	/^  local_int_t * sendLength; \/\/!< lenghts of messages sent to neighboring processes$/;"	m	struct:SparseMatrix_STRUCT
+setKeyValue	OutputFile.cpp	/^OutputFile::setKeyValue(const string & key_arg, const string & value_arg) {$/;"	f	class:OutputFile
+size	Geometry.hpp	/^  int size; \/\/!< Number of MPI processes$/;"	m	struct:Geometry_STRUCT
+startswith	init.cpp	/^startswith(const char * s, const char * prefix) {$/;"	f	file:
+title	SparseMatrix.hpp	/^  char  * title; \/\/!< name of the sparse matrix$/;"	m	struct:SparseMatrix_STRUCT
+totalNumberOfNonzeros	SparseMatrix.hpp	/^  global_int_t totalNumberOfNonzeros; \/\/!< total number of matrix nonzeros across all processes$/;"	m	struct:SparseMatrix_STRUCT
+totalNumberOfRows	SparseMatrix.hpp	/^  global_int_t totalNumberOfRows; \/\/!< total number of matrix rows across all processes$/;"	m	struct:SparseMatrix_STRUCT
+totalToBeSent	SparseMatrix.hpp	/^  local_int_t totalToBeSent; \/\/!< total number of entries to be sent$/;"	m	struct:SparseMatrix_STRUCT
+value	OutputFile.hpp	/^  std::string value; \/\/!< the value of the stored element$/;"	m	class:OutputFile
+value	YAML_Element.hpp	/^  std::string value; \/\/!< the value of the stored element$/;"	m	class:YAML_Element
+values	TestNorms.hpp	/^  double * values; \/\/!< sample values$/;"	m	struct:TestNormsData_STRUCT
+values	Vector.hpp	/^  double * values;          \/\/!< array of values$/;"	m	struct:Vector_STRUCT
+variance	TestNorms.hpp	/^  double variance; \/\/!< variance of mean$/;"	m	struct:TestNormsData_STRUCT
+version	OutputFile.hpp	/^  std::string version; \/\/!< version of the benchmark$/;"	m	class:OutputFile
+xc	MGData.hpp	/^  Vector * xc; \/\/ coarse grid solution vector$/;"	m	struct:MGData_STRUCT
+z	CGData.hpp	/^  Vector z; \/\/!< pointer to preconditioned residual vector$/;"	m	struct:CGData_STRUCT
+zl	hpcg.hpp	/^  local_int_t zl; \/\/!< nz for processors in the z dimension with value less than pz$/;"	m	struct:HPCG_Params_STRUCT
+zu	hpcg.hpp	/^  local_int_t zu; \/\/!< nz for processors in the z dimension with value greater than pz$/;"	m	struct:HPCG_Params_STRUCT
+~OutputFile	OutputFile.cpp	/^OutputFile::~OutputFile() {$/;"	f	class:OutputFile
+~YAML_Doc	YAML_Doc.cpp	/^YAML_Doc::~YAML_Doc(void) {$/;"	f	class:YAML_Doc
+~YAML_Element	YAML_Element.cpp	/^YAML_Element::~YAML_Element() {$/;"	f	class:YAML_Element

@@ -61,7 +61,25 @@ struct SparseMatrix_STRUCT {
    */
   mutable struct SparseMatrix_STRUCT * Ac; // Coarse grid matrix
   mutable MGData * mgData; // Pointer to the coarse level data for this fine matrix
+#ifdef HPCG_USE_MULTICOLORING
+  std::vector<local_int_t> optimizationData[2];
+#elif HPCG_USE_REORDER_MULTICOLORING
+  std::vector<local_int_t> whichNewRowIsOldRow;
+  std::vector<local_int_t> whichOldRowIsNewRow;
+  std::vector<local_int_t> firstRowOfBlock;
+  std::vector<local_int_t> nonzerosInChunk;
+  std::vector<std::vector<local_int_t> > tdg;
+  std::vector<local_int_t> numberOfBlocksInColor;
+
+  bool TDG;
+  local_int_t blockSize;
+  local_int_t chunkSize;
+  local_int_t numberOfChunks;
+  local_int_t numberOfColors;
+  local_int_t numberOfBlocks;
+#else
   void * optimizationData;  // pointer that can be used to store implementation-specific data
+#endif
 
 #ifndef HPCG_NO_MPI
   local_int_t numberOfExternalValues; //!< number of entries that are external to this process

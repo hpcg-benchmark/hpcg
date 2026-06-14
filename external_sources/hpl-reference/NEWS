@@ -1,0 +1,103 @@
+==============================================================
+ High Performance Computing Linpack Benchmark (HPL)
+ HPL - 2.3 - December 2, 2018
+==============================================================
+
+ History
+
+ - 09/09/00 Public release of Version 1.0
+
+ - 09/27/00 A couple of mistakes in the  VSIPL  port have been
+ corrected.  The tar file as well as the web site were updated
+ on September 27th, 2000.  Note  that  these problems were not
+ affecting the BLAS version of the software in any way.
+
+ - 01/01/04 Version 1.0a
+ The  MPI  process grid  numbering  scheme  is now an run-time
+ option.
+ The inlined assembly  timer  routine that caused the compila-
+ tion to fail when using  gcc  version 3.3  and above has been
+ removed from the package.
+ Various building problems on the T3E have been fixed;  Thanks
+ to Edward Anderson.
+
+ - 15/12/04 Version 1.0b
+ Weakness of the pseudo-random matrix generator found for pro-
+ blem sizes being power of twos and larger  than 2^15;  Thanks
+ to Gregory Bauer. This problem has not been fixed. It is thus
+ currently recommended to  HPL  users willing to test matrices
+ of size larger than 2^15 to not use power twos.
+
+ When the matrix size is such that one needs  > 16 GB  per MPI
+ rank,  the  intermediate  calculation  (mat.ld+1) * mat.nq in
+ HPL_pdtest.c  ends up  overflowing  because  it is done using
+ 32-bit arithmetic.  This issue has been fixed by  typecasting
+ to size_t; Thanks to John Baron.
+
+ - 09/10/08 Version 2.0
+
+ Piotr Luszczek changed to 64-bit RNG, modified files:
+ -- [M] include/hpl_matgen.h
+ -- [M] testing/matgen/HPL_ladd.c
+ -- [M] testing/matgen/HPL_lmul.c
+ -- [M] testing/matgen/HPL_rand.c
+ -- [M] testing/ptest/HPL_pdinfo.c
+
+ For a motivation for the change, see:
+    Dongarra and Langou, ``The Problem with the Linpack
+    Benchmark Matrix Generator'', LAWN 206, June 2008.
+
+ -- [M] testing/ptest/HPL_pdtest.c  --
+
+ Julien Langou changed the test for correctness from
+      ||Ax-b||_oo / ( eps * ||A||_1  * N            )
+      ||Ax-b||_oo / ( eps * ||A||_1  * ||x||_1      )
+      ||Ax-b||_oo / ( eps * ||A||_oo * ||x||_oo * N )
+ to the normwise backward error
+      || r ||_oo / ( eps * ( || x ||_oo * || A ||_oo + || b ||_oo ) * N )
+ See:
+  Nicholas J. Higham, ``Accuracy and Stability of Numerical Algorithms'',
+  Society for Industrial and Applied Mathematics, Philadelphia, PA, USA,
+  Second Edition, pages = xxx+680, ISBN = 0-89871-521-0, 2002.
+
+ Note that in our case || b ||_oo is almost for sure
+ 1/2, we compute it anyway.
+
+ - 10/26/2012 Version 2.1
+
+ Piotr Luszczek introduced exact time stamping for HPL_pdgesv():
+ -- [M] dist/include/hpl_misc.h
+ -- [M] dist/testing/ptest/HPL_pdtest.c
+
+ Piotr Luszczek fixed out-of-bounds access in data spreading functions
+ and exact time stamping for HPL_pdgesv():
+ -- [M] dist/src/pgesv/HPL_spreadN.c
+ -- [M] dist/src/pgesv/HPL_spreadT.c
+ Thanks to Stephen Whalen from Cray.
+
+ - 02/24/2016 Version 2.2
+
+ Piotr Luszczek added continuous reporting of factorization progress
+ submitted by Intel and make scripts that uses Intel software tools and
+ libraries and their Apple's Mac OS X equivalents.
+
+ - 12/02/2018 Version 2.3
+
+ Piotr Luszczek removed deprecated MPI functions that are no longer
+ supported in some MPI implementations (for example Open MPI 4.0) and
+ replaced them with
+ modern equivalents in HPL_packL():
+ -- [M] src/comm/HPL_packL.c
+
+ Piotr Luszczek added one digit to the display of performance result
+ and changed display of scaled residual to scientific notation with
+ extra digits in HPL_pdtest():
+ -- [M] testing/ptest/HPL_pdtest.c
+
+ Piotr Luszczek added support for Autotools configuration packages
+ autoconf and automake:
+ -- [A] Makefile.am
+ -- [A] configure.ac
+ -- [A] acinclude.m4
+ -- [A] src/Makefile.am
+ -- [A] testing/Makefile.am

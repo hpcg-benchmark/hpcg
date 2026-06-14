@@ -1,0 +1,71 @@
+include:
+  - local: .gitlab/ci/templates/omb_collective_template.gitlab-ci.yml
+    inputs:
+      collective_name: allgather
+      neighbor_test: "true"
+  - local: .gitlab/ci/templates/omb_collective_template.gitlab-ci.yml
+    inputs:
+      collective_name: allgatherv
+      neighbor_test: "true"
+  - local: .gitlab/ci/templates/omb_collective_template.gitlab-ci.yml
+    inputs:
+      collective_name: allreduce
+      ddt_test: "false"
+  - local: .gitlab/ci/templates/omb_collective_template.gitlab-ci.yml
+    inputs:
+      collective_name: alltoall
+      neighbor_test: "true"
+  - local: .gitlab/ci/templates/omb_collective_template.gitlab-ci.yml
+    inputs:
+      collective_name: alltoallv
+      neighbor_test: "true"
+  - local: .gitlab/ci/templates/omb_collective_template.gitlab-ci.yml
+    inputs:
+      collective_name: alltoallw
+      neighbor_test: "true"
+  - local: .gitlab/ci/templates/omb_collective_template.gitlab-ci.yml
+    inputs:
+      collective_name: bcast
+  - local: .gitlab/ci/templates/omb_collective_template.gitlab-ci.yml
+    inputs:
+      collective_name: gather
+  - local: .gitlab/ci/templates/omb_collective_template.gitlab-ci.yml
+    inputs:
+      collective_name: gatherv
+  - local: .gitlab/ci/templates/omb_collective_template.gitlab-ci.yml
+    inputs:
+      collective_name: reduce
+      ddt_test: "false"
+  - local: .gitlab/ci/templates/omb_collective_template.gitlab-ci.yml
+    inputs:
+      collective_name: reduce_scatter
+      ddt_test: "false"
+  - local: .gitlab/ci/templates/omb_collective_template.gitlab-ci.yml
+    inputs:
+      collective_name: reduce_scatter_block
+      ddt_test: "false"
+  - local: .gitlab/ci/templates/omb_collective_template.gitlab-ci.yml
+    inputs:
+      collective_name: scatter
+  - local: .gitlab/ci/templates/omb_collective_template.gitlab-ci.yml
+    inputs:
+      collective_name: scatterv
+
+osu_barrier:
+  extends: .collective
+  stage: collective-blocking
+  variables:
+    TEST: osu_barrier
+
+osu_ibarrier:
+  extends: .collective
+  stage: collective-nb
+  variables:
+    TEST: osu_ibarrier
+
+#osu_barrier_persistent:
+#  extends: .collective
+#  stage: collective-persistent
+#  variables:
+#    TEST: osu_barrier_persistent
+

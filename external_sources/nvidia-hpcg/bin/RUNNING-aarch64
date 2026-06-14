@@ -1,0 +1,245 @@
+# SPDX-FileCopyrightText: Copyright (c) 2024 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+##############################################################################
+## Running the HPCG-NVIDIA Benchmark
+The HPCG-NVIDIA benchmark uses the same input format as the standard HPCG-
+Benchmark. Please see the HPCG-Benchmark for getting started with the HPCG
+software concepts and best practices.
+
+The HPCG-NVIDIA supports GPU-only, Grace-only, and GPU-Grace execution 
+modes. For GPU-only, the HPCG-NVIDIA expects one GPU per MPI process. As such,
+set the number of MPI processes to match the number of available GPUs in the
+cluster. For Grace-only, the HPCG-NVIDIA supports arbitrary number of MPI proc-
+esses not exceeding the hardware limits. For GPU-Grace, the HPCG-NVIDIA expec-
+ts one GPU per MPI process and one or more corresponding MPI processes on Grace
+such that the number of Grace processes is a multiple of the GPU processes.
+
+The script hpcg-aarch64.sh can be invoked on a command line or through
+a slurm batch script to launch the HPCG-NVIDIA benchmark. The script accepts 
+the following parameters:
+--dat                   path to HPCG.dat ()
+
+Alternatively to input file accepts the following parameters:
+--nx       specifies the local (to an MPI process) X dimensions of the problem
+--ny       specifies the local (to an MPI process) Y dimensions of the problem
+--nz       specifies the local (to an MPI process) Z dimensions of the problem
+--rt       specifies the number of seconds of how long the timed portion of the
+           benchmark should run
+--b        activates benchmarking mode to bypass CPU reference execution when 
+           set to one (--b=1)
+--l2cmp    activates compression in GPU L2 cache when set to one (--l2cmp=1)
+--of       activates generating the log into textfiles, instead of 
+           console (--of=1)
+--gss      specifies the slice size for the GPU rank (default is 2048)
+--css      specifies the slice size for the CPU rank (default is 8)
+
+The following parameters controls the NVIDIA-HPCG benchmark on Grace-Hopper
+systems:
+--exm <int> specifies the execution mode. 0 is GPU-only, 1 is Grace-only, and
+            2 is GPU-Grace. Default is 0
+--ddm <int> specifies the direction that GPU and Grace will not have the same
+            local dimension. 0 is auto, 1 is X, 2 is Y, and 3 is Z. Default is
+            0. Note that the GPU and Grace local problems can differ in one
+            dimension only
+ --lpm <int> controls the meaning of the value provided for --g2c parameter.
+             Applicable when --exm is 2 and depends on the different local
+             dimension specified by --ddm
+             Value Explanation:
+             - 0 means nx/ny/nz are GPU local dims and g2c value is the ratio
+             of GPU dim to Grace dim. e.g., --nx 128 --ny 128 --nz 128 --ddm 2
+             --g2c 8 means the different (Y) Grace dim is 1/8 the different GPU
+             dim. i.e, GPU local problem is 128x128x128 and Grace local problem
+             is 128x16x128
+             - 1 means nx/ny/nz are GPU local dims and g2c value is the absolu-
+             te value for the different dim for Grace. e.g., --nx 128 --ny 128
+             --nz 128 --ddm 3 --g2c 64 means the different (Z) Grace dim is 64.
+             i.e, GPU local problem is 128x128x128 and Grace local problem is 
+             128x128x64
+             - 2 assumes a local problem formed by combining a GPU and a Grace
+             problems. The value 2 means the sum of the different dims of the
+             GPU and Grace is combined in the different dimension value. --g2c
+             is the ratio. e.g., --ddm 1, --nx 1024, and --g2c 8, then GPU nx
+             is 896 and Grace nx is 128
+             - 3 assumes a local problem formed by combining a GPU and a Grace
+             problems. The value 3 means the sum of the different dims of the
+             GPU and Grace is combined in the different dimension value. --g2c
+             is absolute. e.g., --ddm 1, --nx 1024, and --g2c 96 then GPU nx
+             is 928 and Grace nx is 96 
+--g2c <int>  specifies the value of differnt dimensions of the GPU and Grace
+             local problems. Depends on --ddm and --lpm values
+
+
+Additional (optional) parameters:
+--p2p          <int>    specifies the p2p comm mode: 0 MPI_CPU, 
+                        1 MPI_CPU_All2allv, 2 MPI_CUDA_AWARE, 
+                        3 MPI_CUDA_AWARE_All2allv, 4 NCCL. Default MPI_CPU
+--npx          <int>    specifies the process grid X dimension of the problem
+--npy          <int>    specifies the process grid Y dimension of the problem
+--npz          <int>    specifies the process grid Z dimension of the problem
+--gpu-affinity <string> colon separated list of gpu indices
+--cpu-affinity <string> colon separated list of cpu index ranges
+--mem-affinity <string> colon separated list of memory indices
+--ucx-affinity <string> colon separated list of UCX devices
+--ucx-tls      <string> UCX transport to use
+--exec-name    <string> HPCG executable file
+--no-multinode          enable flags for no-multinode (no-network) execution
+--cuda-compat           manually enable CUDA forward compatibility
+
+The next sections provide command line examples for HPCG-NVIDIA benchmark.
+
+For a general guide on pulling and running containers, see "Pulling A Container
+image and Running A Container" in the NGC Container User Guide.
+
+Note 1: For GPU-only and GPU-Grace execution, script hpcg-aarch64.sh uses
+    xhpcg binary to run on CUDA-enabled platforms 
+
+Note 2: For Grace-only execution (--exm 1), script hpcg-aarch64.sh uses a
+    different binary, xhpcg-cpu, to run on Grace-only platforms without CUDA 
+
+##############################################################################
+## Running with Pyxis/Enroot
+The examples below use Pyxis/enroot from NVIDIA to facilitate running HPCG-
+Benchmarks NGC container.
+
+To copy and customize the sample slurm scripts and/or sample hpcg.dat files
+from the containers, run the container in interactive mode,  while  mounting  a
+folder outside the container, and copy the needed files, as follows:
+
+
+    CONT='nvcr.io/nvidia/hpc-benchmarks:24.3'
+    MOUNT="$PWD:/home_pwd"
+
+    srun -N 1 --cpu-bind=none --mpi=pmix \
+        --container-image="${CONT}" \
+        --container-mounts="${MOUNT}" \
+        --pty bash
+
+Once inside the container, copy the needed files to /home_pwd.
+
+Several sample slurm scripts, and several sample hpcg.dat files, are  available
+in the container at /workspace/hpcg-linux- aarch64.
+
+To run HPCG-NVIDIA on a single CG4 node using custom sample parameters:
+    
+    CONT='nvcr.io/nvidia/hpc-benchmarks:24.3'
+
+    #GPU-only
+    srun -N 1 --ntasks-per-node=4 --cpu-bind=none --mpi=pmix\
+        --container-image="${CONT}" \
+        ./hpcg-aarch64.sh --nx 512 --ny 512 --nz 288 \
+        --rt 1810 --cpu-affinity 0-71:72-143:144-215:216-287 \
+        --mem-affinity 0:1:2:3
+    
+    #Grace-only
+    srun -N 1 --ntasks-per-node=4 --cpu-bind=none --mpi=pmix\
+        --container-image="${CONT}" \
+        hpcg-aarch64.sh --nx 512 --ny 512 --nz 288 \
+        --rt 1810 --exm 1 \
+        --cpu-affinity 0-71:72-143:144-215:216-287 \
+        --mem-affinity 0:1:2:3
+    
+    #GPU-Grace
+    srun -N 1 --ntasks-per-node=8 --cpu-bind=none --mpi=pmix\
+        --container-image="${CONT}" \
+        hpcg-aarch64.sh --nx 256 --ny 1024 --nz 288 \
+        --rt 1810 --exm 2 --ddm 2 --lpm 1 --g2c 64 \
+        --npx 4 --npy 2 --npz 1 \ 
+        --cpu-affinity 0-7:8-71:72-79:80-143:144-151:152-215:216-223:224-287 \
+        --mem-affinity 0:0:1:1:2:2:3:3
+
+##############################################################################
+## Running with Sigularity
+The instructions below assume Singularity 3.4.1 or later.
+
+First, save the HPCG-NVIDIA NGC container as a local Singularity image file:
+
+$ singularity build hpc-benchmarks:24.3.sif \
+    docker://nvcr.io/nvidia/hpc-benchmarks:24.3
+This command saves the container in the current directory as
+hpc-benchmarks:24.3.sif.
+
+Second, customize the sample slurm scripts, and sample hpcg.dat files, available
+in the container at /workspace/hpcg-linux-aarch64 to run the benchmark as 
+follows:
+
+To run HPCG-NVIDIA on a single CG4 node using custom sample parameters:
+    
+    CONT='/path/to/hpc-benchmarks:24.3.sif'
+
+    #GPU-only
+    srun -N 1 --ntasks-per-node=4 singularity run --nv \
+        "${CONT}" \
+        ./hpcg-aarch64.sh --nx 512 --ny 512 --nz 288 \
+        --rt 1810 --cpu-affinity 0-71:72-143:144-215:216-287 \
+        --mem-affinity 0:1:2:3
+    
+    #Grace-only
+     srun -N 1 --ntasks-per-node=4 singularity run --nv \
+        "${CONT}" \
+        ./hpcg-aarch64.sh --nx 512 --ny 512 --nz 288 \
+        --rt 1810 --exm 1 \
+        --cpu-affinity 0-71:72-143:144-215:216-287 \
+        --mem-affinity 0:1:2:3
+    
+    #GPU-Grace
+    srun -N 1 --ntasks-per-node=8 singularity run --nv \
+        "${CONT}" \
+        ./hpcg-aarch64.sh --nx 256 --ny 1024 --nz 288 \
+        --rt 1810 --exm 2 --ddm 2 --lpm 1 --g2c 64 \
+        --npx 4 --npy 2 --npz 1 \ 
+        --cpu-affinity 0-7:8-71:72-79:80-143:144-151:152-215:216-223:224-287 \
+        --mem-affinity 0:0:1:1:2:2:3:3
+
+##############################################################################
+## Running with Docker
+
+The below examples are for single node runs with Docker. It is not recommended
+to use Docker for multi-node runs.
+
+    CONT='nvcr.io/nvidia/hpc-benchmarks:24.3'
+
+First, pull the NVIDIA-HPC image:
+
+    docker pull "${CONT}"
+
+To run HPCG-NVIDIA on a single CG4 node using custom parameters:
+
+    #GPU-only
+    docker run "${CONT}" \
+        mpirun --bind-to none -np 4 \
+        ./hpcg-aarch64.sh --nx 512 --ny 512 --nz 288 \
+        --rt 1810 --cpu-affinity 0-71:72-143:144-215:216-287 \
+        --mem-affinity 0:1:2:3
+    
+    #Grace-only
+    docker run "${CONT}" \
+        mpirun --bind-to none -np 4 \
+        ./hpcg-aarch64.sh --nx 512 --ny 512 --nz 288 \
+        --rt 1810 --exm 1 \
+        --cpu-affinity 0-71:72-143:144-215:216-287 \
+        --mem-affinity 0:1:2:3
+    
+    #GPU-Grace
+    docker run "${CONT}" \
+        mpirun --bind-to none -np 4 \
+        ./hpcg-aarch64.sh --nx 256 --ny 1024 --nz 288 \
+        --rt 1810 --exm 2 --ddm 2 --lpm 1 --g2c 64 \
+        --npx 4 --npy 2 --npz 1 \ 
+        --cpu-affinity 0-7:8-71:72-79:80-143:144-151:152-215:216-223:224-287 \
+        --mem-affinity 0:0:1:1:2:2:3:3
+
+Command line examples for HPCG-NVIDIA benchmark can be found on HPC Benchmarks
+NGC web-page: https://catalog.ngc.nvidia.com/orgs/nvidia/containers/hpc-benchmarks

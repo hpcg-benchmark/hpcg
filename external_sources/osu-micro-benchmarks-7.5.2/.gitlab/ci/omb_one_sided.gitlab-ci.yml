@@ -1,0 +1,28 @@
+include:
+  - local: .gitlab/ci/templates/omb_one_sided_template.gitlab-ci.yml
+    inputs:
+      test_name: acc_latency
+  - local: .gitlab/ci/templates/omb_one_sided_template.gitlab-ci.yml
+    inputs:
+      test_name: cas_latency
+  - local: .gitlab/ci/templates/omb_one_sided_template.gitlab-ci.yml
+    inputs:
+      test_name: fop_latency
+  - local: .gitlab/ci/templates/omb_one_sided_template.gitlab-ci.yml
+    inputs:
+      test_name: get_acc_latency
+  - local: .gitlab/ci/templates/omb_one_sided_template.gitlab-ci.yml
+    inputs:
+      test_name: get_bw
+  - local: .gitlab/ci/templates/omb_one_sided_template.gitlab-ci.yml
+    inputs:
+      test_name: get_latency
+  - local: .gitlab/ci/templates/omb_one_sided_template.gitlab-ci.yml
+    inputs:
+      test_name: put_bibw
+  - local: .gitlab/ci/templates/omb_one_sided_template.gitlab-ci.yml
+    inputs:
+      test_name: put_bw
+  - local: .gitlab/ci/templates/omb_one_sided_template.gitlab-ci.yml
+    inputs:
+      test_name: put_latency

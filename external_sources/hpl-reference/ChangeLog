@@ -1,0 +1,16 @@
+==============================================================
+ High Performance Computing Linpack Benchmark (HPL)
+ HPL - 2.3 - December 2, 2018
+==============================================================
+
+ Done list in version 1.0b, December 15th, 2004
+ - Fixed problem with 32-bit integer overflow.
+   Thanks to John Baron.
+
+ Done list in version 1.0a, January 1st, 2004
+ - Added Row- or Column-major process mapping in data file
+ - Fixed compilation error for gcc 3.3 in walltime.
+ - Fixed building problems on the T3E;
+   Thanks to Edward Anderson.
+
+==============================================================

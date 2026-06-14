@@ -1,0 +1,52 @@
+# used to spawn child jobs for pt2pt tests
+
+spec:
+  inputs:
+    test_name:
+    persistent_test:
+      default: "true"
+
+---
+
+.pt2pt:
+  extends: .test
+  stage: pt2pt
+  variables:
+    TEST_TYPE: pt2pt
+    NODES: 2
+    INTRA_PPN: 2
+    INTER_PPN: 1
+
+osu_$[[inputs.test_name]]:
+  extends: .pt2pt
+  variables:
+    TEST: osu_$[[inputs.test_name]]
+
+osu_$[[inputs.test_name]]_mpi_types:
+  extends:
+    - osu_$[[inputs.test_name]]
+    - .mpi-types-test
+
+osu_$[[inputs.test_name]]_ddt:
+  extends: 
+    - osu_$[[inputs.test_name]]
+    - .ddt-test
+
+osu_$[[inputs.test_name]]_persistent:
+  extends: .pt2pt
+  stage: pt2pt-persistent
+  rules:
+    - if: "'$[[inputs.persistent_test]]' == 'true'"
+  variables:
+    TEST: osu_$[[inputs.test_name]]_persistent
+    TEST_TYPE: pt2pt/persistent
+
+osu_$[[inputs.test_name]]_persistent_mpi_types:
+  extends: 
+    - osu_$[[inputs.test_name]]_persistent
+    - .mpi-types-test
+    
+osu_$[[inputs.test_name]]_persistent_ddt:
+  extends: 
+    - osu_$[[inputs.test_name]]_persistent
+    - .ddt-test

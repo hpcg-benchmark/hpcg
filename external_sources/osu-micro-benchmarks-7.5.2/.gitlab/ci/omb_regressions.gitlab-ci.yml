@@ -1,0 +1,134 @@
+# Regression helpers:
+# These are stages run either before or after primary regressions
+regression-setup-job:
+  stage: setup
+  timeout: 2h
+  tags:
+    - omb
+  script:
+    - source setupRegressions.sh
+  variables:
+    GIT_STRATEGY: fetch
+
+eval-job:
+  stage: eval
+  timeout: 3h
+  script:
+    - echo "Evaluating $SLUG"
+    - cd $REG_WORK_DIR
+    - pwd
+    - bash evalRegressions.sh pt2pt-inter pt2pt-intra-intrasock  pt2pt-intra-intersock pt2pt-inter 1-nodes 2-nodes
+    - echo "All done"
+    - mv $PWD/*.html $CI_PROJECT_DIR
+  tags:
+    - omb
+  artifacts:
+    when: always
+    paths:
+      - $CI_PROJECT_DIR/*.html
+      - $CI_PROJECT_DIR/slurm-*.out
+  variables:
+    GIT_STRATEGY: fetch
+
+# Regressions:
+# Currently using ri
+pt2pt-intra-intrasock-regression-job:
+  stage: regression
+  timeout: 24h
+  tags:
+    - omb
+  script:
+    - SLUG="pt2pt-intra-intrasock"
+    - echo "Running $SLUG"
+    - cd $REG_WORK_DIR
+    - sbatch -J pt2pt-intra-intrasock -p bdw-v100  -N2 --ntasks-per-node=2 -t 4:00:00 submit.sh $SLUG
+    - bash wait.sh $SLUG.txt
+    - echo "Completed $SLUG."
+    - mv $PWD/slurm-*.out $CI_PROJECT_DIR
+  artifacts:
+    when: always
+    paths:
+      - $CI_PROJECT_DIR/slurm-*.out
+  variables:
+    GIT_STRATEGY: fetch
+
+pt2pt-intra-intersock-regression-job:
+  stage: regression
+  timeout: 24h
+  tags:
+    - omb
+  script:
+    - SLUG="pt2pt-intra-intersock"
+    - echo "Running $SLUG"
+    - cd $REG_WORK_DIR
+    - sbatch -J pt2pt-intra-intersock -p bdw-v100  -N2 --ntasks-per-node=2 -t 4:00:00 submit.sh $SLUG
+    - bash wait.sh $SLUG.txt
+    - echo "Completed $SLUG."
+    - mv $PWD/slurm-*.out $CI_PROJECT_DIR
+  artifacts:
+    when: always
+    paths:
+      - $CI_PROJECT_DIR/slurm-*.out
+  variables:
+    GIT_STRATEGY: fetch
+
+pt2pt-inter-regression-job:
+  stage: regression
+  timeout: 24h
+  tags:
+    - omb
+  script:
+    - SLUG="pt2pt-inter"
+    - echo "Running $SLUG"
+    - cd $REG_WORK_DIR
+    - sbatch -J pt2pt-inter -p bdw-v100  -N2 --ntasks-per-node=1 -t 4:00:00 submit.sh $SLUG
+    - bash wait.sh $SLUG.txt
+    - echo "Completed $SLUG."
+    - mv $PWD/slurm-*.out $CI_PROJECT_DIR
+  artifacts:
+    when: always
+    paths:
+      - $CI_PROJECT_DIR/slurm-*.out
+  variables:
+    GIT_STRATEGY: fetch
+
+1-nodes-regression-job:
+  stage: regression
+  timeout: 24h
+  tags:
+    - omb
+  script:
+    - SLUG="1-nodes"
+    - echo "Running $SLUG"
+    - cd $REG_WORK_DIR
+    - sbatch -J 1-nodes -p bdw-v100  -N2 --ntasks-per-node=2 -t 4:00:00 submit.sh $SLUG
+    - bash wait.sh $SLUG.txt
+    - echo "Completed $SLUG."
+    - mv $PWD/slurm-*.out $CI_PROJECT_DIR
+  artifacts:
+    when: always
+    paths:
+      - $CI_PROJECT_DIR/slurm-*.out
+  variables:
+    GIT_STRATEGY: fetch
+
+
+2-nodes-regression-job:
+  stage: regression
+  timeout: 24h
+  tags:
+    - omb
+  script:
+    - SLUG="2-nodes"
+    - echo "Running $SLUG"
+    - cd $REG_WORK_DIR
+    - sbatch -J $SLUG -p bdw-v100  -N2 --ntasks-per-node=2 -t 4:00:00 submit.sh $SLUG
+    - bash wait.sh $SLUG.txt
+    - echo "Completed $SLUG."
+    - mv $PWD/slurm-*.out $CI_PROJECT_DIR
+  artifacts:
+    when: always
+    paths:
+      - $CI_PROJECT_DIR/slurm-*.out
+  variables:
+    GIT_STRATEGY: fetch

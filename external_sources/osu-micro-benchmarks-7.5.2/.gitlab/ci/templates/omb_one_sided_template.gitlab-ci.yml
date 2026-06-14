@@ -1,0 +1,26 @@
+# used to spawn child jobs for one-sided tests
+# can eventually use this format to break up the garbage scripts being used
+
+spec:
+  inputs:
+    test_name:
+
+---
+
+.one-sided:
+  extends: .test
+  stage: one-sided
+  variables:
+    TEST_TYPE: one-sided
+    RUN_SCRIPT: testOneSided.sh
+    NODES: 2
+    INTRA_PPN: 2
+    INTER_PPN: 1
+    VALIDATION: "false"
+  
+osu_$[[inputs.test_name]]:
+  extends: .one-sided
+  variables:
+    TEST: osu_$[[inputs.test_name]]
+
+

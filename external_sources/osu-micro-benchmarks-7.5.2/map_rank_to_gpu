@@ -1,0 +1,35 @@
+#!/bin/bash
+#
+# Copyright (c) 2002-2021 the Network-Based Computing Laboratory (NBCL), The
+# Ohio State University.
+# 
+# Contact: Dr. D. K. Panda (panda@cse.ohio-state.edu)
+# 
+# For detailed copyright and licensing information, please refer to the
+# copyright file COPYRIGHT in the top level directory.
+# 
+# Name        : map_rank_to_gpu
+# 
+# Description : This script is used to set the affinity between an MPI process
+# and the GPU on the system.
+#
+#               The processes rank on a node is normally used to do this and
+#               different MPI launchers expose this information through
+#               different environment variables. For example, MVAPICH2 uses
+#               MV2_COMM_WORLD_LOCAL_RANK and OpenMPI uses
+#               OMPI_COMM_WORLD_LOCAL_RANK. For other MPI libraries, please set
+#               the LOCAL_RANK variable below to the appropriate one.
+#
+#               Some python applications don't respect CUDA device mappings.
+#               It's much more convenient to force CUDA_VISIBLE_DEVICES here
+#               rather than setting it within python, because
+#               CUDA_VISIBLE_DEVICES must be set after MPI_Init but before the
+#               offending python package is imported. 
+#
+#               NOTE: Only use map_rank_to_gpu if process mapping is not
+#               respected. Forcing CUDA_VISIBLE_DEVICES will disable CUDA IPC,
+#               which may impact performance
+
+export LOCAL_RANK=$MV2_COMM_WORLD_LOCAL_RANK 
+export CUDA_VISIBLE_DEVICES=$MV2_COMM_WORLD_LOCAL_RANK
+exec $*

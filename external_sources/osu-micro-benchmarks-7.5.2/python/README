@@ -1,0 +1,74 @@
+OSU Micro-Benchmarks for Python
+-------------------------------
+
+The OSU Micro-Benchmarks Python package consists of point-to-point and 
+collective communication benchmark tests utilizing the mpi4py library to 
+provide Python bindings for the MPI standard. 
+The package supports NumPy, CuPy, Numba, and PyCUDA as buffers for 
+communication on CPUs and GPUs.
+
+To run benchmarks, a Python environment must be set up and with dependencies 
+installed. We recommend using Miniconda to create a Python environment and 
+install required packages.
+
+Environment Setup:
+1) Install your preferred MPI library. This README tested Python benchmarks using
+   the MVAPICH2 library, which can be downloaded from 
+   https://mvapich.cse.ohio-state.edu/downloads/.
+
+2) Download and install Miniconda.
+   wget https://repo.anaconda.com/miniconda/Miniconda3-py39_4.9.2-Linux-x86_64.sh
+   bash Miniconda3-py39_4.9.2-Linux-x86_64.sh
+
+3) Create new conda environment
+   source PATH/TO/miniconda3/bin/activate
+   conda create -n OMB-Py python=3.8
+   conda activate OMB-Py
+   export PATH=/path/to/mpi/bin:$PATH
+   export LD_LIBRARY_PATH=/path/to/mpi/lib:$LD_LIBRARY_PATH
+
+4) Install requirements:
+   pip install numpy
+   pip install cupy-cuda112 (replace 112 with appropriate cuda version)
+   pip install pycuda
+   pip install numba
+   pip install mpi4py
+  For more information on installing mpi4py with different MPI libraries, please 
+  refer to the following link: https://mpi4py.readthedocs.io/en/stable/install.html
+  
+5) Activate conda environment before using OMB Python benchmarks
+    source PATH/TO/miniconda3/bin/activate
+    conda activate OMB-Py
+
+
+Running Benchmarks:
+
+To run benchmarks, use the run.py file (available in the "python" folder)
+with the following arguments:
+
+Arguments:
+    --benchmark: specifies benchmark to run. Options: 
+      Collective blocking: allgather, allgatherv, allreduce, alltoall, alltoallv,
+                           barrier, bcast, gather, gatherv, reduce_scatter, 
+                           reduce, scatter, scatterv
+      Point-to-point: bw, bibw, latency, multi_lat
+    --buffer: (optional) sets type of buffer. Options: byterray, numpy, cupy, 
+              pycuda, or numba. CPU buffers are set by default.
+    --pickle: (optional) uses pickle methods. Default is false.
+    --min: (optional) sets the minimum tested message length.
+    --max: (optional) sets the maximum tested message length.
+    --iterations: (optional) sets the number of iterations for each message length.
+    --skip: (optional) sets the number of warmup iterations for each message length.
+
+Examples:
+Latency test on CPU with buffer type NumPy:
+    mpirun -np 2 --hostfile hosts python run.py \ 
+    --benchmark latency --buffer numpy
+
+Allgather test on CPU with buffer type NumPy and message lenghts 128 to 4096:
+    mpirun -np 4 --hostfile hosts python run.py \
+    --benchmark allgather --min 128 --max 4096
+
+Latency test on GPU with buffer type CuPy:
+    mpirun -np 2 --hostfile hosts python run.py \
+    --benchmark latency --buffer cupy

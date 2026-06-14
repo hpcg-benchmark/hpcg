@@ -1,0 +1,46 @@
+Reference Implementation of the HPL-AI Benchmark
+
+To boostrap the configuration files make sure you have GNU Autotools installed and type:
+
+```
+autoreconf -ivf
+```
+
+To configure the build and prepare for compilation run:
+
+```
+./configure
+```
+
+Use `--help` option to see the available settings.
+
+To compile and run the benchmark executable:
+
+```
+$ make
+$ ./hpl-ai <n> <max_iter>
+```
+Where n is the size of linear system to solve.
+max_iter is the maximum number of iterations for GMRES iterative solver.
+
+Example output:
+
+```
+Time spent in conversion to single:        0.000 second
+Time spent in factorization       :        0.004 second
+Time spent in solve               :        0.000 second
+Time spent in conversion to double:        0.000 second
+Residual norm at the beginning of GMRES: 1.176789e-08
+Estimated residual norm at the 1-th iteration of GMRES: 2.550870e-15
+Estimated residual norm at the 2-th iteration of GMRES: 5.056252e-22
+Time spent in GMRES               :        0.001 second
+Total time                        :        0.005 second
+Effective operation per sec       :     0.140091 GFLOPs
+The following scaled residual check will be computed:
+||Ax-b||_oo / ( eps * ( || x ||_oo * || A ||_oo + || b ||_oo ) * N )
+The relative machine precision (eps) is taken to be: 1.110223e-16
+Computational tests pass if scaled residuals are less than 16.0
+||Ax-b||_oo/(eps*(||A||_oo*||x||_oo+||b||_oo)*N)= 4.531977 ...PASSED
+```
+
+SPDX-License-Identifier: BSD 3-Clause Clear License

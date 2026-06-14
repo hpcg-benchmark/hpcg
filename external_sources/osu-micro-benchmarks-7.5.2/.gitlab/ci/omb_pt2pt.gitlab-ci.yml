@@ -1,0 +1,18 @@
+include:
+  - local: .gitlab/ci/templates/omb_pt2pt_template.gitlab-ci.yml
+    inputs:
+      test_name: latency
+  - local: .gitlab/ci/templates/omb_pt2pt_template.gitlab-ci.yml
+    inputs:
+      test_name: bw
+  - local: .gitlab/ci/templates/omb_pt2pt_template.gitlab-ci.yml
+    inputs:
+      test_name: bibw
+  - local: .gitlab/ci/templates/omb_pt2pt_template.gitlab-ci.yml
+    inputs:
+      test_name: mbw_mr
+      persistent_test: "false"
+  - local: .gitlab/ci/templates/omb_pt2pt_template.gitlab-ci.yml
+    inputs:
+      test_name: multi_lat
+      persistent_test: "false"

@@ -1,0 +1,21 @@
+.startup:
+  extends: .test
+  stage: startup
+  variables:
+    TEST_TYPE: startup
+    NODES: 2
+    INTRA_PPN: 2
+    INTER_PPN: 2
+    VALIDATION: "false"
+
+# Startup Tests
+osu_hello:
+  extends: .startup
+  variables:
+    TEST: osu_hello
+
+osu_init:
+  extends: .startup
+  variables:
+    TEST: osu_init
+

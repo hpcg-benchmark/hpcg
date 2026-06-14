@@ -1,0 +1,210 @@
+# SPDX-FileCopyrightText: Copyright (c) 2024 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+#HEADER
+#  -- High Performance Conjugate Gradient Benchmark (HPCG)
+#     HPCG - 3.1 - March 28, 2019
+
+#     Michael A. Heroux
+#     Scalable Algorithms Group, Computing Research Division
+#     Sandia National Laboratories, Albuquerque, NM
+#
+#     Piotr Luszczek
+#     Jack Dongarra
+#     University of Tennessee, Knoxville
+#     Innovative Computing Laboratory
+#
+#     (C) Copyright 2013-2019 All Rights Reserved
+#
+#
+#  -- Copyright notice and Licensing terms:
+#
+#  Redistribution  and  use in  source and binary forms, with or without
+#  modification, are  permitted provided  that the following  conditions
+#  are met:
+#
+#  1. Redistributions  of  source  code  must retain the above copyright
+#  notice, this list of conditions and the following disclaimer.
+#
+#  2. Redistributions in binary form must reproduce  the above copyright
+#  notice, this list of conditions,  and the following disclaimer in the
+#  documentation and/or other materials provided with the distribution.
+#
+#  3. All  advertising  materials  mentioning  features  or  use of this
+#  software must display the following acknowledgement:
+#  This  product  includes  software  developed  at Sandia National
+#  Laboratories, Albuquerque, NM and the  University  of
+#  Tennessee, Knoxville, Innovative Computing Laboratory.
+#
+#  4. The name of the  University,  the name of the  Laboratory,  or the
+#  names  of  its  contributors  may  not  be used to endorse or promote
+#  products  derived   from   this  software  without  specific  written
+#  permission.
+#
+#  -- Disclaimer:
+#
+#  THIS  SOFTWARE  IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+#  ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,  INCLUDING,  BUT NOT
+#  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+#  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE UNIVERSITY
+#  OR  CONTRIBUTORS  BE  LIABLE FOR ANY  DIRECT,  INDIRECT,  INCIDENTAL,
+#  SPECIAL,  EXEMPLARY,  OR  CONSEQUENTIAL DAMAGES  (INCLUDING,  BUT NOT
+#  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+#  DATA OR PROFITS; OR BUSINESS INTERRUPTION)  HOWEVER CAUSED AND ON ANY
+#  THEORY OF LIABILITY, WHETHER IN CONTRACT,  STRICT LIABILITY,  OR TORT
+#  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+#  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+# ######################################################################
+#@HEADER
+# ----------------------------------------------------------------------
+# - shell --------------------------------------------------------------
+# ----------------------------------------------------------------------
+#
+SHELL        = /bin/sh
+#
+CD           = cd
+CP           = cp
+LN_S         = ln -s -f
+MKDIR        = mkdir -p
+RM           = /bin/rm -f
+TOUCH        = touch
+#
+# ----------------------------------------------------------------------
+# - HPCG Directory Structure / HPCG library ------------------------------
+# ----------------------------------------------------------------------
+#
+TOPdir       = .
+SRCdir       = $(TOPdir)/src
+INCdir       = $(TOPdir)/src
+BINdir       = $(TOPdir)/bin
+#
+# ----------------------------------------------------------------------
+# - Message Passing library (MPI) --------------------------------------
+# ----------------------------------------------------------------------
+# MPinc tells the  C  compiler where to find the Message Passing library
+# header files,  MPlib  is defined  to be the name of  the library to be
+# used. The variable MPdir is only used for defining MPinc and MPlib.
+#
+#MPdir        =
+#MPinc        =
+#MPlib        =
+#
+#
+# ----------------------------------------------------------------------
+# - HPCG includes / libraries / specifics -------------------------------
+# ----------------------------------------------------------------------
+#
+
+NVPL_SPARSE_INC=$(NVPL_PATH)/include
+NVPL_SPARSE_LIB=$(NVPL_PATH)/lib
+
+HPCG_INCLUDES = -I$(INCdir) -I$(INCdir)/$(arch) -I$(MPdir)/include  $(CRAY_CUDATOOLKIT_INCLUDE_OPTS)
+HPCG_LIBS     = -L${MPlib} -lmpi
+
+ifeq ($(USE_CUDA), 1)
+    HPCG_INCLUDES += -I$(CUDA_HOME)/include -I$(Mathdir)/include
+    HPCG_LIBS += -L$(Mathdir)/lib  -lcuda -lcusparse -lcublas -lcublasLt  -L$(CUDA_HOME)/lib64
+endif
+
+ifeq ($(USE_GRACE), 1)
+    HPCG_INCLUDES += -I$(NVPL_SPARSE_INC)
+    HPCG_LIBS += -L$(NVPL_SPARSE_LIB) -lnvpl_sparse
+endif
+
+ifeq ($(USE_NCCL), 1)
+    HPCG_INCLUDES += -I$(NCCLdir)/include
+    HPCG_LIBS += -L$(NCCLdir)/lib -lnccl
+endif
+
+#
+# - Compile time options -----------------------------------------------
+#
+# -DHPCG_NO_MPI	            Define to disable MPI
+# -DHPCG_NO_OPENMP	        Define to disable OPENMP
+# -DHPCG_CONTIGUOUS_ARRAYS  Define to have sparse matrix arrays long and contiguous
+# -DHPCG_DEBUG       	    Define to enable debugging output
+# -DHPCG_DETAILED_DEBUG     Define to enable very detailed debugging output
+# -DUSE_CUDA                Define to enable GPU execution
+# -DUSE_GRACE               Define to enable Grace CPU execution
+# -DUSE_NCCL                Define to enable NCCL P2P communication. Use --p2p=4 for NCCL
+# -DUSE_INT64               Define to enable INT64 indexing
+
+# By default HPCG will:
+#    *) Build with MPI enabled.
+#    *) Build with OpenMP enabled.
+#    *) Not generate debugging output.
+#
+HPCG_OPTS  = -DHPCG_CUBIC_RADICAL_SEARCH  -DHPCG_CONTIGUOUS_ARRAYS  #-DHPCG_DEBUG #-DHPCG_NO_MPI
+ifeq ($(USE_CUDA), 1)
+    HPCG_OPTS  += -DUSE_CUDA
+endif
+
+ifeq ($(USE_GRACE), 1)
+    HPCG_OPTS  += -DUSE_GRACE
+endif
+
+ifeq ($(USE_NCCL), 1)
+    HPCG_OPTS  += -DUSE_NCCL
+endif
+
+ifeq ($(HPCG_ENG_VERSION), 1)
+    HPCG_OPTS += -DHPCG_ENG_VERSION
+endif
+
+ifeq ($(USE_INT64), 1)
+    HPCG_OPTS += -DINDEX_64
+endif
+
+#If not set, the defualt values in src/hpcg.hpp will be used
+HPCG_OPTS += -Dmake_HPCG_VER_MAJOR=$(HPCG_VER_MAJOR)
+HPCG_OPTS += -Dmake_HPCG_VER_MINOR=$(HPCG_VER_MINOR)
+HPCG_OPTS += -DHPCG_COMMIT_HASH=$(HPCG_COMMIT_HASH)
+#
+# ----------------------------------------------------------------------
+#
+HPCG_DEFS     = $(HPCG_OPTS) $(HPCG_INCLUDES)
+#
+# ----------------------------------------------------------------------
+# - Compilers / linkers - Optimization flags ---------------------------
+# ----------------------------------------------------------------------
+#
+ifeq ($(USE_CUDA), 1)
+    CUDA_ARCH = -gencode=arch=compute_80,code=sm_80 -gencode=arch=compute_90,code=sm_90
+endif
+ifeq ($(BUILD_B100), 1)
+CUDA_ARCH += --generate-code arch=compute_100,code=sm_100
+endif
+CPU_ARCH ?= native
+
+# STRIP_SYMBOLS=1 : reduce symbols visible to nm/strings (-g0, -fvisibility=hidden, -s, strip --strip-all)
+CXX          = nvcc
+CXXFLAGS     = $(HPCG_DEFS) -O3 -Xcompiler --std=c++17 -Xcompiler -Ofast,-fopenmp,-mcpu=$(CPU_ARCH),-mtune=$(CPU_ARCH),-ftree-vectorize,-funroll-loops $(CUDA_ARCH)
+ifeq ($(STRIP_SYMBOLS), 1)
+    CXXFLAGS     += -Xcompiler=-g0 -Xcompiler=-fvisibility=hidden
+    LINKFLAGS_STRIP = -Xcompiler=-s
+else
+    LINKFLAGS_STRIP =
+endif
+
+#
+LINKER       = $(CXX)
+LINKFLAGS    = $(CXXFLAGS) $(HPCG_LIBS) $(LINKFLAGS_STRIP)
+STRIP        = strip
+#
+ARCHIVER     = ar
+ARFLAGS      = r
+RANLIB       = echo
+#
+# ----------------------------------------------------------------------

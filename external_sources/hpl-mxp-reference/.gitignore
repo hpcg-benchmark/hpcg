@@ -1,0 +1,16 @@
+.deps
+Makefile
+Makefile.in
+aclocal.m4
+autom4te.cache
+compile
+config.log
+config.status
+configure
+depcomp
+hpl-ai-config.h
+hpl_ai
+install-sh
+missing
+stamp-h1
+*.o

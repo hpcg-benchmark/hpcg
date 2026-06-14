@@ -1,0 +1,5 @@
+
+Installation Instructions
+=========================
+
+To install the HPL-AI Benchmark type "./configure", "make", and "make install".

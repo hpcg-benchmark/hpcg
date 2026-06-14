@@ -1,0 +1,159 @@
+# SPDX-FileCopyrightText: Copyright (c) 2024 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+##############################################################################
+## Running the HPCG-NVIDIA Benchmark
+The HPCG-NVIDIA benchmark uses the same input format as the standard HPCG-
+Benchmark. Please see the HPCG-Benchmark for getting started with the HPCG
+software concepts and best practices.
+
+The HPCG-NVIDIA expects one GPU per MPI process. As such, set the number of MPI
+processes to match the number of available GPUs in the cluster.
+
+The script hpcg.sh can be invoked on a command line or through a slurm batch-
+script to launch the HPL-NVIDIA benchmark. The script hpl.sh accepts the follow-
+ing parameters:
+--dat      path to HPL.dat.
+
+Alternatively to input file accepts the following parameters:
+--nx       specifies the local (to an MPI process) X dimensions of the problem
+--ny       specifies the local (to an MPI process) Y dimensions of the problem
+--nz       specifies the local (to an MPI process) Z dimensions of the problem
+--rt       specifies the number of seconds of how long the timed portion of the
+           benchmark should run
+--b        activates benchmarking mode to bypass CPU reference execution when 
+           set to one (--b=1)
+--l2cmp    activates compression in GPU L2 cache when set to one (--l2cmp=1)
+--of       activates generating the log into textfiles, instead of 
+           console (--of=1)
+--gss      specifies the slice size for the GPU rank (default is 2048)
+
+Additional (optional) parameters:
+--p2p          <int>    specifies the p2p comm mode: 0 MPI_CPU, 
+                        1 MPI_CPU_All2allv, 2 MPI_CUDA_AWARE, 
+                        3 MPI_CUDA_AWARE_All2allv, 4 NCCL. Default MPI_CPU
+--npx          <int>    specifies the process grid X dimension of the problem
+--npy          <int>    specifies the process grid Y dimension of the problem
+--npz          <int>    specifies the process grid Z dimension of the problem
+--gpu-affinity <string> colon separated list of gpu indices
+--cpu-affinity <string> colon separated list of cpu index ranges
+--mem-affinity <string> colon separated list of memory indices
+--ucx-affinity <string> colon separated list of UCX devices
+--ucx-tls      <string> UCX transport to use
+--exec-name    <string> HPCG executable file
+--no-multinode          enable flags for no-multinode (no-network) execution
+--cuda-compat           manually enable CUDA forward compatibility
+
+The next sections provide command line examples for HPCG-NVIDIA benchmark.
+
+For a general guide on pulling and running containers, see "Pulling A Container
+image and Running A Container" in the NGC Container User Guide.
+
+##############################################################################
+## Running with Pyxis/Enroot
+The examples below use Pyxis/enroot from NVIDIA to facilitate running HPCG-
+Benchmarks NGC container.
+
+To copy and customize the sample slurm scripts and/or sample hpcg.dat files
+from the containers, run the container in interactive mode,  while  mounting  a
+folder outside the container, and copy the needed files, as follows:
+
+
+    CONT='nvcr.io/nvidia/hpc-benchmarks:24.3'
+    MOUNT="$PWD:/home_pwd"
+
+    srun -N 1 --cpu-bind=none --mpi=pmix \
+        --container-image="${CONT}" \
+        --container-mounts="${MOUNT}" \
+        --pty bash
+
+Once inside the container, copy the needed files to /home_pwd.
+
+Several sample slurm scripts, and several sample hpcg.dat files, are  available
+in the container at /workspace/hpcg-linux-x86_64.
+
+To run HPCG-NVIDIA on a single DGX-A100 or DGX-H100 node, using your custom hpcg.dat file:
+
+    CONT='nvcr.io/nvidia/hpc-benchmarks:24.3'
+    MOUNT="/path/to/your/custom/dat-files:/my-dat-files"
+
+    srun -N 1 --ntasks-per-node=8 --cpu-bind=none --mpi=pmix \
+        --container-image="${CONT}" \
+        --container-mounts="${MOUNT}" \
+        ./hpcg.sh --dat /my-dat-files/hpcg.dat
+
+To run HPCG-NVIDIA on 16 DGX-A100 or DGX-H100 nodes, using provided sample hpcg.dat files:
+
+    CONT='nvcr.io/nvidia/hpc-benchmarks:24.3'
+
+    srun -N 16 --ntasks-per-node=4 --cpu-bind=none --mpi=pmix \
+        --container-image="${CONT}" \
+        --container-mounts="${MOUNT}" \
+        ./hpcg.sh --nx 256 --ny 256 --nz 256 --rt 2
+
+##############################################################################
+## Running with Sigularity
+The instructions below assume Singularity 3.4.1 or later.
+
+First, save the HPCG-NVIDIA NGC container as a local Singularity image file:
+
+$ singularity build hpc-benchmarks:24.3.sif \
+    docker://nvcr.io/nvidia/hpc-benchmarks:24.3
+This command saves the container in the current directory as
+hpc-benchmarks:24.3.sif.
+
+Second, customize the sample slurm scripts, and sample hpcg.dat files, availab-
+le in the container at /workspace/hpcg-linux-x86_64 to run the benchmark as fo-
+llows:
+
+To run HPCG-NVIDIA on a single DGX-A100 or DGX-H100 node, using your custom 
+hpcg.dat file:
+
+    CONT='/path/to/hpc-benchmarks:24.3.sif'
+    MOUNT="/path/to/your/custom/dat-files:/my-dat-files"
+
+    srun -N 1 --ntasks-per-node=8 --cpu-bind=none --mpi=pmix \
+        --container-image="${CONT}" \
+        --container-mounts="${MOUNT}" \
+        ./hpcg.sh --dat /my-dat-files/hpcg.dat
+
+To run HPCG-NVIDIA on 16 DGX-A100 or DGX-H100 nodes, using provided sample 
+hpcg.dat files:
+
+    CONT='/path/to/hpc-benchmarks:24.3.sif'
+
+    srun -N 16 --ntasks-per-node=4 --cpu-bind=none --mpi=pmix \
+        --container-image="${CONT}" \
+        --container-mounts="${MOUNT}" \
+        ./hpcg.sh --nx 256 --ny 256 --nz 256 --rt 2
+
+##############################################################################
+## Running with Docker
+
+The below examples are for single node runs with Docker. It is not recommended
+to use Docker for multi-node runs.
+
+To run HPCG-NVIDIA on a single node with one GPU using your custom hpcg.dat file:
+
+    CONT='nvcr.io/nvidia/hpc-benchmarks:23.10'
+    MOUNT="/full-path/to/your/custom/dat-files:/my-dat-files"
+
+    docker run --gpus all -v --shm-size=1g ${MOUNT} \
+        ${CONT} \
+        mpirun --bind-to none -np 8 \
+        ./hpcg.sh --dat /my-dat-files/hpcg.dat
+
+Command line examples for HPCG-NVIDIA benchmark can be found on HPC Benchmarks
+NGC web-page: https://catalog.ngc.nvidia.com/orgs/nvidia/containers/hpc-benchmarks

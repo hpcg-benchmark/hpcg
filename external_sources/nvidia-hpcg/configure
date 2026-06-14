@@ -1,0 +1,50 @@
+#! /bin/sh
+
+src_path=`echo $0 | sed -e s:/configure$::`
+bld_path=`pwd`
+
+#FIXME: need to check whether src and bld are the same (test f1 -ef f2)
+
+if test x"$#" != x"1" -o x"$1" = "x" ; then
+  echo
+  echo Please specify '"'arch'"' argument, for example:
+  echo
+  echo $0 Unix
+  echo
+  exit 127
+fi
+
+arg_arch="$1"
+
+setup_file=${src_path}/setup/Make.${arg_arch}
+
+if test ! -f $setup_file ; then
+  echo
+  echo Please create the configuration file $setup_file
+  echo
+  exit 127
+fi
+
+mkfile=${bld_path}/Makefile
+
+if test -d $mkfile -o -f $mkfile ; then
+  rm -rf $mkfile
+fi
+
+sed -e "s:HPCG_ROOT_PATH:${bld_path}:g" ${src_path}/Makefile.ext | sed -e "s:HPCG_SRC_PATH:${src_path}:g" | sed -e "s:UNKNOWN:${arg_arch}:" > $mkfile
+
+# creating missing directories
+for path in src testing bin setup
+do
+  if test ! -d $path ; then
+    mkdir $path
+  fi
+done
+
+# copy hpcg.dat if it doesn't exist
+if test ! -f bin/hpcg.dat ; then
+  cp ${src_path}/bin/hpcg.dat bin/hpcg.dat
+fi
+
+# copy the architecture setup file
+cp -f $setup_file setup

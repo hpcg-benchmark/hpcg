@@ -1,0 +1,163 @@
+spec:
+  inputs:
+    startup:
+      default: "enabled"
+    pt2pt:
+      default: "enabled"
+    pt2pt_persistent:
+      default: "enabled"
+    collective:
+      default: "enabled"
+    collective_blocking:
+      default: "enabled"
+    collective_nb:
+      default: "enabled"
+    collective_persistent:
+      default: "enabled"
+    collective_neighbor:
+      default: "enabled"
+    one_sided:
+      default: "enabled"
+    types:
+      default: "enabled"
+    ddt:
+      default: "enabled"
+    regressions:
+      default: "disabled"
+
+---
+
+workflow:
+  rules:
+    # merge requests
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    # for pushes direct to master
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    # for running manually through the Pipelines page
+    - if: $CI_PIPELINE_SOURCE == "web"
+    # branch tagging
+    - if: $CI_COMMIT_TAG
+
+stages:
+  - format
+  - build
+  - startup
+  - pt2pt
+  - pt2pt-persistent
+  - collective-blocking
+  - collective-nb
+  - collective-persistent
+  - collective-neighbor
+  - one-sided
+  - setup
+  - regression
+  - test
+  - eval
+  - clean
+
+.base-rules:
+  - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+  - if: $CI_PIPELINE_SOURCE == "web"
+  - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  - if: $CI_COMMIT_TAG
+
+variables:
+  GIT_STRATEGY: fetch
+  GIT_CLEAN_FLAGS: none
+  GIT_CLONE_PATH: $CI_BUILDS_DIR/$CI_COMMIT_REF_NAME/$CI_COMMIT_SHORT_SHA
+  MVP_PATH: /opt/mvapich2/mvapich2-2.3.7
+  MVP_RUN: $MVP_PATH/bin/mpirun_rsh
+
+before_script:
+  - source .gitlab/ci/setup.sh
+
+.test:
+  tags:
+    - omb
+  rules:
+    - !reference [.base-rules]
+  variables:
+    RUN_SCRIPT: srunTest.sh
+    VALIDATION: "true"
+    TESTSLUG: omb-${TEST_TYPE}-${TEST}${SUFFIX}
+  script: 
+    - echo Intra-node $TEST
+    - ppn=2
+    - while [ $ppn -le $INTRA_PPN ]; do
+    - srun -J $TESTSLUG -p bdw-v100 -t 1:00:00 -N 1 --tasks-per-node=$ppn --exclusive -o ${TESTSLUG}-N1-${ppn}ppn.out $RUN_SCRIPT $MVP_RUN ${OMB_PATH}/${TEST_TYPE}/${TEST} ${TEST_ARGS}
+    - ppn=$((ppn * 2))
+    - done
+    - ppn=1
+    - echo Inter-node $TEST
+    - while [ $ppn -le $INTER_PPN ]; do
+    - srun -J $TESTSLUG -p bdw-v100 -t 1:00:00 -N $NODES --tasks-per-node=$ppn --exclusive -o ${TESTSLUG}-N${NODES}-${ppn}ppn.out $RUN_SCRIPT $MVP_RUN ${OMB_PATH}/${TEST_TYPE}/${TEST} ${TEST_ARGS}
+    - ppn=$((ppn * 2))
+    - done
+    - if [ "$VALIDATION" == "true" ]; then
+    - echo Validation $TEST
+    - srun -J ${TESTSLUG} -p bdw-v100 -t 1:00:00 -N 1 --tasks-per-node=2 --exclusive -o ${TESTSLUG}-N1-${ppn}ppn-validate.out $RUN_SCRIPT $MVP_RUN ${OMB_PATH}/${TEST_TYPE}/${TEST} -c ${TEST_ARGS}
+    - fi
+  timeout: 30m
+  artifacts:
+    when: always
+    paths:
+      - $CI_PROJECT_DIR/${TESTSLUG}*.out
+
+.mpi-types-test:
+  variables:
+    RUN_SCRIPT: testTypes.sh
+    MPI_TYPES: all mpi_char mpi_int mpi_float
+    SUFFIX: "-mpi-types"
+
+.ddt-test:
+  variables:
+    RUN_SCRIPT: testDDT.sh
+    SUFFIX: "-ddt"
+    VALIDATION: "false"
+
+format-job:
+  stage: format
+  tags:
+    - omb
+  script:
+    - maint/omb-format.pl --check
+  variables:
+    GIT_STRATEGY: fetch
+
+build-job:
+  stage: build
+  script:
+    - source build.sh
+  tags: 
+    - omb
+
+include: # migrate to individual files for easier maintainance
+  - local: .gitlab/ci/omb_startup.gitlab-ci.yml
+    rules:
+    - if: "'$[[inputs.startup]]' == 'enabled'"
+  - local: .gitlab/ci/omb_pt2pt.gitlab-ci.yml
+    rules:
+    - if: "'$[[inputs.pt2pt]]' == 'enabled'"
+  - local: .gitlab/ci/omb_collective.gitlab-ci.yml
+    rules:
+    - if: "'$[[inputs.collective]]' == 'enabled'"
+  - local: .gitlab/ci/omb_one_sided.gitlab-ci.yml
+    rules:
+    - if: "'$[[inputs.one_sided]]' == 'enabled'"
+  - local: .gitlab/ci/omb_regressions.gitlab-ci.yml
+    rules:
+    - if: "'$[[inputs.regressions]]' == 'enabled'"
+
+
+Clean-Dir:
+  stage: clean
+  variables:
+    GIT_CHECKOUT: "false"
+  tags:
+    - omb
+  before_script: []
+  when: always
+  script:
+    - rm -rf $CI_BUILDS_DIR/$CI_COMMIT_REF_NAME/$CI_COMMIT_SHORT_SHA
+    - rm -rf $CI_BUILDS_DIR/$CI_COMMIT_REF_NAME/$CI_COMMIT_SHORT_SHA.tmp
+    - rm -rf $BUILD_DIR

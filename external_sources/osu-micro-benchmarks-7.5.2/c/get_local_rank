@@ -1,0 +1,24 @@
+#!/bin/bash
+#
+# Copyright (c) 2002-2021 the Network-Based Computing Laboratory
+# (NBCL), The Ohio State University.
+# 
+# Contact: Dr. D. K. Panda (panda@cse.ohio-state.edu)
+# 
+# For detailed copyright and licensing information, please refer to the
+# copyright file COPYRIGHT in the top level directory.
+# 
+# Name        : get_local_rank
+# 
+# Description : This script is used to set the affinity between an MPI
+#               process and the GPU on the system.
+#
+#               The processes rank on a node is normally used to do this
+#               and different MPI launchers expose this information through
+#               different environment variables. For example, MVAPICH2 uses
+#               MV2_COMM_WORLD_LOCAL_RANK and OpenMPI uses
+#               OMPI_COMM_WORLD_LOCAL_RANK. For other MPI libraries, please
+#               set the LOCAL_RANK variable below to the appropriate one.
+
+export LOCAL_RANK=$MV2_COMM_WORLD_LOCAL_RANK
+exec $*

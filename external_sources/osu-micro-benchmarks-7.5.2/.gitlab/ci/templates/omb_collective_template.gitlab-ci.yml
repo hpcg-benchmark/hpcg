@@ -1,0 +1,141 @@
+# used to spawn child jobs for any collectves
+
+spec:
+  inputs:
+    collective_name:
+    nb_test:
+      default: "true"
+    persistent_test:
+      default: "false"
+    neighbor_test:
+      default: "false"
+    type_test:
+      default: "true"
+    ddt_test:
+      default: "true"
+
+---
+
+.collective:
+  extends: .test
+  variables:
+    TEST_TYPE: collective
+    NODES: 2
+    INTRA_PPN: 4
+    INTER_PPN: 4
+
+osu_$[[inputs.collective_name]]:
+  extends: .collective
+  stage: collective-blocking
+  variables:
+    TEST: osu_$[[inputs.collective_name]]
+
+osu_$[[inputs.collective_name]]_mpi_types:
+  extends:
+    - osu_$[[inputs.collective_name]]
+    - .mpi-types-test
+  rules:
+    - &type_rule
+      if: "'$[[inputs.type_test]]' != 'true'"
+      when: never
+    - !reference [.base-rules]
+
+osu_$[[inputs.collective_name]]_ddt:
+  extends:
+    - osu_$[[inputs.collective_name]]
+    - .ddt-test
+  rules:
+    - &ddt_rule
+      if: "'$[[inputs.ddt_test]]' != 'true'"
+      when: never
+    - !reference [.base-rules]
+
+osu_i$[[inputs.collective_name]]:
+  extends: .collective
+  stage: collective-nb
+  rules:
+    - &nb_rule
+      if: "'$[[inputs.nb_test]]' != 'true'"
+      when: never
+    - !reference [.base-rules]
+  variables:
+    TEST: osu_i$[[inputs.collective_name]]
+
+osu_i$[[inputs.collective_name]]_mpi_types:
+  extends:
+    - osu_i$[[inputs.collective_name]]
+    - .mpi-types-test
+  rules:
+    - *nb_rule
+    - *type_rule
+    - !reference [.base-rules]
+
+osu_i$[[inputs.collective_name]]_ddt:
+  extends:
+    - osu_i$[[inputs.collective_name]]
+    - .ddt-test
+  rules:
+    - *nb_rule
+    - *ddt_rule
+    - !reference [.base-rules]
+    #- if: "'$[[inputs.nb_test]]' == 'true'" && "$[[inputs.ddt_test]]' == 'true'"
+
+osu_$[[inputs.collective_name]]_persistent:
+  extends: .collective
+  stage: collective-persistent
+  rules:
+    - &persistent_rule
+      if: "'$[[inputs.persistent_test]]' != 'true'"
+      when: never
+    - !reference [.base-rules]
+  variables:
+    TEST: osu_$[[inputs.collective_name]]_persistent
+
+osu_$[[inputs.collective_name]]_persistent_mpi_types:
+  extends:
+    - osu_$[[inputs.collective_name]]_persistent
+    - .mpi-types-test
+  rules:
+    - *persistent_rule
+    - *type_rule
+    - !reference [.base-rules]
+    #- if: "'$[[inputs.persistent_test]]' == 'true'" && "$[[inputs.types_test]]' == 'true'"
+
+osu_$[[inputs.collective_name]]_persistent_ddt:
+  extends:
+    - osu_$[[inputs.collective_name]]_persistent
+    - .ddt-test
+  rules:
+    - *persistent_rule
+    - *ddt_rule
+    - !reference [.base-rules]
+    #- if: "'$[[inputs.persistent_test]]' == 'true'" && "$[[inputs.ddt_test]]' == 'true'"
+
+osu_neighbor_$[[inputs.collective_name]]:
+  extends: .collective
+  stage: collective-neighbor
+  rules:
+    - &neighbor_rule
+      if: "'$[[inputs.neighbor_test]]' != 'true'"
+      when: never
+    - !reference [.base-rules]
+  variables:
+    TEST: osu_neighbor_$[[inputs.collective_name]]
+
+osu_neighbor_$[[inputs.collective_name]]_mpi_types:
+  extends:
+    - osu_neighbor_$[[inputs.collective_name]]
+    - .mpi-types-test
+  rules:
+    - *neighbor_rule
+    - *type_rule
+    - !reference [.base-rules]
+
+osu_neighbor_$[[inputs.collective_name]]_ddt:
+  extends:
+    - osu_neighbor_$[[inputs.collective_name]]
+    - .ddt-test
+  rules:
+    - *neighbor_rule
+    - *ddt_rule
+    - !reference [.base-rules]

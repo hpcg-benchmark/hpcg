@@ -1,0 +1,8 @@
+out
+*.swp
+src/*.o
+bin/HPCG-Benchmark_3*.txt
+bin/xhpcg
+bin/xhpcg-cpu
+bin/hpcg20*.txt
+.DS_Store

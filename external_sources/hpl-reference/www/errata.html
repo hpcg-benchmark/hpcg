@@ -1,0 +1,116 @@
+<HTML>
+<HEAD>
+<TITLE>HPL Errata-Bugs</TITLE>
+</HEAD>
+
+<BODY
+BGCOLOR     = "WHITE"
+BACKGROUND  = "WHITE"
+TEXT        = "#000000"
+VLINK       = "#000099"
+ALINK       = "#947153"
+LINK        = "#0000ff">
+
+<H2>HPL Errata - Bugs</H2>
+
+<H3>Issues fixed in Version 2.1, October 26th, 2012</H3>
+
+The output now reports exact time stamps before and after the
+execution of the solver function pdgesv() was run. This could
+allow for accurate accounting of running time for data center
+management   purposes.    For   example  as  reporting  power
+consumption.  This  is  important  for  the Green500 project.<BR><BR>
+
+Fixed an out-of-bounds access to arrays  in the HPL_spreadN()
+and  HPL_spreadT()  functions.  This  may cause  segmentation
+fault signals. It was reported by Stephen Whalen from Cray.<BR><BR>
+
+<H3>Issues fixed in Version 2.0, September 10th, 2008</H3>
+
+Gregory Bauer  found  a  problem  size  corresponding  to the
+periodicity of the pseudo-random matrix generator used in the
+HPL  timing  program. This causes  the  LU  factorization  to
+detect the singularity of the input matrix as it should have.<BR><BR>
+
+A problem size of 2^17 = 131072 causes columns 14 modulo 2^14
+(i.e. 16384)  (starting from 0)  to be bitwise identical on a
+homogeneous platform.  Every problem size  being a power of 2
+and larger than  2^15  will  feature a similar problem if one
+searches far enough in the columns of the square input matrix.<BR><BR>
+
+The pseudo-random  generator  uses  the  linear  congruential
+algorithm:  X(n+1) = (a * X(n) + c) mod m as described in the
+Art of Computer  Programming, Knuth 1973,  Vol. 2. In the HPL
+case, m is set to 2^31.<BR><BR>
+
+It is very important  to realize that this issue is a problem
+of  the  testing  part  of the  HPL software.  The  numerical
+properties  of the  algorithms  used in the factorization and
+the solve should not be questioned because of this.  In fact,
+this is just the opposite: the factorization demonstrated the
+weakness of the testing part of the software by detecting the
+singularity of the input matrix.<BR><BR>
+
+This issue of  the testing program  is not easy to fix.  This
+pseudo-random  generator  has  very useful properties despite
+this.  It is  thus currently recommended to HPL users willing
+to test matrices of size larger than  2^15  to  not use power
+twos.<BR><BR>
+
+This  issue  has  been fixed by  changing  the  pseudo-random
+matrix  generator.   Now the  periodicity of the generator is
+2^64.<BR><BR>
+
+<H3>Issues fixed in Version 1.0b, December 15th, 2004</H3>
+
+When the matrix size is such that one needs  more  than 16 GB
+per  MPI  rank,  the  intermediate  calculation  (mat.ld+1) *
+mat.nq in  HPL_pdtest.c  ends up  overflowing  because  it is
+done using  32-bit arithmetic.   This issue has been fixed by
+typecasting to size_t; Thanks to John Baron.<BR><BR>
+
+<H3>Issues fixed in Version 1.0a, January 20th, 2004</H3>
+
+The  MPI  process  grid numbering scheme defaults now to row-
+major ordering. This option can now be selected at run time.<BR><BR>
+
+The  inlined  assembly  timer  routine  that  was causing the
+compilation to fail when using gcc version  3.3 and above has
+been removed from the package.<BR><BR>
+
+Various building problems on the T3E have been fixed;  Thanks
+to Edward Anderson.<BR><BR>
+
+<H3>Issues fixed in Version 1.0, September 27th, 2000</H3>
+
+Due to a  couple errors  spotted in the  VSIPL  port  of  the
+software,  the  distribution  contained  in  the  tar file of
+September 9th, 2000 had been updated on September 27th,  2000
+with a corrected  distribution.  <STRONG>These  problems were
+not affecting in any way possible the  BLAS  version  of  the
+software.</STRONG>  If you are using  the  VSIPL port of HPL,
+and  want  to  make  sure  you are  indeed  using  the latest
+corrected version, please  check  the  date  contained in the
+file HPL.build.log contained in the main directory.<BR><BR>
+
+
+
+
+<HR NOSHADE>
+<CENTER>
+<A HREF = "index.html">            [Home]</A>
+<A HREF = "copyright.html">        [Copyright and Licensing Terms]</A>
+<A HREF = "algorithm.html">        [Algorithm]</A>
+<A HREF = "scalability.html">      [Scalability]</A>
+<A HREF = "results.html">          [Performance Results]</A>
+<A HREF = "documentation.html">    [Documentation]</A>
+<A HREF = "software.html">         [Software]</A>
+<A HREF = "faqs.html">             [FAQs]</A>
+<A HREF = "tuning.html">           [Tuning]</A>
+<A HREF = "errata.html">           [Errata-Bugs]</A>
+<A HREF = "references.html">       [References]</A>
+<A HREF = "links.html">            [Related Links]</A><BR>
+</CENTER>
+<HR NOSHADE>
+</BODY>
+</HTML>
